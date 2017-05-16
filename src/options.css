@@ -1,0 +1,29 @@
+.gesture_template {
+	display: none;
+}
+
+.container,
+.gesture-container {
+	display: block;
+	margin: 1em 0;
+}
+
+.caption {
+	border-bottom: 1px solid #3cf;
+	font-size: 120%;
+	display: block;
+}
+
+.gesture-label {
+	display: block;
+	font-weight: bold;
+}
+
+.toggle-radio {
+	display: none;
+}
+
+.toggle-radio:checked + label {
+	color: #3cf;
+}
+

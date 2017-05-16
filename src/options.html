@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="./options.css">
+	</head>
+	<body>
+		<div class="gesture_template">
+			<input class="toggle-radio" type="radio" name="toggle-radio">
+			<label>
+				<span class="gesture-caption caption"></span>
+				<span class="gesture-label"></span>
+			</label>
+		</div>
+
+		<div class="container">
+			<label class="caption">Timeout</label>
+			<input id="timeout" type="range" min="1" max="5000">
+		</div>
+
+		<div class="container">
+			<label class="caption">Stroke-size</label>
+			<input id="stroke_size" type="range" min="1" max="255">
+		</div>
+	</body>
+	<script src="content.js"></script>
+</html>
+

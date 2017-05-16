@@ -1,0 +1,32 @@
+{
+	"extensionName": {
+		"message": "Simple Gesture",
+		"description": "Name of the extension."
+	},
+	"extensionDescription": {
+		"message": "シンプルなAndroid用のタッチジェスチャです。",
+		"description": "Description of the extension."
+	},
+	"caption_top": {
+		"message": "一番上へスクロール"
+	},
+	"caption_bottom": {
+		"message": "一番下へスクロール"
+	},
+	"caption_reload": {
+		"message": "更新"
+	},
+	"caption_close": {
+		"message": "タブを閉じる"
+	},
+	"caption_nextTab": {
+		"message": "次のタブ"
+	},
+	"caption_prevTab": {
+		"message": "前のタブ"
+	},
+	"caption_newTab": {
+		"message": "新しいタブ"
+	}
+}
+

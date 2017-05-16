@@ -1,0 +1,33 @@
+{
+	"extensionName": {
+		"message": "Simple Gesture",
+		"description": "Name of the extension."
+	},
+	"extensionDescription": {
+		"message": "Simple touch gesture for Android",
+		"description": "Description of the extension."
+	},
+	"caption_top": {
+		"message": "Scroll to top"
+	},
+	"caption_bottom": {
+		"message": "Scroll to bottom"
+	},
+	"caption_reload": {
+		"message": "Reload"
+	},
+	"caption_close": {
+		"message": "Close tab"
+	},
+	"caption_nextTab": {
+		"message": "Next tab"
+	},
+	"caption_prevTab": {
+		"message": "Prev. tab"
+	},
+	"caption_newTab": {
+		"message": "New tab"
+	}
+}
+
+
