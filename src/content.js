@@ -40,7 +40,7 @@
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 		}
-		if (!eidtTarget) {
+		if (!editTarget) {
 			timeoutId = setTimeout(resetGesture, ini.timeout);
 		}
 		lx = getX(e);
