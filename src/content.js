@@ -1,8 +1,11 @@
 (() => {
 	'use strict';
 
+	// const
+	let MAX_LENGTH = 16;
+
 	// default options
-	let ini = {
+	let defaultIni = {
 		'gestures': {
 			'R-D': 'top',
 			'R-U': 'bottom',
@@ -15,6 +18,8 @@
 		'strokeSize': 32,
 		'timeout': 1500
 	};
+	let GESTURE_NAMES; // set up in 'setupOptionsPage()'
+	let ini = defaultIni;
 	let gesture = null;
 	let lx = 0;
 	let ly = 0;
@@ -35,7 +40,9 @@
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 		}
-		timeoutId = setTimeout(resetGesture, ini.timeout);
+		if (!eidtTarget) {
+			timeoutId = setTimeout(resetGesture, ini.timeout);
+		}
 		lx = getX(e);
 		ly = getY(e);
 		lg = null;
@@ -43,6 +50,7 @@
 
 	let onTouchMove = function(e) {
 		if (gesture === null) return;
+		if (gesture.length > MAX_LENGTH) return;
 		let x = getX(e);
 		let y = getY(e);
 		let dx = x - lx;
@@ -81,19 +89,25 @@
 		browser.storage.local.set({ 'simple_gesture': ini });
 	};
 
+	let keyOf = (m, v) => { return Object.keys(m).filter(k => { return m[k] === v; })[0]; };
+
 	let updateGesture = function() {
-		if (!gesture) return;
-		let newGestures = {};
-		for (let key in ini.gestures) {
-			let value = ini.gestures[key];
-			let newKey = value == editTarget ? gesture : key;
-			newGestures[newKey] = value;
+		if (gesture) {
+			let newGestures = {};
+			for (let gestureName of GESTURE_NAMES) {
+				let newKey = gestureName === editTarget ? gesture : keyOf(ini.gestures, gestureName);
+				if (newKey) {
+					newGestures[newKey] = gestureName;
+				}
+			}
+			ini.gestures = newGestures;
+			document.getElementById('udlr_' + editTarget).textContent = gesture;
+			saveIni();
 		}
-		ini.gestures = newGestures;
-		document.getElementById('gesture_label_' + editTarget).textContent = gesture;
-		document.getElementById('gesture_radio_' + editTarget).checked = false;
-		editTarget = null;
-		saveIni();
+		setTimeout(() => {
+			document.getElementById('gesture_radio_' + editTarget).checked = false;
+			editTarget = null;
+		}, 1);
 	};
 
 	let executeGesture = function(e) {
@@ -131,33 +145,39 @@
 			editTarget = e.target.id.replace(/^.+_/, '');
 		};
 		let template = document.getElementsByClassName('gesture_template')[0];
-		for (let key in ini.gestures) {
-			let g = ini.gestures[key];
+		GESTURE_NAMES = [];
+		for (let i in defaultIni.gestures) {
+			GESTURE_NAMES.push(defaultIni.gestures[i]);
+		}
+		for (let gestureName of GESTURE_NAMES) {
 			let container = template.cloneNode(true);
 			container.className = "gesture-container";
 			let toggleRadio = container.getElementsByClassName('toggle-radio')[0];
-			toggleRadio.id = 'gesture_radio_' + g;
+			toggleRadio.id = 'gesture_radio_' + gestureName;
 			toggleRadio.addEventListener('click', setEditTarget);
-			let label = container.getElementsByClassName('gesture-label')[0];
-			label.id = 'gesture_label_' + g;
-			label.textContent = key;
+			let label = container.getElementsByClassName('udlr')[0];
+			label.id = 'udlr_' + gestureName;
+			label.textContent = keyOf(ini.gestures, gestureName) || '-';
 			let caption = container.getElementsByClassName('gesture-caption')[0];
-			caption.textContent = chrome.i18n.getMessage('caption_' + g);
+			caption.textContent = chrome.i18n.getMessage('caption_' + gestureName);
 			caption.parentNode.setAttribute('for', toggleRadio.id);
 			template.parentNode.insertBefore(container, template);
 		}
-		let timeout = document.getElementById('timeout');
-		timeout.value = ini.timeout;
-		timeout.addEventListener('change', e => {
-			ini.timeout = timeout.value | 1500;
+		// set up <input type="range" ... >
+		let onRangeChange = e => {
+			ini[e.target.id] = e.target.value;
 			saveIni();
-		});
-		let strokeSize = document.getElementById('stroke_size');
-		strokeSize.value = ini.strokeSize;
-		timeout.addEventListener('change', e => {
-			ini.strokeSize.timeout = strokeSize.value | 32;
-			saveIni();
-		});
+		};
+		let onRangeInput = e => {
+			document.getElementById(e.target.id + 'Value').textContent = e.target.value;
+		};
+		for (let id of ['timeout', 'strokeSize']) {
+			let rangeElm = document.getElementById(id);
+			rangeElm.value = ini[id];
+			rangeElm.addEventListener('change', onRangeChange);
+			rangeElm.addEventListener('input', onRangeInput);
+			onRangeInput({ target: rangeElm });
+		}
 	};
 
 	// mouse event is for Test on Desktop

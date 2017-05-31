@@ -14,7 +14,7 @@
 	display: block;
 }
 
-.gesture-label {
+.udlr {
 	display: block;
 	font-weight: bold;
 }
@@ -23,7 +23,42 @@
 	display: none;
 }
 
-.toggle-radio:checked + label {
+.toggle-radio:checked + .gesture-label {
 	color: #3cf;
 }
 
+.toggle-radio + .gesture-label::before {
+	background: #000;
+	content: ' ';
+	display: block;
+	height: 100%;
+	left: 0;
+	opacity: 0;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	transition: opacity .5s;
+	width: 100%;
+}
+.toggle-radio + .gesture-label::after {
+	background: #fff;
+	content: ' ';
+	display: block;
+	height: 200px;
+	left: calc( 50% - 100px );
+	opacity: 0;
+	pointer-events: none;
+	position: fixed;
+	top: calc( 50% - 100px );
+	transition: opacity .5s;
+	width: 200px;
+}
+
+.toggle-radio:checked + .gesture-label::before {
+	opacity: .5;
+	pointer-events: auto;
+}
+.toggle-radio:checked + .gesture-label::after {
+	opacity: 1;
+	pointer-events: auto;
+}
