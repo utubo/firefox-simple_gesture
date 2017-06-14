@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "1.1a3",
+	"version": "1.2.1",
 	"default_locale": "en",
 
 	"applications": {
@@ -13,6 +13,11 @@
 	},
 
 	"content_scripts": [
+		{
+			"matches": ["https://example.com/simple-gesture/setting/"],
+			"js": ["goto_option.js"],
+			"run_at": "document_start"
+		},
 		{
 			"matches": ["*://*/*"],
 			"js": ["content.js"],
