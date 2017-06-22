@@ -3,6 +3,7 @@
 
 	// const
 	let MAX_LENGTH = 16;
+	let GESTURE_NAMES; // set up in 'setupOptionsPage()'
 
 	// default options
 	let defaultIni = {
@@ -18,7 +19,6 @@
 		'strokeSize': 32,
 		'timeout': 1500
 	};
-	let GESTURE_NAMES; // set up in 'setupOptionsPage()'
 	let ini = defaultIni;
 	let gesture = null;
 	let lx = 0;
@@ -69,6 +69,9 @@
 			lx = x;
 			ly = y;
 			lg = g;
+			if (editTarget) {
+				document.getElementById('inputedGesture').textContent = gesture;
+			}
 		}
 	};
 
@@ -89,23 +92,29 @@
 		browser.storage.local.set({ 'simple_gesture': ini });
 	};
 
-	let keyOf = (m, v) => { return Object.keys(m).filter(k => { return m[k] === v; })[0]; };
+	let flip = (m) => {
+		let f = {};
+		for (let key in m) {
+			let value = m[key];
+			f[value] = key;
+		}
+		return f;
+	};
 
 	let updateGesture = function() {
 		if (gesture) {
-			let newGestures = {};
-			for (let gestureName of GESTURE_NAMES) {
-				let newKey = gestureName === editTarget ? gesture : keyOf(ini.gestures, gestureName);
-				if (newKey) {
-					newGestures[newKey] = gestureName;
-				}
-			}
-			ini.gestures = newGestures;
-			document.getElementById('udlr_' + editTarget).textContent = gesture;
+			ini.gestures[gesture] = null;
+			let f = flip(ini.gestures);
+			f[editTarget] = gesture;
+			ini.gestures = flip(f);
 			saveIni();
+			for (let gestureName of GESTURE_NAMES) {
+				document.getElementById('udlr_' + gestureName).textContent = f[gestureName] || '-';
+			}
 		}
 		setTimeout(() => {
 			document.getElementById('gesture_radio_' + editTarget).checked = false;
+			document.getElementById('gestureArea').classList.add('transparent');
 			editTarget = null;
 		}, 1);
 	};
@@ -117,8 +126,7 @@
 			case 'top': smoothScroll(0); break;
 			case 'bottom': smoothScroll(document.body.scrollHeight); break;
 			case 'reload': location.reload(); break;
-			default: browser.runtime.sendMessage(g, (res) => {});
-				break;
+			default: browser.runtime.sendMessage(g, (res) => {}); break;
 		}
 		e.stopPropagation();
 		e.preventDefault();
@@ -143,12 +151,15 @@
 	let setupOptionsPage = function() {
 		let setEditTarget = e => {
 			editTarget = e.target.id.replace(/^.+_/, '');
+			document.getElementById('inputedGesture').textContent = '';
+			document.getElementById('gestureArea').classList.remove('transparent');
 		};
 		let template = document.getElementsByClassName('gesture_template')[0];
 		GESTURE_NAMES = [];
 		for (let i in defaultIni.gestures) {
 			GESTURE_NAMES.push(defaultIni.gestures[i]);
 		}
+		let f = flip(ini.gestures);
 		for (let gestureName of GESTURE_NAMES) {
 			let container = template.cloneNode(true);
 			container.className = "gesture-container";
@@ -157,7 +168,7 @@
 			toggleRadio.addEventListener('click', setEditTarget);
 			let label = container.getElementsByClassName('udlr')[0];
 			label.id = 'udlr_' + gestureName;
-			label.textContent = keyOf(ini.gestures, gestureName) || '-';
+			label.textContent = f[gestureName] || '-';
 			let caption = container.getElementsByClassName('gesture-caption')[0];
 			caption.textContent = chrome.i18n.getMessage('caption_' + gestureName);
 			caption.parentNode.setAttribute('for', toggleRadio.id);

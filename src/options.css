@@ -27,38 +27,41 @@
 	color: #3cf;
 }
 
-.toggle-radio + .gesture-label::before {
-	background: #000;
-	content: ' ';
-	display: block;
-	height: 100%;
-	left: 0;
+.transparent {
 	opacity: 0;
 	pointer-events: none;
+}
+.gesture-area-back {
+	background: rgba(0, 0, 0, .5);
+	height: 100%;
+	left: 0;
 	position: fixed;
+	text-align: center;
 	top: 0;
 	transition: opacity .5s;
 	width: 100%;
 }
-.toggle-radio + .gesture-label::after {
+#inputedGesture {
+	bottom: calc(50% + 120px);
+	color: #fff;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 24px;
+	overflow: hidden;
+	position: fixed;
+	text-align: center;
+	text-shadow: 0px 0px 2px rgba(255, 255, 255, .5);
+	width: 100%;
+}
+.gesture-area-box {
 	background: #fff;
 	content: ' ';
 	display: block;
 	height: 200px;
 	left: calc( 50% - 100px );
-	opacity: 0;
-	pointer-events: none;
 	position: fixed;
 	top: calc( 50% - 100px );
 	transition: opacity .5s;
 	width: 200px;
 }
 
-.toggle-radio:checked + .gesture-label::before {
-	opacity: .5;
-	pointer-events: auto;
-}
-.toggle-radio:checked + .gesture-label::after {
-	opacity: 1;
-	pointer-events: auto;
-}

@@ -2,6 +2,9 @@
 	'use strict';
 
 	let exec = {
+		newTab: function(tab) {
+			browser.tabs.create({ active: true });
+		}
 		close: function(tab) {
 			browser.tabs.remove(tab.id);
 		},
@@ -18,10 +21,6 @@
 		nextTab: function(tab) {
 			exec.xxTab(tab, 1);
 		},
-		newTab: function(tab) {
-			browser.tabs.create({ active: true });
-		}
-
 	};
 
 	browser.runtime.onMessage.addListener((msg, sender, res) => {
