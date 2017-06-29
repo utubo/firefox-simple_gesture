@@ -35,12 +35,19 @@
 		timeoutId = null;
 	};
 
-	let onTouchStart = function(e) {
-		gesture = '';
+	let clearGestureTimeoutTimer = function() {
 		if (timeoutId) {
 			clearTimeout(timeoutId);
+			timeoutId = null;
 		}
-		if (!editTarget) {
+	};
+
+	let onTouchStart = function(e) {
+		gesture = '';
+		clearGestureTimeoutTimer();
+		if (editTarget) {
+			e.preventDefault();
+		} else {
 			timeoutId = setTimeout(resetGesture, ini.timeout);
 		}
 		lx = getX(e);
@@ -71,6 +78,7 @@
 			lg = g;
 			if (editTarget) {
 				document.getElementById('inputedGesture').textContent = gesture;
+				e.preventDefault();
 			}
 		}
 	};
@@ -135,9 +143,7 @@
 
 	let onTouchEnd = function(e) {
 		try {
-			if (timeoutId) {
-				clearTimeout(timeoutId);
-			}
+			clearGestureTimeoutTimer();
 			if (editTarget) {
 				updateGesture();
 			} else {
