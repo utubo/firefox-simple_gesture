@@ -101,24 +101,24 @@
 		browser.storage.local.set({ 'simple_gesture': ini });
 	};
 
-	let flip = m => {
-		let f = {};
+	let swapKeyValue = m => {
+		let s = {};
 		for (let key in m) {
 			let value = m[key];
-			f[value] = key;
+			s[value] = key;
 		}
-		return f;
+		return s;
 	};
 
 	let updateGesture = () => {
 		if (gesture) {
 			ini.gestures[gesture] = null;
-			let f = flip(ini.gestures);
-			f[editTarget] = gesture;
-			ini.gestures = flip(f);
+			let s = swapKeyValue(ini.gestures);
+			s[editTarget] = gesture;
+			ini.gestures = swapKeyValue(s);
 			saveIni();
 			for (let gestureName of GESTURE_NAMES) {
-				document.getElementById('udlr_' + gestureName).textContent = f[gestureName] || '-';
+				document.getElementById('udlr_' + gestureName).textContent = s[gestureName] || '-';
 			}
 		}
 		setTimeout(() => {
@@ -156,17 +156,17 @@
 	};
 
 	let setupOptionsPage = () => {
+		GESTURE_NAMES = [];
+		for (let i in defaultIni.gestures) {
+			GESTURE_NAMES.push(defaultIni.gestures[i]);
+		}
+		let s = swapKeyValue(ini.gestures);
+		let template = document.getElementsByClassName('gesture_template')[0];
 		let setEditTarget = e => {
 			editTarget = e.target.id.replace(/^.+_/, '');
 			document.getElementById('inputedGesture').textContent = '';
 			document.getElementById('gestureArea').classList.remove('transparent');
 		};
-		let template = document.getElementsByClassName('gesture_template')[0];
-		GESTURE_NAMES = [];
-		for (let i in defaultIni.gestures) {
-			GESTURE_NAMES.push(defaultIni.gestures[i]);
-		}
-		let f = flip(ini.gestures);
 		for (let gestureName of GESTURE_NAMES) {
 			let container = template.cloneNode(true);
 			container.className = "gesture-container";
@@ -175,7 +175,7 @@
 			toggleRadio.addEventListener('click', setEditTarget);
 			let label = container.getElementsByClassName('udlr')[0];
 			label.id = 'udlr_' + gestureName;
-			label.textContent = f[gestureName] || '-';
+			label.textContent = s[gestureName] || '-';
 			let caption = container.getElementsByClassName('gesture-caption')[0];
 			caption.textContent = chrome.i18n.getMessage('caption_' + gestureName);
 			caption.parentNode.setAttribute('for', toggleRadio.id);
