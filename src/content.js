@@ -1,11 +1,11 @@
 (() => {
 	'use strict';
 
-	// const
+	// const -------------
 	let MAX_LENGTH = 16;
 	let GESTURE_NAMES; // set up in 'setupOptionsPage()'
 
-	// default options
+	// fields ------------
 	let defaultIni = {
 		'gestures': {
 			'R-D': 'top',
@@ -21,28 +21,29 @@
 	};
 	let ini = defaultIni;
 	let gesture = null;
-	let lx = 0;
-	let ly = 0;
-	let lg = null;
+	let lx = 0; // last X
+	let ly = 0; // last Y
+	let lg = null; // lastGesture
 	let editTarget = null;
 	let timeoutId = null;
 
+	// functions ---------
 	let getX = e => e.touches ? e.touches[0].clientX: e.pageX;
 	let getY = e => e.touches ? e.touches[0].clientY: e.pageY;
 
-	let resetGesture = function(e) {
+	let resetGesture = e => {
 		gesture = null;
 		timeoutId = null;
 	};
 
-	let clearGestureTimeoutTimer = function() {
+	let clearGestureTimeoutTimer = () => {
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 			timeoutId = null;
 		}
 	};
 
-	let onTouchStart = function(e) {
+	let onTouchStart = e => {
 		gesture = '';
 		clearGestureTimeoutTimer();
 		if (editTarget) {
@@ -55,7 +56,7 @@
 		lg = null;
 	};
 
-	let onTouchMove = function(e) {
+	let onTouchMove = e => {
 		if (gesture === null) return;
 		if (gesture.length > MAX_LENGTH) return;
 		let x = getX(e);
@@ -84,7 +85,7 @@
 	};
 
 	let scrollBehaviorBackup = null;
-	let smoothScroll = function(y) {
+	let smoothScroll = y  => {
 		if (scrollBehaviorBackup === null) {
 			scrollBehaviorBackup = document.body.style.scrollBehavior;
 		}
@@ -96,11 +97,11 @@
 		}, 1000);
 	};
 
-	let saveIni = function() {
+	let saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': ini });
 	};
 
-	let flip = (m) => {
+	let flip = m => {
 		let f = {};
 		for (let key in m) {
 			let value = m[key];
@@ -109,7 +110,7 @@
 		return f;
 	};
 
-	let updateGesture = function() {
+	let updateGesture = () => {
 		if (gesture) {
 			ini.gestures[gesture] = null;
 			let f = flip(ini.gestures);
@@ -127,7 +128,7 @@
 		}, 1);
 	};
 
-	let executeGesture = function(e) {
+	let executeGesture = e => {
 		let g = ini.gestures[gesture];
 		if (!g) return true;
 		switch (g) {
@@ -141,7 +142,7 @@
 		return false;
 	};
 
-	let onTouchEnd = function(e) {
+	let onTouchEnd = e => {
 		try {
 			clearGestureTimeoutTimer();
 			if (editTarget) {
@@ -154,7 +155,7 @@
 		}
 	};
 
-	let setupOptionsPage = function() {
+	let setupOptionsPage = () => {
 		let setEditTarget = e => {
 			editTarget = e.target.id.replace(/^.+_/, '');
 			document.getElementById('inputedGesture').textContent = '';
@@ -197,6 +198,7 @@
 		}
 	};
 
+	// START HERE ! ------
 	// mouse event is for Test on Desktop
 	window.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', onTouchStart);
 	window.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', onTouchMove);

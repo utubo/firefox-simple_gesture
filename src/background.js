@@ -2,23 +2,23 @@
 	'use strict';
 
 	let exec = {
-		newTab: function(tab) {
+		newTab: tab => {
 			browser.tabs.create({ active: true });
 		},
-		close: function(tab) {
+		close: tab => {
 			browser.tabs.remove(tab.id);
 		},
-		showTab: function(targetIndex) {
+		showTab: targetIndex => {
 			browser.tabs.query({ index: targetIndex }).then(tabs => {
 				if (tabs[0]) {
 					browser.tabs.update(tabs[0].id, { active: true });
 				}
 			});
 		},
-		prevTab: function(tab) {
+		prevTab: tab => {
 			exec.showTab(tab.index - 1);
 		},
-		nextTab: function(tab) {
+		nextTab: tab => {
 			exec.showTab((tab.index || 0) + 1); // sometimes "tab.index" may be broken...
 		}
 	};
