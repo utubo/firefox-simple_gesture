@@ -7,6 +7,12 @@
 		"message": "シンプルなAndroid用のタッチジェスチャです。",
 		"description": "Description of the extension."
 	},
+	"caption_forward": {
+		"message": "進む"
+	},
+	"caption_back": {
+		"message": "戻る"
+	},
 	"caption_top": {
 		"message": "一番上へスクロール"
 	},

@@ -25,7 +25,7 @@
 
 	browser.runtime.onMessage.addListener((msg, sender, res) => {
 		let f = exec[msg];
-		f && exec[msg](sender.tab);
+		f && f(sender.tab);
 	});
 
 })();

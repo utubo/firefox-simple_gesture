@@ -8,6 +8,8 @@
 	// fields ------------
 	let defaultIni = {
 		'gestures': {
+			'D-L': 'forward',
+			'D-R': 'back',
 			'R-D': 'top',
 			'R-U': 'bottom',
 			'U-L': 'nextTab',
@@ -132,6 +134,8 @@
 		let g = ini.gestures[gesture];
 		if (!g) return true;
 		switch (g) {
+			case 'forward': history.forward(); break;
+			case 'back': history.back(); break;
 			case 'top': smoothScroll(0); break;
 			case 'bottom': smoothScroll(document.body.scrollHeight); break;
 			case 'reload': location.reload(); break;

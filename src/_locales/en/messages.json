@@ -7,6 +7,12 @@
 		"message": "Simple touch gesture for Android",
 		"description": "Description of the extension."
 	},
+	"caption_forward": {
+		"message": "forward"
+	},
+	"caption_back": {
+		"message": "back"
+	},
 	"caption_top": {
 		"message": "Scroll to top"
 	},
