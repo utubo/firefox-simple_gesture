@@ -33,6 +33,15 @@
 	},
 	"caption_newTab": {
 		"message": "新しいタブ"
+	},
+	"caption_newTabUrl": {
+		"message": "新しいタブのURL"
+	},
+	"caption_timeout": {
+		"message": "タイムアウト時間"
+	},
+	"caption_strokeSize": {
+		"message": "辺のサイズ"
 	}
 }
 

@@ -61,6 +61,10 @@
 	let onTouchMove = e => {
 		if (gesture === null) return;
 		if (gesture.length > MAX_LENGTH) return;
+		if (e.touches && e.touches[1]) { // not support two fingers
+			resetGesture();
+			return;
+		}
 		let x = getX(e);
 		let y = getY(e);
 		let dx = x - lx;
@@ -181,24 +185,28 @@
 			label.id = 'udlr_' + gestureName;
 			label.textContent = s[gestureName] || '-';
 			let caption = container.getElementsByClassName('gesture-caption')[0];
-			caption.textContent = chrome.i18n.getMessage('caption_' + gestureName);
+			caption.textContent = gestureName;
 			caption.parentNode.setAttribute('for', toggleRadio.id);
 			template.parentNode.insertBefore(container, template);
 		}
-		// set up <input type="range" ... >
-		let onRangeChange = e => {
+		for (let caption of document.getElementsByClassName('caption')) {
+			caption.textContent = chrome.i18n.getMessage('caption_' + caption.textContent) || caption.textContent;
+		}
+		let onValueChange = e => {
 			ini[e.target.id] = e.target.value;
 			saveIni();
 		};
 		let onRangeInput = e => {
 			document.getElementById(e.target.id + 'Value').textContent = e.target.value;
 		};
-		for (let id of ['timeout', 'strokeSize']) {
+		for (let id of ['newTabUrl', 'timeout', 'strokeSize']) {
 			let rangeElm = document.getElementById(id);
-			rangeElm.value = ini[id];
-			rangeElm.addEventListener('change', onRangeChange);
-			rangeElm.addEventListener('input', onRangeInput);
-			onRangeInput({ target: rangeElm });
+			rangeElm.value = ini[id] || '';
+			rangeElm.addEventListener('change', onValueChange);
+			if (rangeElm.getAttribute('type') === 'range') {
+				rangeElm.addEventListener('input', onRangeInput);
+				onRangeInput({ target: rangeElm });
+			}
 		}
 	};
 

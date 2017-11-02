@@ -3,7 +3,12 @@
 
 	let exec = {
 		newTab: tab => {
-			browser.tabs.create({ active: true });
+			browser.storage.local.get('simple_gesture').then(res => {
+				let url = res.simple_gesture && res.simple_gesture.newTabUrl || null;
+				browser.tabs.create({ active: true, url: url });
+			}, reason => {
+				browser.tabs.create({ active: true });
+			});
 		},
 		close: tab => {
 			browser.tabs.remove(tab.id);

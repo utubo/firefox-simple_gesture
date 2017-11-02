@@ -8,10 +8,19 @@
 	margin: 1em 0;
 }
 
+.container-sub {
+	margin: 0 0 0 1em;
+}
+
 .caption {
 	border-bottom: 1px solid #3cf;
 	font-size: 120%;
 	display: block;
+	margin-bottom: .2em;
+}
+
+.text-input {
+	width: 90%;
 }
 
 .udlr {

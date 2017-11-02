@@ -33,6 +33,15 @@
 	},
 	"caption_newTab": {
 		"message": "New tab"
+	},
+	"caption_newTabUrl": {
+		"message": "URL"
+	},
+	"caption_timeout": {
+		"message": "Timeout"
+	},
+	"caption_strokeSize": {
+		"message": "Stroke-size"
 	}
 }
 
