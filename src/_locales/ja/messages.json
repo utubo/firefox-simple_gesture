@@ -37,11 +37,20 @@
 	"caption_newTabUrl": {
 		"message": "新しいタブのURL"
 	},
+	"caption_disableGesture": {
+		"message": "ジェスチャ無効/有効"
+	},
 	"caption_timeout": {
 		"message": "タイムアウト時間"
 	},
 	"caption_strokeSize": {
 		"message": "辺のサイズ"
+	},
+	"message_gesture_is_disabled": {
+		"message": "ジェスチャ無効"
+	},
+	"message_gesture_is_enabled": {
+		"message": "ジェスチャ有効"
 	}
 }
 

@@ -16,7 +16,8 @@
 			'U-R': 'prevTab',
 			'D-R-U': 'reload',
 			'L-D-R': 'close',
-			'R-D-L': 'newTab'
+			'R-D-L': 'newTab',
+			'R-L-R-L': 'disableGesture'
 		},
 		'strokeSize': 32,
 		'timeout': 1500
@@ -28,6 +29,7 @@
 	let lg = null; // lastGesture
 	let editTarget = null;
 	let timeoutId = null;
+	let isGestureEnabled = true;
 
 	// functions ---------
 	let getX = e => e.touches ? e.touches[0].clientX: e.pageX;
@@ -103,6 +105,12 @@
 		}, 1000);
 	};
 
+	let toggleIsGestureEnabled = () => {
+		isGestureEnabled = !isGestureEnabled;
+		alert(chrome.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
+		return false;
+	};
+
 	let saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': ini });
 	};
@@ -134,9 +142,12 @@
 		}, 1);
 	};
 
+	// For options.html ------
 	let executeGesture = e => {
 		let g = ini.gestures[gesture];
 		if (!g) return true;
+		if (g === 'disableGesture') return toggleIsGestureEnabled();
+		if (!isGestureEnabled) return true;
 		switch (g) {
 			case 'forward': history.forward(); break;
 			case 'back': history.back(); break;
@@ -177,6 +188,7 @@
 		};
 		for (let gestureName of GESTURE_NAMES) {
 			let container = template.cloneNode(true);
+			container.id = gestureName + "_container";
 			container.className = "gesture-container";
 			let toggleRadio = container.getElementsByClassName('toggle-radio')[0];
 			toggleRadio.id = 'gesture_radio_' + gestureName;
@@ -189,6 +201,7 @@
 			caption.parentNode.setAttribute('for', toggleRadio.id);
 			template.parentNode.insertBefore(container, template);
 		}
+		document.getElementById('newTab_container').appendChild(document.getElementById('newTabUrl_container'));
 		for (let caption of document.getElementsByClassName('caption')) {
 			caption.textContent = chrome.i18n.getMessage('caption_' + caption.textContent) || caption.textContent;
 		}

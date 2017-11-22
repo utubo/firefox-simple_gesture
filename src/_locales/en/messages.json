@@ -37,11 +37,20 @@
 	"caption_newTabUrl": {
 		"message": "URL"
 	},
+	"caption_disableGesture": {
+		"message": "Toggle disable/enable gestures"
+	},
 	"caption_timeout": {
 		"message": "Timeout"
 	},
 	"caption_strokeSize": {
 		"message": "Stroke-size"
+	},
+	"message_gesture_is_disabled": {
+		"message": "Simple-Gesuture is disabled."
+	},
+	"message_gesture_is_enabled": {
+		"message": "Simple-Gesuture is enabled."
 	}
 }
 
