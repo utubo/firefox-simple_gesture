@@ -21,7 +21,7 @@
 			});
 		},
 		prevTab: tab => {
-			exec.showTab(tab.index - 1);
+			exec.showTab((tab.index || 0) - 1); // sometimes "tab.index" may be broken...
 		},
 		nextTab: tab => {
 			exec.showTab((tab.index || 0) + 1); // sometimes "tab.index" may be broken...

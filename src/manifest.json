@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "1.5a1",
+	"version": "1.5pre1",
 	"default_locale": "en",
 
 	"applications": {
@@ -11,6 +11,12 @@
 			"strict_min_version": "54.0a1"
 		}
 	},
+
+	"options_ui": {
+			"page": "options.html",
+			"open_in_tab": true
+	},
+
 
 	"content_scripts": [
 		{
@@ -27,11 +33,6 @@
 
 	"background": {
 			"scripts": ["background.js"]
-	},
-
-	"options_ui": {
-			"page": "options.html",
-			"open_in_tab": true
 	},
 
 	"permissions": [

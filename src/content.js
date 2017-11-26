@@ -1,33 +1,33 @@
+var SimpleGesture = {};
+SimpleGesture.defaultIni = {
+	'gestures': {
+		'D-L': 'forward',
+		'D-R': 'back',
+		'R-D': 'top',
+		'R-U': 'bottom',
+		'U-L': 'nextTab',
+		'U-R': 'prevTab',
+		'D-R-U': 'reload',
+		'L-D-R': 'close',
+		'R-D-L': 'newTab',
+		'R-L-R-L': 'disableGesture'
+	},
+	'strokeSize': 32,
+	'timeout': 1500
+};
+SimpleGesture.ini = SimpleGesture.defaultIni;
+
 (() => {
 	'use strict';
 
 	// const -------------
 	let MAX_LENGTH = 16;
-	let GESTURE_NAMES; // set up in 'setupOptionsPage()'
 
 	// fields ------------
-	let defaultIni = {
-		'gestures': {
-			'D-L': 'forward',
-			'D-R': 'back',
-			'R-D': 'top',
-			'R-U': 'bottom',
-			'U-L': 'nextTab',
-			'U-R': 'prevTab',
-			'D-R-U': 'reload',
-			'L-D-R': 'close',
-			'R-D-L': 'newTab',
-			'R-L-R-L': 'disableGesture'
-		},
-		'strokeSize': 32,
-		'timeout': 1500
-	};
-	let ini = defaultIni;
 	let gesture = null;
 	let lx = 0; // last X
 	let ly = 0; // last Y
 	let lg = null; // lastGesture
-	let editTarget = null;
 	let timeoutId = null;
 	let isGestureEnabled = true;
 
@@ -40,7 +40,7 @@
 		timeoutId = null;
 	};
 
-	let clearGestureTimeoutTimer = () => {
+	SimpleGesture.clearGestureTimeoutTimer = () => { // options.js uses this function. TODO: Fix this dirty code.
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 			timeoutId = null;
@@ -49,12 +49,9 @@
 
 	let onTouchStart = e => {
 		gesture = '';
-		clearGestureTimeoutTimer();
-		if (editTarget) {
-			e.preventDefault();
-		} else {
-			timeoutId = setTimeout(resetGesture, ini.timeout);
-		}
+		SimpleGesture.clearGestureTimeoutTimer();
+		timeoutId = setTimeout(resetGesture, SimpleGesture.ini.timeout);
+		SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e, gesture);
 		lx = getX(e);
 		ly = getY(e);
 		lg = null;
@@ -73,11 +70,11 @@
 		let dy = y - ly;
 		let g = '';
 		if (Math.abs(dx) < Math.abs(dy)) {
-			if (dy <= -ini.strokeSize) g = 'U';
-			else if (dy >= ini.strokeSize) g = 'D';
+			if (dy <= - SimpleGesture.ini.strokeSize) g = 'U';
+			else if (dy >= SimpleGesture.ini.strokeSize) g = 'D';
 		} else {
-			if (dx <= -ini.strokeSize) g = 'L';
-			else if (dx >= ini.strokeSize) g = 'R';
+			if (dx <= - SimpleGesture.ini.strokeSize) g = 'L';
+			else if (dx >= SimpleGesture.ini.strokeSize) g = 'R';
 		}
 		if (g && g != lg) {
 			if (gesture) gesture += '-';
@@ -85,10 +82,7 @@
 			lx = x;
 			ly = y;
 			lg = g;
-			if (editTarget) {
-				document.getElementById('inputedGesture').textContent = gesture;
-				e.preventDefault();
-			}
+			SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture);
 		}
 	};
 
@@ -111,40 +105,8 @@
 		return false;
 	};
 
-	let saveIni = () => {
-		browser.storage.local.set({ 'simple_gesture': ini });
-	};
-
-	let swapKeyValue = m => {
-		let s = {};
-		for (let key in m) {
-			let value = m[key];
-			s[value] = key;
-		}
-		return s;
-	};
-
-	let updateGesture = () => {
-		if (gesture) {
-			ini.gestures[gesture] = null;
-			let s = swapKeyValue(ini.gestures);
-			s[editTarget] = gesture;
-			ini.gestures = swapKeyValue(s);
-			saveIni();
-			for (let gestureName of GESTURE_NAMES) {
-				document.getElementById('udlr_' + gestureName).textContent = s[gestureName] || '-';
-			}
-		}
-		setTimeout(() => {
-			document.getElementById('gesture_radio_' + editTarget).checked = false;
-			document.getElementById('gestureArea').classList.add('transparent');
-			editTarget = null;
-		}, 1);
-	};
-
-	// For options.html ------
 	let executeGesture = e => {
-		let g = ini.gestures[gesture];
+		let g = SimpleGesture.ini.gestures[gesture];
 		if (!g) return true;
 		if (g === 'disableGesture') return toggleIsGestureEnabled();
 		if (!isGestureEnabled) return true;
@@ -163,63 +125,11 @@
 
 	let onTouchEnd = e => {
 		try {
-			clearGestureTimeoutTimer();
-			if (editTarget) {
-				updateGesture();
-			} else {
-				return executeGesture(e);
-			}
+			SimpleGesture.clearGestureTimeoutTimer();
+			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return false;
+			return executeGesture(e);
 		} finally {
 			gesture = null;
-		}
-	};
-
-	let setupOptionsPage = () => {
-		GESTURE_NAMES = [];
-		for (let i in defaultIni.gestures) {
-			GESTURE_NAMES.push(defaultIni.gestures[i]);
-		}
-		let s = swapKeyValue(ini.gestures);
-		let template = document.getElementsByClassName('gesture_template')[0];
-		let setEditTarget = e => {
-			editTarget = e.target.id.replace(/^.+_/, '');
-			document.getElementById('inputedGesture').textContent = '';
-			document.getElementById('gestureArea').classList.remove('transparent');
-		};
-		for (let gestureName of GESTURE_NAMES) {
-			let container = template.cloneNode(true);
-			container.id = gestureName + "_container";
-			container.className = "gesture-container";
-			let toggleRadio = container.getElementsByClassName('toggle-radio')[0];
-			toggleRadio.id = 'gesture_radio_' + gestureName;
-			toggleRadio.addEventListener('click', setEditTarget);
-			let label = container.getElementsByClassName('udlr')[0];
-			label.id = 'udlr_' + gestureName;
-			label.textContent = s[gestureName] || '-';
-			let caption = container.getElementsByClassName('gesture-caption')[0];
-			caption.textContent = gestureName;
-			caption.parentNode.setAttribute('for', toggleRadio.id);
-			template.parentNode.insertBefore(container, template);
-		}
-		document.getElementById('newTab_container').appendChild(document.getElementById('newTabUrl_container'));
-		for (let caption of document.getElementsByClassName('caption')) {
-			caption.textContent = chrome.i18n.getMessage('caption_' + caption.textContent) || caption.textContent;
-		}
-		let onValueChange = e => {
-			ini[e.target.id] = e.target.value;
-			saveIni();
-		};
-		let onRangeInput = e => {
-			document.getElementById(e.target.id + 'Value').textContent = e.target.value;
-		};
-		for (let id of ['newTabUrl', 'timeout', 'strokeSize']) {
-			let rangeElm = document.getElementById(id);
-			rangeElm.value = ini[id] || '';
-			rangeElm.addEventListener('change', onValueChange);
-			if (rangeElm.getAttribute('type') === 'range') {
-				rangeElm.addEventListener('input', onRangeInput);
-				onRangeInput({ target: rangeElm });
-			}
 		}
 	};
 
@@ -231,10 +141,7 @@
 
 	browser.storage.local.get('simple_gesture').then(res => {
 		if (res && res.simple_gesture) {
-			ini = res.simple_gesture;
-		}
-		if (location.href == browser.runtime.getURL('options.html')) {
-			setupOptionsPage();
+			SimpleGesture.ini = res.simple_gesture;
 		}
 	});
 
