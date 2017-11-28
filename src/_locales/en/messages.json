@@ -37,6 +37,12 @@
 	"caption_newTabUrl": {
 		"message": "URL"
 	},
+	"caption_toggleUserAgent": {
+		"message": "Toggle Destop-site"
+	},
+	"caption_userAgent": {
+		"message": "User-Agent"
+	},
 	"caption_disableGesture": {
 		"message": "Toggle disable/enable gestures"
 	},

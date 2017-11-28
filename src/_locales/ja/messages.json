@@ -37,6 +37,12 @@
 	"caption_newTabUrl": {
 		"message": "新しいタブのURL"
 	},
+	"caption_toggleUserAgent": {
+		"message": "PC版サイトモードへ切替"
+	},
+	"caption_userAgent": {
+		"message": "User-Agent"
+	},
 	"caption_disableGesture": {
 		"message": "ジェスチャ無効/有効"
 	},

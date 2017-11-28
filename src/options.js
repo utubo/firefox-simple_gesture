@@ -2,7 +2,22 @@
 	'use strict';
 
 	// const -------------
-	let GESTURE_NAMES; // set up in 'setupGestureNames()'
+	let GESTURE_NAMES = [
+		'forward',
+		'back',
+		'top',
+		'bottom',
+		'nextTab',
+		'prevTab',
+		'reload',
+		'close',
+		'newTab',
+		'toggleUserAgent',
+		'disableGesture'
+	];
+	let INSTEAD_OF_EMPTY = {
+		'userAgent': navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux')
+	};
 
 	// fields ------------
 	let editTarget = null;
@@ -39,13 +54,6 @@
 		}, 1);
 	};
 
-	let setupGestureNames = () => {
-		GESTURE_NAMES = [];
-		for (let i in SimpleGesture.defaultIni.gestures) {
-			GESTURE_NAMES.push(SimpleGesture.defaultIni.gestures[i]);
-		}
-	};
-
 	let setupGestureInputBox = () => {
 		let gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
 		// gestures
@@ -78,16 +86,22 @@
 			if (!caption.textContent) continue;
 			caption.textContent = chrome.i18n.getMessage('caption_' + caption.textContent) || caption.textContent;
 		}
+		document.getElementById('toggleUserAgent_container').appendChild(document.getElementById('userAgent_container'));
+		document.getElementById('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
 		let onValueChange = e => {
-			SimpleGesture.ini[e.target.id] = e.target.value;
+			if (e.target.value === INSTEAD_OF_EMPTY[e.target.id]) {
+				SimpleGesture.ini[e.target.id] = null;
+			} else {
+				SimpleGesture.ini[e.target.id] = e.target.value;
+			}
 			saveIni();
 		};
 		let onRangeInput = e => {
 			document.getElementById(e.target.id + 'Value').textContent = e.target.value;
 		};
-		for (let id of ['newTabUrl', 'timeout', 'strokeSize']) {
+		for (let id of ['newTabUrl', 'timeout', 'strokeSize', 'userAgent']) {
 			let rangeElm = document.getElementById(id);
-			rangeElm.value = SimpleGesture.ini[id] || '';
+			rangeElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
 			rangeElm.addEventListener('change', onValueChange);
 			if (rangeElm.getAttribute('type') === 'range') {
 				rangeElm.addEventListener('input', onRangeInput);
@@ -120,7 +134,6 @@
 		if (res && res.simple_gesture) {
 			SimpleGesture.ini = res.simple_gesture;
 		}
-		setupGestureNames();
 		setupGestureInputBox();
 		setupOtherOptions();
 	});

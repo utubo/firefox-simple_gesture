@@ -1,3 +1,7 @@
+body {
+	color: #333;
+}
+
 .gesture_template {
 	display: none;
 }
@@ -5,7 +9,7 @@
 .container,
 .gesture-container {
 	display: block;
-	margin: 1em 0;
+	margin-bottom: 1.5em;
 }
 
 .container-sub {
@@ -17,6 +21,13 @@
 	font-size: 120%;
 	display: block;
 	margin-bottom: .2em;
+}
+
+.caption-sub {
+	border-bottom: none;
+	font-size: 100%;
+	display: block;
+	margin: 0;
 }
 
 .text-input {

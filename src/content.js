@@ -10,7 +10,6 @@ SimpleGesture.defaultIni = {
 		'D-R-U': 'reload',
 		'L-D-R': 'close',
 		'R-D-L': 'newTab',
-		'R-L-R-L': 'disableGesture'
 	},
 	'strokeSize': 32,
 	'timeout': 1500
@@ -31,7 +30,7 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 	let timeoutId = null;
 	let isGestureEnabled = true;
 
-	// functions ---------
+	// utils -------------
 	let getX = e => e.touches ? e.touches[0].clientX: e.pageX;
 	let getY = e => e.touches ? e.touches[0].clientY: e.pageY;
 
@@ -47,6 +46,7 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 		}
 	};
 
+	// touch-events ------
 	let onTouchStart = e => {
 		gesture = '';
 		SimpleGesture.clearGestureTimeoutTimer();
@@ -86,25 +86,17 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 		}
 	};
 
-	let scrollBehaviorBackup = null;
-	let smoothScroll = y  => {
-		if (scrollBehaviorBackup === null) {
-			scrollBehaviorBackup = document.body.style.scrollBehavior;
+	let onTouchEnd = e => {
+		try {
+			SimpleGesture.clearGestureTimeoutTimer();
+			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return false;
+			return executeGesture(e);
+		} finally {
+			gesture = null;
 		}
-		document.body.style.scrollBehavior = 'smooth';
-		setTimeout(() => { window.scrollTo(0, y); }, 1);
-		setTimeout(() => {
-			document.body.style.scrollBehavior = scrollBehaviorBackup;
-			scrollBehaviorBackup = null;
-		}, 1000);
 	};
 
-	let toggleIsGestureEnabled = () => {
-		isGestureEnabled = !isGestureEnabled;
-		alert(chrome.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
-		return false;
-	};
-
+	// execute gesture ---
 	let executeGesture = e => {
 		let g = SimpleGesture.ini.gestures[gesture];
 		if (!g) return true;
@@ -116,21 +108,30 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 			case 'top': smoothScroll(0); break;
 			case 'bottom': smoothScroll(document.body.scrollHeight); break;
 			case 'reload': location.reload(); break;
-			default: browser.runtime.sendMessage(g, (res) => {}); break;
+			default: browser.runtime.sendMessage(g, (res) => {
+				if (res) alert(res);
+			});
 		}
 		e.stopPropagation();
 		e.preventDefault();
 		return false;
 	};
 
-	let onTouchEnd = e => {
-		try {
-			SimpleGesture.clearGestureTimeoutTimer();
-			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return false;
-			return executeGesture(e);
-		} finally {
-			gesture = null;
-		}
+	let scrollBehaviorBackup = null;
+	let smoothScroll = y  => {
+		scrollBehaviorBackup = scrollBehaviorBackup || document.body.style.scrollBehavior;
+		document.body.style.scrollBehavior = 'smooth';
+		setTimeout(() => { window.scrollTo(0, y); });
+		setTimeout(() => {
+			document.body.style.scrollBehavior = scrollBehaviorBackup;
+			scrollBehaviorBackup = null;
+		}, 1000);
+	};
+
+	let toggleIsGestureEnabled = () => {
+		isGestureEnabled = !isGestureEnabled;
+		alert(chrome.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
+		return false;
 	};
 
 	// START HERE ! ------
