@@ -23,6 +23,7 @@
 	let editTarget = null;
 
 	// functions ---------
+	let byId = id => document.getElementById(id);
 	let swapKeyValue = m => {
 		let s = {};
 		for (let key in m) {
@@ -44,12 +45,12 @@
 			SimpleGesture.ini.gestures = swapKeyValue(gestureValues);
 			saveIni();
 			for (let gestureName of GESTURE_NAMES) {
-				document.getElementById('udlr_' + gestureName).textContent = gestureValues[gestureName] || '-';
+				byId('udlr_' + gestureName).textContent = gestureValues[gestureName] || '-';
 			}
 		}
 		setTimeout(() => {
-			document.getElementById('gesture_radio_' + editTarget).checked = false;
-			document.getElementById('gestureArea').classList.add('transparent');
+			byId('gesture_radio_' + editTarget).checked = false;
+			byId('gestureArea').classList.add('transparent');
 			editTarget = null;
 		}, 1);
 	};
@@ -60,8 +61,9 @@
 		let template = document.getElementsByClassName('gesture_template')[0];
 		let setEditTarget = e => {
 			editTarget = e.target.id.replace(/^.+_/, '');
-			document.getElementById('inputedGesture').textContent = '';
-			document.getElementById('gestureArea').classList.remove('transparent');
+			byId('editTarget').textContent = byId('caption_' + editTarget).textContent;
+			byId('inputedGesture').textContent = '';
+			byId('gestureArea').classList.remove('transparent');
 		};
 		for (let gestureName of GESTURE_NAMES) {
 			let container = template.cloneNode(true);
@@ -74,6 +76,7 @@
 			label.id = 'udlr_' + gestureName;
 			label.textContent = gestureValues[gestureName] || '-';
 			let caption = container.getElementsByClassName('gesture-caption')[0];
+			caption.id = 'caption_' + gestureName;
 			caption.textContent = gestureName;
 			caption.parentNode.setAttribute('for', toggleRadio.id);
 			template.parentNode.insertBefore(container, template);
@@ -81,13 +84,13 @@
 	};
 
 	let setupOtherOptions = () => {
-		document.getElementById('newTab_container').appendChild(document.getElementById('newTabUrl_container'));
+		byId('newTab_container').appendChild(byId('newTabUrl_container'));
 		for (let caption of document.getElementsByClassName('caption')) {
 			if (!caption.textContent) continue;
 			caption.textContent = chrome.i18n.getMessage('caption_' + caption.textContent) || caption.textContent;
 		}
-		document.getElementById('toggleUserAgent_container').appendChild(document.getElementById('userAgent_container'));
-		document.getElementById('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
+		byId('toggleUserAgent_container').appendChild(byId('userAgent_container'));
+		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
 		let onValueChange = e => {
 			if (e.target.value === INSTEAD_OF_EMPTY[e.target.id]) {
 				SimpleGesture.ini[e.target.id] = null;
@@ -97,10 +100,10 @@
 			saveIni();
 		};
 		let onRangeInput = e => {
-			document.getElementById(e.target.id + 'Value').textContent = e.target.value;
+			byId(e.target.id + 'Value').textContent = e.target.value;
 		};
 		for (let id of ['newTabUrl', 'timeout', 'strokeSize', 'userAgent']) {
-			let rangeElm = document.getElementById(id);
+			let rangeElm = byId(id);
 			rangeElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
 			rangeElm.addEventListener('change', onValueChange);
 			if (rangeElm.getAttribute('type') === 'range') {
@@ -118,7 +121,7 @@
 	};
 	SimpleGesture.onInputGesture = (e, gesture) => {
 		if (!editTarget) return;
-		document.getElementById('inputedGesture').textContent = gesture;
+		byId('inputedGesture').textContent = gesture;
 		e.preventDefault();
 		return false;
 	};

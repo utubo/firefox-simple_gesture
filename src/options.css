@@ -61,12 +61,12 @@ body {
 	transition: opacity .5s;
 	width: 100%;
 }
-#inputedGesture {
-	bottom: calc(50% + 120px);
+.gesture-area-label-container {
+	bottom: calc(50% + 110px);
 	color: #fff;
-	font-size: 24px;
+	font-size: 25px;
 	font-weight: bold;
-	line-height: 24px;
+	line-height: 30px;
 	overflow: hidden;
 	position: fixed;
 	text-align: center;
