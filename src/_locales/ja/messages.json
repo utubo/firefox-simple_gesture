@@ -38,7 +38,7 @@
 		"message": "新しいタブのURL"
 	},
 	"caption_toggleUserAgent": {
-		"message": "PC版サイトモードへ切替"
+		"message": "PCサイトモード切替"
 	},
 	"caption_userAgent": {
 		"message": "User-Agent"
