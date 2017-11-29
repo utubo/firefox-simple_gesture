@@ -28,7 +28,7 @@
 		let s = {};
 		for (let key in m) {
 			let value = m[key];
-			s[value] = key;
+			if (value) s[value] = key;
 		}
 		return s;
 	};
@@ -37,7 +37,7 @@
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
 	};
 
-	let updateGesture = (gesture) => {
+	let updateGesture = gesture => {
 		if (gesture) {
 			SimpleGesture.ini.gestures[gesture] = null;
 			let gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
@@ -48,11 +48,9 @@
 				byId('udlr_' + gestureName).textContent = gestureValues[gestureName] || '-';
 			}
 		}
-		setTimeout(() => {
-			byId('gesture_radio_' + editTarget).checked = false;
-			byId('gestureArea').classList.add('transparent');
-			editTarget = null;
-		}, 1);
+		byId('gesture_radio_' + editTarget).checked = false;
+		byId('gestureArea').classList.add('transparent');
+		editTarget = null;
 	};
 
 	let setupGestureInputBox = () => {
