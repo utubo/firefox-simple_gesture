@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "1.5",
+	"version": "1.5.2",
 	"default_locale": "en",
 
 	"applications": {
@@ -26,7 +26,7 @@
 		{
 			"matches": ["*://*/*"],
 			"js": ["content.js"],
-			"run_at": "document_end"
+			"run_at": "document_start"
 		}
 	],
 
