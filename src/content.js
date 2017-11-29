@@ -89,8 +89,11 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 	let onTouchEnd = e => {
 		try {
 			SimpleGesture.clearGestureTimeoutTimer();
-			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return false;
-			return executeGesture(e);
+			if (executeGesture(e)) return true;
+			// cancel event when gesture executed
+			e.stopPropagation();
+			e.preventDefault();
+			return false;
 		} finally {
 			gesture = null;
 		}
@@ -98,22 +101,19 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 
 	// execute gesture ---
 	let executeGesture = e => {
+		if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return false; // for options.html
 		let g = SimpleGesture.ini.gestures[gesture];
-		if (!g) return true;
 		if (g === 'disableGesture') return toggleIsGestureEnabled();
 		if (!isGestureEnabled) return true;
+		if (!g) return true;
 		switch (g) {
 			case 'forward': history.forward(); break;
 			case 'back': history.back(); break;
 			case 'top': smoothScroll(0); break;
 			case 'bottom': smoothScroll(document.body.scrollHeight); break;
 			case 'reload': location.reload(); break;
-			default: browser.runtime.sendMessage(g, (res) => {
-				if (res) alert(res);
-			});
+			default: browser.runtime.sendMessage(g, (res) => {});
 		}
-		e.stopPropagation();
-		e.preventDefault();
 		return false;
 	};
 
@@ -121,7 +121,7 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 	let smoothScroll = y  => {
 		scrollBehaviorBackup = scrollBehaviorBackup || document.body.style.scrollBehavior;
 		document.body.style.scrollBehavior = 'smooth';
-		setTimeout(() => { window.scrollTo(0, y); });
+		window.scrollTo(0, y);
 		setTimeout(() => {
 			document.body.style.scrollBehavior = scrollBehaviorBackup;
 			scrollBehaviorBackup = null;
