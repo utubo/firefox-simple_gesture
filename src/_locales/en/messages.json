@@ -8,10 +8,10 @@
 		"description": "Description of the extension."
 	},
 	"caption_forward": {
-		"message": "forward"
+		"message": "Forward"
 	},
 	"caption_back": {
-		"message": "back"
+		"message": "Back"
 	},
 	"caption_top": {
 		"message": "Scroll to top"
