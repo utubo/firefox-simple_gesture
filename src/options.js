@@ -24,6 +24,7 @@
 
 	// functions ---------
 	let byId = id => document.getElementById(id);
+	let byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
 	let swapKeyValue = m => {
 		let s = {};
 		for (let key in m) {
@@ -37,6 +38,16 @@
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
 	};
 
+	let updateUDLRLabel = (label, udlr) => {
+		if (udlr) {
+			label.textContent = udlr;
+			label.classList.remove('udlr-na');
+		} else {
+			label.textContent = '-';
+			label.classList.add('udlr-na');
+		}
+	};
+
 	let updateGesture = gesture => {
 		if (gesture) {
 			SimpleGesture.ini.gestures[gesture] = null;
@@ -45,7 +56,7 @@
 			SimpleGesture.ini.gestures = swapKeyValue(gestureValues);
 			saveIni();
 			for (let gestureName of GESTURE_NAMES) {
-				byId('udlr_' + gestureName).textContent = gestureValues[gestureName] || '-';
+				 updateUDLRLabel(byId('udlr_' + gestureName), gestureValues[gestureName]);
 			}
 		}
 		byId('gesture_radio_' + editTarget).checked = false;
@@ -56,7 +67,7 @@
 	let setupGestureInputBox = () => {
 		let gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
 		// gestures
-		let template = document.getElementsByClassName('gesture_template')[0];
+		let template = byClass(document, 'gesture_template');
 		let setEditTarget = e => {
 			editTarget = e.target.id.replace(/^.+_/, '');
 			byId('editTarget').textContent = byId('caption_' + editTarget).textContent;
@@ -67,13 +78,13 @@
 			let container = template.cloneNode(true);
 			container.id = gestureName + "_container";
 			container.className = "gesture-container";
-			let toggleRadio = container.getElementsByClassName('toggle-radio')[0];
+			let toggleRadio = byClass(container, 'toggle-radio');
 			toggleRadio.id = 'gesture_radio_' + gestureName;
 			toggleRadio.addEventListener('click', setEditTarget);
-			let label = container.getElementsByClassName('udlr')[0];
+			let label = byClass(container, 'udlr');
 			label.id = 'udlr_' + gestureName;
-			label.textContent = gestureValues[gestureName] || '-';
-			let caption = container.getElementsByClassName('gesture-caption')[0];
+			updateUDLRLabel(label, gestureValues[gestureName]);
+			let caption = byClass(container, 'gesture-caption');
 			caption.id = 'caption_' + gestureName;
 			caption.textContent = gestureName;
 			caption.parentNode.setAttribute('for', toggleRadio.id);

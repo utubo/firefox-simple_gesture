@@ -1,5 +1,14 @@
 body {
-	color: #333;
+	background: #f9f9fa;
+	color: #444;
+	margin: 0;
+}
+
+.title {
+	background: #f0f0f0;
+	border-bottom: 2px solid #0099ff;
+	font-weight: bold;
+	padding: 1em;
 }
 
 .gesture_template {
@@ -8,35 +17,38 @@ body {
 
 .container,
 .gesture-container {
+	border-bottom: 1px solid #d7d7db;
 	display: block;
-	margin-bottom: 1.5em;
+	padding: .5em 1em;
 }
 
 .container-sub {
-	margin: 0 0 0 1em;
+	border-bottom: none;
+	margin-left: 1em;
 }
 
 .caption {
-	border-bottom: 1px solid #3cf;
-	font-size: 120%;
+	color: #0c0c0d;
 	display: block;
-	margin-bottom: .2em;
+	font-size: 120%;
 }
 
 .caption-sub {
-	border-bottom: none;
-	font-size: 100%;
 	display: block;
+	font-size: 100%;
 	margin: 0;
 }
 
 .text-input {
-	width: 90%;
+	width: 100%;
 }
 
 .udlr {
 	display: block;
-	font-weight: bold;
+}
+
+.udlr-na {
+	color: #f33;
 }
 
 .toggle-radio {
