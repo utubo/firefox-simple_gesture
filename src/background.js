@@ -40,10 +40,10 @@
 			});
 		},
 		prevTab: tab => {
-			exec.showTab((tab.index || 0) - 1); // sometimes "tab.index" may be broken...
+			exec.showTab(tab.index - 1);
 		},
 		nextTab: tab => {
-			exec.showTab((tab.index || 0) + 1); // sometimes "tab.index" may be broken...
+			exec.showTab(tab.index + 1);
 		},
 		toggleUserAgent: tab => {
 			if (userAgent) {
@@ -66,7 +66,13 @@
 
 	browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 		let f = exec[msg];
-		f && f(sender.tab);
+		if (!f) return;
+		if (sender.tab) {
+			f(sender.tab);
+		} else {
+			// Somtimes sender.tab is undefined.
+			browser.tabs.query({ active: true }).then(tabs => { f(tabs[0]); });
+		}
 	});
 
 })();
