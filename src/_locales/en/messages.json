@@ -46,11 +46,17 @@
 	"caption_disableGesture": {
 		"message": "Toggle disable/enable gestures"
 	},
+	"caption_timeoutAndStrokeSize": {
+		"message": "Timeout and Stroke-size"
+	},
 	"caption_timeout": {
 		"message": "Timeout"
 	},
 	"caption_strokeSize": {
 		"message": "Stroke-size"
+	},
+	"caption_drawSquare": {
+		"message": "Draw a small square."
 	},
 	"caption_basedOn320x480": {
 		"message": "(Based on screen size is 320 x 480.)"
@@ -62,5 +68,4 @@
 		"message": "Simple-Gesuture is enabled."
 	}
 }
-
 

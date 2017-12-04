@@ -29,17 +29,17 @@
 			</datalist>
 		</div>
 
-		<div class="container">
-			<label for="timeout" class="caption">timeout</label>
-			<input id="timeout" type="range" min="1" max="5000">
-			<span id="timeoutValue" class="range-value"></span>ms
-		</div>
-
-		<div class="container">
-			<label for="strokeSize" class="caption">strokeSize</label>
-			<div class="caption note">basedOn320x480</div>
-			<input id="strokeSize" type="range" min="1" max="255">
-			<span id="strokeSizeValue" class="range-value"></span>px
+		<div id="timeoutAndStrokeSize" class="container">
+			<label class="caption">TimeoutAndStrokeSize</label>
+			<div class="container container-sub">
+				<label for="timeout" class="caption caption-sub">timeout</label>
+				<input id="timeout" type="number" min="0" max="9999" size="5">ms
+			</div>
+			<div class="container container-sub">
+				<label for="strokeSize" class="caption caption-sub">strokeSize</label>
+				<div class="caption note">basedOn320x480</div>
+				<input id="strokeSize" type="number" min="1" max="999" size="5">px
+			</div>
 		</div>
 
 		<div id="gestureArea" class="gesture-area-back transparent">
@@ -47,8 +47,15 @@
 				<span id="editTarget" ></span><br>
 				<span id="inputedGesture"></span><br>
 			</div>
-			<div class="gesture-area-box">
+			<div class="gesture-area-box"></div>
+		</div>
+
+		<div id="addjustBox" class="gesture-area-back transparent">
+			<div class="gesture-area-label-container">
+				<span class="caption caption-adjustbox">TimeoutAndStrokeSize</span><br>
+				<span class="caption caption-adjustbox">DrawSquare</span><br>
 			</div>
+			<div class="gesture-area-box"></div>
 		</div>
 	</body>
 	<script src="content.js"></script>

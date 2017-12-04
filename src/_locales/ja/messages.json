@@ -46,11 +46,17 @@
 	"caption_disableGesture": {
 		"message": "ジェスチャ無効/有効"
 	},
-	"caption_timeout": {
-		"message": "タイムアウト時間"
+	"caption_timeoutAndStrokeSize": {
+		"message": "タイムアウトと辺のサイズ"
 	},
 	"caption_strokeSize": {
 		"message": "辺のサイズ"
+	},
+	"caption_timeout": {
+		"message": "タイムアウト"
+	},
+	"caption_drawSquare": {
+		"message": "指で小さめに四角を描いてください"
 	},
 	"caption_basedOn320x480": {
 		"message": "(画面サイズ320x480基準)"

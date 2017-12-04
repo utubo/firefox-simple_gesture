@@ -22,6 +22,11 @@
 
 	// fields ------------
 	let editTarget = null;
+	let minX;
+	let maxX;
+	let minY;
+	let maxY;
+	let startTime = null;
 
 	// functions ---------
 	let byId = id => document.getElementById(id);
@@ -67,6 +72,64 @@
 		editTarget = null;
 	};
 
+	let updateTimeoutAndStrokeSize = () => {
+		byId('timeout').value = SimpleGesture.ini.timeout;
+		byId('strokeSize').value = SimpleGesture.ini.strokeSize;
+	};
+
+	let setupAddjustBox = () => {
+		let box = byId('addjustBox');
+		let getX = e => e.touches ? e.touches[0].clientX: e.pageX;
+		let getY = e => e.touches ? e.touches[0].clientY: e.pageY;
+		box.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', e => {
+			let x = getX(e);
+			let y = getY(e);
+			minX = x;
+			minY = y;
+			maxX = x;
+			maxY = y;
+			startTime = new Date();
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		box.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', e => {
+			if (!startTime) return;
+			let x = getX(e);
+			let y = getY(e);
+			minX = Math.min(x, minX);
+			minY = Math.min(y, minY);
+			maxX = Math.max(x, maxX);
+			maxY = Math.max(y, maxY);
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		box.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', e => {
+			let size = Math.max(maxX - minX, maxY - minY);
+			size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
+			size *= 0.8; // margin
+			size = size^0; // to integer;
+			if (10 < size) {
+				SimpleGesture.ini.timeout = new Date() - startTime;
+				SimpleGesture.ini.strokeSize = size;
+				saveIni();
+				updateTimeoutAndStrokeSize();
+			}
+			startTime = null;
+			box.classList.add('transparent');
+			window.setTimeout(() => {
+				byId('timeout').classList.remove('editing');
+				byId('strokeSize').classList.remove('editing');
+			}, 2000);
+		});
+		byId('timeoutAndStrokeSize').addEventListener('click', e => {
+			if (e.target.tagName === 'INPUT') return;
+			box.classList.remove('transparent');
+			byId('timeout').classList.add('editing');
+			byId('strokeSize').classList.add('editing');
+			e.preventDefault();
+		});
+	};
+
 	let setupGestureInputBox = () => {
 		let gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
 		// gestures
@@ -106,22 +169,18 @@
 		let onValueChange = e => {
 			if (e.target.value === INSTEAD_OF_EMPTY[e.target.id]) {
 				SimpleGesture.ini[e.target.id] = null;
+			} else if (e.target.type === "number" && e.target.value.match(/[^\d]/)) {
+				// invalid number.
+				return;
 			} else {
 				SimpleGesture.ini[e.target.id] = e.target.value;
 			}
 			saveIni();
 		};
-		let onRangeInput = e => {
-			byId(e.target.id + 'Value').textContent = e.target.value;
-		};
-		for (let id of ['newTabUrl', 'timeout', 'strokeSize', 'userAgent']) {
+		for (let id of ['newTabUrl', 'userAgent', 'timeout', 'strokeSize']) {
 			let inputElm = byId(id);
 			inputElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
 			inputElm.addEventListener('change', onValueChange);
-			if (inputElm.getAttribute('type') === 'range') {
-				inputElm.addEventListener('input', onRangeInput);
-				onRangeInput({ target: inputElm });
-			}
 		}
 	};
 
@@ -151,6 +210,7 @@
 		}
 		setupGestureInputBox();
 		setupOtherOptions();
+		setupAddjustBox();
 	});
 
 })();
