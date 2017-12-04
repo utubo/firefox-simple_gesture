@@ -11,16 +11,14 @@ SimpleGesture.defaultIni = {
 		'L-D-R': 'close',
 		'R-D-L': 'newTab',
 	},
-	'strokeSize': 32,
+	'strokeSize': 50,
 	'timeout': 1500
 };
 SimpleGesture.ini = SimpleGesture.defaultIni;
+SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore if gesture is over 19 characters.
 
 (() => {
 	'use strict';
-
-	// const -------------
-	let MAX_LENGTH = 16;
 
 	// fields ------------
 	let gesture = null;
@@ -41,7 +39,7 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 
 	SimpleGesture.clearGestureTimeoutTimer = () => { // options.js uses this function. TODO: Fix this dirty code.
 		if (timeoutId) {
-			clearTimeout(timeoutId);
+			window.clearTimeout(timeoutId);
 			timeoutId = null;
 		}
 	};
@@ -50,8 +48,8 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 	let onTouchStart = e => {
 		gesture = '';
 		SimpleGesture.clearGestureTimeoutTimer();
-		timeoutId = setTimeout(resetGesture, SimpleGesture.ini.timeout);
-		SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e, gesture);
+		timeoutId = window.setTimeout(resetGesture, SimpleGesture.ini.timeout);
+		SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e);
 		lx = getX(e);
 		ly = getY(e);
 		lg = null;
@@ -59,7 +57,7 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 
 	let onTouchMove = e => {
 		if (gesture === null) return;
-		if (gesture.length > MAX_LENGTH) return;
+		if (gesture.length >= SimpleGesture.MAX_LENGTH) return;
 		if (e.touches && e.touches[1]) { // not support two fingers
 			resetGesture();
 			return;
@@ -68,22 +66,17 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 		let y = getY(e);
 		let dx = x - lx;
 		let dy = y - ly;
-		let g = '';
-		if (Math.abs(dx) < Math.abs(dy)) {
-			if (dy <= - SimpleGesture.ini.strokeSize) g = 'U';
-			else if (dy >= SimpleGesture.ini.strokeSize) g = 'D';
-		} else {
-			if (dx <= - SimpleGesture.ini.strokeSize) g = 'L';
-			else if (dx >= SimpleGesture.ini.strokeSize) g = 'R';
-		}
-		if (g && g != lg) {
-			if (gesture) gesture += '-';
-			gesture += g;
-			lx = x;
-			ly = y;
-			lg = g;
-			SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture);
-		}
+		let absX = dx < 0 ? -dx : dx;
+		let absY = dy < 0 ? -dy : dy;
+		if (absX < SimpleGesture.ini.strokeSize && absY < SimpleGesture.ini.strokeSize) return;
+		let g = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
+		if (g === lg) return;
+		if (gesture) gesture += '-';
+		gesture += g;
+		lx = x;
+		ly = y;
+		lg = g;
+		SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture);
 	};
 
 	let onTouchEnd = e => {
@@ -118,11 +111,11 @@ SimpleGesture.ini = SimpleGesture.defaultIni;
 	};
 
 	let scrollBehaviorBackup = null;
-	let smoothScroll = y  => {
+	let smoothScroll = y => {
 		scrollBehaviorBackup = scrollBehaviorBackup || document.body.style.scrollBehavior;
 		document.body.style.scrollBehavior = 'smooth';
 		window.scrollTo(0, y);
-		setTimeout(() => {
+		window.setTimeout(() => {
 			document.body.style.scrollBehavior = scrollBehaviorBackup;
 			scrollBehaviorBackup = null;
 		}, 1000);

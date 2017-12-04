@@ -18,13 +18,16 @@
 	let INSTEAD_OF_EMPTY = {
 		'userAgent': navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux')
 	};
+	let MAX_INPUT_LENGTH = SimpleGesture.MAX_LENGTH - 2;
 
 	// fields ------------
 	let editTarget = null;
 
 	// functions ---------
 	let byId = id => document.getElementById(id);
+
 	let byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
+
 	let swapKeyValue = m => {
 		let s = {};
 		for (let key in m) {
@@ -112,17 +115,17 @@
 			byId(e.target.id + 'Value').textContent = e.target.value;
 		};
 		for (let id of ['newTabUrl', 'timeout', 'strokeSize', 'userAgent']) {
-			let rangeElm = byId(id);
-			rangeElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
-			rangeElm.addEventListener('change', onValueChange);
-			if (rangeElm.getAttribute('type') === 'range') {
-				rangeElm.addEventListener('input', onRangeInput);
-				onRangeInput({ target: rangeElm });
+			let inputElm = byId(id);
+			inputElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
+			inputElm.addEventListener('change', onValueChange);
+			if (inputElm.getAttribute('type') === 'range') {
+				inputElm.addEventListener('input', onRangeInput);
+				onRangeInput({ target: inputElm });
 			}
 		}
 	};
 
-	SimpleGesture.onGestureStart = (e, gesture) => {
+	SimpleGesture.onGestureStart = e => {
 		if (editTarget) {
 			SimpleGesture.clearGestureTimeoutTimer(); // Don't timeout, when editing gesture.
 			e.preventDefault();
@@ -130,13 +133,13 @@
 	};
 	SimpleGesture.onInputGesture = (e, gesture) => {
 		if (!editTarget) return;
-		byId('inputedGesture').textContent = gesture;
+		byId('inputedGesture').textContent = gesture.substring(0, MAX_INPUT_LENGTH);
 		e.preventDefault();
 		return false;
 	};
 	SimpleGesture.onGestured = (e, gesture) => {
 		if (!editTarget) return;
-		updateGesture(gesture);
+		updateGesture(gesture.substring(0, MAX_INPUT_LENGTH));
 		e.preventDefault();
 		return false;
 	};
