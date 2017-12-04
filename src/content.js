@@ -45,8 +45,18 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 		}
 	};
 
+	let lastInnerWidth = 0;
+	let fixSize = () => {
+		let w = window.innerWidth;
+		if (w === lastInnerWidth) return;
+		let z = Math.min(w, window.innerHeight) / 320;
+		size = (SimpleGesture.ini.strokeSize * z)^0;
+	};
+
 	// touch-events ------
 	let onTouchStart = e => {
+		fixSize();
+		if (!size) return;
 		gesture = '';
 		SimpleGesture.clearGestureTimeoutTimer();
 		timeoutId = window.setTimeout(resetGesture, SimpleGesture.ini.timeout);
@@ -128,32 +138,17 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 		return false;
 	};
 
-	let fixSizeTimeoutId = null;
-	let fixSize = () => {
-		let z = Math.min(window.innerWidth, window.innerHeight) / 320;
-		size = (SimpleGesture.ini.strokeSize * z)^0;
-		fixSizeTimeoutId = null;
-	};
-	let fixSizeQueue = e => {
-		if (fixSizeTimeoutId) {
-			window.clearTimeout(fixSizeTimeoutId);
-		}
-		fixSizeTimeoutId = window.setTimeout(fixSize, 500);
-	};
-
 	// START HERE ! ------
 	// mouse event is for Test on Desktop
 	window.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', onTouchStart);
 	window.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', onTouchMove);
 	window.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', onTouchEnd);
-	window.addEventListener('resize', fixSize);
+	//window.visualViewport.addEventListener('resize', fixSize); VisualViewport is draft. :(
 
 	browser.storage.local.get('simple_gesture').then(res => {
 		if (res && res.simple_gesture) {
 			SimpleGesture.ini = res.simple_gesture;
 		}
-	}).finally(() => {
-		fixSize();
 	});
 
 })();
