@@ -27,6 +27,7 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 	let lg = null; // lastGesture
 	let timeoutId = null;
 	let isGestureEnabled = true;
+	let size = SimpleGesture.ini.strokeSize;
 
 	// utils -------------
 	let getX = e => e.touches ? e.touches[0].clientX: e.pageX;
@@ -68,7 +69,7 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 		let dy = y - ly;
 		let absX = dx < 0 ? -dx : dx;
 		let absY = dy < 0 ? -dy : dy;
-		if (absX < SimpleGesture.ini.strokeSize && absY < SimpleGesture.ini.strokeSize) return;
+		if (absX < size && absY < size) return;
 		let g = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
 		if (g === lg) return;
 		if (gesture) gesture += '-';
@@ -127,16 +128,32 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 		return false;
 	};
 
+	let fixSizeTimeoutId = null;
+	let fixSize = () => {
+		let z = Math.min(window.innerWidth, window.innerHeight) / 320;
+		size = (SimpleGesture.ini.strokeSize * z)^0;
+		fixSizeTimeoutId = null;
+	};
+	let fixSizeQueue = e => {
+		if (fixSizeTimeoutId) {
+			window.clearTimeout(fixSizeTimeoutId);
+		}
+		fixSizeTimeoutId = window.setTimeout(fixSize, 500);
+	};
+
 	// START HERE ! ------
 	// mouse event is for Test on Desktop
 	window.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', onTouchStart);
 	window.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', onTouchMove);
 	window.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', onTouchEnd);
+	window.addEventListener('resize', fixSize);
 
 	browser.storage.local.get('simple_gesture').then(res => {
 		if (res && res.simple_gesture) {
 			SimpleGesture.ini = res.simple_gesture;
 		}
+	}).finally(() => {
+		fixSize();
 	});
 
 })();

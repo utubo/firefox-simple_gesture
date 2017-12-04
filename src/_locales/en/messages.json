@@ -52,6 +52,9 @@
 	"caption_strokeSize": {
 		"message": "Stroke-size"
 	},
+	"caption_basedOn320x480": {
+		"message": "(Based on screen size is 320 x 480.)"
+	},
 	"message_gesture_is_disabled": {
 		"message": "Simple-Gesuture is disabled."
 	},

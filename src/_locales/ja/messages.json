@@ -52,6 +52,9 @@
 	"caption_strokeSize": {
 		"message": "辺のサイズ"
 	},
+	"caption_basedOn320x480": {
+		"message": "(画面サイズ320x480基準)"
+	},
 	"message_gesture_is_disabled": {
 		"message": "ジェスチャ無効"
 	},
