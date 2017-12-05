@@ -58,6 +58,9 @@
 	"caption_drawSquare": {
 		"message": "Draw a small square."
 	},
+	"caption_deleteGesture": {
+		"message": "Delete"
+	},
 	"caption_basedOn320x480": {
 		"message": "(Based on screen size is 320 x 480.)"
 	},

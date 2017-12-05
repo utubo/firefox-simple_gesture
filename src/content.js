@@ -30,19 +30,18 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 	let size = SimpleGesture.ini.strokeSize;
 
 	// utils -------------
-	let getX = e => e.touches ? e.touches[0].clientX: e.pageX;
-	let getY = e => e.touches ? e.touches[0].clientY: e.pageY;
-
-	let resetGesture = e => {
-		gesture = null;
-		timeoutId = null;
-	};
+	SimpleGesture.getXY = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.pageX, e.pageY];
 
 	SimpleGesture.clearGestureTimeoutTimer = () => { // options.js uses this function. TODO: Fix this dirty code.
 		if (timeoutId) {
 			window.clearTimeout(timeoutId);
 			timeoutId = null;
 		}
+	};
+
+	let resetGesture = e => {
+		gesture = null;
+		timeoutId = null;
 	};
 
 	let lastInnerWidth = 0;
@@ -61,8 +60,7 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 		SimpleGesture.clearGestureTimeoutTimer();
 		timeoutId = window.setTimeout(resetGesture, SimpleGesture.ini.timeout);
 		SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e);
-		lx = getX(e);
-		ly = getY(e);
+		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
 	};
 
@@ -73,8 +71,7 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 			resetGesture();
 			return;
 		}
-		let x = getX(e);
-		let y = getY(e);
+		let [x, y] = SimpleGesture.getXY(e);
 		let dx = x - lx;
 		let dy = y - ly;
 		let absX = dx < 0 ? -dx : dx;
@@ -138,13 +135,16 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 		return false;
 	};
 
-	// START HERE ! ------
-	// mouse event is for Test on Desktop
-	window.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', onTouchStart);
-	window.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', onTouchMove);
-	window.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', onTouchEnd);
-	//window.visualViewport.addEventListener('resize', fixSize); VisualViewport is draft. :(
+	SimpleGesture.addTouchEventListener = (target, events) => {
+		// mouse event is for Test on Desktop
+		target.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', events.start);
+		target.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', events.move);
+		target.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', events.end);
+		//window.visualViewport.addEventListener('resize', fixSize); VisualViewport is draft. :(
+	};
 
+	// START HERE ! ------
+	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
 	browser.storage.local.get('simple_gesture').then(res => {
 		if (res && res.simple_gesture) {
 			SimpleGesture.ini = res.simple_gesture;

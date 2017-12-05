@@ -61,6 +61,9 @@
 	"caption_basedOn320x480": {
 		"message": "(画面サイズ320x480基準)"
 	},
+	"caption_deleteGesture": {
+		"message": "削除"
+	},
 	"message_gesture_is_disabled": {
 		"message": "ジェスチャ無効"
 	},

@@ -28,7 +28,7 @@
 	let maxY;
 	let startTime = null;
 
-	// functions ---------
+	// utils -------------
 	let byId = id => document.getElementById(id);
 
 	let byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
@@ -42,11 +42,12 @@
 		return s;
 	};
 
+	// functions ---------
 	let saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
 	};
 
-	let updateUDLRLabel = (label, udlr) => {
+	let refreshUDLRLabel = (label, udlr) => {
 		if (udlr) {
 			label.textContent = udlr;
 			label.classList.remove('udlr-na');
@@ -56,15 +57,20 @@
 		}
 	};
 
+	let DELETE_GESTURE = 'n/a';
 	let updateGesture = gesture => {
 		if (gesture) {
-			SimpleGesture.ini.gestures[gesture] = null;
+			if (gesture === DELETE_GESTURE) {
+				gesture = null;
+			} else {
+				SimpleGesture.ini.gestures[gesture] = null;
+			}
 			let gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
 			gestureValues[editTarget] = gesture;
 			SimpleGesture.ini.gestures = swapKeyValue(gestureValues);
 			saveIni();
 			for (let gestureName of GESTURE_NAMES) {
-				 updateUDLRLabel(byId('udlr_' + gestureName), gestureValues[gestureName]);
+				 refreshUDLRLabel(byId('udlr_' + gestureName), gestureValues[gestureName]);
 			}
 		}
 		byId('gesture_radio_' + editTarget).checked = false;
@@ -72,54 +78,49 @@
 		editTarget = null;
 	};
 
-	let updateTimeoutAndStrokeSize = () => {
+	let refreshTimeoutAndStrokeSize = () => {
 		byId('timeout').value = SimpleGesture.ini.timeout;
 		byId('strokeSize').value = SimpleGesture.ini.strokeSize;
 	};
 
 	let setupAddjustBox = () => {
 		let box = byId('addjustBox');
-		let getX = e => e.touches ? e.touches[0].clientX: e.pageX;
-		let getY = e => e.touches ? e.touches[0].clientY: e.pageY;
-		box.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', e => {
-			let x = getX(e);
-			let y = getY(e);
-			minX = x;
-			minY = y;
-			maxX = x;
-			maxY = y;
-			startTime = new Date();
-			e.preventDefault();
-			e.stopPropagation();
-		});
-		box.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', e => {
-			if (!startTime) return;
-			let x = getX(e);
-			let y = getY(e);
-			minX = Math.min(x, minX);
-			minY = Math.min(y, minY);
-			maxX = Math.max(x, maxX);
-			maxY = Math.max(y, maxY);
-			e.preventDefault();
-			e.stopPropagation();
-		});
-		box.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', e => {
-			let size = Math.max(maxX - minX, maxY - minY);
-			size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
-			size *= 0.8; // margin
-			size = size^0; // to integer;
-			if (10 < size) {
-				SimpleGesture.ini.timeout = new Date() - startTime;
-				SimpleGesture.ini.strokeSize = size;
-				saveIni();
-				updateTimeoutAndStrokeSize();
+		SimpleGesture.addTouchEventListener(box, {
+			start: e => {
+				[minX, minY] = SimpleGesture.getXY(e);
+				[maxX, maxY] = [minX, minY];
+				startTime = new Date();
+				e.preventDefault();
+				e.stopPropagation();
+			},
+			move: e => {
+				if (!startTime) return;
+				let [x, y] = SimpleGesture.getXY(e);
+				minX = Math.min(x, minX);
+				minY = Math.min(y, minY);
+				maxX = Math.max(x, maxX);
+				maxY = Math.max(y, maxY);
+				e.preventDefault();
+				e.stopPropagation();
+			},
+			end: e => {
+				let size = Math.max(maxX - minX, maxY - minY);
+				size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
+				size *= 0.8; // margin
+				size ^= 0; // to integer;
+				if (10 < size) {
+					SimpleGesture.ini.timeout = new Date() - startTime;
+					SimpleGesture.ini.strokeSize = size;
+					saveIni();
+					refreshTimeoutAndStrokeSize();
+				}
+				startTime = null;
+				box.classList.add('transparent');
+				window.setTimeout(() => {
+					byId('timeout').classList.remove('editing');
+					byId('strokeSize').classList.remove('editing');
+				}, 2000);
 			}
-			startTime = null;
-			box.classList.add('transparent');
-			window.setTimeout(() => {
-				byId('timeout').classList.remove('editing');
-				byId('strokeSize').classList.remove('editing');
-			}, 2000);
 		});
 		byId('timeoutAndStrokeSize').addEventListener('click', e => {
 			if (e.target.tagName === 'INPUT') return;
@@ -137,7 +138,7 @@
 		let setEditTarget = e => {
 			editTarget = e.target.id.replace(/^.+_/, '');
 			byId('editTarget').textContent = byId('caption_' + editTarget).textContent;
-			byId('inputedGesture').textContent = '';
+			byId('inputedGesture').textContent = byId('udlr_' + editTarget).textContent;
 			byId('gestureArea').classList.remove('transparent');
 		};
 		for (let gestureName of GESTURE_NAMES) {
@@ -149,13 +150,17 @@
 			toggleRadio.addEventListener('click', setEditTarget);
 			let label = byClass(container, 'udlr');
 			label.id = 'udlr_' + gestureName;
-			updateUDLRLabel(label, gestureValues[gestureName]);
+			refreshUDLRLabel(label, gestureValues[gestureName]);
 			let caption = byClass(container, 'gesture-caption');
 			caption.id = 'caption_' + gestureName;
 			caption.textContent = gestureName;
 			caption.parentNode.setAttribute('for', toggleRadio.id);
 			template.parentNode.insertBefore(container, template);
 		}
+		SimpleGesture.addTouchEventListener(byId('deleteGesture'), { start: e => {
+			updateGesture(DELETE_GESTURE);
+			e.preventDefault();
+		}, move: e => {}, end: e => {} });
 	};
 
 	let setupOtherOptions = () => {
