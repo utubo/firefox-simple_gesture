@@ -83,8 +83,8 @@
 		byId('strokeSize').value = SimpleGesture.ini.strokeSize;
 	};
 
-	let setupAddjustBox = () => {
-		let box = byId('addjustBox');
+	let setupAdjustBox = () => {
+		let box = byId('adjustBox');
 		SimpleGesture.addTouchEventListener(box, {
 			start: e => {
 				[minX, minY] = SimpleGesture.getXY(e);
@@ -215,7 +215,7 @@
 		}
 		setupGestureInputBox();
 		setupOtherOptions();
-		setupAddjustBox();
+		setupAdjustBox();
 	});
 
 })();
