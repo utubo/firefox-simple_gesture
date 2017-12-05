@@ -109,7 +109,7 @@
 				size *= 0.8; // margin
 				size ^= 0; // to integer;
 				if (10 < size) {
-					SimpleGesture.ini.timeout = new Date() - startTime;
+					SimpleGesture.ini.timeout = new Date() - startTime + 300; // margin 300ms
 					SimpleGesture.ini.strokeSize = size;
 					saveIni();
 					refreshTimeoutAndStrokeSize();
