@@ -7,10 +7,11 @@
 		'back',
 		'top',
 		'bottom',
+		'reload',
 		'nextTab',
 		'prevTab',
-		'reload',
 		'close',
+		'closeAll',
 		'newTab',
 		'toggleUserAgent',
 		'disableGesture'

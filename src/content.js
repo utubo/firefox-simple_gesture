@@ -113,7 +113,7 @@ SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore i
 			case 'top': smoothScroll(0); break;
 			case 'bottom': smoothScroll(document.body.scrollHeight); break;
 			case 'reload': location.reload(); break;
-			default: browser.runtime.sendMessage(g, (res) => {});
+			default: browser.runtime.sendMessage(g);
 		}
 		return false;
 	};

@@ -25,6 +25,9 @@
 	"caption_close": {
 		"message": "タブを閉じる"
 	},
+	"caption_closeAll": {
+		"message": "全てのタブを閉じる"
+	},
 	"caption_nextTab": {
 		"message": "次のタブ"
 	},

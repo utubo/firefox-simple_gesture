@@ -32,6 +32,13 @@
 		close: tab => {
 			browser.tabs.remove(tab.id);
 		},
+		closeAll: tab => {
+			browser.tabs.query({}).then(tabs => {
+				for (let i = tabs.length - 1; 0 <= i; i --) {
+					browser.tabs.remove(tabs[i].id);
+				}
+			});
+		},
 		showTab: targetIndex => {
 			browser.tabs.query({ index: targetIndex }).then(tabs => {
 				if (tabs[0]) {
@@ -71,7 +78,7 @@
 			f(sender.tab);
 		} else {
 			// Somtimes sender.tab is undefined.
-			browser.tabs.query({ active: true }).then(tabs => { f(tabs[0]); });
+			browser.tabs.query({ active: true, currentWindow: true }).then(tabs => { f(tabs[0]); });
 		}
 	});
 

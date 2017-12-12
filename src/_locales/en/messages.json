@@ -25,6 +25,9 @@
 	"caption_close": {
 		"message": "Close tab"
 	},
+	"caption_closeAll": {
+		"message": "Close all tabs"
+	},
 	"caption_nextTab": {
 		"message": "Next tab"
 	},
