@@ -1,30 +1,32 @@
 var SimpleGesture = {};
-SimpleGesture.defaultIni = {
-	'gestures': {
-		'D-L': 'forward',
-		'D-R': 'back',
-		'R-D': 'top',
-		'R-U': 'bottom',
-		'U-L': 'nextTab',
-		'U-R': 'prevTab',
-		'D-R-U': 'reload',
-		'L-D-R': 'close',
-		'R-D-L': 'newTab',
-	},
-	'strokeSize': 50,
-	'timeout': 1500
-};
-SimpleGesture.ini = SimpleGesture.defaultIni;
-SimpleGesture.MAX_LENGTH = 19; // Up to 17 chars (= 9 moves) are valid. Ignore if gesture is over 19 characters.
-
 (() => {
 	'use strict';
+
+	// const -------------
+	// Default settings
+	SimpleGesture.ini = {
+		'gestures': {
+			'D-L': 'forward',
+			'D-R': 'back',
+			'R-D': 'top',
+			'R-U': 'bottom',
+			'U-L': 'nextTab',
+			'U-R': 'prevTab',
+			'D-R-U': 'reload',
+			'L-D-R': 'close',
+			'R-D-L': 'newTab',
+		},
+		'strokeSize': 50,
+		'timeout': 1500
+	};
+	// Up to 17 chars (= 9 moves) are valid. Ignore if gesture is over 19 characters.
+	SimpleGesture.MAX_LENGTH = 19;
 
 	// fields ------------
 	let gesture = null;
 	let lx = 0; // last X
 	let ly = 0; // last Y
-	let lg = null; // lastGesture
+	let lg = null; // last gesture ('L','R','U' or 'D')
 	let timeoutId = null;
 	let isGestureEnabled = true;
 	let size = SimpleGesture.ini.strokeSize;
