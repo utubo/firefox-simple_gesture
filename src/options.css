@@ -24,7 +24,6 @@ body {
 
 .container-sub {
 	border-bottom: none;
-	margin-left: 1em;
 }
 
 .caption {
@@ -59,11 +58,16 @@ body {
 }
 
 .udlr {
+	color: #666;
 	display: block;
 }
 
 .udlr-na {
+	background: #fcc;
+	border-radius: 3px;
 	color: #f33;
+	text-align: center;
+	width: 3em;
 }
 
 .toggle-radio {
@@ -77,8 +81,9 @@ body {
 }
 
 .editing,
-.toggle-radio:checked + .gesture-label {
-	color: #3cf;
+.toggle-radio:checked + .gesture-label .gesture-caption,
+.toggle-radio:checked + .gesture-label .udlr {
+	color: #3cf !important;
 }
 
 .transparent {
