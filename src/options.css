@@ -46,7 +46,16 @@ body {
 }
 
 .text-input {
+	font-size: 1em;
+	padding-left: 4px;
 	width: 100%;
+}
+
+.number-input {
+	font-size: 1em;
+	padding-right: 4px;
+	text-align: right;
+	width: 6em;
 }
 
 .udlr {
