@@ -5,9 +5,9 @@
 	let GESTURE_NAMES = [
 		'forward',
 		'back',
+		'reload',
 		'top',
 		'bottom',
-		'reload',
 		'nextTab',
 		'prevTab',
 		'close',
