@@ -215,8 +215,7 @@
 		return false;
 	};
 
-	// START HERE ! ------
-	browser.storage.local.get('simple_gesture').then(res => {
+	let setupSettingItems = res => {
 		if (res && res.simple_gesture) {
 			SimpleGesture.ini = res.simple_gesture;
 		}
@@ -224,7 +223,10 @@
 		setupOtherOptions();
 		setupAdjustBox();
 		removeCover();
-	});
+	};
+
+	// START HERE ! ------
+	browser.storage.local.get('simple_gesture').then(setupSettingItems, setupSettingItems); // promise.finally is supported on FF 58 or later.
 
 })();
 
