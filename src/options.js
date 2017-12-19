@@ -190,6 +190,12 @@
 		}
 	};
 
+	let removeCover = () => {
+		let cover = byId('cover');
+		setTimeout(() => { cover.classList.add('transparent'); });
+		setTimeout(() => { cover.parentNode.removeChild(cover); }, 500);
+	};
+
 	SimpleGesture.onGestureStart = e => {
 		if (editTarget) {
 			SimpleGesture.clearGestureTimeoutTimer(); // Don't timeout, when editing gesture.
@@ -217,6 +223,7 @@
 		setupGestureInputBox();
 		setupOtherOptions();
 		setupAdjustBox();
+		removeCover();
 	});
 
 })();
