@@ -2,8 +2,11 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "1.9.1",
+	"version": "1.10a3",
 	"default_locale": "en",
+	"icons": {
+		"64": "icon64.png"
+	},
 
 	"applications": {
 		"gecko": {
