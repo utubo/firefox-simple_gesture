@@ -2,7 +2,7 @@
 	'use strict';
 
 	// const -------------
-	let GESTURE_NAMES = [
+	const GESTURE_NAMES = [
 		'forward',
 		'back',
 		'reload',
@@ -16,10 +16,10 @@
 		'toggleUserAgent',
 		'disableGesture'
 	];
-	let INSTEAD_OF_EMPTY = {
+	const INSTEAD_OF_EMPTY = {
 		'userAgent': navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux')
 	};
-	let MAX_INPUT_LENGTH = SimpleGesture.MAX_LENGTH - 2;
+	const MAX_INPUT_LENGTH = SimpleGesture.MAX_LENGTH - 2;
 
 	// fields ------------
 	let editTarget = null;
@@ -30,25 +30,25 @@
 	let startTime = null;
 
 	// utils -------------
-	let byId = id => document.getElementById(id);
+	const byId = id => document.getElementById(id);
 
-	let byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
+	const byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
 
-	let swapKeyValue = m => {
-		let s = {};
+	const swapKeyValue = m => {
+		const s = {};
 		for (let key in m) {
-			let value = m[key];
+			const value = m[key];
 			if (value) s[value] = key;
 		}
 		return s;
 	};
 
 	// functions ---------
-	let saveIni = () => {
+	const saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
 	};
 
-	let refreshUDLRLabel = (label, udlr) => {
+	const refreshUDLRLabel = (label, udlr) => {
 		if (udlr) {
 			label.textContent = udlr;
 			label.classList.remove('udlr-na');
@@ -58,15 +58,15 @@
 		}
 	};
 
-	let DELETE_GESTURE = 'n/a';
-	let updateGesture = gesture => {
+	const DELETE_GESTURE = 'n/a';
+	const updateGesture = gesture => {
 		if (gesture) {
 			if (gesture === DELETE_GESTURE) {
 				gesture = null;
 			} else {
 				SimpleGesture.ini.gestures[gesture] = null;
 			}
-			let gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
+			const gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
 			gestureValues[editTarget] = gesture;
 			SimpleGesture.ini.gestures = swapKeyValue(gestureValues);
 			saveIni();
@@ -79,13 +79,13 @@
 		editTarget = null;
 	};
 
-	let refreshTimeoutAndStrokeSize = () => {
+	const refreshTimeoutAndStrokeSize = () => {
 		byId('timeout').value = SimpleGesture.ini.timeout;
 		byId('strokeSize').value = SimpleGesture.ini.strokeSize;
 	};
 
-	let setupAdjustBox = () => {
-		let box = byId('adjustBox');
+	const setupAdjustBox = () => {
+		const box = byId('adjustBox');
 		SimpleGesture.addTouchEventListener(box, {
 			start: e => {
 				[minX, minY] = SimpleGesture.getXY(e);
@@ -96,7 +96,7 @@
 			},
 			move: e => {
 				if (!startTime) return;
-				let [x, y] = SimpleGesture.getXY(e);
+				const [x, y] = SimpleGesture.getXY(e);
 				minX = Math.min(x, minX);
 				minY = Math.min(y, minY);
 				maxX = Math.max(x, maxX);
@@ -132,27 +132,27 @@
 		});
 	};
 
-	let setupGestureInputBox = () => {
-		let gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
+	const setupGestureInputBox = () => {
+		const gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
 		// gestures
-		let template = byClass(document, 'gesture_template');
-		let setEditTarget = e => {
+		const template = byClass(document, 'gesture_template');
+		const setEditTarget = e => {
 			editTarget = e.target.id.replace(/^.+_/, '');
 			byId('editTarget').textContent = byId('caption_' + editTarget).textContent;
 			byId('inputedGesture').textContent = byId('udlr_' + editTarget).textContent;
 			byId('gestureArea').classList.remove('transparent');
 		};
 		for (let gestureName of GESTURE_NAMES) {
-			let container = template.cloneNode(true);
+			const container = template.cloneNode(true);
 			container.id = gestureName + "_container";
 			container.className = "gesture-container";
-			let toggleRadio = byClass(container, 'toggle-radio');
+			const toggleRadio = byClass(container, 'toggle-radio');
 			toggleRadio.id = 'gesture_radio_' + gestureName;
 			toggleRadio.addEventListener('click', setEditTarget);
-			let label = byClass(container, 'udlr');
+			const label = byClass(container, 'udlr');
 			label.id = 'udlr_' + gestureName;
 			refreshUDLRLabel(label, gestureValues[gestureName]);
-			let caption = byClass(container, 'gesture-caption');
+			const caption = byClass(container, 'gesture-caption');
 			caption.id = 'caption_' + gestureName;
 			caption.textContent = gestureName;
 			caption.parentNode.setAttribute('for', toggleRadio.id);
@@ -164,7 +164,7 @@
 		}, move: e => {}, end: e => {} });
 	};
 
-	let setupOtherOptions = () => {
+	const setupOtherOptions = () => {
 		byId('newTab_container').appendChild(byId('newTabUrl_container'));
 		for (let caption of document.getElementsByClassName('caption')) {
 			if (!caption.textContent) continue;
@@ -172,7 +172,7 @@
 		}
 		byId('toggleUserAgent_container').appendChild(byId('userAgent_container'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
-		let onValueChange = e => {
+		const onValueChange = e => {
 			if (e.target.value === INSTEAD_OF_EMPTY[e.target.id]) {
 				SimpleGesture.ini[e.target.id] = null;
 			} else if (e.target.type === "number" && e.target.value.match(/[^\d]/)) {
@@ -184,14 +184,14 @@
 			saveIni();
 		};
 		for (let id of ['newTabUrl', 'userAgent', 'timeout', 'strokeSize']) {
-			let inputElm = byId(id);
+			const inputElm = byId(id);
 			inputElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
 			inputElm.addEventListener('change', onValueChange);
 		}
 	};
 
-	let removeCover = () => {
-		let cover = byId('cover');
+	const removeCover = () => {
+		const cover = byId('cover');
 		setTimeout(() => { cover.classList.add('transparent'); });
 		setTimeout(() => { cover.parentNode.removeChild(cover); }, 500);
 	};
@@ -215,7 +215,7 @@
 		return false;
 	};
 
-	let setupSettingItems = res => {
+	const setupSettingItems = res => {
 		if (res && res.simple_gesture) {
 			SimpleGesture.ini = res.simple_gesture;
 		}

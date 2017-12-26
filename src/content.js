@@ -41,21 +41,21 @@ var SimpleGesture = {};
 		}
 	};
 
-	let resetGesture = e => {
+	const resetGesture = e => {
 		gesture = null;
 		timeoutId = null;
 	};
 
 	let lastInnerWidth = 0;
-	let fixSize = () => {
-		let w = window.innerWidth;
+	const fixSize = () => {
+		const w = window.innerWidth;
 		if (w === lastInnerWidth) return;
-		let z = Math.min(w, window.innerHeight) / 320;
+		const z = Math.min(w, window.innerHeight) / 320;
 		size = (SimpleGesture.ini.strokeSize * z)^0;
 	};
 
 	// touch-events ------
-	let onTouchStart = e => {
+	const onTouchStart = e => {
 		fixSize();
 		if (!size) return;
 		gesture = '';
@@ -66,20 +66,20 @@ var SimpleGesture = {};
 		lg = null;
 	};
 
-	let onTouchMove = e => {
+	const onTouchMove = e => {
 		if (gesture === null) return;
 		if (gesture.length >= SimpleGesture.MAX_LENGTH) return;
 		if (e.touches && e.touches[1]) { // not support two fingers
 			resetGesture();
 			return;
 		}
-		let [x, y] = SimpleGesture.getXY(e);
-		let dx = x - lx;
-		let dy = y - ly;
-		let absX = dx < 0 ? -dx : dx;
-		let absY = dy < 0 ? -dy : dy;
+		const [x, y] = SimpleGesture.getXY(e);
+		const dx = x - lx;
+		const dy = y - ly;
+		const absX = dx < 0 ? -dx : dx;
+		const absY = dy < 0 ? -dy : dy;
 		if (absX < size && absY < size) return;
-		let g = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
+		const g = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
 		if (g === lg) return;
 		if (gesture) gesture += '-';
 		gesture += g;
@@ -89,7 +89,7 @@ var SimpleGesture = {};
 		SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture);
 	};
 
-	let onTouchEnd = e => {
+	const onTouchEnd = e => {
 		try {
 			SimpleGesture.clearGestureTimeoutTimer();
 			if (executeGesture(e)) return true;
@@ -103,9 +103,9 @@ var SimpleGesture = {};
 	};
 
 	// execute gesture ---
-	let executeGesture = e => {
+	const executeGesture = e => {
 		if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return false; // for options.html
-		let g = SimpleGesture.ini.gestures[gesture];
+		const g = SimpleGesture.ini.gestures[gesture];
 		if (g === 'disableGesture') return toggleIsGestureEnabled();
 		if (!isGestureEnabled) return true;
 		if (!g) return true;
@@ -121,7 +121,7 @@ var SimpleGesture = {};
 	};
 
 	let scrollBehaviorBackup = null;
-	let smoothScroll = y => {
+	const smoothScroll = y => {
 		scrollBehaviorBackup = scrollBehaviorBackup || document.body.style.scrollBehavior;
 		document.body.style.scrollBehavior = 'smooth';
 		window.scrollTo(0, y);
@@ -131,7 +131,7 @@ var SimpleGesture = {};
 		}, 1000);
 	};
 
-	let toggleIsGestureEnabled = () => {
+	const toggleIsGestureEnabled = () => {
 		isGestureEnabled = !isGestureEnabled;
 		alert(chrome.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
 		return false;

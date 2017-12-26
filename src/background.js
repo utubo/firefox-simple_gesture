@@ -1,7 +1,7 @@
 (() => {
 	'use strict';
 
-	let withIni = f => {
+	const withIni = f => {
 		browser.storage.local.get('simple_gesture').then(res => {
 			f(res.simple_gesture  || {});
 		}, reason => {
@@ -10,7 +10,7 @@
 	};
 
 	let userAgent = null;
-	let rewriteUserAgentHeader = e => {
+	const rewriteUserAgentHeader = e => {
 		if (userAgent) {
 			for (let header of e.requestHeaders) {
 				if (header.name.toLowerCase() === "user-agent") {
@@ -22,10 +22,10 @@
 		return { requestHeaders: e.requestHeaders };
 	};
 
-	let exec = {
+	const exec = {
 		newTab: tab => {
 			withIni(ini => {
-				let url = ini.newTabUrl || null;
+				const url = ini.newTabUrl || null;
 				browser.tabs.create({ active: true, url: url });
 			});
 		},
@@ -72,7 +72,7 @@
 	};
 
 	browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-		let f = exec[msg];
+		const f = exec[msg];
 		if (!f) return;
 		if (sender.tab) {
 			f(sender.tab);
