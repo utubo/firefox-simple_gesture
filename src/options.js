@@ -16,10 +16,12 @@
 		'toggleUserAgent',
 		'disableGesture'
 	];
+	const TEXT_FORMS = ['newTabUrl', 'userAgent', 'timeout', 'strokeSize'];
 	const INSTEAD_OF_EMPTY = {
 		'userAgent': navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux')
 	};
 	const MAX_INPUT_LENGTH = SimpleGesture.MAX_LENGTH - 2;
+	const TIMERS = {};
 
 	// fields ------------
 	let editTarget = null;
@@ -43,11 +45,11 @@
 		return s;
 	};
 
-	// functions ---------
 	const saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
 	};
 
+	// edit UDLR ---------
 	const refreshUDLRLabel = (label, udlr) => {
 		if (udlr) {
 			label.textContent = udlr;
@@ -117,7 +119,7 @@
 				}
 				startTime = null;
 				box.classList.add('transparent');
-				window.setTimeout(() => {
+				TIMERS.strokeSizeEditing = setTimeout(() => {
 					byId('timeout').classList.remove('editing');
 					byId('strokeSize').classList.remove('editing');
 				}, 2000);
@@ -125,6 +127,7 @@
 		});
 		byId('timeoutAndStrokeSize').addEventListener('click', e => {
 			if (e.target.tagName === 'INPUT') return;
+			clearTimeout(TIMERS.strokeSizeEditing);
 			box.classList.remove('transparent');
 			byId('timeout').classList.add('editing');
 			byId('strokeSize').classList.add('editing');
@@ -164,38 +167,7 @@
 		}, move: e => {}, end: e => {} });
 	};
 
-	const setupOtherOptions = () => {
-		byId('newTab_container').appendChild(byId('newTabUrl_container'));
-		for (let caption of document.getElementsByClassName('caption')) {
-			if (!caption.textContent) continue;
-			caption.textContent = chrome.i18n.getMessage('caption_' + caption.textContent) || caption.textContent;
-		}
-		byId('toggleUserAgent_container').appendChild(byId('userAgent_container'));
-		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
-		const onValueChange = e => {
-			if (e.target.value === INSTEAD_OF_EMPTY[e.target.id]) {
-				SimpleGesture.ini[e.target.id] = null;
-			} else if (e.target.type === "number" && e.target.value.match(/[^\d]/)) {
-				// invalid number.
-				return;
-			} else {
-				SimpleGesture.ini[e.target.id] = e.target.value;
-			}
-			saveIni();
-		};
-		for (let id of ['newTabUrl', 'userAgent', 'timeout', 'strokeSize']) {
-			const inputElm = byId(id);
-			inputElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
-			inputElm.addEventListener('change', onValueChange);
-		}
-	};
-
-	const removeCover = () => {
-		const cover = byId('cover');
-		setTimeout(() => { cover.classList.add('transparent'); });
-		setTimeout(() => { cover.parentNode.removeChild(cover); }, 500);
-	};
-
+	// inject settings-page behavior
 	SimpleGesture.onGestureStart = e => {
 		if (editTarget) {
 			SimpleGesture.clearGestureTimeoutTimer(); // Don't timeout, when editing gesture.
@@ -213,6 +185,51 @@
 		updateGesture(gesture.substring(0, MAX_INPUT_LENGTH));
 		e.preventDefault();
 		return false;
+	};
+
+	// edit text values --
+	const saveTextValues = e => {
+		clearTimeout(TIMERS.delaySaveTextValues);
+		for (let id of TEXT_FORMS) {
+			const target = byId(id);
+			const value = target.value;
+			if (value === INSTEAD_OF_EMPTY[id]) {
+				SimpleGesture.ini[id] = null;
+			} else if (target.type === "number" && value.match(/[^\d]/)) {
+				continue; // ignore invalid number.
+			} else {
+				SimpleGesture.ini[id] = value;
+			}
+		}
+		saveIni();
+	};
+
+	const saveTextValuesDelay = e => {
+		clearTimeout(TIMERS.delaySaveTextValues);
+		TIMERS.delayTextValues = setTimeout(saveTextValues, 3000);
+	};
+
+	const setupOtherOptions = () => {
+		byId('newTab_container').appendChild(byId('newTabUrl_container'));
+		for (let caption of document.getElementsByClassName('caption')) {
+			if (!caption.textContent) continue;
+			caption.textContent = chrome.i18n.getMessage('caption_' + caption.textContent) || caption.textContent;
+		}
+		byId('toggleUserAgent_container').appendChild(byId('userAgent_container'));
+		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
+		for (let id of TEXT_FORMS) {
+			const inputElm = byId(id);
+			inputElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
+			inputElm.addEventListener('change', saveTextValues);
+			inputElm.addEventListener('input', saveTextValuesDelay);
+		}
+	};
+
+	// setup options page
+	const removeCover = () => {
+		const cover = byId('cover');
+		setTimeout(() => { cover.classList.add('transparent'); });
+		setTimeout(() => { cover.parentNode.removeChild(cover); }, 500);
 	};
 
 	const setupSettingItems = res => {
