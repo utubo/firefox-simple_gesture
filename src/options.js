@@ -210,11 +210,11 @@
 	};
 
 	const setupOtherOptions = () => {
-		byId('newTab_container').appendChild(byId('newTabUrl_container'));
 		for (let caption of document.getElementsByClassName('caption')) {
 			if (!caption.textContent) continue;
 			caption.textContent = chrome.i18n.getMessage('caption_' + caption.textContent) || caption.textContent;
 		}
+		byId('newTab_container').appendChild(byId('newTabUrl_container'));
 		byId('toggleUserAgent_container').appendChild(byId('userAgent_container'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
 		for (let id of TEXT_FORMS) {
