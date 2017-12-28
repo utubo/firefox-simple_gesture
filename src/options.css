@@ -90,6 +90,11 @@ body {
 	opacity: 0;
 	pointer-events: none;
 }
+
+.hide {
+	display: none;
+}
+
 .gesture-area-back {
 	background: rgba(0, 0, 0, .5);
 	height: 100%;
@@ -120,26 +125,8 @@ body {
 .gesture-area-buttons-container {
 	position: fixed;
 	text-align: center;
-	top: calc(50% + 130px);
+	top: calc(50% + 130px - .5em);
 	width: 100%;
-}
-.gesture-area-button {
-	background: #666;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	color: #ccc;
-	cursor: default;
-	display: inline-block;
-	font-size: 16px;
-	padding: 0.2em 0.5em;
-}
-#deleteGesture::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16" fill="white"><path d="M1 5l2 10s0.2 1 1 1h7s1 0.2 1-1l2-10z"/><g transform="rotate(-8) translate(-1.9,1.2)"><path d="M2 3.5h13s0-2-2-2h-9s-2 0-2 2zM7 1.5a 1.5 1.5 1.5 1 1 3-0z"/></g></svg>');
-	display: inline-block;
-	height: auto;
-	margin: 0 2px;
-	vertical-align: middle;
-	width: 1em;
 }
 .gesture-area-box {
 	background: #fff;
@@ -153,6 +140,32 @@ body {
 	width: 200px;
 }
 
+#customGestureEditBox {
+	background: rgba(0, 0, 0, .5);
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+}
+.custom-gesture-edit-container {
+	background: #f9f9fa;
+	border-radius: 3px;
+	display: flex;
+	flex-direction: column;
+	height: calc(100% - 4em);
+	margin: 1em;
+	padding: 1em;
+}
+#customGestureTitle {
+	margin-bottom: 0.5em;
+	width: auto;
+}
+#customGestureValue {
+	flex-grow: 1;
+	width: auto;
+}
+
 #cover {
 	background: #fff;
 	height: 100%;
@@ -163,4 +176,43 @@ body {
 	transition: opacity .3s;
 	width: 100%;
 	z-index: 99;
+}
+
+.buttons {
+	text-align: center;
+}
+
+.button {
+	background: #666;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	color: #ccc;
+	cursor: default;
+	display: inline-block;
+	font-size: 16px;
+	margin: .5em 0;
+	padding: 0.2em 0.5em;
+}
+.button::before {
+	display: inline-block;
+	height: auto;
+	margin: 0 2px;
+	vertical-align: middle;
+	width: 1em;
+}
+.custom-gesture-delete::before,
+#deleteGesture::before {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 5l2 10s0.2 1 1 1h7s1 0.2 1-1l2-10z"/><g transform="rotate(-8) translate(-1.9,1.2)"><path d="M2 3.5h13s0-2-2-2h-9s-2 0-2 2zM7 1.5a 1.5 1.5 1.5 1 1 3-0z"/></g></svg>');
+}
+.custom-gesture-edit::before {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M0 16h4l9-9l-4-4l-9 9zM10 2l4 4l2-2l-4-4z"/></svg>');
+}
+#addCustomGesture::before {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M6 1h4v5h5v4h-5v5h-4v-5h-5v-4h5z"/></svg>');
+}
+#cancelCustomGesture::before {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 4l3-3 4 4 4-4 3 3-4 4 4 4-3 3-4-4-4 4-3-3 4-4-4-4z"/></svg>');
+}
+#saveCustomGesture::before {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 1v14h14v-12l-2-2h-1v5h-8v-5zM8 1h2v3h-2z"/></svg>');
 }

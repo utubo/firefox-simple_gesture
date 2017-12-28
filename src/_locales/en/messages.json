@@ -7,65 +7,92 @@
 		"message": "Simple touch gesture for Android",
 		"description": "Description of the extension."
 	},
-	"caption_forward": {
+	"forward": {
 		"message": "Forward"
 	},
-	"caption_back": {
+	"back": {
 		"message": "Back"
 	},
-	"caption_top": {
+	"top": {
 		"message": "Scroll to top"
 	},
-	"caption_bottom": {
+	"bottom": {
 		"message": "Scroll to bottom"
 	},
-	"caption_reload": {
+	"reload": {
 		"message": "Reload"
 	},
-	"caption_close": {
+	"close": {
 		"message": "Close tab"
 	},
-	"caption_closeAll": {
+	"closeAll": {
 		"message": "Close all tabs"
 	},
-	"caption_nextTab": {
+	"nextTab": {
 		"message": "Next tab"
 	},
-	"caption_prevTab": {
+	"prevTab": {
 		"message": "Prev. tab"
 	},
-	"caption_newTab": {
+	"newTab": {
 		"message": "New tab"
 	},
-	"caption_newTabUrl": {
+	"newTabUrl": {
 		"message": "URL"
 	},
-	"caption_toggleUserAgent": {
+	"toggleUserAgent": {
 		"message": "Toggle Destop-site"
 	},
-	"caption_userAgent": {
+	"userAgent": {
 		"message": "User-Agent"
 	},
-	"caption_disableGesture": {
+	"disableGesture": {
 		"message": "Toggle disable/enable gestures"
 	},
-	"caption_timeoutAndStrokeSize": {
+	"timeoutAndStrokeSize": {
 		"message": "Timeout and Stroke-size"
 	},
-	"caption_timeout": {
+	"timeout": {
 		"message": "Timeout"
 	},
-	"caption_strokeSize": {
+	"strokeSize": {
 		"message": "Stroke-size"
 	},
-	"caption_drawSquare": {
+	"drawSquare": {
 		"message": "Draw a small square."
 	},
-	"caption_deleteGesture": {
+	"basedOn320x480": {
+		"message": "(Based on screen size is 320 x 480.)"
+	},
+	"delete": {
 		"message": "Delete"
 	},
-	"caption_basedOn320x480": {
-		"message": "(Based on screen size is 320 x 480.)"
+	"edit": {
+		"message": "Edit"
+	},
+	"cancel": {
+		"message": "Cancel"
+	},
+	"save": {
+		"message": "Save"
+	},
+	"addCustomGesture": {
+		"message": "Add Custom-Gesture"
+	},
+	"scriptOrURl": {
+		"message": "URL or Script"
+	},
+	"urlIsOpenedInNewTab": {
+		"message": "URL is opened a new tab."
+	},
+	"scriptWorksOnlyWhen": {
+		"message": "User script works only when current URL is 'http://...' or 'https://...'."
+	},
+	"advanced": {
+		"message": "Advanced"
+	},
+	"message_delete_confirm": {
+		"message": "Are you sure you want to Delete ?\n(This action cannot be undone!)"
 	},
 	"message_gesture_is_disabled": {
 		"message": "Simple-Gesuture is disabled."

@@ -8,12 +8,22 @@
 	</head>
 	<body>
 		<div class="title">Simple Gesture</div>
-		<div class="gesture_template">
-			<input class="toggle-radio" type="radio" name="toggle-radio">
-			<label class="gesture-label">
-				<span class="gesture-caption caption"></span>
-				<span class="udlr"></span>
-			</label>
+		<div id="gestureList">
+			<div class="gesture_template">
+				<input class="toggle-radio" type="radio" name="toggle-radio">
+				<label class="gesture-label">
+					<span class="gesture-caption caption"></span>
+					<span class="udlr"></span>
+				</label>
+				<div class="custom-gesture-buttons hide">
+					<div class="custom-gesture-edit caption button">edit</div>
+					<div class="custom-gesture-delete caption button">delete</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="caption note">advanced</div>
+			<div id="addCustomGesture" class="caption button">addCustomGesture</div>
 		</div>
 
 		<div id="newTabUrl_container" class="container container-sub">
@@ -49,7 +59,7 @@
 			</div>
 			<div class="gesture-area-box"></div>
 			<div class="gesture-area-buttons-container">
-				<div id="deleteGesture" class="caption gesture-area-button">deleteGesture</div>
+				<div id="deleteGesture" class="caption button">delete</div>
 			</div>
 		</div>
 
@@ -59,6 +69,20 @@
 				<span class="caption caption-adjustbox">DrawSquare</span><br>
 			</div>
 			<div class="gesture-area-box"></div>
+		</div>
+
+		<div id="customGestureEditBox" class="transparent">
+			<div class="custom-gesture-edit-container">
+				<input id="customGestureTitle" class="text-input">
+				<label for="customGestureValue" class="caption">scriptOrURL</label>
+				<textarea id="customGestureValue" class="text-input"></textarea>
+				<div class="caption note">urlIsOpenedInNewTab</div>
+				<div class="caption note">scriptWorksOnlyWhen</div>
+				<div class="buttons">
+					<span id="cancelCustomGesture" class="caption button">cancel</span>
+					<span id="saveCustomGesture" class="caption button">save</span>
+				</div>
+			</div>
 		</div>
 
 		<div id="cover"></div>

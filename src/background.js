@@ -68,12 +68,31 @@
 				);
 				browser.tabs.reload(tab.id);
 			});
+		},
+		openNewTabIfUrl: url => {
+			if ((typeof url) !== 'string') return false;
+			if (!url.match(/^(https?|about|moz-extension):\/\//)) return false;
+			browser.tabs.create({ active: true, url: url });
+			return true;
+		},
+		userScript: id => {
+			let key = 'simple_gesture_' + id;
+			browser.storage.local.get(key).then( res => {
+				let userScript = res[key];
+				if (exec.openNewTabIfUrl(userScript)) return;
+				browser.tabs.executeScript({ code: userScript }).then(result => {
+					exec.openNewTabIfUrl(result[0]);
+				});
+			});
 		}
 	};
 
 	browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+		if (msg[0] === '$') { // custom gesture prefix
+			exec.userScript(msg);
+			return;
+		}
 		const f = exec[msg];
-		if (!f) return;
 		if (sender.tab) {
 			f(sender.tab);
 		} else {

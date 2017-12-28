@@ -7,65 +7,92 @@
 		"message": "シンプルなAndroid用のタッチジェスチャです。",
 		"description": "Description of the extension."
 	},
-	"caption_forward": {
+	"forward": {
 		"message": "進む"
 	},
-	"caption_back": {
+	"back": {
 		"message": "戻る"
 	},
-	"caption_top": {
+	"top": {
 		"message": "一番上へスクロール"
 	},
-	"caption_bottom": {
+	"bottom": {
 		"message": "一番下へスクロール"
 	},
-	"caption_reload": {
+	"reload": {
 		"message": "更新"
 	},
-	"caption_close": {
+	"close": {
 		"message": "タブを閉じる"
 	},
-	"caption_closeAll": {
+	"closeAll": {
 		"message": "全てのタブを閉じる"
 	},
-	"caption_nextTab": {
+	"nextTab": {
 		"message": "次のタブ"
 	},
-	"caption_prevTab": {
+	"prevTab": {
 		"message": "前のタブ"
 	},
-	"caption_newTab": {
+	"newTab": {
 		"message": "新しいタブ"
 	},
-	"caption_newTabUrl": {
+	"newTabUrl": {
 		"message": "新しいタブのURL"
 	},
-	"caption_toggleUserAgent": {
+	"toggleUserAgent": {
 		"message": "PCサイトモード切替"
 	},
-	"caption_userAgent": {
+	"userAgent": {
 		"message": "User-Agent"
 	},
-	"caption_disableGesture": {
+	"disableGesture": {
 		"message": "ジェスチャ無効/有効"
 	},
-	"caption_timeoutAndStrokeSize": {
+	"timeoutAndStrokeSize": {
 		"message": "タイムアウトと辺のサイズ"
 	},
-	"caption_strokeSize": {
+	"strokeSize": {
 		"message": "辺のサイズ"
 	},
-	"caption_timeout": {
+	"timeout": {
 		"message": "タイムアウト"
 	},
-	"caption_drawSquare": {
+	"drawSquare": {
 		"message": "指で小さめに四角を描いてください"
 	},
-	"caption_basedOn320x480": {
+	"basedOn320x480": {
 		"message": "(画面サイズ320x480基準)"
 	},
-	"caption_deleteGesture": {
+	"delete": {
 		"message": "削除"
+	},
+	"edit": {
+		"message": "編集"
+	},
+	"cancel": {
+		"message": "取消"
+	},
+	"save": {
+		"message": "保存"
+	},
+	"addCustomGesture": {
+		"message": "カスタムジェスチャを追加"
+	},
+	"scriptOrURl": {
+		"message": "URL または Script"
+	},
+	"urlIsOpenedInNewTab": {
+		"message": "URLを入力した場合は新しいタブで開きます"
+	},
+	"scriptWorksOnlyWhen": {
+		"message": "JavaScriptは現在のURLがhttp～～のときだけ動きます"
+	},
+	"message_delete_confirm": {
+		"message": "削除しますか？\n(この操作は取消できません！)"
+	},
+	"advanced": {
+		"message": "高度な設定"
 	},
 	"message_gesture_is_disabled": {
 		"message": "ジェスチャ無効"
