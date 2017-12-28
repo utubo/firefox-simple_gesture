@@ -87,7 +87,7 @@ body {
 }
 
 .transparent {
-	opacity: 0;
+	opacity: 0 !important;
 	pointer-events: none;
 }
 
@@ -144,8 +144,10 @@ body {
 	background: rgba(0, 0, 0, .5);
 	height: 100%;
 	left: 0;
+	opacity: 1;
 	position: fixed;
 	top: 0;
+	transition: opacity .5s;
 	width: 100%;
 }
 .custom-gesture-edit-container {

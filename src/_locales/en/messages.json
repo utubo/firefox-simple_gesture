@@ -64,6 +64,9 @@
 	"basedOn320x480": {
 		"message": "(Based on screen size is 320 x 480.)"
 	},
+	"clear": {
+		"message": "Clear"
+	},
 	"delete": {
 		"message": "Delete"
 	},

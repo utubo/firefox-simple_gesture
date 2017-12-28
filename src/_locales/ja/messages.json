@@ -64,6 +64,9 @@
 	"basedOn320x480": {
 		"message": "(画面サイズ320x480基準)"
 	},
+	"clear": {
+		"message": "クリア"
+	},
 	"delete": {
 		"message": "削除"
 	},
@@ -80,7 +83,7 @@
 		"message": "カスタムジェスチャを追加"
 	},
 	"scriptOrURl": {
-		"message": "URL または Script"
+		"message": "URL または JavaScript"
 	},
 	"urlIsOpenedInNewTab": {
 		"message": "URLを入力した場合は新しいタブで開きます"
