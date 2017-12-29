@@ -41,6 +41,14 @@
 
 	const byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
 
+	const toggleClass = (elm, clazz, b) => {
+		if (b) {
+			elm.classList.add(clazz);
+		} else {
+			elm.classList.remove(clazz);
+		}
+	};
+
 	const swapKeyValue = m => {
 		const s = {};
 		for (let key in m) {
@@ -237,62 +245,82 @@
 	// custom gesture ----
 	let customGestureId = null;
 	const customGestureTitle = byId('customGestureTitle');
-	const customGestureValue = byId('customGestureValue');
+	const customGestureType = byId('customGestureType');
+	const customGestureURl = byId('customGestureUrl');
+	const customGestureScript = byId('customGestureScript');
 	const addCustomGesture = e => {
 		// ini
 		do {
 			customGestureId = CUSTOM_GESTURE_PREFIX + Math.random().toString(36).slice(-8);
 		} while (findCustomGesture(customGestureId));
-		let c = { id: customGestureId, title: 'Custom Gesture', };
+		const c = { id: customGestureId, title: 'Custom Gesture', };
 		GESTURE_NAMES.push(customGestureId);
 		exData.customGestureList.push(c);
 		// dom
 		createGestureContainer(c.id);
 		customGestureTitle.value = c.title;
-		customGestureValue.value = 'alert("Hello World");';
+		customGestureType.value = 'url';
+		customGestureUrl.value = '';
+		customGestureScript.value = '';
 		// save
 		saveCustomGesture();
 	};
 	const dataTargetId = e => e.target.getAttribute('data-targetId');
 	const deleteCustomGesture = e => {
-		let id = dataTargetId(e);
+		const id = dataTargetId(e);
 		browser.storage.local.remove('simple_gesture_' + id);
-		let c = findCustomGesture(id);
+		const c = findCustomGesture(id);
 		exData.customGestureList = exData.customGestureList.filter((v,i,a) => v.id !== id);
 		browser.storage.local.set({ simple_gesture_exdata: exData });
-		let container = byId(id + '_container');
+		const container = byId(id + '_container');
 		container.parentNode.removeChild(container);
 		setupGestureNames();
 	};
 	const showCustomGestureEditBox = e => {
 		customGestureId = dataTargetId(e);
-		let c = findCustomGesture(customGestureId);
+		const c = findCustomGesture(customGestureId);
 		customGestureTitle.value = c.title;
-		browser.storage.local.get('simple_gesture_' + customGestureId).then(res => {
-			customGestureValue.value = res['simple_gesture_' + customGestureId];
+		const key = 'simple_gesture_' + customGestureId;
+		browser.storage.local.get(key).then(res => {
+			const c1 = res[key];
+			customGestureType.value = c1.type;
+			customGestureUrl.value = c1.type === 'url' ? c1.url : '';
+			customGestureScript.value = c1.type === 'script' ? c1.script : '';
+			toggleEditor();
 		}).then(() => {
 			byId('customGestureEditBox').classList.remove('transparent');
 		});
 	};
 	const saveCustomGesture = e => {
 		// save list
-		let c = findCustomGesture(customGestureId);
+		const c = findCustomGesture(customGestureId);
 		c.title = customGestureTitle.value;
 		byClass(byId(customGestureId + '_container'), 'gesture-caption').textContent = c.title;
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		// save value
-		let res = {};
-		res['simple_gesture_' + customGestureId] = customGestureValue.value;
+		const c1 = { type: customGestureType.value };
+		switch(c1.type) {
+			case 'url': c1.url = customGestureUrl.value; break;
+			case 'script': c1.script = customGestureScript.value; break;
+		}
+		const res = {};
+		res['simple_gesture_' + customGestureId] = c1;
 		browser.storage.local.set(res);
 		hideCustomGestureEditBox();
 	};
 	const hideCustomGestureEditBox = e => {
 		byId('customGestureEditBox').classList.add('transparent');
 	};
+	const toggleEditor = e => {
+		toggleClass(customGestureUrl, 'hide', customGestureType.value !== 'url');
+		toggleClass(customGestureScript, 'hide', customGestureType.value !== 'script');
+		toggleClass(byId('customGestureScriptNote'), 'hide', customGestureType.value !== 'script');
+	};
 	const setupCustomGestureEditBox = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
 		byId('cancelCustomGesture').addEventListener('click', hideCustomGestureEditBox);
+		customGestureType.addEventListener('change', toggleEditor);
 	};
 
 	// edit text values --

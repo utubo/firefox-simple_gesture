@@ -75,21 +75,24 @@
 			browser.tabs.create({ active: true, url: url });
 			return true;
 		},
-		userScript: id => {
+		customGesture: id => {
 			let key = 'simple_gesture_' + id;
 			browser.storage.local.get(key).then( res => {
-				let userScript = res[key];
-				if (exec.openNewTabIfUrl(userScript)) return;
-				browser.tabs.executeScript({ code: userScript }).then(result => {
-					exec.openNewTabIfUrl(result[0]);
-				});
+				let c = res[key];
+				if (c.url) {
+					browser.tabs.create({ active: true, url: c.url });
+				} else if (c.script) {
+					browser.tabs.executeScript({ code: c.script }).then(result => {
+						exec.openNewTabIfUrl(result[0]);
+					});
+				}
 			});
 		}
 	};
 
 	browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 		if (msg[0] === '$') { // custom gesture prefix
-			exec.userScript(msg);
+			exec.customGesture(msg);
 			return;
 		}
 		const f = exec[msg];
@@ -98,6 +101,25 @@
 		} else {
 			// Somtimes sender.tab is undefined.
 			browser.tabs.query({ active: true, currentWindow: true }).then(tabs => { f(tabs[0]); });
+		}
+	});
+
+	// for old beta version. (TODO: delete this code.)
+	browser.storage.local.get().then(res => {
+		for (let key in res) {
+			if (key.indexOf('$') === -1) continue;
+			const c = res[key];
+			if (c.url || c.script) continue;
+			if ((typeof c) !== 'string') continue;
+			if (c.match(/^(https?|about|moz-extension):\/\//)) {
+				const w = {};
+				w[key] = { type: 'url', url: c };
+				browser.storage.local.set(w);
+			} else {
+				const w = {};
+				w[key] = { type: 'script', script: c };
+				browser.storage.local.set(w);
+			}
 		}
 	});
 

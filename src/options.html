@@ -74,10 +74,13 @@
 		<div id="customGestureEditBox" class="transparent">
 			<div class="custom-gesture-edit-container">
 				<input id="customGestureTitle" class="text-input">
-				<label for="customGestureValue" class="caption">scriptOrURL</label>
-				<textarea id="customGestureValue" class="text-input"></textarea>
-				<div class="caption note">urlIsOpenedInNewTab</div>
-				<div class="caption note">scriptWorksOnlyWhen</div>
+				<select id="customGestureType">
+					<option value="url" class="caption">OpenURLInNewTab</option>
+					<option value="script" class="caption">ExecuteJavascript</option>
+				</select>
+				<input id="customGestureUrl" type="url" class="text-input" placeholder="http://www.example.com/">
+				<textarea id="customGestureScript" class="text-input" placeholder="alert('Hello World');"></textarea>
+				<div id="customGestureScriptNote" class="caption note">scriptWorksOnlyWhen</div>
 				<div class="buttons">
 					<span id="cancelCustomGesture" class="caption button">cancel</span>
 					<span id="saveCustomGesture" class="caption button">save</span>

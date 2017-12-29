@@ -82,11 +82,11 @@
 	"addCustomGesture": {
 		"message": "Add Custom-Gesture"
 	},
-	"scriptOrURl": {
-		"message": "URL or Script"
+	"OpenURLInNewTab": {
+		"message": "Open URL in a new tab."
 	},
-	"urlIsOpenedInNewTab": {
-		"message": "URL is opened a new tab."
+	"ExecuteJavascript": {
+		"message": "Execute javascript."
 	},
 	"scriptWorksOnlyWhen": {
 		"message": "User script works only when current URL is 'http://...' or 'https://...'."

@@ -82,11 +82,11 @@
 	"addCustomGesture": {
 		"message": "カスタムジェスチャを追加"
 	},
-	"scriptOrURl": {
-		"message": "URL または JavaScript"
+	"OpenURLInNewTab": {
+		"message": "URLを新しいタブで開く"
 	},
-	"urlIsOpenedInNewTab": {
-		"message": "URLを入力した場合は新しいタブで開きます"
+	"ExecuteJavascript": {
+		"message": "Javascriptを実行する"
 	},
 	"scriptWorksOnlyWhen": {
 		"message": "JavaScriptは現在のURLがhttp～～のときだけ動きます"

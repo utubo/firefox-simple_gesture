@@ -170,11 +170,13 @@ body {
 	margin: 1em;
 	padding: 1em;
 }
-#customGestureTitle {
+#customGestureTitle,
+#customGestureType,
+#customGestureUrl {
 	margin-bottom: 0.5em;
 	width: auto;
 }
-#customGestureValue {
+#customGestureScript {
 	flex-grow: 1;
 	width: auto;
 	word-break: break-all;
