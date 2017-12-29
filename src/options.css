@@ -8,16 +8,7 @@ body {
 	background: #f2f2f2;
 	border-bottom: 2px solid #0099ff;
 	font-weight: bold;
-	left: 0;
 	padding: 1em;
-	position: fixed;
-	top: 0;
-	width: 100%;
-	z-index: 1;
-}
-
-#gestureList {
-	margin-top: calc(3em + 4px);
 }
 
 .gesture_template {
