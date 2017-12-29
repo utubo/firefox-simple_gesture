@@ -19,7 +19,8 @@
 	const CUSTOM_GESTURE_PREFIX = '$';
 	const TEXT_FORMS = ['newTabUrl', 'userAgent', 'timeout', 'strokeSize'];
 	const INSTEAD_OF_EMPTY = {
-		'userAgent': navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux')
+		userAgent: navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux'),
+		noGesture: '-'
 	};
 	const MAX_INPUT_LENGTH = SimpleGesture.MAX_LENGTH - 2;
 	const TIMERS = {};
@@ -66,7 +67,7 @@
 			label.textContent = udlr;
 			label.classList.remove('udlr-na');
 		} else {
-			label.textContent = '-';
+			label.textContent = INSTEAD_OF_EMPTY.noGesture;
 			label.classList.add('udlr-na');
 		}
 	};
@@ -242,7 +243,7 @@
 		do {
 			customGestureId = CUSTOM_GESTURE_PREFIX + Math.random().toString(36).slice(-8);
 		} while (findCustomGesture(customGestureId));
-		let c = { id: customGestureId, title: 'CustomGesture', };
+		let c = { id: customGestureId, title: 'Custom Gesture', };
 		GESTURE_NAMES.push(customGestureId);
 		exData.customGestureList.push(c);
 		// dom
@@ -320,7 +321,7 @@
 		for (let caption of document.getElementsByClassName('caption')) {
 			if (!caption.textContent) continue;
 			if (caption.textContent[0] === CUSTOM_GESTURE_PREFIX) {
-				caption.textContent = findCustomGesture(caption.textContent).title || '-';
+				caption.textContent = findCustomGesture(caption.textContent).title;
 			} else {
 				caption.textContent = chrome.i18n.getMessage(caption.textContent) || caption.textContent;
 			}
@@ -368,6 +369,5 @@
 			}
 		}),
 	]).then(setupSettingItems, setupSettingItems); // promise.finally is supported on FF 58 or later.
-
 })();
 

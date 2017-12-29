@@ -20,6 +20,7 @@ body {
 	border-bottom: 1px solid #d7d7db;
 	display: block;
 	padding: .5em 1em;
+	position: relative;
 }
 
 .container-sub {
@@ -57,6 +58,10 @@ body {
 	width: 6em;
 }
 
+.gesture-caption {
+	min-height: 1em;
+}
+
 .udlr {
 	color: #666;
 	display: block;
@@ -84,6 +89,12 @@ body {
 .toggle-radio:checked + .gesture-label .gesture-caption,
 .toggle-radio:checked + .gesture-label .udlr {
 	color: #3cf !important;
+}
+
+.custom-gesture-buttons {
+	position: absolute;
+	right: .5em;
+	top: 0;
 }
 
 .transparent {
@@ -201,6 +212,11 @@ body {
 	margin: 0 2px;
 	vertical-align: middle;
 	width: 1em;
+}
+.icon-only {
+	color: transparent;
+	max-width: 18px;
+	height: 22px;
 }
 .custom-gesture-delete::before,
 #deleteGesture::before {
