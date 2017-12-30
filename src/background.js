@@ -69,12 +69,6 @@
 				browser.tabs.reload(tab.id);
 			});
 		},
-		openNewTabIfUrl: url => {
-			if ((typeof url) !== 'string') return false;
-			if (!url.match(/^(https?|about|moz-extension):\/\//)) return false;
-			browser.tabs.create({ active: true, url: url });
-			return true;
-		},
 		customGesture: id => {
 			let key = 'simple_gesture_' + id;
 			browser.storage.local.get(key).then( res => {
@@ -84,7 +78,13 @@
 				} else if (c.script) {
 					const userScript = `{ const SimpleGesture = { target: document.getElementsByClassName('simple-gesture-target')[0]}; ${c.script} }`;
 					browser.tabs.executeScript({ code: userScript }).then(result => {
-						exec.openNewTabIfUrl(result[0]);
+						const r = result[0];
+						if (!r) return;
+						if (!r.url) return;
+						browser.tabs.create({
+							url: r.url,
+							active: (!('active' in r) || r.active)
+						});
 					});
 				}
 			});
