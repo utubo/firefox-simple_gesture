@@ -27,6 +27,7 @@ var SimpleGesture = {};
 	let lx = 0; // last X
 	let ly = 0; // last Y
 	let lg = null; // last gesture ('L','R','U' or 'D')
+	let target = null;
 	let timeoutId = null;
 	let isGestureEnabled = true;
 	let size = SimpleGesture.ini.strokeSize;
@@ -64,6 +65,7 @@ var SimpleGesture = {};
 		SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e);
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
+		target = e.target;
 	};
 
 	const onTouchMove = e => {
@@ -115,9 +117,20 @@ var SimpleGesture = {};
 			case 'top': smoothScroll(0); break;
 			case 'bottom': smoothScroll(document.body.scrollHeight); break;
 			case 'reload': location.reload(); break;
-			default: browser.runtime.sendMessage(g);
+			default:
+				if (g[0] === '$') { // custom gesture prefix.
+					setCustomGestureTarget();
+				}
+				browser.runtime.sendMessage(g);
 		}
 		return false;
+	};
+
+	const setCustomGestureTarget = () => {
+		const before = document.getElementsByClassName('simple-gesture-target')[0];
+		before && before.classList.remove('simple-gesture-target');
+		target && target.classList && target.classList.add('simple-gesture-target');
+		target = null;
 	};
 
 	let scrollBehaviorBackup = null;

@@ -82,7 +82,8 @@
 				if (c.url) {
 					browser.tabs.create({ active: true, url: c.url });
 				} else if (c.script) {
-					browser.tabs.executeScript({ code: c.script }).then(result => {
+					const userScript = `{ const SimpleGesture = { target: document.getElementsByClassName('simple-gesture-target')[0]}; ${c.script} }`;
+					browser.tabs.executeScript({ code: userScript }).then(result => {
 						exec.openNewTabIfUrl(result[0]);
 					});
 				}
