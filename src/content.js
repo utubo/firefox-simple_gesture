@@ -123,6 +123,7 @@ var SimpleGesture = {};
 				}
 				browser.runtime.sendMessage(g);
 		}
+		target = null;
 		return false;
 	};
 
@@ -130,7 +131,6 @@ var SimpleGesture = {};
 		const before = document.getElementsByClassName('simple-gesture-target')[0];
 		before && before.classList.remove('simple-gesture-target');
 		target && target.classList && target.classList.add('simple-gesture-target');
-		target = null;
 	};
 
 	let scrollBehaviorBackup = null;
