@@ -105,24 +105,5 @@
 		}
 	});
 
-	// for old beta version. (TODO: delete this code.)
-	browser.storage.local.get().then(res => {
-		for (let key in res) {
-			if (key.indexOf('$') === -1) continue;
-			const c = res[key];
-			if (c.url || c.script) continue;
-			if ((typeof c) !== 'string') continue;
-			if (c.match(/^(https?|about|moz-extension):\/\//)) {
-				const w = {};
-				w[key] = { type: 'url', url: c };
-				browser.storage.local.set(w);
-			} else {
-				const w = {};
-				w[key] = { type: 'script', script: c };
-				browser.storage.local.set(w);
-			}
-		}
-	});
-
 })();
 
