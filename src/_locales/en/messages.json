@@ -92,7 +92,7 @@
 		"message": "User script works only when current URL is 'http://...' or 'https://...'."
 	},
 	"dontSetUntrustedScript": {
-		"message": "Dont set untrusted script, as this could lead to a security issue."
+		"message": "Don't set untrusted script, as this could lead to a security issue."
 	},
 	"advanced": {
 		"message": "Advanced"
