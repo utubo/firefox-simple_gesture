@@ -92,7 +92,7 @@
 		"message": "JavaScriptは現在のURLがhttp～～のときだけ動きます。"
 	},
 	"dontSetUntrustedScript": {
-		"message": "信頼できないスクリプトをせっとしないで下さい。セキュリティ上の問題が発生する場合があります。"
+		"message": "信頼できないスクリプトをセットしないで下さい。セキュリティ上の問題が発生する場合があります。"
 	},
 	"message_delete_confirm": {
 		"message": "削除しますか？\n(この操作は取消できません！)"
