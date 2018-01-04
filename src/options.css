@@ -178,6 +178,7 @@ body {
 }
 #customGestureScript {
 	flex-grow: 1;
+	min-height: 4em;
 	width: auto;
 	word-break: break-all;
 }
