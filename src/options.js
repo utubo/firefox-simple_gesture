@@ -20,7 +20,8 @@
 	const TEXT_FORMS = ['newTabUrl', 'userAgent', 'timeout', 'strokeSize'];
 	const INSTEAD_OF_EMPTY = {
 		userAgent: navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux'),
-		noGesture: '-'
+		noGesture: '-',
+		defaultTitle: 'Custom Gesture'
 	};
 	const MAX_INPUT_LENGTH = SimpleGesture.MAX_LENGTH - 2;
 	const TIMERS = {};
@@ -67,6 +68,11 @@
 			if (c.id === id) return c;
 		}
 		return null;
+	};
+
+	const resetTimer = (name, f, msec) => {
+		clearTimeout(TIMERS[name]);
+		TIMERS[name] = setTimeout(f, msec);
 	};
 
 	// edit UDLR ---------
@@ -253,7 +259,7 @@
 		do {
 			customGestureId = CUSTOM_GESTURE_PREFIX + Math.random().toString(36).slice(-8);
 		} while (findCustomGesture(customGestureId));
-		const c = { id: customGestureId, title: 'Custom Gesture', };
+		const c = { id: customGestureId, title: INSTEAD_OF_EMPTY.defaultTitle, };
 		GESTURE_NAMES.push(customGestureId);
 		exData.customGestureList.push(c);
 		// dom
@@ -316,16 +322,29 @@
 		toggleClass(customGestureScript, 'hide', customGestureType.value !== 'script');
 		toggleClass(byId('customGestureScriptNote'), 'hide', customGestureType.value !== 'script');
 	};
+	const autoTitle = () => {
+		if (customGestureTitle.value && customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
+		if (customGestureUrl.value.match(/https?:\/\/([^\/]+)/)) {
+			customGestureTitle.value = RegExp.$1;
+		}
+	};
+	const autoTitleByScript = () => {
+		if (customGestureScript.value.match(/\*\s+@name\s+([\w ]+)\s*(\n|\s*\*?)/)) {
+			customGestureTitle.value = RegExp.$1;
+		}
+	};
 	const setupCustomGestureEditBox = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
 		byId('cancelCustomGesture').addEventListener('click', hideCustomGestureEditBox);
 		customGestureType.addEventListener('change', toggleEditor);
+		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitle, 1000); });
+		customGestureScript.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByScript, 1000); });
 	};
 
 	// edit text values --
 	const saveTextValues = e => {
-		clearTimeout(TIMERS.delaySaveTextValues);
+		clearTimeout(TIMERS.saveTextValues);
 		for (let id of TEXT_FORMS) {
 			const target = byId(id);
 			const value = target.value;
@@ -341,8 +360,7 @@
 	};
 
 	const saveTextValuesDelay = e => {
-		clearTimeout(TIMERS.delaySaveTextValues);
-		TIMERS.delayTextValues = setTimeout(saveTextValues, 3000);
+		resetTimer('saveTextValues', saveTextValues, 3000);
 	};
 
 	const setupOtherOptions = () => {
