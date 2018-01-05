@@ -329,7 +329,7 @@
 		}
 	};
 	const autoTitleByScript = () => {
-		if (customGestureScript.value.match(/\*\s+@name\s+([\w ]+)\s*(\n|\s*\*?)/)) {
+		if (customGestureScript.value.match(/\*\s+@name\s+(.+?)(\s*\n|\s+\*)/)) {
 			customGestureTitle.value = RegExp.$1;
 		}
 	};
