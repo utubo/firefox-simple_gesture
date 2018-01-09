@@ -133,15 +133,20 @@ var SimpleGesture = {};
 		target && target.classList && target.classList.add('simple-gesture-target');
 	};
 
-	let scrollBehaviorBackup = null;
-	const smoothScroll = y => {
-		scrollBehaviorBackup = scrollBehaviorBackup || document.body.style.scrollBehavior;
-		document.body.style.scrollBehavior = 'smooth';
+	const smoothScrollImpl = y => {
+		document.body.classList.add('simple-gesture-smoothscroll');
 		window.scrollTo(0, y);
 		window.setTimeout(() => {
-			document.body.style.scrollBehavior = scrollBehaviorBackup;
-			scrollBehaviorBackup = null;
+			document.body.classList.remove('simple-gesture-smoothscroll');
 		}, 1000);
+	};
+
+	let smoothScroll = y => {
+		// When 1st scroll, insert css.
+		const s = (document.head || document.documentElement).appendChild(document.createElement('STYLE'));
+		s.sheet.insertRule('.simple-gesture-smoothscroll { scroll-behavior: smooth; }', 0);
+		smoothScroll = smoothScrollImpl;
+		smoothScroll(y);
 	};
 
 	const toggleIsGestureEnabled = () => {
