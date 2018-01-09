@@ -179,10 +179,26 @@ body {
 	width: auto;
 }
 #customGestureScript {
-	flex-grow: 1;
+	flex: 1 1 auto;
 	min-height: 4em;
 	width: auto;
 	word-break: break-all;
+}
+#customGestureScriptNote {
+	flex: 0 1 auto;
+	overflow: hidden;
+	padding: 2px;
+	position: relative;
+}
+#customGestureScriptNote::after {
+	background: linear-gradient(rgba(249,249,250,0) 0,rgba(249,249,250,1) 100%);
+	bottom: 0;
+	content: '';
+	display: block;
+	height: 4px;
+	position: absolute;
+	width: 100%;
+	z-index: 1;
 }
 
 #cover {
