@@ -168,11 +168,13 @@ body {
 	flex-direction: column;
 	height: calc(100% - 4em);
 	margin: 1em;
+	overflow: auto;
 	padding: 1em;
 }
 #customGestureTitle,
 #customGestureType,
 #customGestureUrl {
+	flex: none;
 	margin-bottom: 0.7em;
 	width: auto;
 }
