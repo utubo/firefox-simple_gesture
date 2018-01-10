@@ -56,6 +56,9 @@ body {
 	text-align: right;
 	width: 6em;
 }
+.editing {
+	color: #3cf !important;
+}
 
 /* gestures */
 .gesture-caption {
@@ -72,18 +75,10 @@ body {
 	text-align: center;
 	width: 3em;
 }
-.toggle-radio {
-	display: none;
-}
 .gesture-label,
 #timeout,
 #strokeSize {
 	transition: color .5s ease;
-}
-.editing,
-.toggle-radio:checked + .gesture-label .gesture-caption,
-.toggle-radio:checked + .gesture-label .udlr {
-	color: #3cf !important;
 }
 .custom-gesture-buttons {
 	float: right;

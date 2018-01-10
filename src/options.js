@@ -59,6 +59,12 @@
 		return s;
 	};
 
+	const resetTimer = (name, f, msec) => {
+		clearTimeout(TIMERS[name]);
+		TIMERS[name] = setTimeout(f, msec);
+	};
+
+	// utils for Simple gesture
 	const saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
 	};
@@ -70,15 +76,16 @@
 		return null;
 	};
 
-	const resetTimer = (name, f, msec) => {
-		clearTimeout(TIMERS[name]);
-		TIMERS[name] = setTimeout(f, msec);
+	const toggleEditing = (ids, b) => {
+		for (let id of ids) {
+			toggleClass(byId(id), 'editing', b);
+		}
 	};
 
 	// node --------------
 	const gestureList = byId('gestureList');
 	const templates = byId('templates');
-	const template = byClass(templates, 'gesture-container');
+	const gestureTemplate = byClass(templates, 'gesture-container');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
 	const customGestureTitle = byId('customGestureTitle');
 	const customGestureType = byId('customGestureType');
@@ -108,11 +115,11 @@
 			gestureValues[editTarget] = gesture;
 			SimpleGesture.ini.gestures = swapKeyValue(gestureValues);
 			saveIni();
-			for (let gestureName of GESTURE_NAMES) {
-				 refreshUDLRLabel(byId('udlr_' + gestureName), gestureValues[gestureName]);
+			for (let name of GESTURE_NAMES) {
+				 refreshUDLRLabel(byId('udlr_' + name), gestureValues[name]);
 			}
 		}
-		byId('gesture_radio_' + editTarget).checked = false;
+		toggleEditing(['caption_' + editTarget, 'udlr_' + editTarget], false);
 		byId('gestureDlg').classList.add('transparent');
 		editTarget = null;
 	};
@@ -155,18 +162,14 @@
 				}
 				startTime = null;
 				box.classList.add('transparent');
-				TIMERS.strokeSizeEditing = setTimeout(() => {
-					byId('timeout').classList.remove('editing');
-					byId('strokeSize').classList.remove('editing');
-				}, 2000);
+				TIMERS.strokeSizeEditing = setTimeout(() => { toggleEditing(['timeout', 'strokeSize'], false); }, 2000);
 			}
 		});
 		byId('timeoutAndStrokeSize').addEventListener('click', e => {
 			if (e.target.tagName === 'INPUT') return;
 			clearTimeout(TIMERS.strokeSizeEditing);
 			box.classList.remove('transparent');
-			byId('timeout').classList.add('editing');
-			byId('strokeSize').classList.add('editing');
+			toggleEditing(['timeout', 'strokeSize'], true);
 			e.preventDefault();
 		});
 	};
@@ -184,45 +187,42 @@
 
 	const setEditTarget = e => {
 		editTarget = e.target.id.replace(/^.+_/, '');
+		toggleEditing(['caption_' + editTarget, 'udlr_' + editTarget], true);
 		byId('editTarget').textContent = byId('caption_' + editTarget).textContent;
 		byId('inputedGesture').textContent = byId('udlr_' + editTarget).textContent;
 		byId('gestureDlg').classList.remove('transparent');
 	};
 
-	const getUDLR = gestureName => {
+	const getUDLR = name => {
 		for (let g in SimpleGesture.ini.gestures) {
-			if (SimpleGesture.ini.gestures[g] === gestureName) return g;
+			if (SimpleGesture.ini.gestures[g] === name) return g;
 		}
 	};
-	const createGestureContainer = gestureName => {
-		const container = template.cloneNode(true);
-		container.id = gestureName + "_container";
-		container.className = "gesture-container";
-		const toggleRadio = byClass(container, 'toggle-radio');
-		toggleRadio.id = 'gesture_radio_' + gestureName;
+	const createGestureContainer = name => {
+		const container = gestureTemplate.cloneNode(true);
+		container.id = name + "_container";
 		const label = byClass(container, 'udlr');
-		label.id = 'udlr_' + gestureName;
-		refreshUDLRLabel(label, getUDLR(gestureName));
+		label.id = 'udlr_' + name;
+		refreshUDLRLabel(label, getUDLR(name));
 		const caption = byClass(container, 'gesture-caption');
-		caption.id = 'caption_' + gestureName;
-		caption.textContent = gestureName;
-		caption.parentNode.setAttribute('for', toggleRadio.id);
-		if (gestureName[0] === CUSTOM_GESTURE_PREFIX) {
-			const buttons = buttonsTamplate.cloneNode(true);
-			buttons.classList.remove('hide');
-			byClass(buttons, 'custom-gesture-edit').setAttribute('data-targetId', gestureName);
-			byClass(buttons, 'custom-gesture-delete').setAttribute('data-targetId', gestureName);
-			container.insertBefore(buttons, container.firstChild);
+		caption.id = 'caption_' + name;
+		caption.textContent = name;
+		if (name[0] === CUSTOM_GESTURE_PREFIX) {
+			const b = buttonsTamplate.cloneNode(true);
+			b.classList.remove('hide');
+			byClass(b, 'custom-gesture-edit').setAttribute('data-targetId', name);
+			byClass(b, 'custom-gesture-delete').setAttribute('data-targetId', name);
+			container.insertBefore(b, container.firstChild);
 		}
 		gestureList.appendChild(container);
 	};
 
 	const setupGestureInputBox = () => {
-		for (let gestureName of GESTURE_NAMES) {
-			createGestureContainer(gestureName);
+		for (let name of GESTURE_NAMES) {
+			createGestureContainer(name);
 		}
 		gestureList.addEventListener('click', e => {
-			if (e.target.classList.contains('toggle-radio')) {
+			if (e.target.parentNode && e.target.parentNode.classList.contains('gesture-label')) {
 				setEditTarget(e);
 			} else if (e.target.classList.contains('custom-gesture-edit')) {
 				showCustomGestureEditBox(e);
