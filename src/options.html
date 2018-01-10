@@ -8,19 +8,23 @@
 	</head>
 	<body>
 		<div class="title">Simple Gesture</div>
-		<div id="gestureList">
-			<div class="gesture_template">
+
+		<div id="gestureList"></div>
+
+		<div id="templates" class="hide">
+			<div class="gesture-container">
 				<input class="toggle-radio" type="radio" name="toggle-radio">
 				<label class="gesture-label">
 					<span class="gesture-caption caption"></span>
 					<span class="udlr"></span>
 				</label>
-				<div class="custom-gesture-buttons hide">
-					<div class="custom-gesture-edit caption button icon-only">edit</div>
-					<div class="custom-gesture-delete caption button icon-only">delete</div>
-				</div>
+			</div>
+			<div class="custom-gesture-buttons">
+				<div class="custom-gesture-edit button icon-only"></div>
+				<div class="custom-gesture-delete button icon-only"></div>
 			</div>
 		</div>
+
 		<div class="container">
 			<div class="caption note">advanced</div>
 			<div id="addCustomGesture" class="caption button">addCustomGesture</div>
@@ -52,27 +56,27 @@
 			</div>
 		</div>
 
-		<div id="gestureArea" class="gesture-area-back transparent">
-			<div class="gesture-area-label-container">
-				<span id="editTarget" ></span><br>
-				<span id="inputedGesture"></span><br>
+		<div id="gestureDlg" class="dlg transparent">
+			<div class="dlg-labels">
+				<div id="editTarget"></div>
+				<div id="inputedGesture"></div>
 			</div>
-			<div class="gesture-area-box"></div>
-			<div class="gesture-area-buttons-container">
+			<div class="gesture-area"></div>
+			<div class="dlg-buttons">
 				<div id="deleteGesture" class="caption button">clear</div>
 			</div>
 		</div>
 
-		<div id="adjustBox" class="gesture-area-back transparent">
-			<div class="gesture-area-label-container">
-				<span class="caption caption-adjustbox">TimeoutAndStrokeSize</span><br>
-				<span class="caption caption-adjustbox">DrawSquare</span><br>
+		<div id="adjustDlg" class="dlg transparent">
+			<div class="dlg-labels">
+				<div class="caption adjust-dlg-caption">TimeoutAndStrokeSize</div>
+				<div class="caption adjust-dlg-caption">DrawSquare</div>
 			</div>
-			<div class="gesture-area-box"></div>
+			<div class="gesture-area"></div>
 		</div>
 
-		<div id="customGestureEditBox" class="transparent">
-			<div class="custom-gesture-edit-container">
+		<div id="editDlg" class="dlg transparent">
+			<div class="dlg-container">
 				<input id="customGestureTitle" class="text-input">
 				<select id="customGestureType">
 					<option value="url" class="caption">OpenURLInNewTab</option>

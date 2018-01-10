@@ -1,56 +1,55 @@
+/* basic */
 body {
 	background: #f9f9fa;
 	color: #444;
 	margin: 0;
 }
-
+.hide {
+	display: none;
+}
+.transparent {
+	opacity: 0 !important;
+	pointer-events: none;
+}
 .title {
 	background: #f2f2f2;
 	border-bottom: 2px solid #0099ff;
 	font-weight: bold;
 	padding: 1em;
 }
-
-.gesture_template {
-	display: none;
-}
-
 .container,
 .gesture-container {
 	border-bottom: 1px solid #d7d7db;
 	display: block;
 	padding: .7em 1em;
 	position: relative;
+	clear: both;
 }
-
 .container-sub {
 	border-bottom: none;
 }
-
 .caption {
 	color: #0c0c0d;
 	display: block;
 	font-size: 120%;
 }
-
 .caption-sub {
 	display: block;
 	font-size: 100%;
 	margin: 0;
 }
-
 .note {
 	display: block;
 	font-size: 80%;
 	color: #666;
 }
 
+/* form */
 .text-input {
 	font-size: 1em;
 	padding-left: 4px;
 	width: 100%;
 }
-
 .number-input {
 	font-size: 1em;
 	padding-right: 4px;
@@ -58,15 +57,14 @@ body {
 	width: 6em;
 }
 
+/* gestures */
 .gesture-caption {
 	min-height: 1em;
 }
-
 .udlr {
 	color: #666;
 	display: block;
 }
-
 .udlr-na {
 	background: #fcc;
 	border-radius: 3px;
@@ -74,49 +72,36 @@ body {
 	text-align: center;
 	width: 3em;
 }
-
 .toggle-radio {
 	display: none;
 }
-
 .gesture-label,
 #timeout,
 #strokeSize {
 	transition: color .5s ease;
 }
-
 .editing,
 .toggle-radio:checked + .gesture-label .gesture-caption,
 .toggle-radio:checked + .gesture-label .udlr {
 	color: #3cf !important;
 }
-
 .custom-gesture-buttons {
-	position: absolute;
-	right: .5em;
-	top: 0;
+	float: right;
 }
 
-.transparent {
-	opacity: 0 !important;
-	pointer-events: none;
-}
-
-.hide {
-	display: none;
-}
-
-.gesture-area-back {
+/* dialog */
+.dlg {
 	background: rgba(0, 0, 0, .5);
 	height: 100%;
 	left: 0;
+	opacity: 1;
 	position: fixed;
 	text-align: center;
 	top: 0;
 	transition: opacity .5s;
 	width: 100%;
 }
-.gesture-area-label-container {
+.dlg-labels {
 	bottom: calc(50% + 110px);
 	color: #fff;
 	font-size: 25px;
@@ -128,18 +113,28 @@ body {
 	text-shadow: 0px 0px 2px rgba(255, 255, 255, .5);
 	width: 100%;
 }
-.caption-adjustbox {
+.adjust-dlg-caption {
 	color: #fff;
-	display: inline;
 	font-size: 18px;
 }
-.gesture-area-buttons-container {
+.dlg-buttons {
 	position: fixed;
 	text-align: center;
 	top: calc(50% + 130px - .5em);
 	width: 100%;
 }
-.gesture-area-box {
+.dlg-container {
+	background: #f9f9fa;
+	border-radius: 3px;
+	display: flex;
+	flex-direction: column;
+	height: calc(100% - 4em);
+	margin: 1em;
+	overflow: auto;
+	padding: 1em;
+}
+
+.gesture-area {
 	background: #fff;
 	content: ' ';
 	display: block;
@@ -151,25 +146,8 @@ body {
 	width: 200px;
 }
 
-#customGestureEditBox {
-	background: rgba(0, 0, 0, .5);
-	height: 100%;
-	left: 0;
-	opacity: 1;
-	position: fixed;
-	top: 0;
-	transition: opacity .5s;
-	width: 100%;
-}
-.custom-gesture-edit-container {
-	background: #f9f9fa;
-	border-radius: 3px;
-	display: flex;
-	flex-direction: column;
-	height: calc(100% - 4em);
-	margin: 1em;
-	overflow: auto;
-	padding: 1em;
+#addCustomGesture {
+	margin-top: .5em;
 }
 #customGestureTitle,
 #customGestureType,
@@ -189,6 +167,7 @@ body {
 	overflow: hidden;
 	padding: 2px;
 	position: relative;
+	text-align: left;
 }
 #customGestureScriptNote::after {
 	background: linear-gradient(rgba(249,249,250,0) 0,rgba(249,249,250,1) 100%);
@@ -201,6 +180,7 @@ body {
 	z-index: 1;
 }
 
+/* others */
 #cover {
 	background: #fff;
 	height: 100%;
@@ -213,7 +193,9 @@ body {
 	z-index: 99;
 }
 
+/* buttons */
 .buttons {
+	margin-top: .5em;
 	text-align: center;
 }
 
@@ -225,7 +207,6 @@ body {
 	cursor: default;
 	display: inline-block;
 	font-size: 16px;
-	margin: .5em 0;
 	padding: 0.2em 0.5em;
 }
 .button::before {
@@ -256,3 +237,4 @@ body {
 #saveCustomGesture::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 1v14h14v-12l-2-2h-1v5h-8v-5zM8 1h2v3h-2z"/></svg>');
 }
+

@@ -75,6 +75,16 @@
 		TIMERS[name] = setTimeout(f, msec);
 	};
 
+	// node --------------
+	const gestureList = byId('gestureList');
+	const templates = byId('templates');
+	const template = byClass(templates, 'gesture-container');
+	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
+	const customGestureTitle = byId('customGestureTitle');
+	const customGestureType = byId('customGestureType');
+	const customGestureURl = byId('customGestureUrl');
+	const customGestureScript = byId('customGestureScript');
+
 	// edit UDLR ---------
 	const refreshUDLRLabel = (label, udlr) => {
 		if (udlr) {
@@ -103,7 +113,7 @@
 			}
 		}
 		byId('gesture_radio_' + editTarget).checked = false;
-		byId('gestureArea').classList.add('transparent');
+		byId('gestureDlg').classList.add('transparent');
 		editTarget = null;
 	};
 
@@ -113,7 +123,7 @@
 	};
 
 	const setupAdjustBox = () => {
-		const box = byId('adjustBox');
+		const box = byId('adjustDlg');
 		SimpleGesture.addTouchEventListener(box, {
 			start: e => {
 				[minX, minY] = SimpleGesture.getXY(e);
@@ -176,7 +186,7 @@
 		editTarget = e.target.id.replace(/^.+_/, '');
 		byId('editTarget').textContent = byId('caption_' + editTarget).textContent;
 		byId('inputedGesture').textContent = byId('udlr_' + editTarget).textContent;
-		byId('gestureArea').classList.remove('transparent');
+		byId('gestureDlg').classList.remove('transparent');
 	};
 
 	const getUDLR = gestureName => {
@@ -198,20 +208,20 @@
 		caption.textContent = gestureName;
 		caption.parentNode.setAttribute('for', toggleRadio.id);
 		if (gestureName[0] === CUSTOM_GESTURE_PREFIX) {
-			const customGestureButtons = byClass(container, 'custom-gesture-buttons');
-			customGestureButtons.classList.remove('hide');
-			byClass(customGestureButtons, 'custom-gesture-edit').setAttribute('data-targetId', gestureName);
-			byClass(customGestureButtons, 'custom-gesture-delete').setAttribute('data-targetId', gestureName);
+			const buttons = buttonsTamplate.cloneNode(true);
+			buttons.classList.remove('hide');
+			byClass(buttons, 'custom-gesture-edit').setAttribute('data-targetId', gestureName);
+			byClass(buttons, 'custom-gesture-delete').setAttribute('data-targetId', gestureName);
+			container.insertBefore(buttons, container.firstChild);
 		}
-		template.parentNode.insertBefore(container, template);
+		gestureList.appendChild(container);
 	};
 
-	const template = byClass(document, 'gesture_template');
 	const setupGestureInputBox = () => {
 		for (let gestureName of GESTURE_NAMES) {
 			createGestureContainer(gestureName);
 		}
-		byId('gestureList').addEventListener('click', e => {
+		gestureList.addEventListener('click', e => {
 			if (e.target.classList.contains('toggle-radio')) {
 				setEditTarget(e);
 			} else if (e.target.classList.contains('custom-gesture-edit')) {
@@ -250,10 +260,6 @@
 
 	// custom gesture ----
 	let customGestureId = null;
-	const customGestureTitle = byId('customGestureTitle');
-	const customGestureType = byId('customGestureType');
-	const customGestureURl = byId('customGestureUrl');
-	const customGestureScript = byId('customGestureScript');
 	const addCustomGesture = e => {
 		// ini
 		do {
@@ -294,7 +300,7 @@
 			customGestureScript.value = c1.type === 'script' ? c1.script : '';
 			toggleEditor();
 		}).then(() => {
-			byId('customGestureEditBox').classList.remove('transparent');
+			byId('editDlg').classList.remove('transparent');
 		});
 	};
 	const saveCustomGesture = e => {
@@ -315,7 +321,7 @@
 		hideCustomGestureEditBox();
 	};
 	const hideCustomGestureEditBox = e => {
-		byId('customGestureEditBox').classList.add('transparent');
+		byId('editDlg').classList.add('transparent');
 	};
 	const toggleEditor = e => {
 		toggleClass(customGestureUrl, 'hide', customGestureType.value !== 'url');
