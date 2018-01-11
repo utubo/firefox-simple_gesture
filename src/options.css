@@ -18,14 +18,14 @@ body {
 	padding: 1em;
 }
 .container,
-.gesture-container {
+.sub-container {
 	border-bottom: 1px solid #d7d7db;
 	display: block;
 	padding: .7em 1em;
 	position: relative;
 	clear: both;
 }
-.container-sub {
+.sub-container {
 	border-bottom: none;
 }
 .caption {
@@ -33,13 +33,10 @@ body {
 	display: block;
 	font-size: 120%;
 }
-.caption-sub {
-	display: block;
+.sub {
 	font-size: 100%;
-	margin: 0;
 }
 .note {
-	display: block;
 	font-size: 80%;
 	color: #666;
 }

@@ -27,7 +27,7 @@
 	const TIMERS = {};
 
 	// fields ------------
-	let editTarget = null;
+	let target = null;
 	let minX;
 	let maxX;
 	let minY;
@@ -76,62 +76,58 @@
 		return null;
 	};
 
-	const toggleEditing = (ids, b) => {
-		for (let id of ids) {
-			toggleClass(byId(id), 'editing', b);
+	const toggleEditing = (b, ...elms) => {
+		for (let elm of elms) {
+			toggleClass(elm, 'editing', b);
 		}
 	};
+
+	const ifById = id => (typeof id === 'string') ? byId(id): id;
+	const fadeout = elm => { ifById(elm).classList.add('transparent'); };
+	const fadein = elm => { ifById(elm).classList.remove('transparent'); };
 
 	// node --------------
 	const gestureList = byId('gestureList');
 	const templates = byId('templates');
-	const gestureTemplate = byClass(templates, 'gesture-container');
+	const gestureTemplate = byClass(templates, 'gesture-template');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
 	const customGestureTitle = byId('customGestureTitle');
 	const customGestureType = byId('customGestureType');
 	const customGestureURl = byId('customGestureUrl');
 	const customGestureScript = byId('customGestureScript');
+	const timeout = byId('timeout');
+	const strokeSize = byId('strokeSize');
 
 	// edit UDLR ---------
 	const refreshUDLRLabel = (label, udlr) => {
-		if (udlr) {
-			label.textContent = udlr;
-			label.classList.remove('udlr-na');
-		} else {
-			label.textContent = INSTEAD_OF_EMPTY.noGesture;
-			label.classList.add('udlr-na');
-		}
+		label.textContent = udlr || INSTEAD_OF_EMPTY.noGesture;
+		toggleClass(label, 'udlr-na', !udlr);
 	};
 
 	const DELETE_GESTURE = 'n/a';
-	const updateGesture = gesture => {
-		if (gesture) {
-			if (gesture === DELETE_GESTURE) {
-				gesture = null;
+	const updateGesture = udlr => {
+		if (udlr) {
+			if (udlr === DELETE_GESTURE) {
+				udlr = null;
 			} else {
-				SimpleGesture.ini.gestures[gesture] = null;
+				SimpleGesture.ini.gestures[udlr] = null;
 			}
 			const gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
-			gestureValues[editTarget] = gesture;
+			gestureValues[target.name] = udlr;
 			SimpleGesture.ini.gestures = swapKeyValue(gestureValues);
 			saveIni();
 			for (let name of GESTURE_NAMES) {
-				 refreshUDLRLabel(byId('udlr_' + name), gestureValues[name]);
+				 refreshUDLRLabel(byId(`${name}_udlr`), gestureValues[name]);
 			}
 		}
-		toggleEditing(['caption_' + editTarget, 'udlr_' + editTarget], false);
-		byId('gestureDlg').classList.add('transparent');
-		editTarget = null;
-	};
-
-	const refreshTimeoutAndStrokeSize = () => {
-		byId('timeout').value = SimpleGesture.ini.timeout;
-		byId('strokeSize').value = SimpleGesture.ini.strokeSize;
+		toggleEditing(false, target.caption, target.udlr);
+		fadeout('gestureDlg');
+		target = null;
 	};
 
 	const setupAdjustBox = () => {
-		const box = byId('adjustDlg');
-		SimpleGesture.addTouchEventListener(box, {
+		const dlg = byId('adjustDlg');
+		SimpleGesture.addTouchEventListener(dlg, {
 			start: e => {
 				[minX, minY] = SimpleGesture.getXY(e);
 				[maxX, maxY] = [minX, minY];
@@ -158,18 +154,19 @@
 					SimpleGesture.ini.timeout = new Date() - startTime + 300; // margin 300ms
 					SimpleGesture.ini.strokeSize = size;
 					saveIni();
-					refreshTimeoutAndStrokeSize();
+					timeout.value = SimpleGesture.ini.timeout;
+					strokeSize.value = SimpleGesture.ini.strokeSize;
 				}
 				startTime = null;
-				box.classList.add('transparent');
-				TIMERS.strokeSizeEditing = setTimeout(() => { toggleEditing(['timeout', 'strokeSize'], false); }, 2000);
+				fadeout(dlg);
+				TIMERS.strokeSizeEditing = setTimeout(() => { toggleEditing(false, timeout, strokeSize); }, 2000);
 			}
 		});
 		byId('timeoutAndStrokeSize').addEventListener('click', e => {
 			if (e.target.tagName === 'INPUT') return;
 			clearTimeout(TIMERS.strokeSizeEditing);
-			box.classList.remove('transparent');
-			toggleEditing(['timeout', 'strokeSize'], true);
+			fadein(dlg);
+			toggleEditing(true, timeout, strokeSize);
 			e.preventDefault();
 		});
 	};
@@ -186,11 +183,13 @@
 	};
 
 	const setEditTarget = e => {
-		editTarget = e.target.id.replace(/^.+_/, '');
-		toggleEditing(['caption_' + editTarget, 'udlr_' + editTarget], true);
-		byId('editTarget').textContent = byId('caption_' + editTarget).textContent;
-		byId('inputedGesture').textContent = byId('udlr_' + editTarget).textContent;
-		byId('gestureDlg').classList.remove('transparent');
+		target = { name: e.target.id.replace(/_(caption|udlr)$/, '') };
+		target.caption = byId(`${target.name}_caption`);
+		target.udlr = byId(`${target.name}_udlr`);
+		toggleEditing(true, target.caption, target.udlr);
+		byId('editTarget').textContent = target.caption.textContent;
+		byId('inputedGesture').textContent = target.udlr.textContent;
+		fadein('gestureDlg');
 	};
 
 	const getUDLR = name => {
@@ -200,12 +199,12 @@
 	};
 	const createGestureContainer = name => {
 		const container = gestureTemplate.cloneNode(true);
-		container.id = name + "_container";
+		container.id = `${name}_container`;
 		const label = byClass(container, 'udlr');
-		label.id = 'udlr_' + name;
+		label.id = `${name}_udlr`;
 		refreshUDLRLabel(label, getUDLR(name));
 		const caption = byClass(container, 'gesture-caption');
-		caption.id = 'caption_' + name;
+		caption.id = `${name}_caption`;
 		caption.textContent = name;
 		if (name[0] === CUSTOM_GESTURE_PREFIX) {
 			const b = buttonsTamplate.cloneNode(true);
@@ -240,19 +239,19 @@
 
 	// inject settings-page behavior
 	SimpleGesture.onGestureStart = e => {
-		if (editTarget) {
+		if (target) {
 			SimpleGesture.clearGestureTimeoutTimer(); // Don't timeout, when editing gesture.
 			e.preventDefault();
 		}
 	};
 	SimpleGesture.onInputGesture = (e, gesture) => {
-		if (!editTarget) return;
+		if (!target) return;
 		byId('inputedGesture').textContent = gesture.substring(0, MAX_INPUT_LENGTH);
 		e.preventDefault();
 		return false;
 	};
 	SimpleGesture.onGestured = (e, gesture) => {
-		if (!editTarget) return;
+		if (!target) return;
 		updateGesture(gesture.substring(0, MAX_INPUT_LENGTH));
 		e.preventDefault();
 		return false;
@@ -280,11 +279,11 @@
 	const dataTargetId = e => e.target.getAttribute('data-targetId');
 	const deleteCustomGesture = e => {
 		const id = dataTargetId(e);
-		browser.storage.local.remove('simple_gesture_' + id);
+		browser.storage.local.remove(`simple_gesture_${id}`);
 		const c = findCustomGesture(id);
 		exData.customGestureList = exData.customGestureList.filter((v,i,a) => v.id !== id);
 		browser.storage.local.set({ simple_gesture_exdata: exData });
-		const container = byId(id + '_container');
+		const container = byId(`${id}_container`);
 		container.parentNode.removeChild(container);
 		setupGestureNames();
 	};
@@ -292,7 +291,7 @@
 		customGestureId = dataTargetId(e);
 		const c = findCustomGesture(customGestureId);
 		customGestureTitle.value = c.title;
-		const key = 'simple_gesture_' + customGestureId;
+		const key = `simple_gesture_${customGestureId}`;
 		browser.storage.local.get(key).then(res => {
 			const c1 = res[key];
 			customGestureType.value = c1.type;
@@ -300,14 +299,14 @@
 			customGestureScript.value = c1.type === 'script' ? c1.script : '';
 			toggleEditor();
 		}).then(() => {
-			byId('editDlg').classList.remove('transparent');
+			fadein('editDlg');
 		});
 	};
 	const saveCustomGesture = e => {
 		// save list
 		const c = findCustomGesture(customGestureId);
 		c.title = customGestureTitle.value;
-		byClass(byId(customGestureId + '_container'), 'gesture-caption').textContent = c.title;
+		byClass(byId(`${customGestureId}_container`), 'gesture-caption').textContent = c.title;
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		// save value
 		const c1 = { type: customGestureType.value };
@@ -316,12 +315,12 @@
 			case 'script': c1.script = customGestureScript.value; break;
 		}
 		const res = {};
-		res['simple_gesture_' + customGestureId] = c1;
+		res[`simple_gesture_${customGestureId}`] = c1;
 		browser.storage.local.set(res);
 		hideCustomGestureEditBox();
 	};
 	const hideCustomGestureEditBox = e => {
-		byId('editDlg').classList.add('transparent');
+		fadeout('editDlg');
 	};
 	const toggleEditor = e => {
 		toggleClass(customGestureUrl, 'hide', customGestureType.value !== 'url');
@@ -352,11 +351,11 @@
 	const saveTextValues = e => {
 		clearTimeout(TIMERS.saveTextValues);
 		for (let id of TEXT_FORMS) {
-			const target = byId(id);
-			const value = target.value;
+			const t = byId(id);
+			const value = t.value;
 			if (value === INSTEAD_OF_EMPTY[id]) {
 				SimpleGesture.ini[id] = null;
-			} else if (target.type === "number" && value.match(/[^\d]/)) {
+			} else if (t.type === 'number' && value.match(/[^\d]/)) {
 				continue; // ignore invalid number.
 			} else {
 				SimpleGesture.ini[id] = value;
@@ -382,17 +381,17 @@
 		byId('toggleUserAgent_container').appendChild(byId('userAgent_container'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
 		for (let id of TEXT_FORMS) {
-			const inputElm = byId(id);
-			inputElm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
-			inputElm.addEventListener('change', saveTextValues);
-			inputElm.addEventListener('input', saveTextValuesDelay);
+			const textForm = byId(id);
+			textForm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
+			textForm.addEventListener('change', saveTextValues);
+			textForm.addEventListener('input', saveTextValuesDelay);
 		}
 	};
 
 	// setup options page
 	const removeCover = () => {
 		const cover = byId('cover');
-		setTimeout(() => { cover.classList.add('transparent'); });
+		setTimeout(() => { fadeout(cover); });
 		setTimeout(() => { cover.parentNode.removeChild(cover); }, 500);
 	};
 

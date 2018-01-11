@@ -12,7 +12,7 @@
 		<div id="gestureList"></div>
 
 		<div id="templates" class="hide">
-			<div class="gesture-container">
+			<div class="gesture-template container">
 				<label class="gesture-label">
 					<span class="gesture-caption caption"></span>
 					<span class="udlr"></span>
@@ -22,6 +22,15 @@
 				<div class="custom-gesture-edit button icon-only"></div>
 				<div class="custom-gesture-delete button icon-only"></div>
 			</div>
+			<div id="newTabUrl_container" class="sub-container">
+				<label for="newTabUrl" class="caption sub">newTabUrl</label>
+				<input id="newTabUrl" type="url" class="text-input">
+			</div>
+			<div id="userAgent_container" class="sub-container">
+				<label for="userAgent" class="caption sub">UserAgent</label>
+				<input id="userAgent" type="text" class="text-input" list="userAgentList">
+				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
+			</div>
 		</div>
 
 		<div class="container">
@@ -29,27 +38,14 @@
 			<div id="addCustomGesture" class="caption button">addCustomGesture</div>
 		</div>
 
-		<div id="newTabUrl_container" class="container container-sub">
-			<label for="newTabUrl" class="caption caption-sub">newTabUrl</label>
-			<input id="newTabUrl" type="url" class="text-input">
-		</div>
-
-		<div id="userAgent_container" class="container container-sub">
-			<label for="userAgent" class="caption caption-sub">UserAgent</label>
-			<input id="userAgent" type="text" class="text-input" list="userAgentList">
-			<datalist id="userAgentList">
-				<option id="defaultUserAgent">
-			</datalist>
-		</div>
-
 		<div id="timeoutAndStrokeSize" class="container">
 			<label class="caption">TimeoutAndStrokeSize</label>
-			<div class="container container-sub">
-				<label for="timeout" class="caption caption-sub">timeout</label>
+			<div class="sub-container">
+				<label for="timeout" class="caption sub">timeout</label>
 				<input id="timeout" class="number-input" type="number" min="0" max="9999" size="5">ms
 			</div>
-			<div class="container container-sub">
-				<label for="strokeSize" class="caption caption-sub">strokeSize</label>
+			<div class="sub-container">
+				<label for="strokeSize" class="caption sub">strokeSize</label>
 				<div class="caption note">basedOn320x480</div>
 				<input id="strokeSize" class="number-input" type="number" min="1" max="999" size="5">px
 			</div>
