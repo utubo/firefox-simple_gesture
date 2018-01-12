@@ -63,7 +63,6 @@ body {
 }
 .udlr {
 	color: #666;
-	display: block;
 }
 .udlr-na {
 	background: #fcc;
@@ -72,9 +71,9 @@ body {
 	text-align: center;
 	width: 3em;
 }
-.gesture-label,
-#timeout,
-#strokeSize {
+.gesture-caption,
+.udlr,
+.number-input {
 	transition: color .5s ease;
 }
 .custom-gesture-buttons {
@@ -214,7 +213,7 @@ body {
 	height: 22px;
 }
 .custom-gesture-delete::before,
-#deleteGesture::before {
+#clearGesture::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 5l2 10s0.2 1 1 1h7s1 0.2 1-1l2-10z"/><g transform="rotate(-8) translate(-1.9,1.2)"><path d="M2 3.5h13s0-2-2-2h-9s-2 0-2 2zM7 1.5a 1.5 1.5 1.5 1 1 3-0z"/></g></svg>');
 }
 .custom-gesture-edit::before {

@@ -70,13 +70,15 @@
 			});
 		},
 		customGesture: id => {
-			let key = 'simple_gesture_' + id;
-			browser.storage.local.get(key).then( res => {
-				let c = res[key];
+			const key = 'simple_gesture_' + id;
+			browser.storage.local.get(key).then(res => {
+				const c = res[key];
 				if (c.url) {
 					browser.tabs.create({ active: true, url: c.url });
-				} else if (c.script) {
-					const userScript = `{ const SimpleGesture = { target: document.getElementsByClassName('simple-gesture-target')[0]}; ${c.script} }`;
+					return;
+				}
+				if (c.script) {
+					const userScript = `{ const SimpleGesture = { target: document.getElementsByClassName('simple-gesture-target')[0] }; ${c.script} }`;
 					browser.tabs.executeScript({ code: userScript }).then(result => {
 						const r = result[0];
 						if (!r) return;

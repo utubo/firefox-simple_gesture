@@ -19,14 +19,13 @@ var SimpleGesture = {};
 		'strokeSize': 50,
 		'timeout': 1500
 	};
-	// Up to 17 chars (= 9 moves) are valid. Ignore if gesture is over 19 characters.
-	SimpleGesture.MAX_LENGTH = 19;
+	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
 
 	// fields ------------
 	let gesture = null;
 	let lx = 0; // last X
 	let ly = 0; // last Y
-	let lg = null; // last gesture ('L','R','U' or 'D')
+	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let timeoutId = null;
 	let isGestureEnabled = true;
@@ -70,7 +69,7 @@ var SimpleGesture = {};
 
 	const onTouchMove = e => {
 		if (gesture === null) return;
-		if (gesture.length >= SimpleGesture.MAX_LENGTH) return;
+		if (gesture.length > SimpleGesture.MAX_LENGTH) return;
 		if (e.touches && e.touches[1]) { // not support two fingers
 			resetGesture();
 			return;

@@ -23,7 +23,6 @@
 		noGesture: '-',
 		defaultTitle: 'Custom Gesture'
 	};
-	const MAX_INPUT_LENGTH = SimpleGesture.MAX_LENGTH - 2;
 	const TIMERS = {};
 
 	// fields ------------
@@ -42,7 +41,7 @@
 
 	const byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
 
-	const toggleClass = (elm, clazz, b) => {
+	const toggleClass = (b, elm, clazz) => {
 		if (b) {
 			elm.classList.add(clazz);
 		} else {
@@ -78,7 +77,7 @@
 
 	const toggleEditing = (b, ...elms) => {
 		for (let elm of elms) {
-			toggleClass(elm, 'editing', b);
+			toggleClass(b, elm, 'editing');
 		}
 	};
 
@@ -89,7 +88,7 @@
 	// node --------------
 	const gestureList = byId('gestureList');
 	const templates = byId('templates');
-	const gestureTemplate = byClass(templates, 'gesture-template');
+	const gestureTemplate = byClass(templates, 'gesture-container');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
 	const customGestureTitle = byId('customGestureTitle');
 	const customGestureType = byId('customGestureType');
@@ -101,74 +100,28 @@
 	// edit UDLR ---------
 	const refreshUDLRLabel = (label, udlr) => {
 		label.textContent = udlr || INSTEAD_OF_EMPTY.noGesture;
-		toggleClass(label, 'udlr-na', !udlr);
+		toggleClass(!udlr, label, 'udlr-na');
 	};
 
-	const DELETE_GESTURE = 'n/a';
+	const CLEAR_GESTURE = 'n/a'; // magic number
 	const updateGesture = udlr => {
 		if (udlr) {
-			if (udlr === DELETE_GESTURE) {
+			if (udlr === CLEAR_GESTURE) {
 				udlr = null;
 			} else {
 				SimpleGesture.ini.gestures[udlr] = null;
 			}
-			const gestureValues = swapKeyValue(SimpleGesture.ini.gestures);
-			gestureValues[target.name] = udlr;
-			SimpleGesture.ini.gestures = swapKeyValue(gestureValues);
+			const udlrs = swapKeyValue(SimpleGesture.ini.gestures);
+			udlrs[target.name] = udlr;
+			SimpleGesture.ini.gestures = swapKeyValue(udlrs);
 			saveIni();
 			for (let name of GESTURE_NAMES) {
-				 refreshUDLRLabel(byId(`${name}_udlr`), gestureValues[name]);
+				 refreshUDLRLabel(byId(`${name}_udlr`), udlrs[name]);
 			}
 		}
 		toggleEditing(false, target.caption, target.udlr);
 		fadeout('gestureDlg');
 		target = null;
-	};
-
-	const setupAdjustBox = () => {
-		const dlg = byId('adjustDlg');
-		SimpleGesture.addTouchEventListener(dlg, {
-			start: e => {
-				[minX, minY] = SimpleGesture.getXY(e);
-				[maxX, maxY] = [minX, minY];
-				startTime = new Date();
-				e.preventDefault();
-				e.stopPropagation();
-			},
-			move: e => {
-				if (!startTime) return;
-				const [x, y] = SimpleGesture.getXY(e);
-				minX = Math.min(x, minX);
-				minY = Math.min(y, minY);
-				maxX = Math.max(x, maxX);
-				maxY = Math.max(y, maxY);
-				e.preventDefault();
-				e.stopPropagation();
-			},
-			end: e => {
-				let size = Math.max(maxX - minX, maxY - minY);
-				size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
-				size *= 0.8; // margin
-				size ^= 0; // to integer;
-				if (10 < size) {
-					SimpleGesture.ini.timeout = new Date() - startTime + 300; // margin 300ms
-					SimpleGesture.ini.strokeSize = size;
-					saveIni();
-					timeout.value = SimpleGesture.ini.timeout;
-					strokeSize.value = SimpleGesture.ini.strokeSize;
-				}
-				startTime = null;
-				fadeout(dlg);
-				TIMERS.strokeSizeEditing = setTimeout(() => { toggleEditing(false, timeout, strokeSize); }, 2000);
-			}
-		});
-		byId('timeoutAndStrokeSize').addEventListener('click', e => {
-			if (e.target.tagName === 'INPUT') return;
-			clearTimeout(TIMERS.strokeSizeEditing);
-			fadein(dlg);
-			toggleEditing(true, timeout, strokeSize);
-			e.preventDefault();
-		});
 	};
 
 	const setupGestureNames = () => {
@@ -197,6 +150,7 @@
 			if (SimpleGesture.ini.gestures[g] === name) return g;
 		}
 	};
+
 	const createGestureContainer = name => {
 		const container = gestureTemplate.cloneNode(true);
 		container.id = `${name}_container`;
@@ -221,7 +175,7 @@
 			createGestureContainer(name);
 		}
 		gestureList.addEventListener('click', e => {
-			if (e.target.parentNode && e.target.parentNode.classList.contains('gesture-label')) {
+			if ((e.target.parentNode || e.target).classList.contains('gesture-container')) {
 				setEditTarget(e);
 			} else if (e.target.classList.contains('custom-gesture-edit')) {
 				showCustomGestureEditBox(e);
@@ -231,8 +185,8 @@
 				}
 			}
 		});
-		SimpleGesture.addTouchEventListener(byId('deleteGesture'), { start: e => {
-			updateGesture(DELETE_GESTURE);
+		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
+			updateGesture(CLEAR_GESTURE);
 			e.preventDefault();
 		}, move: e => {}, end: e => {} });
 	};
@@ -246,13 +200,13 @@
 	};
 	SimpleGesture.onInputGesture = (e, gesture) => {
 		if (!target) return;
-		byId('inputedGesture').textContent = gesture.substring(0, MAX_INPUT_LENGTH);
+		byId('inputedGesture').textContent = gesture.substring(0, SimpleGesture.MAX_LENGTH);
 		e.preventDefault();
 		return false;
 	};
 	SimpleGesture.onGestured = (e, gesture) => {
 		if (!target) return;
-		updateGesture(gesture.substring(0, MAX_INPUT_LENGTH));
+		updateGesture(gesture.substring(0, SimpleGesture.MAX_LENGTH));
 		e.preventDefault();
 		return false;
 	};
@@ -323,9 +277,9 @@
 		fadeout('editDlg');
 	};
 	const toggleEditor = e => {
-		toggleClass(customGestureUrl, 'hide', customGestureType.value !== 'url');
-		toggleClass(customGestureScript, 'hide', customGestureType.value !== 'script');
-		toggleClass(byId('customGestureScriptNote'), 'hide', customGestureType.value !== 'script');
+		toggleClass(customGestureType.value !== 'url', customGestureUrl, 'hide');
+		toggleClass(customGestureType.value !== 'script', customGestureScript, 'hide');
+		toggleClass(customGestureType.value !== 'script', byId('customGestureScriptNote'), 'hide');
 	};
 	const autoTitle = () => {
 		if (customGestureTitle.value && customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
@@ -345,6 +299,53 @@
 		customGestureType.addEventListener('change', toggleEditor);
 		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitle, 1000); });
 		customGestureScript.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByScript, 1000); });
+	};
+
+	// adjustment dlg ----
+	const setupAdjustBox = () => {
+		const dlg = byId('adjustDlg');
+		SimpleGesture.addTouchEventListener(dlg, {
+			start: e => {
+				[minX, minY] = SimpleGesture.getXY(e);
+				[maxX, maxY] = [minX, minY];
+				startTime = new Date();
+				e.preventDefault();
+				e.stopPropagation();
+			},
+			move: e => {
+				if (!startTime) return;
+				const [x, y] = SimpleGesture.getXY(e);
+				minX = Math.min(x, minX);
+				minY = Math.min(y, minY);
+				maxX = Math.max(x, maxX);
+				maxY = Math.max(y, maxY);
+				e.preventDefault();
+				e.stopPropagation();
+			},
+			end: e => {
+				let size = Math.max(maxX - minX, maxY - minY);
+				size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
+				size *= 0.8; // margin
+				size ^= 0; // to integer;
+				if (10 < size) {
+					SimpleGesture.ini.timeout = new Date() - startTime + 300; // margin 300ms
+					SimpleGesture.ini.strokeSize = size;
+					saveIni();
+					timeout.value = SimpleGesture.ini.timeout;
+					strokeSize.value = SimpleGesture.ini.strokeSize;
+				}
+				startTime = null;
+				fadeout(dlg);
+				resetTimer('strokeSizeChanged', () => { toggleEditing(false, timeout, strokeSize); }, 2000);
+			}
+		});
+		byId('timeoutAndStrokeSize').addEventListener('click', e => {
+			if (e.target.tagName === 'INPUT') return;
+			fadein(dlg);
+			clearTimeout(TIMERS.strokeSizeChanged);
+			toggleEditing(true, timeout, strokeSize);
+			e.preventDefault();
+		});
 	};
 
 	// edit text values --
