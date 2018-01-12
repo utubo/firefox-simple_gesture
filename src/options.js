@@ -90,6 +90,7 @@
 	const templates = byId('templates');
 	const gestureTemplate = byClass(templates, 'gesture-container');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
+	const inputedGesture = byId('inputedGesture');
 	const customGestureTitle = byId('customGestureTitle');
 	const customGestureType = byId('customGestureType');
 	const customGestureURl = byId('customGestureUrl');
@@ -136,12 +137,12 @@
 	};
 
 	const setEditTarget = e => {
-		target = { name: e.target.id.replace(/_(caption|udlr)$/, '') };
+		target = { name: e.target.id.replace(/_[^_]+$/, '') };
 		target.caption = byId(`${target.name}_caption`);
 		target.udlr = byId(`${target.name}_udlr`);
 		toggleEditing(true, target.caption, target.udlr);
 		byId('editTarget').textContent = target.caption.textContent;
-		byId('inputedGesture').textContent = target.udlr.textContent;
+		inputedGesture.textContent = target.udlr.textContent;
 		fadein('gestureDlg');
 	};
 
@@ -193,14 +194,13 @@
 
 	// inject settings-page behavior
 	SimpleGesture.onGestureStart = e => {
-		if (target) {
-			SimpleGesture.clearGestureTimeoutTimer(); // Don't timeout, when editing gesture.
-			e.preventDefault();
-		}
+		if (!target) return;
+		SimpleGesture.clearGestureTimeoutTimer(); // Don't timeout, when editing gesture.
+		e.preventDefault();
 	};
 	SimpleGesture.onInputGesture = (e, gesture) => {
 		if (!target) return;
-		byId('inputedGesture').textContent = gesture.substring(0, SimpleGesture.MAX_LENGTH);
+		inputedGesture.textContent = gesture.substring(0, SimpleGesture.MAX_LENGTH);
 		e.preventDefault();
 		return false;
 	};
@@ -281,7 +281,7 @@
 		toggleClass(customGestureType.value !== 'script', customGestureScript, 'hide');
 		toggleClass(customGestureType.value !== 'script', byId('customGestureScriptNote'), 'hide');
 	};
-	const autoTitle = () => {
+	const autoTitleByUrl = () => {
 		if (customGestureTitle.value && customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
 		if (customGestureUrl.value.match(/https?:\/\/([^\/]+)/)) {
 			customGestureTitle.value = RegExp.$1;
@@ -297,7 +297,7 @@
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
 		byId('cancelCustomGesture').addEventListener('click', hideCustomGestureEditBox);
 		customGestureType.addEventListener('change', toggleEditor);
-		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitle, 1000); });
+		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
 		customGestureScript.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByScript, 1000); });
 	};
 
