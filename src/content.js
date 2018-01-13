@@ -127,8 +127,8 @@ var SimpleGesture = {};
 	};
 
 	const setCustomGestureTarget = () => {
-		const before = document.getElementsByClassName('simple-gesture-target')[0];
-		before && before.classList.remove('simple-gesture-target');
+		const befores = document.getElementsByClassName('simple-gesture-target');
+		[...befores].forEach(e => { e.classList.remove('simple-gesture-target'); });
 		target && target.classList && target.classList.add('simple-gesture-target');
 	};
 
