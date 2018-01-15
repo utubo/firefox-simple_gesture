@@ -69,7 +69,7 @@
 				browser.tabs.reload(tab.id);
 			});
 		},
-		customGesture: id => {
+		customGesture: (tab, id) => {
 			const key = 'simple_gesture_' + id;
 			browser.storage.local.get(key).then(res => {
 				const c = res[key];
@@ -85,7 +85,8 @@
 						if (!r.url) return;
 						browser.tabs.create({
 							url: r.url,
-							active: (!('active' in r) || r.active)
+							active: (!('active' in r) || r.active),
+							openerTabId: tab.id
 						});
 					});
 				}
@@ -94,16 +95,12 @@
 	};
 
 	browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-		if (msg[0] === '$') { // custom gesture prefix
-			exec.customGesture(msg);
-			return;
-		}
-		const f = exec[msg];
+		const f = msg[0] === '$' ? exec.customGesture : exec[msg]; // '$' is custom-gesture prefix.
 		if (sender.tab) {
-			f(sender.tab);
+			f(sender.tab, msg);
 		} else {
 			// Somtimes sender.tab is undefined.
-			browser.tabs.query({ active: true, currentWindow: true }).then(tabs => { f(tabs[0]); });
+			browser.tabs.query({ active: true, currentWindow: true }).then(tabs => { f(tabs[0], msg); });
 		}
 	});
 

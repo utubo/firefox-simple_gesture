@@ -117,7 +117,7 @@ var SimpleGesture = {};
 			case 'bottom': smoothScroll(document.body.scrollHeight); break;
 			case 'reload': location.reload(); break;
 			default:
-				if (g[0] === '$') { // custom gesture prefix.
+				if (g[0] === '$') { // '$' is custom-gesture prefix.
 					setCustomGestureTarget();
 				}
 				browser.runtime.sendMessage(g);
