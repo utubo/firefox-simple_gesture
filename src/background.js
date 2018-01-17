@@ -85,8 +85,8 @@
 						if (!r.url) return;
 						browser.tabs.create({
 							url: r.url,
-							active: (!('active' in r) || r.active),
-							openerTabId: tab.id
+							active: (!('active' in r) || r.active)
+							//openerTabId: tab.id // Firefox for Android does not support this.
 						});
 					});
 				}
