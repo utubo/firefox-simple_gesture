@@ -75,13 +75,8 @@
 				const userScript = `{
 					const SimpleGesture = {};
 					SimpleGesture.target = document.getElementsByClassName('simple-gesture-target')[0];
-					SimpleGesture.exit = v => { throw { message: 'SimpleGestureExit', value: v }; };
-					try {
-						${c.script}
-					} catch (e) {
-						if (e.message !== 'SimpleGestureExit') throw e;
-						if (e.value) value;
-					}
+					SimpleGesture.exit = v => { throw new Error('SimpleGestureExit'); };
+					${c.script}
 				}`;
 				try {
 					const result = await browser.tabs.executeScript({ code: userScript });
@@ -94,10 +89,12 @@
 						//openerTabId: tab.id // Firefox for Android does not support this.
 					});
 				} catch (e) {
-					const msg = e.message.replace(/(['\\])/g, '\\$1');
-					const code = `alert('${msg}');`; // TODO: Always e.lieNumber is 0.
-					browser.tabs.executeScript({ code: code });
-					return;
+					if (e.message !== 'SimpleGestureExit') {
+						const msg = e.message.replace(/(['\\])/g, '\\$1');
+						const code = `alert('${msg}');`; // TODO: Always e.lieNumber is 0.
+						browser.tabs.executeScript({ code: code });
+						return;
+					}
 				}
 			}
 		}
