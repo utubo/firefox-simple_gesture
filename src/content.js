@@ -1,5 +1,5 @@
 var SimpleGesture = {};
-(() => {
+(async () => {
 	'use strict';
 
 	// const -------------
@@ -164,11 +164,9 @@ var SimpleGesture = {};
 
 	// START HERE ! ------
 	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
-	browser.storage.local.get('simple_gesture').then(res => {
-		if (res && res.simple_gesture) {
-			SimpleGesture.ini = res.simple_gesture;
-		}
-	});
-
+	const res = await browser.storage.local.get('simple_gesture');
+	if (res && res.simple_gesture) {
+		SimpleGesture.ini = res.simple_gesture;
+	}
 })();
 

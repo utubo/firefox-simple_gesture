@@ -1,4 +1,4 @@
-(() => {
+(async () => {
 	'use strict';
 
 	// const -------------
@@ -61,6 +61,15 @@
 	const resetTimer = (name, f, msec) => {
 		clearTimeout(TIMERS[name]);
 		TIMERS[name] = setTimeout(f, msec);
+	};
+
+	const storageValue = async name => {
+		try {
+			const v = await browser.storage.local.get(name);
+			return v ? v[name] : null;
+		} catch (e) {
+			return null;
+		}
 	};
 
 	// utils for Simple gesture
@@ -241,20 +250,16 @@
 		container.parentNode.removeChild(container);
 		setupGestureNames();
 	};
-	const showCustomGestureEditBox = e => {
+	const showCustomGestureEditBox = async e => {
 		customGestureId = dataTargetId(e);
 		const c = findCustomGesture(customGestureId);
 		customGestureTitle.value = c.title;
-		const key = `simple_gesture_${customGestureId}`;
-		browser.storage.local.get(key).then(res => {
-			const c1 = res[key];
-			customGestureType.value = c1.type;
-			customGestureUrl.value = c1.type === 'url' ? c1.url : '';
-			customGestureScript.value = c1.type === 'script' ? c1.script : '';
-			toggleEditor();
-		}).then(() => {
-			fadein('editDlg');
-		});
+		const c1 = await storageValue(`simple_gesture_${customGestureId}`);
+		customGestureType.value = c1.type;
+		customGestureUrl.value = c1.type === 'url' ? c1.url : '';
+		customGestureScript.value = c1.type === 'script' ? c1.script : '';
+		toggleEditor();
+		fadein('editDlg');
 	};
 	const saveCustomGesture = e => {
 		// save list
@@ -409,17 +414,8 @@
 	};
 
 	// START HERE ! ------
-	Promise.all([
-		browser.storage.local.get('simple_gesture').then(res => {
-			if (res && res.simple_gesture) {
-				SimpleGesture.ini = res.simple_gesture;
-			}
-		}),
-		browser.storage.local.get('simple_gesture_exdata').then(res => {
-			if (res && res.simple_gesture_exdata) {
-				exData = res.simple_gesture_exdata;
-			}
-		}),
-	]).then(setupSettingItems, setupSettingItems); // promise.finally is supported on FF 58 or later.
+	SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
+	exData = (await storageValue('simple_gesture_exdata')) || exData;
+	setupSettingItems();
 })();
 
