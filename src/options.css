@@ -194,6 +194,7 @@ body {
 	background: #666;
 	border: 1px solid #ccc;
 	border-radius: 4px;
+	box-sizing: border-box;
 	color: #ccc;
 	cursor: default;
 	display: inline-block;
@@ -206,11 +207,6 @@ body {
 	margin: 0 2px;
 	vertical-align: middle;
 	width: 1em;
-}
-.icon-only {
-	color: transparent;
-	max-width: 18px;
-	height: 22px;
 }
 .custom-gesture-delete::before,
 #clearGesture::before {
