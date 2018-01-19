@@ -32,9 +32,7 @@
 	let minY;
 	let maxY;
 	let startTime = null;
-	let exData = {
-		customGestureList: []
-	};
+	let exData = { customGestureList: [] };
 
 	// utils -------------
 	const byId = id => document.getElementById(id);
@@ -172,7 +170,6 @@
 		caption.textContent = name;
 		if (name[0] === CUSTOM_GESTURE_PREFIX) {
 			const b = buttonsTamplate.cloneNode(true);
-			b.classList.remove('hide');
 			byClass(b, 'custom-gesture-edit').setAttribute('data-targetId', name);
 			byClass(b, 'custom-gesture-delete').setAttribute('data-targetId', name);
 			container.insertBefore(b, container.firstChild);

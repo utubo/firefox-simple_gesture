@@ -91,7 +91,7 @@
 				} catch (e) {
 					if (e.message !== 'SimpleGestureExit') {
 						const msg = e.message.replace(/(['\\])/g, '\\$1');
-						const code = `alert('${msg}');`; // TODO: Always e.lieNumber is 0.
+						const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
 						browser.tabs.executeScript({ code: code });
 						return;
 					}
