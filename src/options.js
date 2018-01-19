@@ -401,10 +401,7 @@
 		setTimeout(() => { cover.parentNode.removeChild(cover); }, 500);
 	};
 
-	const setupSettingItems = res => {
-		if (res && res.simple_gesture) {
-			SimpleGesture.ini = res.simple_gesture;
-		}
+	const setupSettingItems = () => {
 		setupGestureNames();
 		setupGestureInputBox();
 		setupCustomGestureEditBox();
