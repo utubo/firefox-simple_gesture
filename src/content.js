@@ -154,6 +154,7 @@ var SimpleGesture = {};
 		return false;
 	};
 
+	// utils for setup ----
 	SimpleGesture.addTouchEventListener = (target, events) => {
 		// mouse event is for Test on Desktop
 		target.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', events.start);
@@ -162,11 +163,15 @@ var SimpleGesture = {};
 		//window.visualViewport.addEventListener('resize', fixSize); VisualViewport is draft. :(
 	};
 
+	SimpleGesture.loadIni = async () => {
+		const res = await browser.storage.local.get('simple_gesture');
+		if (res && res.simple_gesture) {
+			SimpleGesture.ini = res.simple_gesture;
+		}
+	};
+
 	// START HERE ! ------
 	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
-	const res = await browser.storage.local.get('simple_gesture');
-	if (res && res.simple_gesture) {
-		SimpleGesture.ini = res.simple_gesture;
-	}
+	SimpleGesture.loadIni();
 })();
 

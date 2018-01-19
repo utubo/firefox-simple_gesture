@@ -73,6 +73,12 @@
 	// utils for Simple gesture
 	const saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
+		resetTimer('reloadAllTabsIni', reloadAllTabsIni, 1000);
+
+	};
+
+	const reloadAllTabsIni = () => {
+		browser.runtime.sendMessage('reloadAllTabsIni');
 	};
 
 	const findCustomGesture = id => {

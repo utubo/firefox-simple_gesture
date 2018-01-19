@@ -97,6 +97,12 @@
 					}
 				}
 			}
+		},
+		reloadAllTabsIni: async () => {
+			const tabs = await browser.tabs.query({});
+			for (let tab of tabs) {
+				browser.tabs.executeScript(tab.id, { code: 'SimpleGesture.loadIni();' });
+			}
 		}
 	};
 
