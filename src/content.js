@@ -168,6 +168,7 @@ var SimpleGesture = {};
 		if (res && res.simple_gesture) {
 			SimpleGesture.ini = res.simple_gesture;
 		}
+		lastInnerWidth = 0; // for recalucrate stroke size on touchstart.
 	};
 
 	// START HERE ! ------
