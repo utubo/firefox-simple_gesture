@@ -89,7 +89,10 @@
 						//openerTabId: tab.id // Firefox for Android does not support this.
 					});
 				} catch (e) {
-					if (e.message !== 'SimpleGestureExit') {
+					if (
+						e.message !== 'SimpleGestureExit' &&
+						e.message.indexOf('result is non-structured-clonable data') === -1 // Ignore invalid value.
+					) {
 						const msg = e.message.replace(/(['\\])/g, '\\$1');
 						const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
 						browser.tabs.executeScript({ code: code });
