@@ -113,8 +113,8 @@ var SimpleGesture = {};
 		switch (g) {
 			case 'forward': history.forward(); break;
 			case 'back': history.back(); break;
-			case 'top': smoothScroll(0); break;
-			case 'bottom': smoothScroll(document.body.scrollHeight); break;
+			case 'top': window.scrollTo({ top: 0, behavior: 'smooth' }); break;
+			case 'bottom': window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); break;
 			case 'reload': location.reload(); break;
 			default:
 				if (g[0] === '$') { // '$' is custom-gesture prefix.
@@ -130,22 +130,6 @@ var SimpleGesture = {};
 		const befores = document.getElementsByClassName('simple-gesture-target');
 		[...befores].forEach(e => { e.classList.remove('simple-gesture-target'); });
 		target && target.classList && target.classList.add('simple-gesture-target');
-	};
-
-	const smoothScrollImpl = y => {
-		document.body.classList.add('simple-gesture-smoothscroll');
-		window.scrollTo(0, y);
-		window.setTimeout(() => {
-			document.body.classList.remove('simple-gesture-smoothscroll');
-		}, 1000);
-	};
-
-	let smoothScroll = y => {
-		// When 1st scroll, insert css.
-		const s = (document.head || document.documentElement).appendChild(document.createElement('STYLE'));
-		s.sheet.insertRule('.simple-gesture-smoothscroll { scroll-behavior: smooth; }', 0);
-		smoothScroll = smoothScrollImpl;
-		smoothScroll(y);
 	};
 
 	const toggleIsGestureEnabled = () => {
