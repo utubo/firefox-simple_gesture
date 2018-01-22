@@ -310,8 +310,8 @@
 	};
 
 	// adjustment dlg ----
-	const setupAdjustBox = () => {
-		const dlg = byId('adjustDlg');
+	const setupAdjustmentDlg = () => {
+		const dlg = byId('adjustmentDlg');
 		SimpleGesture.addTouchEventListener(dlg, {
 			start: e => {
 				[minX, minY] = SimpleGesture.getXY(e);
@@ -409,7 +409,7 @@
 		setupGestureInputBox();
 		setupCustomGestureEditBox();
 		setupOtherOptions();
-		setupAdjustBox();
+		setupAdjustmentDlg();
 		removeCover();
 	};
 
