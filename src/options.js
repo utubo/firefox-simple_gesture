@@ -191,7 +191,7 @@
 			if ((e.target.parentNode || e.target).classList.contains('gesture-container')) {
 				setEditTarget(e);
 			} else if (e.target.classList.contains('custom-gesture-edit')) {
-				showCustomGestureEditBox(e);
+				showCustomGestureEditDlg(e);
 			} else if (e.target.classList.contains('custom-gesture-delete')) {
 				if (confirm(chrome.i18n.getMessage('message_delete_confirm'))) {
 					deleteCustomGesture(e);
@@ -253,7 +253,7 @@
 		container.parentNode.removeChild(container);
 		setupGestureNames();
 	};
-	const showCustomGestureEditBox = async e => {
+	const showCustomGestureEditDlg = async e => {
 		customGestureId = dataTargetId(e);
 		const c = findCustomGesture(customGestureId);
 		customGestureTitle.value = c.title;
@@ -279,9 +279,9 @@
 		const res = {};
 		res[`simple_gesture_${customGestureId}`] = c1;
 		browser.storage.local.set(res);
-		hideCustomGestureEditBox();
+		hideCustomGestureEditDlg();
 	};
-	const hideCustomGestureEditBox = e => {
+	const hideCustomGestureEditDlg = e => {
 		fadeout('editDlg');
 	};
 	const toggleEditor = e => {
@@ -300,10 +300,10 @@
 			customGestureTitle.value = RegExp.$1;
 		}
 	};
-	const setupCustomGestureEditBox = () => {
+	const setupCustomGestureEditDlg = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
-		byId('cancelCustomGesture').addEventListener('click', hideCustomGestureEditBox);
+		byId('cancelCustomGesture').addEventListener('click', hideCustomGestureEditDlg);
 		customGestureType.addEventListener('change', toggleEditor);
 		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
 		customGestureScript.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByScript, 1000); });
@@ -407,7 +407,7 @@
 	const setupSettingItems = () => {
 		setupGestureNames();
 		setupGestureInputBox();
-		setupCustomGestureEditBox();
+		setupCustomGestureEditDlg();
 		setupOtherOptions();
 		setupAdjustmentDlg();
 		removeCover();
