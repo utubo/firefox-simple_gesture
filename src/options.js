@@ -27,7 +27,7 @@
 	const byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
 
 	const parentByClass = (elm, clazz) => {
-		for (let e = elm; e.classList; e = e.parentNode) {
+		for (let e = elm; e && e.classList; e = e.parentNode) {
 			if (e.classList.contains(clazz)) return e;
 		}
 	};
@@ -257,7 +257,7 @@
 			if (v === id) gestureNames.splice(i, 1);
 		});
 	};
-	const showCustomGestureEditDlg = async id => {
+	const showEditDlg = async id => {
 		customGestureId = id;
 		const c = findCustomGesture(customGestureId);
 		customGestureTitle.value = c.title;
@@ -303,7 +303,7 @@
 			customGestureTitle.value = RegExp.$1;
 		}
 	};
-	const setupCustomGestureEditDlg = () => {
+	const setupEditDlg = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
 		byId('cancelCustomGesture').addEventListener('click', e => { history.back(); });
@@ -403,28 +403,16 @@
 		}
 	};
 
-	//
+	// paging ------------
 	const changeState = state => {
 		if (!state.page) {
 			state.page = history.state && history.state.page;
 		}
 		history.pushState(state, document.title);
-		onpopstate({state: state});
+		onPopState({ state: state });
 	};
-
-	const onpopstate = e => {
+	const onPopState = e => {
 		const s = e && e.state || history.state;
-		for (let dlg of document.getElementsByClassName('dlg')) {
-			if (s && s.dlg === dlg.id) {
-				switch (dlg.id) {
-					case 'gestureDlg': showGestureDlg(s.targetId); break;
-					case 'editDlg': showCustomGestureEditDlg(s.targetId); break;
-					case 'adjustmentDlg': showAdjustmentDlg(); break;
-				}
-			} else {
-				fadeout(dlg);
-			}
-		}
 		for (let page of document.getElementsByClassName('page')) {
 			if (page.id === 'index') {
 				toggleClass(s && s.page, page, 'hide');
@@ -432,42 +420,51 @@
 				toggleClass(!s || s.page !== page.id, page, 'hide');
 			}
 		}
+		for (let dlg of document.getElementsByClassName('dlg')) {
+			if (s && s.dlg === dlg.id) {
+				switch (dlg.id) {
+					case 'gestureDlg': showGestureDlg(s.targetId); break;
+					case 'editDlg': showEditDlg(s.targetId); break;
+					case 'adjustmentDlg': showAdjustmentDlg(); break;
+				}
+			} else {
+				fadeout(dlg);
+			}
+		}
 	};
 
 	// setup options page
-	const targetPage = e => {
+	const getTargetPage = e => {
 		const container = parentByClass(e.target, 'container');
 		const page = container.getAttribute('data-targetPage');
 		return [page, container];
 	};
 	const setupIndex = () => {
 		byId('index').addEventListener('touchstart', e => {
-			const [page, container] = targetPage(e);
+			const [page, container] = getTargetPage(e);
 			if (!page) return;
 			container.classList.add('active');
 		});
 		byId('index').addEventListener('click', e => {
-			const [page, container] = targetPage(e);
+			const [page, container] = getTargetPage(e);
 			if (!page) return;
 			container.classList.remove('active');
 			changeState({ page: page});
 		});
 		byClass(document, 'title').addEventListener('click', e => { history.back(); });
 	};
-
 	const removeCover = () => {
 		const cover = byId('cover');
 		setTimeout(() => { fadeout(cover); });
 		setTimeout(() => { cover.parentNode.removeChild(cover); }, 500);
 	};
-
 	const setupSettingItems = () => {
 		setupGestureList();
-		setupCustomGestureEditDlg();
+		setupEditDlg();
 		setupOtherOptions();
 		setupAdjustmentDlg();
 		setupIndex();
-		onpopstate();
+		onPopState();
 		removeCover();
 	};
 
@@ -475,6 +472,6 @@
 	SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
 	exData = (await storageValue('simple_gesture_exdata')) || exData;
 	setupSettingItems();
-	window.addEventListener('popstate', onpopstate);
+	window.addEventListener('popstate', onPopState);
 })();
 
