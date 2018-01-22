@@ -9,7 +9,46 @@
 	<body>
 		<div class="title">Simple Gesture</div>
 
-		<div id="gestureList"></div>
+		<!-- Pages -->
+
+		<div class="page" id="index">
+			<div class="container caption" data-targetPage="basicActions">BasicActions</div>
+			<div class="container caption" data-targetPage="tabActions">Tab</div>
+			<div class="container caption" data-targetPage="otherActions">OtherActions</div>
+			<div class="container" data-targetPage="customGestures">
+				<span class="caption note">advanced</span>
+				<span class="caption">CustomGestures</span>
+			</div>
+			<div class="container caption" data-targetPage="otherSettings">OtherSettings</div>
+		</div>
+
+		<div class="page" id="basicActions" data-gestures="forward back reload top bottom pageUp pageDown"></div>
+
+		<div class="page" id="tabActions" data-gestures="nextTab prevTab close closeAll newTab"></div>
+
+		<div class="page" id="otherActions" data-gestures="toggleUserAgent disableGesture"></div>
+
+		<div class="page" id="customGestures">
+			<div id="customGestureList"></div>
+			<div id="addCustomGesture" class="caption button">addCustomGesture</div>
+		</div>
+
+		<div class="page" id="otherSettings">
+			<div id="timeoutAndStrokeSize" class="container">
+				<label class="caption">TimeoutAndStrokeSize</label>
+				<div class="sub-container">
+					<label for="timeout" class="caption sub">timeout</label>
+					<input id="timeout" class="number-input" type="number" min="0" max="9999" size="5">ms
+				</div>
+				<div class="sub-container">
+					<label for="strokeSize" class="caption sub">strokeSize</label>
+					<div class="caption note">basedOn320x480</div>
+					<input id="strokeSize" class="number-input" type="number" min="1" max="999" size="5">px
+				</div>
+			</div>
+		</div>
+
+		<!-- Components -->
 
 		<div id="templates" class="hide">
 			<div class="gesture-container container">
@@ -28,24 +67,6 @@
 				<label for="userAgent" class="caption sub">UserAgent</label>
 				<input id="userAgent" type="text" class="text-input" list="userAgentList">
 				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
-			</div>
-		</div>
-
-		<div class="container">
-			<div class="caption note">advanced</div>
-			<div id="addCustomGesture" class="caption button">addCustomGesture</div>
-		</div>
-
-		<div id="timeoutAndStrokeSize" class="container">
-			<label class="caption">TimeoutAndStrokeSize</label>
-			<div class="sub-container">
-				<label for="timeout" class="caption sub">timeout</label>
-				<input id="timeout" class="number-input" type="number" min="0" max="9999" size="5">ms
-			</div>
-			<div class="sub-container">
-				<label for="strokeSize" class="caption sub">strokeSize</label>
-				<div class="caption note">basedOn320x480</div>
-				<input id="strokeSize" class="number-input" type="number" min="1" max="999" size="5">px
 			</div>
 		</div>
 

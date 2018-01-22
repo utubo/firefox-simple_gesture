@@ -12,21 +12,34 @@ body {
 	pointer-events: none;
 }
 .title {
+	align-items: center;
 	background: #f2f2f2;
 	border-bottom: 2px solid #0099ff;
+	display: flex;
 	font-weight: bold;
 	padding: .8em 1em;
+}
+.title::before {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 6" stroke="%23444444" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h4M3 1l-2 2 2 2"/></svg>');
+	display: inline-block;
+	height: 1em;
+	margin-right: .5em;
+	width: 1em;
 }
 .container,
 .sub-container {
 	border-bottom: 1px solid #d7d7db;
-	display: block;
-	padding: .7em 1em;
-	position: relative;
 	clear: both;
+	display: block;
+	padding: .7em 19.2px;
+	position: relative;
+	transition: .2s;
 }
 .sub-container {
 	border-bottom: none;
+}
+.active {
+	background: #efeff0;
 }
 .caption {
 	color: #0c0c0d;
@@ -138,7 +151,7 @@ body {
 }
 
 #addCustomGesture {
-	margin-top: .5em;
+	margin: 1em 19.2px;
 }
 #customGestureTitle,
 #customGestureType,

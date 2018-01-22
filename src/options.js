@@ -2,20 +2,6 @@
 	'use strict';
 
 	// const -------------
-	const GESTURE_NAMES = [
-		'forward',
-		'back',
-		'reload',
-		'top',
-		'bottom',
-		'nextTab',
-		'prevTab',
-		'close',
-		'closeAll',
-		'newTab',
-		'toggleUserAgent',
-		'disableGesture'
-	];
 	const CUSTOM_GESTURE_PREFIX = '$';
 	const TEXT_FORMS = ['newTabUrl', 'userAgent', 'timeout', 'strokeSize'];
 	const INSTEAD_OF_EMPTY = {
@@ -26,6 +12,7 @@
 	const TIMERS = {};
 
 	// fields ------------
+	let gestureNames = [];
 	let target = null;
 	let minX;
 	let maxX;
@@ -38,6 +25,12 @@
 	const byId = id => document.getElementById(id);
 
 	const byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
+
+	const parentByClass = (elm, clazz) => {
+		for (let e = elm; e.classList; e = e.parentNode) {
+			if (e.classList.contains(clazz)) return e;
+		}
+	};
 
 	const toggleClass = (b, elm, clazz) => {
 		if (b) {
@@ -99,11 +92,11 @@
 	const fadein = elm => { ifById(elm).classList.remove('transparent'); };
 
 	// node --------------
-	const gestureList = byId('gestureList');
 	const templates = byId('templates');
 	const gestureTemplate = byClass(templates, 'gesture-container');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
 	const inputedGesture = byId('inputedGesture');
+	const customGestureList = byId('customGestureList');
 	const customGestureTitle = byId('customGestureTitle');
 	const customGestureType = byId('customGestureType');
 	const customGestureURl = byId('customGestureUrl');
@@ -129,28 +122,17 @@
 			udlrs[target.name] = udlr;
 			SimpleGesture.ini.gestures = swapKeyValue(udlrs);
 			saveIni();
-			for (let name of GESTURE_NAMES) {
+			for (let name of gestureNames) {
 				 refreshUDLRLabel(byId(`${name}_udlr`), udlrs[name]);
 			}
 		}
 		toggleEditing(false, target.caption, target.udlr);
-		fadeout('gestureDlg');
 		target = null;
+		history.back();
 	};
 
-	const setupGestureNames = () => {
-		for (let i = GESTURE_NAMES.length - 1; 0 <= i; i --) {
-			if (GESTURE_NAMES[i][0] === CUSTOM_GESTURE_PREFIX) {
-				GESTURE_NAMES.splice(i, 1);
-			}
-		}
-		for (let c of exData.customGestureList) {
-			GESTURE_NAMES.push(c.id);
-		}
-	};
-
-	const setEditTarget = e => {
-		target = { name: e.target.id.replace(/_[^_]+$/, '') };
+	const showGestureDlg = targetId => {
+		target = { name: targetId.replace(/_[^_]+$/, '') };
 		target.caption = byId(`${target.name}_caption`);
 		target.udlr = byId(`${target.name}_udlr`);
 		toggleEditing(true, target.caption, target.udlr);
@@ -180,22 +162,39 @@
 			byClass(b, 'custom-gesture-delete').setAttribute('data-targetId', name);
 			container.insertBefore(b, container.firstChild);
 		}
-		gestureList.appendChild(container);
+		return container;
 	};
 
-	const setupGestureInputBox = () => {
-		for (let name of GESTURE_NAMES) {
-			createGestureContainer(name);
+	const setupGestureList = () => {
+		gestureNames = [];
+		for (let page of document.getElementsByClassName('page')) {
+			const gestures = page.getAttribute('data-gestures');
+			if (!gestures) continue;
+			for (let name of gestures.split(/\s+/)) {
+				page.appendChild(createGestureContainer(name));
+				gestureNames.push(name);
+			}
 		}
-		gestureList.addEventListener('click', e => {
-			if ((e.target.parentNode || e.target).classList.contains('gesture-container')) {
-				setEditTarget(e);
-			} else if (e.target.classList.contains('custom-gesture-edit')) {
-				showCustomGestureEditDlg(e);
-			} else if (e.target.classList.contains('custom-gesture-delete')) {
+		for (let c of exData.customGestureList) {
+			customGestureList.appendChild(createGestureContainer(c.id));
+			gestureNames.push(c.id);
+		}
+		window.addEventListener('click', e => {
+			if (e.target.tagName === 'INPUT') return;
+			if (e.target.tagName === 'LABEL') return;
+			if (e.target.classList.contains('custom-gesture-edit')) {
+				changeState({dlg: 'editDlg', targetId: dataTargetId(e)});
+				return;
+			}
+			if (e.target.classList.contains('custom-gesture-delete')) {
 				if (confirm(chrome.i18n.getMessage('message_delete_confirm'))) {
 					deleteCustomGesture(e);
 				}
+				return;
+			}
+			const container = parentByClass(e.target, 'gesture-container');
+			if (container) {
+				changeState({dlg: 'gestureDlg', targetId: container.id});
 			}
 		});
 		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
@@ -231,16 +230,19 @@
 			customGestureId = CUSTOM_GESTURE_PREFIX + Math.random().toString(36).slice(-8);
 		} while (findCustomGesture(customGestureId));
 		const c = { id: customGestureId, title: INSTEAD_OF_EMPTY.defaultTitle, };
-		GESTURE_NAMES.push(customGestureId);
+		gestureNames.push(customGestureId);
 		exData.customGestureList.push(c);
 		// dom
-		createGestureContainer(c.id);
+		customGestureList.appendChild(createGestureContainer(c.id));
 		customGestureTitle.value = c.title;
 		customGestureType.value = 'url';
 		customGestureUrl.value = '';
 		customGestureScript.value = '';
-		// save
+		// after
 		saveCustomGesture();
+		setTimeout(() => {
+			window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+		});
 	};
 	const dataTargetId = e => e.target.getAttribute('data-targetId');
 	const deleteCustomGesture = e => {
@@ -251,10 +253,12 @@
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		const container = byId(`${id}_container`);
 		container.parentNode.removeChild(container);
-		setupGestureNames();
+		gestureNames.some((v,i) => {
+			if (v === id) gestureNames.splice(i, 1);
+		});
 	};
-	const showCustomGestureEditDlg = async e => {
-		customGestureId = dataTargetId(e);
+	const showCustomGestureEditDlg = async id => {
+		customGestureId = id;
 		const c = findCustomGesture(customGestureId);
 		customGestureTitle.value = c.title;
 		const c1 = await storageValue(`simple_gesture_${customGestureId}`);
@@ -279,10 +283,9 @@
 		const res = {};
 		res[`simple_gesture_${customGestureId}`] = c1;
 		browser.storage.local.set(res);
-		hideCustomGestureEditDlg();
-	};
-	const hideCustomGestureEditDlg = e => {
-		fadeout('editDlg');
+		if (e && e.target.id === 'saveCustomGesture') {
+			history.back();
+		}
 	};
 	const toggleEditor = e => {
 		toggleClass(customGestureType.value !== 'url', customGestureUrl, 'hide');
@@ -303,7 +306,7 @@
 	const setupCustomGestureEditDlg = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
-		byId('cancelCustomGesture').addEventListener('click', hideCustomGestureEditDlg);
+		byId('cancelCustomGesture').addEventListener('click', e => { history.back(); });
 		customGestureType.addEventListener('change', toggleEditor);
 		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
 		customGestureScript.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByScript, 1000); });
@@ -343,17 +346,20 @@
 					strokeSize.value = SimpleGesture.ini.strokeSize;
 				}
 				startTime = null;
-				fadeout(dlg);
 				resetTimer('strokeSizeChanged', () => { toggleEditing(false, timeout, strokeSize); }, 2000);
+				history.back();
 			}
 		});
 		byId('timeoutAndStrokeSize').addEventListener('click', e => {
 			if (e.target.tagName === 'INPUT') return;
-			fadein(dlg);
-			clearTimeout(TIMERS.strokeSizeChanged);
-			toggleEditing(true, timeout, strokeSize);
-			e.preventDefault();
+			changeState({dlg: 'adjustmentDlg'});
 		});
+	};
+	const showAdjustmentDlg = e => {
+		e && e.preventDefault();
+		fadein('adjustmentDlg');
+		clearTimeout(TIMERS.strokeSizeChanged);
+		toggleEditing(true, timeout, strokeSize);
 	};
 
 	// edit text values --
@@ -397,7 +403,58 @@
 		}
 	};
 
+	//
+	const changeState = state => {
+		if (!state.page) {
+			state.page = history.state && history.state.page;
+		}
+		history.pushState(state, document.title);
+		onpopstate({state: state});
+	};
+
+	const onpopstate = e => {
+		const s = e && e.state || history.state;
+		for (let dlg of document.getElementsByClassName('dlg')) {
+			if (s && s.dlg === dlg.id) {
+				switch (dlg.id) {
+					case 'gestureDlg': showGestureDlg(s.targetId); break;
+					case 'editDlg': showCustomGestureEditDlg(s.targetId); break;
+					case 'adjustmentDlg': showAdjustmentDlg(); break;
+				}
+			} else {
+				fadeout(dlg);
+			}
+		}
+		for (let page of document.getElementsByClassName('page')) {
+			if (page.id === 'index') {
+				toggleClass(s && s.page, page, 'hide');
+			} else {
+				toggleClass(!s || s.page !== page.id, page, 'hide');
+			}
+		}
+	};
+
 	// setup options page
+	const targetPage = e => {
+		const container = parentByClass(e.target, 'container');
+		const page = container.getAttribute('data-targetPage');
+		return [page, container];
+	};
+	const setupIndex = () => {
+		byId('index').addEventListener('touchstart', e => {
+			const [page, container] = targetPage(e);
+			if (!page) return;
+			container.classList.add('active');
+		});
+		byId('index').addEventListener('click', e => {
+			const [page, container] = targetPage(e);
+			if (!page) return;
+			container.classList.remove('active');
+			changeState({ page: page});
+		});
+		byClass(document, 'title').addEventListener('click', e => { history.back(); });
+	};
+
 	const removeCover = () => {
 		const cover = byId('cover');
 		setTimeout(() => { fadeout(cover); });
@@ -405,11 +462,12 @@
 	};
 
 	const setupSettingItems = () => {
-		setupGestureNames();
-		setupGestureInputBox();
+		setupGestureList();
 		setupCustomGestureEditDlg();
 		setupOtherOptions();
 		setupAdjustmentDlg();
+		setupIndex();
+		onpopstate();
 		removeCover();
 	};
 
@@ -417,5 +475,6 @@
 	SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
 	exData = (await storageValue('simple_gesture_exdata')) || exData;
 	setupSettingItems();
+	window.addEventListener('popstate', onpopstate);
 })();
 

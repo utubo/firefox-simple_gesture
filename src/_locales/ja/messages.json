@@ -19,6 +19,12 @@
 	"bottom": {
 		"message": "一番下へスクロール"
 	},
+	"pageUp": {
+		"message": "ページアップ"
+	},
+	"pageDown": {
+		"message": "ページダウン"
+	},
 	"reload": {
 		"message": "更新"
 	},
@@ -105,6 +111,21 @@
 	},
 	"message_gesture_is_enabled": {
 		"message": "ジェスチャ有効"
+	},
+	"BasicActions": {
+		"message": "基本的なアクション"
+	},
+	"Tab": {
+		"message": "タブ"
+	},
+	"OtherActions": {
+		"message": "その他のアクション"
+	},
+	"CustomGestures": {
+		"message": "カスタムジェスチャ"
+	},
+	"OtherSettings": {
+		"message": "その他の設定"
 	}
 }
 

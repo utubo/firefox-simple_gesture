@@ -115,6 +115,8 @@ var SimpleGesture = {};
 			case 'back': history.back(); break;
 			case 'top': window.scrollTo({ top: 0, behavior: 'smooth' }); break;
 			case 'bottom': window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); break;
+			case 'pageUp': window.scrollByPages(-1, { behavior: 'smooth' }); break;
+			case 'pageDown': window.scrollByPages(1, { behavior: 'smooth' }); break;
 			case 'reload': location.reload(); break;
 			default:
 				if (g[0] === '$') { // '$' is custom-gesture prefix.
