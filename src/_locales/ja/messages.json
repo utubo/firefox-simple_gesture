@@ -113,13 +113,13 @@
 		"message": "ジェスチャ有効"
 	},
 	"BasicGestures": {
-		"message": "基本的なジェスチャ"
+		"message": "基本的な操作"
 	},
 	"Tab": {
 		"message": "タブ"
 	},
 	"OtherGestures": {
-		"message": "その他のジェスチャ"
+		"message": "その他"
 	},
 	"CustomGestures": {
 		"message": "カスタムジェスチャ"
