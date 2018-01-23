@@ -124,8 +124,8 @@
 	"CustomGestures": {
 		"message": "カスタムジェスチャ"
 	},
-	"OtherSettings": {
-		"message": "その他の設定"
+	"Configurations": {
+		"message": "詳細設定"
 	}
 }
 
