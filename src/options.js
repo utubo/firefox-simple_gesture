@@ -407,23 +407,20 @@
 
 	// paging ------------
 	const changeState = state => {
-		if (!state.page) {
-			state.page = history.state && history.state.page;
-		}
+		state.page = state.page || history.state && history.state.page;
 		history.pushState(state, document.title);
 		onPopState({ state: state });
 	};
 	const onPopState = e => {
-		const s = e && e.state || history.state;
-		for (let page of document.getElementsByClassName('page')) {
-			if (page.id === 'index') {
-				toggleClass(s && s.page, 'hide', page);
-			} else {
-				toggleClass(!s || s.page !== page.id, 'hide', page);
-			}
+		const s = e && e.state || history.state || {};
+		const currentPage = byClass(document, 'current-page');
+		const newPageId = s.page || 'index';
+		if (!currentPage || currentPage.id !== newPageId) {
+			currentPage && currentPage.classList.remove('current-page');
+			byId(newPageId).classList.add('current-page');
 		}
 		for (let dlg of document.getElementsByClassName('dlg')) {
-			if (s && s.dlg === dlg.id) {
+			if (s.dlg === dlg.id) {
 				dlgs[dlg.id].onShow(s.targetId);
 				fadein(dlg);
 			} else {
@@ -434,22 +431,20 @@
 	};
 
 	// setup options page
-	const getTargetPage = e => {
+	const doTargetPage = (e, f) => {
 		const container = parentByClass(e.target, 'container');
 		const page = container.getAttribute('data-targetPage');
-		return [page, container];
+		page && f(container, page);
 	};
 	const setupIndex = () => {
 		byId('index').addEventListener('touchstart', e => {
-			const [page, container] = getTargetPage(e);
-			if (!page) return;
-			container.classList.add('active');
+			doTargetPage(e, (container, page) => { container.classList.add('active'); });
+		});
+		byId('index').addEventListener('touchend', e => {
+			doTargetPage(e, (container, page) => { container.classList.remove('active'); });
 		});
 		byId('index').addEventListener('click', e => {
-			const [page, container] = getTargetPage(e);
-			if (!page) return;
-			container.classList.remove('active');
-			changeState({ page: page});
+			doTargetPage(e, (container, page) => { changeState({ page: page}); });
 		});
 		byClass(document, 'title').addEventListener('click', e => {
 			if (HAS_HISTORY || history.state && history.state.page) {

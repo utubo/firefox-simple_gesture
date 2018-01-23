@@ -26,6 +26,12 @@ body {
 	margin-right: .5em;
 	width: 1em;
 }
+.page {
+	display: none;
+}
+.current-page {
+	display: block;
+}
 .container,
 .sub-container {
 	border-bottom: 1px solid #d7d7db;
