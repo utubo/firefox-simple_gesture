@@ -32,11 +32,9 @@
 		}
 	};
 
-	const toggleClass = (b, elm, clazz) => {
-		if (b) {
-			elm.classList.add(clazz);
-		} else {
-			elm.classList.remove(clazz);
+	const toggleClass = (b, clazz, ...elms) => {
+		for (let elm of elms) {
+			b ? elm.classList.add(clazz) : elm.classList.remove(clazz);
 		}
 	};
 
@@ -81,12 +79,6 @@
 		return null;
 	};
 
-	const toggleEditing = (b, ...elms) => {
-		for (let elm of elms) {
-			toggleClass(b, elm, 'editing');
-		}
-	};
-
 	const ifById = id => (typeof id === 'string') ? byId(id): id;
 	const fadeout = elm => { ifById(elm).classList.add('transparent'); };
 	const fadein = elm => { ifById(elm).classList.remove('transparent'); };
@@ -108,7 +100,7 @@
 	// edit UDLR ---------
 	const refreshUDLRLabel = (label, udlr) => {
 		label.textContent = udlr || INSTEAD_OF_EMPTY.noGesture;
-		toggleClass(!udlr, label, 'udlr-na');
+		toggleClass(!udlr, 'udlr-na', label);
 	};
 
 	const CLEAR_GESTURE = 'n/a'; // magic number
@@ -127,7 +119,7 @@
 				 refreshUDLRLabel(byId(`${name}_udlr`), udlrs[name]);
 			}
 		}
-		toggleEditing(false, target.caption, target.udlr);
+		toggleClass(false, 'editing', target.caption, target.udlr);
 		target = null;
 		history.back();
 	};
@@ -136,7 +128,7 @@
 		target = { name: targetId.replace(/_[^_]+$/, '') };
 		target.caption = byId(`${target.name}_caption`);
 		target.udlr = byId(`${target.name}_udlr`);
-		toggleEditing(true, target.caption, target.udlr);
+		toggleClass(true, 'editing', target.caption, target.udlr);
 		byId('editTarget').textContent = target.caption.textContent;
 		inputedGesture.textContent = target.udlr.textContent;
 		fadein('gestureDlg');
@@ -289,9 +281,8 @@
 		}
 	};
 	const toggleEditor = e => {
-		toggleClass(customGestureType.value !== 'url', customGestureUrl, 'hide');
-		toggleClass(customGestureType.value !== 'script', customGestureScript, 'hide');
-		toggleClass(customGestureType.value !== 'script', byId('customGestureScriptNote'), 'hide');
+		toggleClass(customGestureType.value !== 'url', 'hide', customGestureUrl);
+		toggleClass(customGestureType.value !== 'script', 'hide', customGestureScript, byId('customGestureScriptNote'));
 	};
 	const autoTitleByUrl = () => {
 		if (customGestureTitle.value && customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
@@ -347,7 +338,7 @@
 					strokeSize.value = SimpleGesture.ini.strokeSize;
 				}
 				startTime = null;
-				resetTimer('strokeSizeChanged', () => { toggleEditing(false, timeout, strokeSize); }, 2000);
+				resetTimer('strokeSizeChanged', () => { toggleClass(false, 'editing', timeout, strokeSize); }, 2000);
 				history.back();
 			}
 		});
@@ -360,7 +351,7 @@
 		e && e.preventDefault();
 		fadein('adjustmentDlg');
 		clearTimeout(TIMERS.strokeSizeChanged);
-		toggleEditing(true, timeout, strokeSize);
+		toggleClass(true, 'editing', timeout, strokeSize);
 	};
 
 	// edit text values --
@@ -413,9 +404,9 @@
 		const s = e && e.state || history.state;
 		for (let page of document.getElementsByClassName('page')) {
 			if (page.id === 'index') {
-				toggleClass(s && s.page, page, 'hide');
+				toggleClass(s && s.page, 'hide', page);
 			} else {
-				toggleClass(!s || s.page !== page.id, page, 'hide');
+				toggleClass(!s || s.page !== page.id, 'hide', page);
 			}
 		}
 		for (let dlg of document.getElementsByClassName('dlg')) {
