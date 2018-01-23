@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "2.4a5",
+	"version": "2.4a7",
 	"default_locale": "en",
 	"icons": {
 		"64": "icon64.png"
