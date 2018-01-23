@@ -112,13 +112,13 @@
 	"message_gesture_is_enabled": {
 		"message": "ジェスチャ有効"
 	},
-	"BasicActions": {
+	"BasicGestures": {
 		"message": "基本的なアクション"
 	},
 	"Tab": {
 		"message": "タブ"
 	},
-	"OtherActions": {
+	"OtherGestures": {
 		"message": "その他のアクション"
 	},
 	"CustomGestures": {

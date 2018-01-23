@@ -112,14 +112,14 @@
 	"message_gesture_is_enabled": {
 		"message": "Simple-Gesuture is enabled."
 	},
-	"BasicActions": {
-		"message": "Basic actions"
+	"BasicGestures": {
+		"message": "Basic"
 	},
 	"Tab": {
 		"message": "Tab"
 	},
-	"OtherActions": {
-		"message": "Other actions"
+	"OtherGestures": {
+		"message": "Other gestures"
 	},
 	"CustomGestures": {
 		"message": "Custom-gestures"

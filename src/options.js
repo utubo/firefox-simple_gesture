@@ -3,7 +3,6 @@
 
 	// const -------------
 	const CUSTOM_GESTURE_PREFIX = '$';
-	const TEXT_FORMS = ['newTabUrl', 'userAgent', 'timeout', 'strokeSize'];
 	const INSTEAD_OF_EMPTY = {
 		userAgent: navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux'),
 		noGesture: '-',
@@ -103,6 +102,7 @@
 	const customGestureScript = byId('customGestureScript');
 	const timeout = byId('timeout');
 	const strokeSize = byId('strokeSize');
+	const TEXT_FORMS = document.getElementsByClassName('js-iniTextValue');
 
 	// edit UDLR ---------
 	const refreshUDLRLabel = (label, udlr) => {
@@ -365,15 +365,13 @@
 	// edit text values --
 	const saveTextValues = e => {
 		clearTimeout(TIMERS.saveTextValues);
-		for (let id of TEXT_FORMS) {
-			const t = byId(id);
-			const value = t.value;
-			if (value === INSTEAD_OF_EMPTY[id]) {
-				SimpleGesture.ini[id] = null;
-			} else if (t.type === 'number' && value.match(/[^\d]/)) {
+		for (let elm of TEXT_FORMS) {
+			if (elm.value === INSTEAD_OF_EMPTY[elm.id]) {
+				SimpleGesture.ini[elm.id] = null;
+			} else if (elm.type === 'number' && elm.value.match(/[^\d]/)) {
 				continue; // ignore invalid number.
 			} else {
-				SimpleGesture.ini[id] = value;
+				SimpleGesture.ini[elm.id] = elm.value;
 			}
 		}
 		saveIni();
@@ -395,11 +393,10 @@
 		byId('newTab_container').appendChild(byId('newTabUrl_container'));
 		byId('toggleUserAgent_container').appendChild(byId('userAgent_container'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
-		for (let id of TEXT_FORMS) {
-			const textForm = byId(id);
-			textForm.value = SimpleGesture.ini[id] || INSTEAD_OF_EMPTY[id] || '';
-			textForm.addEventListener('change', saveTextValues);
-			textForm.addEventListener('input', saveTextValuesDelay);
+		for (let elm of TEXT_FORMS) {
+			elm.value = SimpleGesture.ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
+			elm.addEventListener('change', saveTextValues);
+			elm.addEventListener('input', saveTextValuesDelay);
 		}
 	};
 
