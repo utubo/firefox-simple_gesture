@@ -9,6 +9,7 @@
 		defaultTitle: 'Custom Gesture'
 	};
 	const TIMERS = {};
+	const HAS_HISTORY = 1 < history.length;
 
 	// fields ------------
 	let gestureNames = [];
@@ -448,7 +449,13 @@
 			container.classList.remove('active');
 			changeState({ page: page});
 		});
-		byClass(document, 'title').addEventListener('click', e => { history.back(); });
+		byClass(document, 'title').addEventListener('click', e => {
+			if (HAS_HISTORY || history.state && history.state.page) {
+				history.back();
+			} else {
+				browser.runtime.sendMessage('close');
+			}
+		});
 	};
 	const removeCover = () => {
 		const cover = byId('cover');
