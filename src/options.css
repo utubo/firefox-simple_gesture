@@ -32,8 +32,8 @@ body {
 .current-page {
 	display: block;
 }
-.container,
-.sub-container {
+.item,
+.sub-item {
 	border-bottom: 1px solid #d7d7db;
 	clear: both;
 	display: block;
@@ -41,7 +41,7 @@ body {
 	position: relative;
 	transition: .2s;
 }
-.sub-container {
+.sub-item {
 	border-bottom: none;
 }
 .active {

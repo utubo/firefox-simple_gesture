@@ -86,7 +86,7 @@
 
 	// node --------------
 	const templates = byId('templates');
-	const gestureTemplate = byClass(templates, 'gesture-container');
+	const gestureTemplate = byClass(templates, 'gesture-item');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
 	const inputedGesture = byId('inputedGesture');
 	const customGestureList = byId('customGestureList');
@@ -145,22 +145,22 @@
 		}
 	};
 
-	const createGestureContainer = name => {
-		const container = gestureTemplate.cloneNode(true);
-		container.id = `${name}_container`;
-		const label = byClass(container, 'udlr');
+	const createGestureItem = name => {
+		const item = gestureTemplate.cloneNode(true);
+		item.id = `${name}_item`;
+		const label = byClass(item, 'udlr');
 		label.id = `${name}_udlr`;
 		refreshUDLRLabel(label, getUDLR(name));
-		const caption = byClass(container, 'gesture-caption');
+		const caption = byClass(item, 'gesture-caption');
 		caption.id = `${name}_caption`;
 		caption.textContent = name;
 		if (name[0] === CUSTOM_GESTURE_PREFIX) {
 			const b = buttonsTamplate.cloneNode(true);
 			byClass(b, 'custom-gesture-edit').setAttribute('data-targetId', name);
 			byClass(b, 'custom-gesture-delete').setAttribute('data-targetId', name);
-			container.insertBefore(b, container.firstChild);
+			item.insertBefore(b, item.firstChild);
 		}
-		return container;
+		return item;
 	};
 
 	const setupGestureList = () => {
@@ -169,12 +169,12 @@
 			const gestures = page.getAttribute('data-gestures');
 			if (!gestures) continue;
 			for (let name of gestures.split(/\s+/)) {
-				page.appendChild(createGestureContainer(name));
+				page.appendChild(createGestureItem(name));
 				gestureNames.push(name);
 			}
 		}
 		for (let c of exData.customGestureList) {
-			customGestureList.appendChild(createGestureContainer(c.id));
+			customGestureList.appendChild(createGestureItem(c.id));
 			gestureNames.push(c.id);
 		}
 		window.addEventListener('click', e => {
@@ -190,9 +190,9 @@
 				}
 				return;
 			}
-			const container = parentByClass(e.target, 'gesture-container');
-			if (container) {
-				changeState({dlg: 'gestureDlg', targetId: container.id});
+			const item = parentByClass(e.target, 'gesture-item');
+			if (item) {
+				changeState({dlg: 'gestureDlg', targetId: item.id});
 			}
 		});
 		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
@@ -231,7 +231,7 @@
 		gestureNames.push(customGestureId);
 		exData.customGestureList.push(c);
 		// dom
-		customGestureList.appendChild(createGestureContainer(c.id));
+		customGestureList.appendChild(createGestureItem(c.id));
 		customGestureTitle.value = c.title;
 		customGestureType.value = 'url';
 		customGestureUrl.value = '';
@@ -249,8 +249,8 @@
 		const c = findCustomGesture(id);
 		exData.customGestureList = exData.customGestureList.filter((v,i,a) => v.id !== id);
 		browser.storage.local.set({ simple_gesture_exdata: exData });
-		const container = byId(`${id}_container`);
-		container.parentNode.removeChild(container);
+		const item = byId(`${id}_item`);
+		item.parentNode.removeChild(item);
 		gestureNames.some((v,i) => {
 			if (v === id) gestureNames.splice(i, 1);
 		});
@@ -274,7 +274,7 @@
 		// save list
 		const c = findCustomGesture(customGestureId);
 		c.title = customGestureTitle.value;
-		byClass(byId(`${customGestureId}_container`), 'gesture-caption').textContent = c.title;
+		byClass(byId(`${customGestureId}_item`), 'gesture-caption').textContent = c.title;
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		// save value
 		const c1 = { type: customGestureType.value };
@@ -395,8 +395,8 @@
 				caption.textContent = chrome.i18n.getMessage(caption.textContent) || caption.textContent;
 			}
 		}
-		byId('newTab_container').appendChild(byId('newTabUrl_container'));
-		byId('toggleUserAgent_container').appendChild(byId('userAgent_container'));
+		byId('newTab_item').appendChild(byId('newTabUrl_item'));
+		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
 		for (let elm of textInputForms) {
 			elm.value = SimpleGesture.ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
@@ -432,19 +432,19 @@
 
 	// setup options page
 	const doTargetPage = (e, f) => {
-		const container = parentByClass(e.target, 'container');
-		const page = container.getAttribute('data-targetPage');
-		page && f(container, page);
+		const item = parentByClass(e.target, 'item');
+		const page = item.getAttribute('data-targetPage');
+		page && f(item, page);
 	};
 	const setupIndex = () => {
 		byId('index').addEventListener('touchstart', e => {
-			doTargetPage(e, (container, page) => { container.classList.add('active'); });
+			doTargetPage(e, (item, page) => { item.classList.add('active'); }); // css ':active' does not work.
 		});
 		byId('index').addEventListener('touchend', e => {
-			doTargetPage(e, (container, page) => { container.classList.remove('active'); });
+			doTargetPage(e, (item, page) => { item.classList.remove('active'); });
 		});
 		byId('index').addEventListener('click', e => {
-			doTargetPage(e, (container, page) => { changeState({ page: page}); });
+			doTargetPage(e, (item, page) => { changeState({ page: page}); });
 		});
 		byClass(document, 'title').addEventListener('click', e => {
 			if (HAS_HISTORY || history.state && history.state.page) {

@@ -12,14 +12,14 @@
 		<!-- Pages -->
 
 		<div class="page" id="index">
-			<div class="container caption" data-targetPage="basicGestures">BasicGestures</div>
-			<div class="container caption" data-targetPage="tabGestures">Tab</div>
-			<div class="container caption" data-targetPage="otherGestures">OtherGestures</div>
-			<div class="container" data-targetPage="customGestures">
+			<div class="item caption" data-targetPage="basicGestures">BasicGestures</div>
+			<div class="item caption" data-targetPage="tabGestures">Tab</div>
+			<div class="item caption" data-targetPage="otherGestures">OtherGestures</div>
+			<div class="item" data-targetPage="customGestures">
 				<span class="caption note">advanced</span>
 				<span class="caption">CustomGestures</span>
 			</div>
-			<div class="container caption" data-targetPage="configurations">Configurations</div>
+			<div class="item caption" data-targetPage="configurations">Configurations</div>
 		</div>
 
 		<div class="page" id="basicGestures" data-gestures="forward back reload top bottom pageUp pageDown"></div>
@@ -34,13 +34,13 @@
 		</div>
 
 		<div class="page" id="configurations">
-			<div id="timeoutAndStrokeSize" class="container">
+			<div id="timeoutAndStrokeSize" class="item">
 				<label class="caption">TimeoutAndStrokeSize</label>
-				<div class="sub-container">
+				<div class="sub-item">
 					<label for="timeout" class="caption sub">timeout</label>
 					<input id="timeout" class="number-input js-iniTextValue" type="number" min="0" max="9999" size="5">ms
 				</div>
-				<div class="sub-container">
+				<div class="sub-item">
 					<label for="strokeSize" class="caption sub">strokeSize</label>
 					<div class="caption note">basedOn320x480</div>
 					<input id="strokeSize" class="number-input js-iniTextValue" type="number" min="1" max="999" size="5">px
@@ -51,7 +51,7 @@
 		<!-- Components -->
 
 		<div id="templates" class="hide">
-			<div class="gesture-container container">
+			<div class="gesture-item item">
 				<div class="gesture-caption caption"></div>
 				<div class="udlr"></div>
 			</div>
@@ -59,11 +59,11 @@
 				<div class="custom-gesture-edit button"></div>
 				<div class="custom-gesture-delete button"></div>
 			</div>
-			<div id="newTabUrl_container" class="sub-container">
+			<div id="newTabUrl_item" class="sub-item">
 				<label for="newTabUrl" class="caption sub">newTabUrl</label>
 				<input id="newTabUrl" type="url" class="text-input js-iniTextValue">
 			</div>
-			<div id="userAgent_container" class="sub-container">
+			<div id="userAgent_item" class="sub-item">
 				<label for="userAgent" class="caption sub">UserAgent</label>
 				<input id="userAgent" type="text" class="text-input js-iniTextValue" list="userAgentList">
 				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
