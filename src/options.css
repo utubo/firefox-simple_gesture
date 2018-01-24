@@ -21,6 +21,7 @@ body {
 	padding: .8em 1em;
 }
 .page {
+	box-sizing: border-box;
 	min-height: 100vh;
 	padding-bottom: 2em;
 }

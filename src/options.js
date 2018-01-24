@@ -427,20 +427,21 @@
 	const onScrollEnd = () => {
 		if (openedDlg) return;
 		const y = history.state && history.state.y;
-		const state = { y: window.pageYOffset };
-		if (state.y) {
+		const newY = window.pageYOffset;
+		if (newY) {
 			if (y) {
-				history.replaceState(state, document.title);
+				history.replaceState({ y: newY }, document.title);
 			} else {
-				history.pushState(state, document.title);
+				history.pushState({ y: newY }, document.title);
 			}
 		} else if (y) {
+			// Prevent to stack histories.
 			history.back();
+			// Cancel scroll by `history.back();`.
+			setTimeout(() => { window.scrollTo({ top:0, behavior: 'instant' }); });
 		}
 	};
-	window.addEventListener('scroll', e => {
-		resetTimer('onScrollEnd', onScrollEnd, 500);
-	});
+	window.addEventListener('scroll', e => { resetTimer('onScrollEnd', onScrollEnd, 500); });
 
 	// setup options page
 	const doTargetPage = (e, f) => {
