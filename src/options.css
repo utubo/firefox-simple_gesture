@@ -32,6 +32,11 @@ body {
 	padding-bottom: .4em 0;
 	margin: 0 19.2px;
 }
+.page-break {
+	border: none;
+	border-top: 1px solid #d7d7db;
+	margin: 1em 0;
+}
 .item,
 .sub-item {
 	border-bottom: 1px solid #d7d7db;
