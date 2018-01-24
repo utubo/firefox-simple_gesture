@@ -3,6 +3,7 @@ body {
 	background: #f9f9fa;
 	color: #444;
 	margin: 0;
+	scroll-behavior: smooth;
 }
 .hide {
 	display: none;
@@ -19,25 +20,24 @@ body {
 	font-weight: bold;
 	padding: .8em 1em;
 }
-.title::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 6" stroke="%23444444" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h4M3 1l-2 2 2 2"/></svg>');
-	display: inline-block;
-	height: 1em;
-	margin-right: .5em;
-	width: 1em;
-}
 .page {
-	display: none;
+	min-height: 100vh;
+	padding-bottom: 2em;
 }
-.current-page {
-	display: block;
+.page-header {
+	border-bottom: 2px solid #d7d7db;
+	color: #888 !important;
+	font-size: 100% !important;
+	padding-bottom: .4em 0;
+	margin: 0 19.2px;
 }
 .item,
 .sub-item {
 	border-bottom: 1px solid #d7d7db;
 	clear: both;
 	display: block;
-	padding: .7em 19.2px;
+	padding: .7em 0;
+	margin: 0 19.2px;
 	position: relative;
 	transition: .2s;
 }

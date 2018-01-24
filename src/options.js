@@ -165,11 +165,11 @@
 
 	const setupGestureList = () => {
 		gestureNames = [];
-		for (let page of document.getElementsByClassName('page')) {
-			const gestures = page.getAttribute('data-gestures');
+		for (let list of document.getElementsByClassName('gesture-list')) {
+			const gestures = list.getAttribute('data-gestures');
 			if (!gestures) continue;
 			for (let name of gestures.split(/\s+/)) {
-				page.appendChild(createGestureItem(name));
+				list.appendChild(createGestureItem(name));
 				gestureNames.push(name);
 			}
 		}
@@ -238,9 +238,6 @@
 		customGestureScript.value = '';
 		// after
 		saveCustomGesture();
-		setTimeout(() => {
-			window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-		});
 	};
 	const dataTargetId = e => e.target.getAttribute('data-targetId');
 	const deleteCustomGesture = e => {
@@ -407,18 +404,18 @@
 
 	// paging ------------
 	const changeState = state => {
-		state.page = state.page || history.state && history.state.page;
-		history.pushState(state, document.title);
+		const current = history.state && history.state.page;
+		state.page = state.page || current;
+		if (current) {
+			history.replaceState(state, document.title); // Always, when click back, go to index.
+		} else {
+			history.pushState(state, document.title);
+		}
 		onPopState({ state: state });
 	};
 	const onPopState = e => {
 		const s = e && e.state || history.state || {};
-		const currentPage = byClass(document, 'current-page');
-		const newPageId = s.page || 'index';
-		if (!currentPage || currentPage.id !== newPageId) {
-			currentPage && currentPage.classList.remove('current-page');
-			byId(newPageId).classList.add('current-page');
-		}
+		s.page ? byId(s.page).scrollIntoView() : scrollTo(0, 0);
 		for (let dlg of document.getElementsByClassName('dlg')) {
 			if (s.dlg === dlg.id) {
 				dlgs[dlg.id].onShow(s.targetId);
@@ -445,13 +442,6 @@
 		});
 		byId('index').addEventListener('click', e => {
 			doTargetPage(e, (item, page) => { changeState({ page: page}); });
-		});
-		byClass(document, 'title').addEventListener('click', e => {
-			if (HAS_HISTORY || history.state && history.state.page) {
-				history.back();
-			} else {
-				browser.runtime.sendMessage('close');
-			}
 		});
 	};
 	const removeCover = () => {

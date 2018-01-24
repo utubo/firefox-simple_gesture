@@ -49,6 +49,9 @@
 	"toggleUserAgent": {
 		"message": "PCサイトモード切替"
 	},
+	"openAddonSettings": {
+		"message": "ジェスチャの設定を開く"
+	},
 	"userAgent": {
 		"message": "User-Agent"
 	},
@@ -112,19 +115,19 @@
 	"message_gesture_is_enabled": {
 		"message": "ジェスチャ有効"
 	},
-	"BasicGestures": {
+	"basicGestures": {
 		"message": "基本的な操作"
 	},
-	"Tab": {
+	"tabGestures": {
 		"message": "タブ"
 	},
-	"OtherGestures": {
+	"otherGestures": {
 		"message": "その他"
 	},
-	"CustomGestures": {
+	"customGestures": {
 		"message": "カスタムジェスチャ"
 	},
-	"Configurations": {
+	"configurations": {
 		"message": "詳細設定"
 	}
 }

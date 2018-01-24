@@ -12,28 +12,39 @@
 		<!-- Pages -->
 
 		<div class="page" id="index">
-			<div class="item caption" data-targetPage="basicGestures">BasicGestures</div>
-			<div class="item caption" data-targetPage="tabGestures">Tab</div>
-			<div class="item caption" data-targetPage="otherGestures">OtherGestures</div>
+			<div class="item caption" data-targetPage="basicGestures">basicGestures</div>
+			<div class="item caption" data-targetPage="tabGestures">tabGestures</div>
+			<div class="item caption" data-targetPage="otherGestures">otherGestures</div>
 			<div class="item" data-targetPage="customGestures">
 				<span class="caption note">advanced</span>
-				<span class="caption">CustomGestures</span>
+				<span class="caption">customGestures</span>
 			</div>
-			<div class="item caption" data-targetPage="configurations">Configurations</div>
+			<div class="item caption" data-targetPage="configurations">configurations</div>
 		</div>
 
-		<div class="page" id="basicGestures" data-gestures="forward back reload top bottom pageUp pageDown"></div>
+		<div class="page" id="basicGestures">
+			<div class="page-header caption">basicGestures</div>
+			<div class="gesture-list" data-gestures="forward back reload top bottom pageUp pageDown"></div>
+		</div>
 
-		<div class="page" id="tabGestures" data-gestures="nextTab prevTab close closeAll newTab"></div>
+		<div class="page" id="tabGestures">
+			<div class="page-header caption">tabGestures</div>
+			<div class="gesture-list" data-gestures="nextTab prevTab close closeAll newTab"></div>
+		</div>
 
-		<div class="page" id="otherGestures" data-gestures="toggleUserAgent disableGesture"></div>
+		<div class="page" id="otherGestures">
+			<div class="page-header caption">otherGestures</div>
+			<div class="gesture-list" data-gestures="toggleUserAgent disableGesture openAddonSettings">
+			</div>
+		</div>
 
 		<div class="page" id="customGestures">
-			<div id="customGestureList"></div>
+			<div id="customGestureList" class="gesture-list"></div>
 			<div id="addCustomGesture" class="caption button">addCustomGesture</div>
 		</div>
 
 		<div class="page" id="configurations">
+			<div class="page-header caption">configurations</div>
 			<div id="timeoutAndStrokeSize" class="item">
 				<label class="caption">TimeoutAndStrokeSize</label>
 				<div class="sub-item">

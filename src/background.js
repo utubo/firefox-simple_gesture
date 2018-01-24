@@ -64,6 +64,9 @@
 			);
 			browser.tabs.reload(tab.id);
 		},
+		openAddonSettings: tab => {
+			browser.tabs.create({ active: true, url: 'options.html' });
+		},
 		customGesture: async (tab, id) => {
 			const key = 'simple_gesture_' + id;
 			const c = (await browser.storage.local.get(key))[key];
