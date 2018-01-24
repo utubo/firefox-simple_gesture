@@ -21,6 +21,7 @@
 	let maxY;
 	let startTime = null;
 	let exData = { customGestureList: [] };
+	let openedDlg;
 
 	// utils -------------
 	const byId = id => document.getElementById(id);
@@ -402,33 +403,44 @@
 		}
 	};
 
-	// paging ------------
+	// cntrol Back button
 	const changeState = state => {
-		if (state.page) {
-			if (history.state && history.state.page) {
-				history.replaceState(state , document.title);
-			} else {
-				history.pushState(state , document.title);
-			}
-			byId(state.page).scrollIntoView();
-		}
 		if (state.dlg) {
 			history.pushState(state , document.title);
 			onPopState({ state: state });
 		}
 	};
 	const onPopState = e => {
-		const s = e.state || history.state || {};
-		for (let dlg of document.getElementsByClassName('dlg')) {
-			if (s.dlg === dlg.id) {
-				dlgs[dlg.id].onShow(s.targetId);
-				fadein(dlg);
-			} else {
-				dlgs[dlg.id].onHide();
-				fadeout(dlg);
-			}
+		const state = e.state || history.state || { y: 0 };
+		if (openedDlg && !state.dlg) {
+			dlgs[openedDlg.id].onHide();
+			fadeout(openedDlg);
+			openedDlg = null;
+		} else if (state.dlg) {
+			dlgs[state.dlg].onShow(state.targetId);
+			openedDlg = byId(state.dlg);
+			fadein(openedDlg);
+		} else {
+			setTimeout(() => { window.scrollTo(0, state.y); });
 		}
 	};
+	const onScrollEnd = () => {
+		if (openedDlg) return;
+		const y = history.state && history.state.y;
+		const state = { y: window.pageYOffset };
+		if (state.y) {
+			if (y) {
+				history.replaceState(state, document.title);
+			} else {
+				history.pushState(state, document.title);
+			}
+		} else if (y) {
+			history.back();
+		}
+	};
+	window.addEventListener('scroll', e => {
+		resetTimer('onScrollEnd', onScrollEnd, 500);
+	});
 
 	// setup options page
 	const doTargetPage = (e, f) => {
@@ -444,7 +456,7 @@
 			doTargetPage(e, (item, page) => { item.classList.remove('active'); });
 		});
 		byId('index').addEventListener('click', e => {
-			doTargetPage(e, (item, page) => { changeState({ page: page}); });
+			doTargetPage(e, (item, page) => { byId(page).scrollIntoView(); });
 		});
 	};
 	const removeCover = () => {
