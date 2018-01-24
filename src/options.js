@@ -424,10 +424,14 @@
 			setTimeout(() => { window.scrollTo(0, state.y); });
 		}
 	};
-	const onScrollEnd = () => {
+	const scrollIntoView = target => {
+		onScrollEnd(target.getBoundingClientRect().top); // push history state for back when scrolling.
+		target.scrollIntoView();
+	};
+	const onScrollEnd = newY => {
 		if (openedDlg) return;
 		const y = history.state && history.state.y;
-		const newY = window.pageYOffset;
+		newY = newY || window.pageYOffset;
 		if (newY) {
 			if (y) {
 				history.replaceState({ y: newY }, document.title);
@@ -438,7 +442,7 @@
 			// Prevent to stack histories.
 			history.back();
 			// Cancel scroll by `history.back();`.
-			setTimeout(() => { window.scrollTo({ top:0, behavior: 'instant' }); });
+			setTimeout(() => { window.scrollTo({ top: 0, behavior: 'instant' }); });
 		}
 	};
 	window.addEventListener('scroll', e => { resetTimer('onScrollEnd', onScrollEnd, 500); });
@@ -457,7 +461,7 @@
 			doTargetPage(e, (item, page) => { item.classList.remove('active'); });
 		});
 		byId('index').addEventListener('click', e => {
-			doTargetPage(e, (item, page) => { byId(page).scrollIntoView(); });
+			doTargetPage(e, (item, page) => { scrollIntoView(byId(page)); });
 		});
 	};
 	const removeCover = () => {
