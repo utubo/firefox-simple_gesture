@@ -404,18 +404,21 @@
 
 	// paging ------------
 	const changeState = state => {
-		const current = history.state && history.state.page;
-		state.page = state.page || current;
-		if (current) {
-			history.replaceState(state, document.title); // Always, when click back, go to index.
-		} else {
-			history.pushState(state, document.title);
+		if (state.page) {
+			if (history.state && history.state.page) {
+				history.replaceState(state , document.title);
+			} else {
+				history.pushState(state , document.title);
+			}
+			byId(state.page).scrollIntoView();
 		}
-		onPopState({ state: state });
+		if (state.dlg) {
+			history.pushState(state , document.title);
+			onPopState({ state: state });
+		}
 	};
 	const onPopState = e => {
-		const s = e && e.state || history.state || {};
-		s.page ? byId(s.page).scrollIntoView() : scrollTo(0, 0);
+		const s = e.state || history.state || {};
 		for (let dlg of document.getElementsByClassName('dlg')) {
 			if (s.dlg === dlg.id) {
 				dlgs[dlg.id].onShow(s.targetId);
@@ -430,7 +433,7 @@
 	// setup options page
 	const doTargetPage = (e, f) => {
 		const item = parentByClass(e.target, 'item');
-		const page = item.getAttribute('data-targetPage');
+		const page = item && item.getAttribute('data-targetPage');
 		page && f(item, page);
 	};
 	const setupIndex = () => {
@@ -455,7 +458,7 @@
 		setupOtherOptions();
 		setupAdjustmentDlg();
 		setupIndex();
-		onPopState();
+		onPopState(history);
 		removeCover();
 	};
 

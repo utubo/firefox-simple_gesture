@@ -43,6 +43,7 @@ body {
 }
 .sub-item {
 	border-bottom: none;
+	margin-right: 0;
 }
 .active {
 	background: #efeff0;
@@ -62,6 +63,7 @@ body {
 
 /* form */
 .text-input {
+	box-sizing: border-box;
 	font-size: 1em;
 	padding-left: 4px;
 	width: 100%;
