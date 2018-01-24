@@ -425,20 +425,20 @@
 		}
 	};
 	const scrollIntoView = target => {
-		onScrollEnd(target.getBoundingClientRect().top); // push history state for back when scrolling.
+		onScrollEnd({ fource: true }); // For back during scrolling.
 		target.scrollIntoView();
 	};
-	const onScrollEnd = newY => {
+	const onScrollEnd = e => {
 		if (openedDlg) return;
-		const y = history.state && history.state.y;
-		newY = newY || window.pageYOffset;
-		if (newY) {
-			if (y) {
+		const hasOldY = history.state && 'y' in history.state;
+		const newY = window.pageYOffset;
+		if (newY || e && e.fource) {
+			if (hasOldY) {
 				history.replaceState({ y: newY }, document.title);
 			} else {
 				history.pushState({ y: newY }, document.title);
 			}
-		} else if (y) {
+		} else if (hasOldY) {
 			// Prevent to stack histories.
 			history.back();
 			// Cancel scroll by `history.back();`.
