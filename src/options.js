@@ -10,6 +10,8 @@
 	};
 	const TIMERS = {};
 	const HAS_HISTORY = 1 < history.length;
+	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
+	SimpleGesture.MAX_LENGTH += 9; // margin of cancel to input. 5 moves + 4 hyphens = 9 chars.
 
 	// fields ------------
 	let gestureNames = [];
@@ -133,7 +135,7 @@
 			toggleClass(true, 'editing', target.caption, target.udlr);
 			byId('editTarget').textContent = target.caption.textContent;
 			inputedGesture.textContent = target.udlr.textContent;
-			inputedGesture.classList.remove('dup');
+			inputedGesture.classList.remove('dup', 'canceled');
 			dupName.textContent = '';
 		},
 		onHide: () => {
@@ -214,7 +216,10 @@
 	};
 	SimpleGesture.onInputGesture = (e, gesture) => {
 		if (!target) return;
-		inputedGesture.textContent = gesture.substring(0, SimpleGesture.MAX_LENGTH);
+		if (gesture.length > SimpleGesture.MAX_LENGTH) {
+			inputedGesture.classList.add('canceled');
+		}
+		inputedGesture.textContent = gesture.substring(0, MAX_LENGTH);
 		let d = SimpleGesture.ini.gestures[inputedGesture.textContent];
 		d = (d && d !== target.name) ? `\u00a0(${getMessage(d)})` : '';
 		dupName.textContent = d;
@@ -224,7 +229,11 @@
 	};
 	SimpleGesture.onGestured = (e, gesture) => {
 		if (!target) return;
-		updateGesture(gesture.substring(0, SimpleGesture.MAX_LENGTH));
+		if (inputedGesture.classList.contains('canceled')) {
+			history.back();
+		} else {
+			updateGesture(gesture.substring(0, MAX_LENGTH));
+		}
 		e.preventDefault();
 		return false;
 	};
