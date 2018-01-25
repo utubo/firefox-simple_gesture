@@ -1,7 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="64" height="64">
-<g stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="rgb(164, 198, 57)" fill="none" stroke-width="5" d="M20 5h-15v22h22v-11h-11"/>
-  <path stroke="dimgray" fill="white" stroke-width="1.5" d="M14 16q2.5-2.5 4 0l2 5q6 0.5 6 2.5q-0 2-2 6l-6 1.5l-6-7q3-2 4.5 0z"/>
-</g>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="#a4c639" fill="none" stroke-width="10" d="M40 10h-30v44h44v-22h-22"/>
+  <path stroke="#696969" fill="white" stroke-width="3" d="M28 32q5-5 8 0l4 10q12 1 12 5q-0 4-4 12l-12 3l-12-14q6-4 9 0z"/>
 </svg>
-
