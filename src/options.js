@@ -90,6 +90,7 @@
 	const gestureTemplate = byClass(templates, 'gesture-item');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
 	const inputedGesture = byId('inputedGesture');
+	const dupName = byId('dupName');
 	const customGestureList = byId('customGestureList');
 	const customGestureTitle = byId('customGestureTitle');
 	const customGestureType = byId('customGestureType');
@@ -132,6 +133,8 @@
 			toggleClass(true, 'editing', target.caption, target.udlr);
 			byId('editTarget').textContent = target.caption.textContent;
 			inputedGesture.textContent = target.udlr.textContent;
+			inputedGesture.classList.remove('dup');
+			dupName.textContent = '';
 		},
 		onHide: () => {
 			if (!target) return;
@@ -179,6 +182,7 @@
 			gestureNames.push(c.id);
 		}
 		window.addEventListener('click', e => {
+			if (!e.target.classList) return;
 			if (e.target.tagName === 'INPUT') return;
 			if (e.target.tagName === 'LABEL') return;
 			if (e.target.classList.contains('custom-gesture-edit')) {
@@ -211,6 +215,10 @@
 	SimpleGesture.onInputGesture = (e, gesture) => {
 		if (!target) return;
 		inputedGesture.textContent = gesture.substring(0, SimpleGesture.MAX_LENGTH);
+		let d = SimpleGesture.ini.gestures[inputedGesture.textContent];
+		d = (d && d !== target.name) ? `\u00a0(${getMessage(d)})` : '';
+		dupName.textContent = d;
+		toggleClass(d, 'dup', inputedGesture);
 		e.preventDefault();
 		return false;
 	};
@@ -384,14 +392,17 @@
 		resetTimer('saveTextValues', saveTextValues, 3000);
 	};
 
+	const getMessage = s => {
+		if (!s) return s;
+		if (s[0] === CUSTOM_GESTURE_PREFIX) {
+			return findCustomGesture(s).title;
+		} else {
+			return chrome.i18n.getMessage(s) || s;
+		}
+	};
 	const setupOtherOptions = () => {
 		for (let caption of document.getElementsByClassName('caption')) {
-			if (!caption.textContent) continue;
-			if (caption.textContent[0] === CUSTOM_GESTURE_PREFIX) {
-				caption.textContent = findCustomGesture(caption.textContent).title;
-			} else {
-				caption.textContent = chrome.i18n.getMessage(caption.textContent) || caption.textContent;
-			}
+			caption.textContent = getMessage(caption.textContent);
 		}
 		byId('newTab_item').appendChild(byId('newTabUrl_item'));
 		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
