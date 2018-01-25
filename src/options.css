@@ -119,7 +119,7 @@ body {
 	width: 100%;
 }
 .dlg-labels {
-	bottom: calc(50% + 35vmin + .5rem);
+	bottom: calc(50% + 30vmin + .5rem);
 	color: #fff;
 	font-size: 1.7rem;
 	font-weight: bold;
@@ -137,7 +137,7 @@ body {
 .dlg-buttons {
 	position: fixed;
 	text-align: center;
-	top: calc(50% + 35vmin + 1.5rem);
+	top: calc(50% + 30vmin + 1.5rem);
 	width: 100%;
 }
 .dlg-container {
@@ -155,12 +155,12 @@ body {
 	background: #fff;
 	content: ' ';
 	display: block;
-	height: 70vmin;
-	left: calc( 50% - 35vmin );
+	height: 60vmin;
+	left: calc( 50% - 30vmin );
 	position: fixed;
-	top: calc( 50% - 35vmin );
+	top: calc( 50% - 30vmin );
 	transition: .3s;
-	width: 70vmin;
+	width: 60vmin;
 }
 #inputedGesture {
 	display: inline-block;
@@ -179,7 +179,7 @@ body {
 	text-decoration: line-through;
 	text-shadow: 0px 0px 2px #0007;
 }
-@media (max-height: 27rem) {
+@media (max-height: 23rem) {
 	.gesture-area {
 		opacity: 0;
 		height: 0;
