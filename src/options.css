@@ -18,32 +18,31 @@ body {
 	border-bottom: 2px solid #0099ff;
 	display: flex;
 	font-weight: bold;
-	padding: .8em 1em;
+	padding: .8rem 1rem;
 }
 .page {
 	box-sizing: border-box;
 	min-height: 100vh;
-	padding-bottom: 2em;
+	padding-bottom: 2rem;
 }
 .page-header {
 	border-bottom: 2px solid #d7d7db;
 	color: #888 !important;
-	font-size: 100% !important;
-	padding-bottom: .4em 0;
-	margin: 0 19.2px;
+	font-size: 1rem !important;
+	margin: 0 1.2rem;
 }
 .page-break {
 	border: none;
 	border-top: 1px solid #d7d7db;
-	margin: 1em 0;
+	margin: 1rem 0;
 }
 .item,
 .sub-item {
 	border-bottom: 1px solid #d7d7db;
 	clear: both;
 	display: block;
-	padding: .7em 0;
-	margin: 0 19.2px;
+	padding: .8rem 0;
+	margin: 0 1.2rem;
 	position: relative;
 	transition: .2s;
 }
@@ -57,28 +56,28 @@ body {
 .caption {
 	color: #0c0c0d;
 	display: block;
-	font-size: 120%;
+	font-size: 1.2rem;
 }
 .sub {
-	font-size: 100%;
+	font-size: 1rem;
 }
 .note {
-	font-size: 80%;
+	font-size: .8rem;
 	color: #666;
 }
 
 /* form */
 .text-input {
 	box-sizing: border-box;
-	font-size: 1em;
+	font-size: 1rem;
 	padding-left: 4px;
 	width: 100%;
 }
 .number-input {
-	font-size: 1em;
+	font-size: 1rem;
 	padding-right: 4px;
 	text-align: right;
-	width: 6em;
+	width: 6rem;
 }
 .editing {
 	color: #3cf !important;
@@ -96,7 +95,7 @@ body {
 	border-radius: 3px;
 	color: #f33;
 	text-align: center;
-	width: 3em;
+	width: 3em;/* don't "em" */
 }
 .gesture-caption,
 .udlr,
@@ -109,7 +108,7 @@ body {
 
 /* dialog */
 .dlg {
-	background: rgba(0, 0, 0, .5);
+	background: #0007;
 	height: 100%;
 	left: 0;
 	opacity: 1;
@@ -120,25 +119,25 @@ body {
 	width: 100%;
 }
 .dlg-labels {
-	bottom: calc(50% + 110px);
+	bottom: calc(50% + 35vmin + .5rem);
 	color: #fff;
-	font-size: 25px;
+	font-size: 1.7rem;
 	font-weight: bold;
-	line-height: 30px;
+	line-height: 2rem;
 	overflow: hidden;
 	position: fixed;
 	text-align: center;
-	text-shadow: 0px 0px 2px rgba(255, 255, 255, .5);
+	text-shadow: 0px 0px 2px #fff7;
 	width: 100%;
 }
 .adjustment-dlg-caption {
 	color: #fff;
-	font-size: 18px;
+	font-size: 1.2rem;
 }
 .dlg-buttons {
 	position: fixed;
 	text-align: center;
-	top: calc(50% + 130px - .5em);
+	top: calc(50% + 35vmin + 1.5rem);
 	width: 100%;
 }
 .dlg-container {
@@ -146,22 +145,22 @@ body {
 	border-radius: 3px;
 	display: flex;
 	flex-direction: column;
-	height: calc(100% - 4em);
-	margin: 1em;
+	height: calc(100% - 4rem);
+	margin: 1rem;
 	overflow: auto;
-	padding: 1em;
+	padding: 1rem;
 }
 
 .gesture-area {
 	background: #fff;
 	content: ' ';
 	display: block;
-	height: 200px;
-	left: calc( 50% - 100px );
+	height: 70vmin;
+	left: calc( 50% - 35vmin );
 	position: fixed;
-	top: calc( 50% - 100px );
-	transition: opacity .5s;
-	width: 200px;
+	top: calc( 50% - 35vmin );
+	transition: .3s;
+	width: 70vmin;
 }
 #inputedGesture {
 	display: inline-block;
@@ -173,27 +172,43 @@ body {
 }
 .dup {
 	color: red;
-	text-shadow: 0px 0px 2px rgba(1, .5, .5, .5);
+	text-shadow: 0px 0px 2px #f777;
 }
 .canceled {
 	color: #999;
 	text-decoration: line-through;
-	text-shadow: 0px 0px 2px rgba(0, 0, 0, .5);
+	text-shadow: 0px 0px 2px #0007;
+}
+@media (max-height: 27rem) {
+	.gesture-area {
+		opacity: 0;
+		height: 0;
+		left: 50%;
+		position: fixed;
+		top: 50%;
+		width: 0;
+	}
+	.dlg-labels {
+		bottom: calc(50% - 1rem);
+	}
+	.dlg-buttons {
+		top: calc(50% + 1.5rem);
+	}
 }
 
 #addCustomGesture {
-	margin: 1em 19.2px;
+	margin: 1rem 1.2rem;
 }
 #customGestureTitle,
 #customGestureType,
 #customGestureUrl {
 	flex: none;
-	margin-bottom: 0.7em;
+	margin-bottom: .7rem;
 	width: auto;
 }
 #customGestureScript {
 	flex: 1 1 auto;
-	min-height: 4em;
+	min-height: 4em;/* don't "rem" */
 	width: auto;
 	word-break: break-all;
 }
@@ -230,7 +245,7 @@ body {
 
 /* buttons */
 .buttons {
-	margin-top: .5em;
+	margin-top: .5rem;
 	text-align: center;
 }
 
@@ -242,8 +257,8 @@ body {
 	color: #ccc;
 	cursor: default;
 	display: inline-block;
-	font-size: 16px;
-	padding: 0.2em 0.5em;
+	font-size: 1rem;
+	padding: .2rem .8rem;
 }
 .button::before {
 	display: inline-block;
