@@ -73,6 +73,21 @@
 	"basedOn320x480": {
 		"message": "(Based on screen size is 320 x 480.)"
 	},
+	"mouseGesture": {
+		"message": "Mouse Gesture"
+	},
+	"disabled": {
+		"message": "Disabled"
+	},
+	"leftButton": {
+		"message": "Left button"
+	},
+	"rightButton": {
+		"message": "Right button"
+	},
+	"middleButton": {
+		"message": "Middle button"
+	},
 	"clear": {
 		"message": "Clear"
 	},

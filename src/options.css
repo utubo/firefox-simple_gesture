@@ -36,8 +36,7 @@ body {
 	border-top: 1px solid #d7d7db;
 	margin: 1rem 0;
 }
-.item,
-.sub-item {
+.item {
 	border-bottom: 1px solid #d7d7db;
 	clear: both;
 	display: block;
@@ -47,8 +46,7 @@ body {
 	transition: .2s;
 }
 .sub-item {
-	border-bottom: none;
-	margin-right: 0;
+	padding: .8rem 0;
 }
 .active {
 	background: #efeff0;

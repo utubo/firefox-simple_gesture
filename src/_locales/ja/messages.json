@@ -73,6 +73,21 @@
 	"basedOn320x480": {
 		"message": "(画面サイズ320x480基準)"
 	},
+	"mouseGesture": {
+		"message": "マウスジェスチャ"
+	},
+	"disabled": {
+		"message": "無効"
+	},
+	"leftButton": {
+		"message": "左ボタン"
+	},
+	"rightButton": {
+		"message": "右ボタン"
+	},
+	"middleButton": {
+		"message": "中ボタン"
+	},
 	"clear": {
 		"message": "クリア"
 	},

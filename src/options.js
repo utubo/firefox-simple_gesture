@@ -390,6 +390,8 @@
 				SimpleGesture.ini[elm.id] = null;
 			} else if (elm.type === 'number' && elm.value.match(/[^\d]/)) {
 				continue; // ignore invalid number.
+			} else if (elm.type === 'number' || elm.getAttribute('data-type') === 'number') {
+				SimpleGesture.ini[elm.id] = elm.value ^ 0;
 			} else {
 				SimpleGesture.ini[elm.id] = elm.value;
 			}

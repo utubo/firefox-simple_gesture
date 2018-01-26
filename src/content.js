@@ -17,7 +17,8 @@ var SimpleGesture = {};
 			'R-D-L': 'newTab',
 		},
 		'strokeSize': 50,
-		'timeout': 1500
+		'timeout': 1500,
+		'mouseButton': null
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
 
@@ -58,6 +59,7 @@ var SimpleGesture = {};
 	const onTouchStart = e => {
 		fixSize();
 		if (!size) return;
+		if (!e.touches && e.buttons && e.buttons !== SimpleGesture.ini.mouseButton) return;
 		gesture = '';
 		SimpleGesture.clearGestureTimeoutTimer();
 		timeoutId = window.setTimeout(resetGesture, SimpleGesture.ini.timeout);
@@ -90,6 +92,8 @@ var SimpleGesture = {};
 		SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture);
 	};
 
+	const preventEvent = e => { e.preventDefault(); };
+
 	const onTouchEnd = e => {
 		try {
 			SimpleGesture.clearGestureTimeoutTimer();
@@ -97,6 +101,10 @@ var SimpleGesture = {};
 			// cancel event when gesture executed
 			e.stopPropagation();
 			e.preventDefault();
+			if (!e.touches && e.type === 'mouseup') {
+				document.body.addEventListener('contextmenu', preventEvent);
+				setTimeout(() => { document.body.removeEventListener('contextmenu', preventEvent); }, 100);
+			}
 			return false;
 		} finally {
 			gesture = null;
@@ -142,7 +150,6 @@ var SimpleGesture = {};
 
 	// utils for setup ----
 	SimpleGesture.addTouchEventListener = (target, events) => {
-		// mouse event is for Test on Desktop
 		target.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', events.start);
 		target.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', events.move);
 		target.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', events.end);
