@@ -53,23 +53,14 @@
 			<div id="timeoutAndStrokeSize" class="item">
 				<label class="caption">TimeoutAndStrokeSize</label>
 				<div class="sub-item">
-					<label class="caption sub">timeout</label><!-- don't set "for=", for show adjustment dlg. -->
+					<label for="timeout" class="caption sub">timeout</label>
 					<input id="timeout" class="number-input js-iniTextValue" type="number" min="0" max="9999" size="5">ms
 				</div>
 				<div class="sub-item">
-					<label class="caption sub">strokeSize</label><!-- don't set "for=", for show adjustment dlg. -->
+					<label for="strokeSize" class="caption sub">strokeSize</label>
 					<div class="caption note">basedOn320x480</div>
 					<input id="strokeSize" class="number-input js-iniTextValue" type="number" min="1" max="999" size="5">px
 				</div>
-			</div>
-			<div class="item">
-				<label for="mouseGesture" class="caption">mouseGesture</label>
-				<select id="mouseButton" class="js-iniTextValue" data-type="number">
-					<option class="caption" value="">disabled</option>
-					<option class="caption" value="1">leftButton</option>
-					<option class="caption" value="2">rightButton</option>
-					<option class="caption" value="4">middleButton</option>
-				</select>
 			</div>
 		</div>
 
