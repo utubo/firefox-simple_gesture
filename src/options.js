@@ -65,13 +65,13 @@
 		}
 	};
 
-	addTouchEventListener = (target, events) => {
+	const addTouchEventListener = (target, events) => {
 		if ('ontouchstart' in window) {
 			target.addEventListener('touchstart', events.start);
 			target.addEventListener('touchmove', events.move);
 			target.addEventListener('touchend', events.end);
 		}
-		if ('mousedown' in window) {
+		if ('onmousedown' in window) {
 			target.addEventListener('mousedown', events.start);
 			target.addEventListener('mousemove', events.move);
 			target.addEventListener('mouseup', events.end);
@@ -241,7 +241,7 @@
 	};
 	SimpleGesture.onGestured = (e, gesture) => {
 		if (!target) return;
-		if (inputedGesture.classList.contains('canceled')) {
+		if (!gesture || inputedGesture.classList.contains('canceled')) {
 			history.back();
 		} else {
 			updateGesture(gesture.substring(0, MAX_LENGTH));

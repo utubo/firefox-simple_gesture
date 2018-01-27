@@ -159,9 +159,9 @@ var SimpleGesture = {};
 	const setupMouseEvents = (oldMouseButton, mouseButton) => {
 		if (!(oldMouseButton ^ mouseButton)) return;
 		const f = window[`${mouseButton ? 'add' : 'remove'}EventListener`];
-		f('mousedown', onMouseDown);
-		f('mousemove', onTouchMove);
-		f('mouseUp', onMouseUp);
+		f.call(window, 'mousedown', onMouseDown);
+		f.call(window, 'mousemove', onTouchMove);
+		f.call(window, 'mouseup', onMouseUp);
 	};
 
 	// utils for setup ----
@@ -169,7 +169,7 @@ var SimpleGesture = {};
 		const res = await browser.storage.local.get('simple_gesture');
 		const old = SimpleGesture.ini;
 		if (!res) return;
-		if (!res.SimpleGesture) return;
+		if (!res.simple_gesture) return;
 		SimpleGesture.ini = res.simple_gesture;
 		lastInnerWidth = 0; // for recalucrate stroke size on touchstart.
 		setupMouseEvents(old.mouseButton, SimpleGesture.ini.mouseButton);
