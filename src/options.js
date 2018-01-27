@@ -65,6 +65,20 @@
 		}
 	};
 
+	addTouchEventListener = (target, events) => {
+		if ('ontouchstart' in window) {
+			target.addEventListener('touchstart', events.start);
+			target.addEventListener('touchmove', events.move);
+			target.addEventListener('touchend', events.end);
+		}
+		if ('mousedown' in window) {
+			target.addEventListener('mousedown', events.start);
+			target.addEventListener('mousemove', events.move);
+			target.addEventListener('mouseup', events.end);
+		}
+		//window.visualViewport.addEventListener('resize', fixSize); VisualViewport is draft. :(
+	};
+
 	// utils for Simple gesture
 	const saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
@@ -202,10 +216,8 @@
 				changeState({dlg: 'gestureDlg', targetId: item.id});
 			}
 		});
-		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
-			updateGesture(CLEAR_GESTURE);
-			e.preventDefault();
-		}, move: e => {}, end: e => {} });
+		addTouchEventListener(byId('clearGesture'), { start: e => { updateGesture(CLEAR_GESTURE); }, move: e => {}, end: e => {} });
+		byId('gestureDlg').addEventListener('contextmenu', e => { e.preventDefault(); });
 	};
 
 	// inject settings-page behavior
@@ -331,7 +343,8 @@
 	// adjustment dlg ----
 	const setupAdjustmentDlg = () => {
 		const dlg = byId('adjustmentDlg');
-		SimpleGesture.addTouchEventListener(dlg, {
+		dlg.addEventListener('contextmenu', e => { e.preventDefault(); });
+		addTouchEventListener(dlg, {
 			start: e => {
 				[minX, minY] = SimpleGesture.getXY(e);
 				[maxX, maxY] = [minX, minY];

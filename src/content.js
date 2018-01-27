@@ -59,7 +59,6 @@ var SimpleGesture = {};
 	const onTouchStart = e => {
 		fixSize();
 		if (!size) return;
-		if (!e.touches && e.buttons && e.buttons !== SimpleGesture.ini.mouseButton) return;
 		gesture = '';
 		SimpleGesture.clearGestureTimeoutTimer();
 		timeoutId = window.setTimeout(resetGesture, SimpleGesture.ini.timeout);
@@ -101,10 +100,6 @@ var SimpleGesture = {};
 			// cancel event when gesture executed
 			e.stopPropagation();
 			e.preventDefault();
-			if (!e.touches && e.type === 'mouseup') {
-				document.body.addEventListener('contextmenu', preventEvent);
-				setTimeout(() => { document.body.removeEventListener('contextmenu', preventEvent); }, 100);
-			}
 			return false;
 		} finally {
 			gesture = null;
@@ -148,24 +143,42 @@ var SimpleGesture = {};
 		return false;
 	};
 
-	// utils for setup ----
-	SimpleGesture.addTouchEventListener = (target, events) => {
-		target.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', events.start);
-		target.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', events.move);
-		target.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', events.end);
-		//window.visualViewport.addEventListener('resize', fixSize); VisualViewport is draft. :(
+	// for mouse
+	const preventDefault = e => { e.preventDefault(); };
+	const onMouseDown = e => {
+			if (e.buttons !== SimpleGesture.ini.mouseButton) return;
+			onTouchStart(e);
+	};
+	const onMouseUp = e => {
+		onTouchEnd(e);
+		if (e.defaultPrevented) {
+			addEventListener('contextmenu', preventEvent);
+			setTimeout(() => { removeEventListener('contextmenu', preventEvent); }, 100);
+		}
+	};
+	const setupMouseEvents = (oldMouseButton, mouseButton) => {
+		if (!(oldMouseButton ^ mouseButton)) return;
+		const f = window[`${mouseButton ? 'add' : 'remove'}EventListener`];
+		f('mousedown', onMouseDown);
+		f('mousemove', onTouchMove);
+		f('mouseUp', onMouseUp);
 	};
 
+	// utils for setup ----
 	SimpleGesture.loadIni = async () => {
 		const res = await browser.storage.local.get('simple_gesture');
-		if (res && res.simple_gesture) {
-			SimpleGesture.ini = res.simple_gesture;
-		}
+		const old = SimpleGesture.ini;
+		if (!res) return;
+		if (!res.SimpleGesture) return;
+		SimpleGesture.ini = res.simple_gesture;
 		lastInnerWidth = 0; // for recalucrate stroke size on touchstart.
+		setupMouseEvents(old.mouseButton, SimpleGesture.ini.mouseButton);
 	};
 
 	// START HERE ! ------
-	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
+	addEventListener('touchstart', onTouchStart);
+	addEventListener('touchmove', onTouchMove);
+	addEventListener('touchend', onTouchEnd);
 	SimpleGesture.loadIni();
 })();
 
