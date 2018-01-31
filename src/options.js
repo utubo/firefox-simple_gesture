@@ -423,10 +423,10 @@
 		}
 	};
 
-	// cntrol Back button
+	// control Back button
 	const changeState = state => {
 		if (state.dlg) {
-			history.pushState(state , document.title);
+			history.pushState(state, document.title);
 			onPopState({ state: state });
 		}
 	};
@@ -446,7 +446,7 @@
 	};
 	const scrollIntoView = target => {
 		onScrollEnd({ fource: true }); // For back during scrolling.
-		target.scrollIntoView();
+		target.scrollIntoView(true);
 	};
 	const onScrollEnd = e => {
 		if (openedDlg) return;
@@ -466,6 +466,7 @@
 		}
 	};
 	window.addEventListener('scroll', e => { resetTimer('onScrollEnd', onScrollEnd, 500); });
+	window.addEventListener('popstate', onPopState);
 
 	// setup options page
 	const doTargetPage = (e, f) => {
@@ -482,6 +483,10 @@
 		});
 		byId('index').addEventListener('click', e => {
 			doTargetPage(e, (item, page) => { scrollIntoView(byId(page)); });
+		});
+		// Fix page height ('min-height: 100vh' has probrem of scroll position.)
+		setTimeout(() => {
+			document.styleSheets.item(0).insertRule(`.page { min-height: ${innerHeight}px; }`, 0);
 		});
 	};
 	const removeCover = () => {
@@ -503,6 +508,5 @@
 	SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
 	exData = (await storageValue('simple_gesture_exdata')) || exData;
 	setupSettingItems();
-	window.addEventListener('popstate', onPopState);
 })();
 

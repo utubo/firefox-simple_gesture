@@ -22,7 +22,7 @@ body {
 }
 .page {
 	box-sizing: border-box;
-	min-height: 100vh;
+	/* min-height: 100vh; this setting has probrem of scroll position. */
 	padding-bottom: 2rem;
 }
 .page-header {
