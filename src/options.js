@@ -239,29 +239,28 @@
 	};
 
 	// custom gesture ----
-	let customGestureId = null;
 	const addCustomGesture = e => {
-		// ini
+		let newId;
 		do {
-			customGestureId = CUSTOM_GESTURE_PREFIX + Math.random().toString(36).slice(-8);
-		} while (findCustomGesture(customGestureId));
-		const c = { id: customGestureId, title: INSTEAD_OF_EMPTY.defaultTitle, };
-		gestureNames.push(customGestureId);
+			newId = CUSTOM_GESTURE_PREFIX + Math.random().toString(36).slice(-8);
+		} while (findCustomGesture(newId));
+		gestureNames.push(newId);
+		// save list
+		const c = { id: newId, title: INSTEAD_OF_EMPTY.defaultTitle, };
 		exData.customGestureList.push(c);
-		// dom
+		browser.storage.local.set({ simple_gesture_exdata: exData });
+		// save details
+		const details = {};
+		details[`simple_gesture_${newId}`] = { type: 'url', url: '' };
+		browser.storage.local.set(details);
+		// update list
 		customGestureList.appendChild(createGestureItem(c.id));
-		customGestureTitle.value = c.title;
-		customGestureType.value = 'url';
-		customGestureUrl.value = '';
-		customGestureScript.value = '';
-		// after
-		saveCustomGesture();
+		byId(`${newId}_caption`).textContent = c.title;
 	};
 	const dataTargetId = e => e.target.getAttribute('data-targetId');
 	const deleteCustomGesture = e => {
 		const id = dataTargetId(e);
 		browser.storage.local.remove(`simple_gesture_${id}`);
-		const c = findCustomGesture(id);
 		exData.customGestureList = exData.customGestureList.filter((v,i,a) => v.id !== id);
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		const item = byId(`${id}_item`);
@@ -271,38 +270,37 @@
 		});
 	};
 	dlgs.editDlg = {
+		targetId: null,
 		onShow: async id => {
-			customGestureId = id;
-			const c = findCustomGesture(customGestureId);
-			customGestureTitle.value = c.title;
-			const c1 = await storageValue(`simple_gesture_${customGestureId}`);
-			customGestureType.value = c1.type;
-			customGestureUrl.value = c1.type === 'url' ? c1.url : '';
-			customGestureScript.value = c1.type === 'script' ? c1.script : '';
+			dlgs.editDlg.targetId = id;
+			customGestureTitle.value = findCustomGesture(id).title;
+			const details = await storageValue(`simple_gesture_${id}`);
+			customGestureType.value = details.type;
+			customGestureUrl.value = details.type === 'url' ? details.url : '';
+			customGestureScript.value = details.type === 'script' ? details.script : '';
 			toggleEditor();
 		},
 		onHide: () => {
-			customGestureId = null;
+			dlgs.editDlg.targetId = null;
 		}
 	};
 	const saveCustomGesture = e => {
 		// save list
-		const c = findCustomGesture(customGestureId);
+		const c = findCustomGesture(dlgs.editDlg.targetId);
 		c.title = customGestureTitle.value;
-		byClass(byId(`${customGestureId}_item`), 'gesture-caption').textContent = c.title;
 		browser.storage.local.set({ simple_gesture_exdata: exData });
-		// save value
-		const c1 = { type: customGestureType.value };
-		switch(c1.type) {
-			case 'url': c1.url = customGestureUrl.value; break;
-			case 'script': c1.script = customGestureScript.value; break;
+		// save detail
+		const d = { type: customGestureType.value };
+		switch(d.type) {
+			case 'url': d.url = customGestureUrl.value; break;
+			case 'script': d.script = customGestureScript.value; break;
 		}
-		const res = {};
-		res[`simple_gesture_${customGestureId}`] = c1;
-		browser.storage.local.set(res);
-		if (e && e.target.id === 'saveCustomGesture') {
-			history.back();
-		}
+		const details = {};
+		details[`simple_gesture_${c.id}`] = d;
+		browser.storage.local.set(details);
+		// update list
+		byId(`${c.id}_caption`).textContent = c.title;
+		history.back();
 	};
 	const toggleEditor = e => {
 		toggleClass(customGestureType.value !== 'url', 'hide', customGestureUrl);
@@ -445,7 +443,7 @@
 		}
 	};
 	const scrollIntoView = target => {
-		onScrollEnd({ fource: true }); // For back during scrolling.
+		onScrollEnd({ fource: true }); // For returning during scrolling.
 		target.scrollIntoView(true);
 	};
 	const onScrollEnd = e => {
