@@ -134,17 +134,18 @@ var SimpleGesture = {};
 		target && target.classList && target.classList.add('simple-gesture-target');
 	};
 
+	const isBacked = old => old.state !== history.state || old.href !== location.href;
 	const backOrClose = () => {
 		const old = { state: history.state, href: location.href };
 		history.back();
-		// wait for show about:home.
-		const id = window.setTimeout(() => {
-			if (old.state === history.state && old.href === location.href) {
-				browser.runtime.sendMessage('close');
-			}
+		if (isBacked(old)) return;
+		// wait for show 'about:home'
+		const timer = window.setTimeout(() => {
+			if (isBacked(old)) return;
+			browser.runtime.sendMessage('close');
 		}, 200);
 		// cancel when history forward.
-		window.addEventListener('pageshow', () => { window.clearTimeout(id); }, { once: true });
+		window.addEventListener('pageshow', () => { window.clearTimeout(timer); }, { once: true });
 	};
 
 	const toggleIsGestureEnabled = () => {
