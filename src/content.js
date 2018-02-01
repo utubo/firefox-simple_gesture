@@ -112,7 +112,7 @@ var SimpleGesture = {};
 		if (!g) return true;
 		switch (g) {
 			case 'forward': history.forward(); break;
-			case 'back': history.back(); break;
+			case 'back': backOrClose(); break;
 			case 'top': window.scrollTo({ top: 0, behavior: 'smooth' }); break;
 			case 'bottom': window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); break;
 			case 'pageUp': window.scrollByPages(-1, { behavior: 'smooth' }); break;
@@ -132,6 +132,14 @@ var SimpleGesture = {};
 		const befores = document.getElementsByClassName('simple-gesture-target');
 		[...befores].forEach(e => { e.classList.remove('simple-gesture-target'); });
 		target && target.classList && target.classList.add('simple-gesture-target');
+	};
+
+	const backOrClose = () => {
+		const old = { state: history.state, href: location.href };
+		history.back();
+		if (old.state === history.state && old.href === location.href) {
+			browser.runtime.sendMessage('close');
+		}
 	};
 
 	const toggleIsGestureEnabled = () => {
