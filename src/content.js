@@ -137,9 +137,14 @@ var SimpleGesture = {};
 	const backOrClose = () => {
 		const old = { state: history.state, href: location.href };
 		history.back();
-		if (old.state === history.state && old.href === location.href) {
-			browser.runtime.sendMessage('close');
-		}
+		// wait for show about:home.
+		const id = window.setTimeout(() => {
+			if (old.state === history.state && old.href === location.href) {
+				browser.runtime.sendMessage('close');
+			}
+		}, 200);
+		// cancel when history forward.
+		window.addEventListener('pageshow', () => { window.clearTimeout(id); }, { once: true });
 	};
 
 	const toggleIsGestureEnabled = () => {
