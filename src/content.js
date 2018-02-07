@@ -143,7 +143,7 @@ var SimpleGesture = {};
 		const timer = window.setTimeout(() => {
 			if (isBacked(old)) return;
 			browser.runtime.sendMessage('close');
-		}, 200);
+		}, 500);
 		// cancel when history forward.
 		window.addEventListener('pageshow', () => { window.clearTimeout(timer); }, { once: true });
 	};
