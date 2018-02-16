@@ -67,6 +67,15 @@
 	"strokeSize": {
 		"message": "Stroke-size"
 	},
+	"displayCommand": {
+		"message": "Display Command"
+	},
+	"toastForeground": {
+		"message": "Foreground"
+	},
+	"toastBackground": {
+		"message": "Background"
+	},
 	"drawSquare": {
 		"message": "Draw a small square."
 	},

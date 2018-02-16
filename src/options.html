@@ -55,12 +55,27 @@
 				<label class="caption">TimeoutAndStrokeSize</label>
 				<div class="sub-item">
 					<label for="timeout" class="caption sub">timeout</label>
-					<input id="timeout" class="number-input js-iniTextValue" type="number" min="0" max="9999" size="5">ms
+					<input id="timeout" class="number-input js-binding" type="number" min="0" max="9999" size="5">ms
 				</div>
 				<div class="sub-item">
 					<label for="strokeSize" class="caption sub">strokeSize</label>
 					<div class="caption note">basedOn320x480</div>
-					<input id="strokeSize" class="number-input js-iniTextValue" type="number" min="1" max="999" size="5">px
+					<input id="strokeSize" class="number-input js-binding" type="number" min="1" max="999" size="5">px
+				</div>
+			</div>
+			<div class="item">
+				<label for="toast" class="checkbox-label">
+					<span class="caption">displayCommand</span>
+					<input id="toast" class="checkbox js-binding" type="checkbox" value="true">
+					<label for="toast" class="checkbox-image"></label>
+				</label>
+				<div class="sub-item">
+					<label for="toastForeground" class="caption sub">toastForeground</label>
+					<input id="toastForeground" class="color-input js-binding" type="color">
+				</div>
+				<div class="sub-item">
+					<label for="toastBackground" class="caption sub">toastBackground</label>
+					<input id="toastBackground" class="color-input js-binding" type="color">
 				</div>
 			</div>
 		</div>
@@ -78,11 +93,11 @@
 			</div>
 			<div id="newTabUrl_item" class="sub-item">
 				<label for="newTabUrl" class="caption sub">newTabUrl</label>
-				<input id="newTabUrl" type="url" class="text-input js-iniTextValue">
+				<input id="newTabUrl" type="url" class="text-input js-binding">
 			</div>
 			<div id="userAgent_item" class="sub-item">
 				<label for="userAgent" class="caption sub">UserAgent</label>
-				<input id="userAgent" type="text" class="text-input js-iniTextValue" list="userAgentList">
+				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
 				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
 			</div>
 		</div>

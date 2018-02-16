@@ -6,7 +6,9 @@
 	const INSTEAD_OF_EMPTY = {
 		userAgent: navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux'),
 		noGesture: '-',
-		defaultTitle: 'Custom Gesture'
+		defaultTitle: 'Custom Gesture',
+		toastForeground: '#f9f9fa',
+		toastBackground: '#00bfff',
 	};
 	const TIMERS = {};
 	const HAS_HISTORY = 1 < history.length;
@@ -77,10 +79,7 @@
 	};
 
 	const findCustomGesture = id => {
-		for (let c of exData.customGestureList) {
-			if (c.id === id) return c;
-		}
-		return null;
+		return exData.customGestureList.find((e, i, a) => e.id === id);
 	};
 
 	const ifById = id => (typeof id === 'string') ? byId(id): id;
@@ -100,7 +99,7 @@
 	const customGestureScript = byId('customGestureScript');
 	const timeout = byId('timeout');
 	const strokeSize = byId('strokeSize');
-	const textInputForms = document.getElementsByClassName('js-iniTextValue');
+	const bidingForms = document.getElementsByClassName('js-binding');
 
 	// edit UDLR ---------
 	const refreshUDLRLabel = (label, udlr) => {
@@ -261,7 +260,7 @@
 	const deleteCustomGesture = e => {
 		const id = dataTargetId(e);
 		browser.storage.local.remove(`simple_gesture_${id}`);
-		exData.customGestureList = exData.customGestureList.filter((v,i,a) => v.id !== id);
+		exData.customGestureList = exData.customGestureList.filter((v, i, a) => v.id !== id);
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		const item = byId(`${id}_item`);
 		item.parentNode.removeChild(item);
@@ -383,8 +382,10 @@
 	// edit text values --
 	const saveTextValues = e => {
 		clearTimeout(TIMERS.saveTextValues);
-		for (let elm of textInputForms) {
-			if (elm.value === INSTEAD_OF_EMPTY[elm.id]) {
+		for (let elm of bidingForms) {
+			if (elm.type === 'checkbox') {
+				SimpleGesture.ini[elm.id] = elm.checked;
+			} else if (elm.value === INSTEAD_OF_EMPTY[elm.id]) {
 				SimpleGesture.ini[elm.id] = null;
 			} else if (elm.type === 'number' && elm.value.match(/[^\d]/)) {
 				continue; // ignore invalid number.
@@ -414,8 +415,12 @@
 		byId('newTab_item').appendChild(byId('newTabUrl_item'));
 		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
-		for (let elm of textInputForms) {
-			elm.value = SimpleGesture.ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
+		for (let elm of bidingForms) {
+			if (elm.type === 'checkbox') {
+				elm.checked = !!SimpleGesture.ini[elm.id];
+			} else {
+				elm.value = SimpleGesture.ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
+			}
 			elm.addEventListener('change', saveTextValues);
 			elm.addEventListener('input', saveTextValuesDelay);
 		}

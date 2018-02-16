@@ -49,6 +49,7 @@ body {
 .sub-item {
 	border-bottom: none;
 	margin-right: 0;
+	padding: .4rem 0;
 }
 .active {
 	background: #efeff0;
@@ -78,6 +79,31 @@ body {
 	padding-right: 4px;
 	text-align: right;
 	width: 6rem;
+}
+.color-input {
+	border: none;
+	height: 1.5rem;
+	padding: 0;
+	width: 4rem;
+}
+.checkbox-label {
+	display: block;
+	position: relative;
+}
+.checkbox {
+	display: none;
+}
+.checkbox-image {
+	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="dimgray" stroke-linejoin="round"><path stroke-width="1" fill="white" d="M1 1v14h14v-14h-14z"/></svg>');
+	display: inline-block;
+	height: 1rem;
+	top: calc(50% - .5rem);
+	position: absolute;
+	right: 0;
+	width: 1rem;
+}
+.checkbox:checked + .checkbox-image {
+	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="dimgray" stroke-linejoin="round"><path stroke-width="1" fill="white" d="M1 1v14h14v-14h-14z"/><path stroke-width="2" fill="none" d="M4 7l3 5l5-7"/></svg>');
 }
 .editing {
 	color: #3cf !important;
