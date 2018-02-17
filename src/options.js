@@ -7,7 +7,7 @@
 		userAgent: navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux'),
 		noGesture: '-',
 		defaultTitle: 'Custom Gesture',
-		toastForeground: '#f9f9fa',
+		toastForeground: '#ffffff',
 		toastBackground: '#21a1de',
 	};
 	const TIMERS = {};
