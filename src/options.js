@@ -32,6 +32,8 @@
 
 	const byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
 
+	const allByClass = clazz => document.getElementsByClassName(clazz);
+
 	const parentByClass = (elm, clazz) => {
 		for (let e = elm; e && e.classList; e = e.parentNode) {
 			if (e.classList.contains(clazz)) return e;
@@ -100,7 +102,7 @@
 	const customGestureScript = byId('customGestureScript');
 	const timeout = byId('timeout');
 	const strokeSize = byId('strokeSize');
-	const bidingForms = document.getElementsByClassName('js-binding');
+	const bidingForms = allByClass('js-binding');
 
 	// edit UDLR ---------
 	const refreshUDLRLabel = (label, udlr) => {
@@ -171,7 +173,7 @@
 
 	const setupGestureList = () => {
 		gestureNames = [];
-		for (let list of document.getElementsByClassName('gesture-list')) {
+		for (let list of allByClass('gesture-list')) {
 			const gestures = list.getAttribute('data-gestures');
 			if (!gestures) continue;
 			for (let name of gestures.split(/\s+/)) {
@@ -413,22 +415,22 @@
 	};
 	const onChangeColor = e => {
 		e.target.parentNode.style.backgroundColor = e.target.value;
-		const t = document.getElementById(e.target.id.replace(/^.*_/, ''));
-		t.value = e.target.value;
+		byId(e.target.id.replace(/^color_/, '')).value = e.target.value;
 		saveBindingValues();
 	};
 	const onChangeColorText = e => {
-		setTimeout(() => {
-			const elm = document.getElementById(`color_${e.target.id}`);
-			const value = e.target.value || INSTEAD_OF_EMPTY[e.target.id];
-			if (value !== elm.parentNode.style.backgroundColor) {
-				elm.value = value;
-				elm.parentNode.style.backgroundColor = value;
+		const id = e.target.id;
+		resetTimer(`onchangecolortext_${id}`, () => {
+			const colorInput = byId(`color_${id}`);
+			const value = byId(id).value || INSTEAD_OF_EMPTY[id];
+			if (value !== colorInput.parentNode.style.backgroundColor) {
+				colorInput.value = value;
+				colorInput.parentNode.style.backgroundColor = value;
 			}
 		}, 500);
 	};
 	const setupOtherOptions = () => {
-		for (let caption of document.getElementsByClassName('caption')) {
+		for (let caption of allByClass('caption')) {
 			caption.textContent = getMessage(caption.textContent);
 		}
 		byId('newTab_item').appendChild(byId('newTabUrl_item'));
@@ -443,11 +445,11 @@
 			elm.addEventListener('change', saveBindingValues);
 			elm.addEventListener('input', saveBindingValuesDelay);
 		}
-		for (let elm of document.getElementsByClassName('color-text-input')) {
+		for (let elm of allByClass('color-text-input')) {
 			elm.setAttribute('placeholder', INSTEAD_OF_EMPTY[elm.id]);
 			onChangeColorText({ target: elm });
 			elm.addEventListener('input', onChangeColorText);
-			document.getElementById(`color_${elm.id}`).addEventListener('change', onChangeColor);
+			byId(`color_${elm.id}`).addEventListener('change', onChangeColor);
 		}
 	};
 
