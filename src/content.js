@@ -49,7 +49,7 @@ var SimpleGesture = {};
 		timeoutId = null;
 		if (e.withTimeout && toast) {
 			toast.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
-			setTimeout(hideToast, 1000);
+			window.setTimeout(hideToast, 1000);
 		} else {
 			hideToast();
 		}
@@ -178,8 +178,8 @@ var SimpleGesture = {};
 		toast.style.fontSize = ((5 * z)^0) + 'px';
 		toast.style.padding = ((1 * z)^0) + 'px';
 		toast.style.color = SimpleGesture.ini.toastForeground || '#f9f9fa';
-		toast.style.background = SimpleGesture.ini.toastBackground || '#00bfff';
-		toast.style.opacity = '1';
+		toast.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
+		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
 	};
 	const hideToast = () => {
 		if (!toast) return;
@@ -211,7 +211,7 @@ var SimpleGesture = {};
 				position: fixed;
 				text-align: center;
 				top: 0;
-				transition: opacity .5s;
+				transition: opacity .3s;
 				width: 100%;
 				z-index: 999;
 			`;
