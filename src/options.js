@@ -76,6 +76,7 @@
 
 	const reloadAllTabsIni = () => {
 		browser.runtime.sendMessage('reloadAllTabsIni');
+		SimpleGesture.loadIni();
 	};
 
 	const findCustomGesture = id => {
@@ -267,6 +268,7 @@
 		gestureNames.some((v,i) => {
 			if (v === id) gestureNames.splice(i, 1);
 		});
+		reloadAllTabsIni();
 	};
 	dlgs.editDlg = {
 		targetId: null,
@@ -299,6 +301,7 @@
 		browser.storage.local.set(details);
 		// update list
 		byId(`${c.id}_caption`).textContent = c.title;
+		reloadAllTabsIni(); // for toast
 		history.back();
 	};
 	const toggleEditor = e => {
