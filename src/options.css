@@ -105,21 +105,43 @@ body {
 .checkbox-label {
 	display: block;
 	position: relative;
+	transition: .2s;
 }
 .checkbox {
 	display: none;
 }
+
 .checkbox-image {
-	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="dimgray" stroke-linejoin="round"><path stroke-width="1" fill="white" d="M1 1v14h14v-14h-14z"/></svg>');
+	background: #bbb;
+	border-radius: .4rem;
+	content: '';
 	display: inline-block;
-	height: 1rem;
-	top: calc(50% - .5rem);
+	height: .8rem;
 	position: absolute;
 	right: 0;
-	width: 1rem;
+	top: calc(50% - .4rem);
+	transition: .3s;
+	width: 2rem;
+}
+.checkbox-image::after {
+	background: #e4e4e4;
+	border-radius: 50%;
+	box-shadow: 0 2px 2px #0004;
+	content: '';
+	display: inline-block;
+	height: 1.2rem;
+	position: absolute;
+	top: calc(50% - .6rem);
+	transform: translateX(0);
+	transition: .3s;
+	width: 1.2rem;
 }
 .checkbox:checked + .checkbox-image {
-	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="dimgray" stroke-linejoin="round"><path stroke-width="1" fill="white" d="M1 1v14h14v-14h-14z"/><path stroke-width="2" fill="none" d="M4 7l3 5l5-7"/></svg>');
+	background: #9cf;
+}
+.checkbox:checked + .checkbox-image::after {
+	background: #08f;
+	transform: translateX(1rem);
 }
 .editing {
 	color: #3cf !important;
