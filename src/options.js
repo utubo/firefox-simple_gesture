@@ -383,8 +383,8 @@
 	};
 
 	// edit text values --
-	const saveTextValues = e => {
-		clearTimeout(TIMERS.saveTextValues);
+	const saveBindingValues = e => {
+		clearTimeout(TIMERS.saveBindingValues);
 		for (let elm of bidingForms) {
 			if (elm.type === 'checkbox') {
 				SimpleGesture.ini[elm.id] = elm.checked;
@@ -399,8 +399,8 @@
 		saveIni();
 	};
 
-	const saveTextValuesDelay = e => {
-		resetTimer('saveTextValues', saveTextValues, 3000);
+	const saveBindingValuesDelay = e => {
+		resetTimer('saveBindingValues', saveBindingValues, 3000);
 	};
 
 	const getMessage = s => {
@@ -415,7 +415,7 @@
 		e.target.parentNode.style.backgroundColor = e.target.value;
 		const t = document.getElementById(e.target.id.replace(/^.*_/, ''));
 		t.value = e.target.value;
-		saveTextValues();
+		saveBindingValues();
 	};
 	const onChangeColorText = e => {
 		setTimeout(() => {
@@ -440,8 +440,8 @@
 			} else {
 				elm.value = SimpleGesture.ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
 			}
-			elm.addEventListener('change', saveTextValues);
-			elm.addEventListener('input', saveTextValuesDelay);
+			elm.addEventListener('change', saveBindingValues);
+			elm.addEventListener('input', saveBindingValuesDelay);
 		}
 		for (let elm of document.getElementsByClassName('color-text-input')) {
 			elm.setAttribute('placeholder', INSTEAD_OF_EMPTY[elm.id]);
@@ -453,10 +453,9 @@
 
 	// control Back button
 	const changeState = state => {
-		if (state.dlg) {
-			history.pushState(state, document.title);
-			onPopState({ state: state });
-		}
+		if (!state.dlg) return;
+		history.pushState(state, document.title);
+		onPopState({ state: state });
 	};
 	const onPopState = e => {
 		const state = e.state || history.state || { y: 0 };
@@ -503,19 +502,13 @@
 		page && f(item, page);
 	};
 	const setupIndex = () => {
-		byId('index').addEventListener('touchstart', e => {
-			doTargetPage(e, (item, page) => { item.classList.add('active'); }); // css ':active' does not work.
-		});
-		byId('index').addEventListener('touchend', e => {
-			doTargetPage(e, (item, page) => { item.classList.remove('active'); });
-		});
-		byId('index').addEventListener('click', e => {
-			doTargetPage(e, (item, page) => { scrollIntoView(byId(page)); });
-		});
-		// Fix page height ('min-height: 100vh' has probrem of scroll position.)
-		setTimeout(() => {
-			document.styleSheets.item(0).insertRule(`.page { min-height: ${innerHeight}px; }`, 0);
-		});
+		const index = byId('index');
+		index.addEventListener('click', e => { doTargetPage(e, (item, page) => { scrollIntoView(byId(page)); }); });
+		// Highlight when touched with JS. (css ':active' does not work.)
+		index.addEventListener('touchstart', e => { doTargetPage(e, (item, page) => { item.classList.add('active'); }); });
+		index.addEventListener('touchend', e => { doTargetPage(e, (item, page) => { item.classList.remove('active'); }); });
+		// Fix page heights with JS. (css 'min-height: 100vh' has probrem of scroll position.)
+		setTimeout(() => { document.styleSheets.item(0).insertRule(`.page { min-height: ${innerHeight}px; }`, 0); });
 	};
 	const removeCover = () => {
 		const cover = byId('cover');
