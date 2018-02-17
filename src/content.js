@@ -189,12 +189,11 @@ var SimpleGesture = {};
 	const showGesture = async () => {
 		if (!SimpleGesture.ini.toast) return;
 		const g = SimpleGesture.ini.gestures[gesture];
-		if (!g) {
-			hideToast();
-			return;
-		}
+		if (!g && !gesture[1]) return;
 		let name;
-		if (g[0] === '$') {
+		if (!g) {
+			name = '';
+		} else if (g[0] === '$') {
 			await loadExData(!exData);
 			name = exData.customGestureList.find((e, i, a) => e.id === g).title;
 		} else {
