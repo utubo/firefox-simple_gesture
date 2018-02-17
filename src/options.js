@@ -8,7 +8,7 @@
 		noGesture: '-',
 		defaultTitle: 'Custom Gesture',
 		toastForeground: '#f9f9fa',
-		toastBackground: '#00bfff',
+		toastBackground: '#21a1de',
 	};
 	const TIMERS = {};
 	const HAS_HISTORY = 1 < history.length;
@@ -408,6 +408,22 @@
 			return chrome.i18n.getMessage(s) || s;
 		}
 	};
+	const onChangeColor = e => {
+		e.target.parentNode.style.backgroundColor = e.target.value;
+		const t = document.getElementById(e.target.id.replace(/^.*_/, ''));
+		t.value = e.target.value;
+		saveTextValues();
+	};
+	const onChangeColorText = e => {
+		setTimeout(() => {
+			const elm = document.getElementById(`color_${e.target.id}`);
+			const value = e.target.value || INSTEAD_OF_EMPTY[e.target.id];
+			if (value !== elm.parentNode.style.backgroundColor) {
+				elm.value = value;
+				elm.parentNode.style.backgroundColor = value;
+			}
+		}, 500);
+	};
 	const setupOtherOptions = () => {
 		for (let caption of document.getElementsByClassName('caption')) {
 			caption.textContent = getMessage(caption.textContent);
@@ -423,6 +439,12 @@
 			}
 			elm.addEventListener('change', saveTextValues);
 			elm.addEventListener('input', saveTextValuesDelay);
+		}
+		for (let elm of document.getElementsByClassName('color-text-input')) {
+			elm.setAttribute('placeholder', INSTEAD_OF_EMPTY[elm.id]);
+			onChangeColorText({ target: elm });
+			elm.addEventListener('input', onChangeColorText);
+			document.getElementById(`color_${elm.id}`).addEventListener('change', onChangeColor);
 		}
 	};
 

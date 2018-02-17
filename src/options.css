@@ -81,10 +81,26 @@ body {
 	width: 6rem;
 }
 .color-input {
-	border: none;
+	box-sizing: border-box;
 	height: 1.5rem;
+	margin: 0;
+	opacity: 0;
 	padding: 0;
-	width: 4rem;
+	width: 1.5rem;
+}
+.color-preview {
+	border: 1px solid #999;
+	border-radius: 2px;
+	display: inline-block;
+	height: 1.5rem;
+	margin-right: .2rem;
+	overflow: hidden;
+	vertical-align: bottom;
+	width: 1.5rem;
+}
+.color-text-input {
+	display: inline-block;
+	width: 8rem;
 }
 .checkbox-label {
 	display: block;
