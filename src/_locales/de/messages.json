@@ -1,0 +1,142 @@
+{
+	"extensionName": {
+		"message": "Simple Gesture",
+		"description": "Name of the extension."
+	},
+	"extensionDescription": {
+		"message": "Simple touch gesture for Android",
+		"description": "Description of the extension."
+	},
+	"forward": {
+		"message": "Seite vorwärts"
+	},
+	"back": {
+		"message": "Seite zurück"
+	},
+	"top": {
+		"message": "Zum Anfang scrollen"
+	},
+	"bottom": {
+		"message": "Zum Ende scrollen"
+	},
+	"pageUp": {
+		"message": "Seitenweise hoch scrollen"
+	},
+	"pageDown": {
+		"message": "Seitenweise runter scrollen"
+	},
+	"reload": {
+		"message": "Neu laden"
+	},
+	"close": {
+		"message": "Tab schließen"
+	},
+	"closeAll": {
+		"message": "Alle tabs schließen"
+	},
+	"nextTab": {
+		"message": "Nächster Tab"
+	},
+	"prevTab": {
+		"message": "Vorheriger Tab"
+	},
+	"newTab": {
+		"message": "Neuer Tab"
+	},
+	"newTabUrl": {
+		"message": "URL"
+	},
+	"toggleUserAgent": {
+		"message": "Desktop-Site umschalten"
+	},
+	"userAgent": {
+		"message": "User-Agent"
+	},
+	"disableGesture": {
+		"message": "Simlpe-gesture Deaktivieren/Aktivieren"
+	},
+	"openAddonSettings": {
+		"message": "Optionen"
+	},
+	"timeoutAndStrokeSize": {
+		"message": "Timeout und Strichgröße"
+	},
+	"timeout": {
+		"message": "Timeout"
+	},
+	"strokeSize": {
+		"message": "Strichgröße"
+	},
+	"displayCommand": {
+		"message": "Befehl anzeigen"
+	},
+	"toastForeground": {
+		"message": "Vordergrundfarbe"
+	},
+	"toastBackground": {
+		"message": "Hintergrundfarbe"
+	},
+	"drawSquare": {
+		"message": "Zeichne ein kleines Quadrat."
+	},
+	"basedOn320x480": {
+		"message": "(Dies basiert auf Bildschirmgröße 320 x 480.)"
+	},
+	"clear": {
+		"message": "klar"
+	},
+	"delete": {
+		"message": "Löschen"
+	},
+	"edit": {
+		"message": "Bearbeiten"
+	},
+	"cancel": {
+		"message": "Stornieren"
+	},
+	"save": {
+		"message": "speichern"
+	},
+	"addCustomGesture": {
+		"message": "Hinzufügen"
+	},
+	"OpenURLInNewTab": {
+		"message": "URL in einem neuen Tab öffnen."
+	},
+	"ExecuteJavascript": {
+		"message": "Führen Sie Javascript aus."
+	},
+	"scriptWorksOnlyWhen": {
+		"message": "Das Benutzerskript funktioniert nur, wenn die aktuelle URL \"http: // ...\" oder \"https: // ...\" lautet."
+	},
+	"dontSetUntrustedScript": {
+		"message": "Setzen Sie kein nicht vertrauenswürdiges Skript, da dies zu einem Sicherheitsproblem führen könnte."
+	},
+	"advanced": {
+		"message": "Fortgeschritten"
+	},
+	"message_delete_confirm": {
+		"message": "Sind Sie sicher, dass Sie löschen möchten ?\n(Diese Aktion kann nicht rückgängig gemacht werden!)"
+	},
+	"message_gesture_is_disabled": {
+		"message": "Simple-Simulation ist deaktiviert."
+	},
+	"message_gesture_is_enabled": {
+		"message": "Simple-Simulation ist aktiviert."
+	},
+	"basicGestures": {
+		"message": "Grundlagen"
+	},
+	"tabGestures": {
+		"message": "Tab"
+	},
+	"otherGestures": {
+		"message": "Andere"
+	},
+	"customGestures": {
+		"message": "Benutzerdefinierte Gesten"
+	},
+	"configurations": {
+		"message": "Konfigurationen"
+	}
+}

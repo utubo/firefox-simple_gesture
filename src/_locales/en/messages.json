@@ -47,16 +47,16 @@
 		"message": "URL"
 	},
 	"toggleUserAgent": {
-		"message": "Toggle Destop-site"
-	},
-	"openAddonSettings": {
-		"message": "Open addon settings"
+		"message": "Toggle Desktop-site"
 	},
 	"userAgent": {
 		"message": "User-Agent"
 	},
 	"disableGesture": {
 		"message": "Toggle disable/enable gestures"
+	},
+	"openAddonSettings": {
+		"message": "Open addon settings"
 	},
 	"timeoutAndStrokeSize": {
 		"message": "Timeout and Stroke-size"
@@ -107,7 +107,7 @@
 		"message": "Execute javascript."
 	},
 	"scriptWorksOnlyWhen": {
-		"message": "User script works only when current URL is 'http://...' or 'https://...'."
+		"message": "User script works only when current URL is \"http://...\" or \"https://...\"."
 	},
 	"dontSetUntrustedScript": {
 		"message": "Don't set untrusted script, as this could lead to a security issue."

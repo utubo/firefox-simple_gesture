@@ -1,0 +1,142 @@
+{
+	"extensionName": {
+		"message": "Simple Gesture",
+		"description": "Name of the extension."
+	},
+	"extensionDescription": {
+		"message": "Simple touch gesture for Android",
+		"description": "Description of the extension."
+	},
+	"forward": {
+		"message": "前进"
+	},
+	"back": {
+		"message": "后退"
+	},
+	"top": {
+		"message": "滚动到顶部"
+	},
+	"bottom": {
+		"message": "滚动到底部"
+	},
+	"pageUp": {
+		"message": "向上滚动页面"
+	},
+	"pageDown": {
+		"message": "向下滚动页面"
+	},
+	"reload": {
+		"message": "重新载入"
+	},
+	"close": {
+		"message": "关闭当前选项卡"
+	},
+	"closeAll": {
+		"message": "关闭所有标签页"
+	},
+	"nextTab": {
+		"message": "下一个标签页"
+	},
+	"prevTab": {
+		"message": "上一个标签页"
+	},
+	"newTab": {
+		"message": "新标签页"
+	},
+	"newTabUrl": {
+		"message": "URL"
+	},
+	"toggleUserAgent": {
+		"message": "切换桌面网站"
+	},
+	"userAgent": {
+		"message": "User-Agent"
+	},
+	"disableGesture": {
+		"message": "禁用/启用 Simple-Gesture"
+	},
+	"openAddonSettings": {
+		"message": "打开add-on设置"
+	},
+	"timeoutAndStrokeSize": {
+		"message": "超时和描边尺寸"
+	},
+	"timeout": {
+		"message": "超时"
+	},
+	"strokeSize": {
+		"message": "描边尺寸"
+	},
+	"displayCommand": {
+		"message": "显示命令"
+	},
+	"toastForeground": {
+		"message": "前景色"
+	},
+	"toastBackground": {
+		"message": "背景颜色"
+	},
+	"drawSquare": {
+		"message": "画一个小方块。"
+	},
+	"basedOn320x480": {
+		"message": "(此基于屏幕尺寸为 320 x 480。)"
+	},
+	"clear": {
+		"message": "删除"
+	},
+	"delete": {
+		"message": "删除"
+	},
+	"edit": {
+		"message": "编辑"
+	},
+	"cancel": {
+		"message": "取消"
+	},
+	"save": {
+		"message": "保存"
+	},
+	"addCustomGesture": {
+		"message": "添加自定义手势"
+	},
+	"OpenURLInNewTab": {
+		"message": "在新标签页中打开网址"
+	},
+	"ExecuteJavascript": {
+		"message": "执行javascript"
+	},
+	"scriptWorksOnlyWhen": {
+		"message": "用户脚本仅在当前URL为“http：// ...”或“https：// ...”时才起作用。"
+	},
+	"dontSetUntrustedScript": {
+		"message": "不要设置不受信任的脚本，因为这可能会导致安全问题。"
+	},
+	"advanced": {
+		"message": "高等的"
+	},
+	"message_delete_confirm": {
+		"message": "您确定要删除吗?\n（此操作无法撤消!）"
+	},
+	"message_gesture_is_disabled": {
+		"message": "Simple-Gesuture已禁用。"
+	},
+	"message_gesture_is_enabled": {
+		"message": "Simple-Gesuture已启用。"
+	},
+	"basicGestures": {
+		"message": "基本"
+	},
+	"tabGestures": {
+		"message": "标签页"
+	},
+	"otherGestures": {
+		"message": "其他"
+	},
+	"customGestures": {
+		"message": "自定义手势"
+	},
+	"configurations": {
+		"message": "组态"
+	}
+}
