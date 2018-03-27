@@ -65,6 +65,7 @@ var SimpleGesture = {};
 		if (w === lastInnerWidth) return;
 		const z = Math.min(w, window.innerHeight) / 320;
 		size = (SimpleGesture.ini.strokeSize * z)^0;
+		lastInnerWidth = w;
 	};
 
 	// touch-events ------
@@ -148,21 +149,6 @@ var SimpleGesture = {};
 		[...befores].forEach(e => { e.classList.remove('simple-gesture-target'); });
 		target && target.classList && target.classList.add('simple-gesture-target');
 	};
-
-	// This has a some issue.
-	// const isBacked = old => old.state !== history.state || old.href !== location.href;
-	// const backOrClose = () => {
-	// 	const old = { state: history.state, href: location.href };
-	// 	history.back();
-	// 	if (isBacked(old)) return;
-	// 	// wait for show 'about:home'
-	// 	const timer = window.setTimeout(() => {
-	// 		if (isBacked(old)) return;
-	// 		browser.runtime.sendMessage('close');
-	// 	}, 500);
-	// 	// cancel when history forward.
-	// 	window.addEventListener('pageshow', () => { window.clearTimeout(timer); }, { once: true });
-	// };
 
 	const toggleIsGestureEnabled = () => {
 		isGestureEnabled = !isGestureEnabled;
