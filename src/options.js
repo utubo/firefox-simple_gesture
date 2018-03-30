@@ -429,6 +429,11 @@
 			}
 		}, 500);
 	};
+	const onChecked = e => {
+		for (let elm of allByClass(`js-linked-${e.target.id}`)) {
+			toggleClass(!e.target.checked, 'disabled', elm);
+		}
+	};
 	const setupOtherOptions = () => {
 		for (let caption of allByClass('caption')) {
 			caption.textContent = getMessage(caption.textContent);
@@ -439,6 +444,7 @@
 		for (let elm of bidingForms) {
 			if (elm.type === 'checkbox') {
 				elm.checked = !!SimpleGesture.ini[elm.id];
+				elm.addEventListener('change', onChecked);
 			} else {
 				elm.value = SimpleGesture.ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
 			}

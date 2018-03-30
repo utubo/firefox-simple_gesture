@@ -12,6 +12,10 @@ body {
 	opacity: 0 !important;
 	pointer-events: none;
 }
+.disabled {
+	opacity: .5;
+	pointer-events: none;
+}
 .title {
 	align-items: center;
 	background: #f2f2f2;
