@@ -41,13 +41,19 @@
 			const tabs = await browser.tabs.query({ index: targetIndex });
 			if (tabs[0]) {
 				browser.tabs.update(tabs[0].id, { active: true });
+				return true;
 			}
 		},
-		prevTab: tab => {
-			exec.showTab(tab.index - 1);
+		prevTab: async tab => {
+			if (tab.index) {
+				exec.showTab(tab.index - 1);
+			} else {
+				let all = await browser.tabs.query({});
+				exec.showTab(all.length - 1);
+			}
 		},
-		nextTab: tab => {
-			exec.showTab(tab.index + 1);
+		nextTab: async tab => {
+			(await exec.showTab(tab.index + 1)) || exec.showTab(0);
 		},
 		toggleUserAgent: async tab => {
 			if (userAgent) {
