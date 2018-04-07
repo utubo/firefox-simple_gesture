@@ -31,6 +31,12 @@
 	"close": {
 		"message": "タブを閉じる"
 	},
+	"afterClose": {
+		"message": "閉じた後に表示するタブ"
+	},
+	"default": {
+		"message": "デフォルト"
+	},
 	"closeAll": {
 		"message": "全てのタブを閉じる"
 	},

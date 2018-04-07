@@ -31,6 +31,12 @@
 	"close": {
 		"message": "Tab schließen"
 	},
+	"afterClose": {
+		"message": "Und zeigen"
+	},
+	"default": {
+		"message": "Standard"
+	},
 	"closeAll": {
 		"message": "Alle tabs schließen"
 	},

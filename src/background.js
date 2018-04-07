@@ -28,7 +28,12 @@
 			const url = await iniValue('newTabUrl');
 			browser.tabs.create({ active: true, url: url });
 		},
-		close: tab => {
+		close: async tab => {
+			let a = await iniValue('afterClose');
+			switch (a) {
+				case 'prevTab': await exec.prevTab(tab); break;
+				case 'nextTab': await exec.nextTab(tab); break;
+			}
 			browser.tabs.remove(tab.id);
 		},
 		closeAll: async tab => {

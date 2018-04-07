@@ -31,6 +31,12 @@
 	"close": {
 		"message": "关闭当前选项卡"
 	},
+	"afterClose": {
+		"message": "关闭后显示标签页"
+	},
+	"default": {
+		"message": "默认"
+	},
 	"closeAll": {
 		"message": "关闭所有标签页"
 	},

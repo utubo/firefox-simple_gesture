@@ -189,6 +189,7 @@
 			if (!e.target.classList) return;
 			if (e.target.tagName === 'INPUT') return;
 			if (e.target.tagName === 'LABEL') return;
+			if (e.target.tagName === 'SELECT') return;
 			if (e.target.classList.contains('custom-gesture-edit')) {
 				changeState({dlg: 'editDlg', targetId: dataTargetId(e)});
 				return;
@@ -438,6 +439,7 @@
 		for (let caption of allByClass('caption')) {
 			caption.textContent = getMessage(caption.textContent);
 		}
+		byId('close_item').appendChild(byId('afterClose_item'));
 		byId('newTab_item').appendChild(byId('newTabUrl_item'));
 		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
