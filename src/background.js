@@ -87,7 +87,6 @@
 			}
 			if (c.script) {
 				const userScript = `{
-					const SimpleGesture = {};
 					SimpleGesture.target = document.getElementsByClassName('simple-gesture-target')[0];
 					SimpleGesture.exit = v => { throw new Error('SimpleGestureExit'); };
 					${c.script}

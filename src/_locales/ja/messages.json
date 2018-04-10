@@ -112,6 +112,9 @@
 	"ExecuteJavascript": {
 		"message": "Javascriptを実行する"
 	},
+	"addCommandToScript": {
+		"message": "コマンドをscriptに追加する"
+	},
 	"scriptWorksOnlyWhen": {
 		"message": "JavaScriptは現在のURLがhttp～～のときだけ動きます。"
 	},

@@ -110,7 +110,10 @@
 		"message": "在新标签页中打开网址"
 	},
 	"ExecuteJavascript": {
-		"message": "执行javascript"
+		"message": "执行Javascript"
+	},
+	"addCommandToScript": {
+		"message": "補記到script命令"
 	},
 	"scriptWorksOnlyWhen": {
 		"message": "用户脚本仅在当前URL为“http：// ...”或“https：// ...”时才起作用。"

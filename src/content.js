@@ -109,23 +109,19 @@ var SimpleGesture = {};
 		try {
 			SimpleGesture.clearGestureTimeoutTimer();
 			hideToast();
-			if (executeGesture(e)) return true;
-			// cancel event when gesture executed
+			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return;
+			const g = SimpleGesture.ini.gestures[gesture];
+			if (!g) return;
+			if (!isGestureEnabled && g !== 'disableGesture') return;
+			SimpleGesture.doCommand(g);
 			e.stopPropagation();
 			e.preventDefault();
-			return false;
 		} finally {
 			gesture = null;
 		}
 	};
 
-	// execute gesture ---
-	const executeGesture = e => {
-		if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return false; // for options.html
-		const g = SimpleGesture.ini.gestures[gesture];
-		if (g === 'disableGesture') return toggleIsGestureEnabled();
-		if (!isGestureEnabled) return true;
-		if (!g) return true;
+	SimpleGesture.doCommand = g => {
 		switch (g) {
 			case 'forward': history.forward(); break;
 			case 'back': history.back(); break;
@@ -134,6 +130,7 @@ var SimpleGesture = {};
 			case 'pageUp': window.scrollByPages(-1, { behavior: 'smooth' }); break;
 			case 'pageDown': window.scrollByPages(1, { behavior: 'smooth' }); break;
 			case 'reload': location.reload(); break;
+			case 'disableGesture': toggleIsGestureEnabled(); break;
 			default:
 				if (g[0] === '$') { // '$' is custom-gesture prefix.
 					setCustomGestureTarget();
@@ -141,7 +138,6 @@ var SimpleGesture = {};
 				browser.runtime.sendMessage(g);
 		}
 		target = null;
-		return false;
 	};
 
 	const setCustomGestureTarget = () => {
@@ -153,7 +149,6 @@ var SimpleGesture = {};
 	const toggleIsGestureEnabled = () => {
 		isGestureEnabled = !isGestureEnabled;
 		alert(chrome.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
-		return false;
 	};
 
 	// others -------------
@@ -198,8 +193,8 @@ var SimpleGesture = {};
 				top: 0;
 				transition: opacity .3s;
 				width: 100%;
-				z-index: 999;
-			`;
+				z-index: 2147483647;
+			`; // TODO: I don't like this z-index. :(
 			document.body.appendChild(toast);
 		}
 		toast.textContent = `${name}(${gesture})`;

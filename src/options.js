@@ -310,6 +310,21 @@
 	const toggleEditor = e => {
 		toggleClass(customGestureType.value !== 'url', 'hide', customGestureUrl);
 		toggleClass(customGestureType.value !== 'script', 'hide', customGestureScript, byId('customGestureScriptNote'));
+		if (customGestureType.value !== 'script') return;
+		let s = byId('addCommandToScript');
+		let f = document.createDocumentFragment();
+		f.appendChild(s.firstChild.cloneNode(true));
+		for (let i of allByClass('gesture-item')) {
+			let name = i.id.replace(/_item/, '');
+			if (name === dlgs.editDlg.targetId) continue;
+			if (!name) continue;
+			let o = document.createElement('OPTION');
+			o.value = name;
+			o.textContent = byClass(i, 'gesture-caption').textContent;
+			f.appendChild(o);
+		}
+		while (s.firstChild) { s.remove(s.firstChild); }
+		s.appendChild(f);
 	};
 	const autoTitleByUrl = () => {
 		if (customGestureTitle.value && customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
@@ -322,6 +337,17 @@
 			customGestureTitle.value = RegExp.$1;
 		}
 	};
+	const addCommand = e => {
+		let name = e.target.value;
+		if (!name) return;
+		let script = `\nSimpleGesture.doCommand('${name}');\n`;
+		if (name[0] === CUSTOM_GESTURE_PREFIX) {
+			let title = findCustomGesture(name).title.replace(/\*/, ' ');
+			script = `/* ${title} */${script}\n`;
+		}
+		customGestureScript.value += script;
+		window.requestAnimationFrame(() => { e.target.selectedIndex = 0; });
+	};
 	const setupEditDlg = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
@@ -329,6 +355,7 @@
 		customGestureType.addEventListener('change', toggleEditor);
 		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
 		customGestureScript.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByScript, 1000); });
+		byId('addCommandToScript').addEventListener('change', addCommand);
 	};
 
 	// adjustment dlg ----

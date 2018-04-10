@@ -112,6 +112,9 @@
 	"ExecuteJavascript": {
 		"message": "Führen Sie Javascript aus."
 	},
+	"addCommandToScript": {
+		"message": "Fügen eines Befehl zu script"
+	},
 	"scriptWorksOnlyWhen": {
 		"message": "Das Benutzerskript funktioniert nur, wenn die aktuelle URL \"http: // ...\" oder \"https: // ...\" lautet."
 	},

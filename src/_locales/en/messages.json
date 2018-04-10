@@ -112,6 +112,9 @@
 	"ExecuteJavascript": {
 		"message": "Execute javascript."
 	},
+	"addCommandToScript": {
+		"message": "Add a command to script"
+	},
 	"scriptWorksOnlyWhen": {
 		"message": "User script works only when current URL is \"http://...\" or \"https://...\"."
 	},
