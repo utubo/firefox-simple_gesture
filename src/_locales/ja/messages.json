@@ -82,6 +82,9 @@
 	"toastBackground": {
 		"message": "背景色"
 	},
+	"EnableExperimentalFeatures": {
+		"message": "実験的な機能を有効にする"
+	},
 	"drawSquare": {
 		"message": "指で小さめに四角を描いてください"
 	},

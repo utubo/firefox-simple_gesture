@@ -82,6 +82,9 @@
 	"toastBackground": {
 		"message": "背景颜色"
 	},
+	"EnableExperimentalFeatures": {
+		"message": "实验功能"
+	},
 	"drawSquare": {
 		"message": "画一个小方块。"
 	},

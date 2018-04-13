@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="./options.css">
+		<link rel="icon" type="image/png" href="./icon64.png">
+		<title>Experimental - Simple Gesture</title>
+<style>
+.code {
+	background: #666;
+	border-radius: 4pt;
+	color: #eee;
+	padding: 2pt;
+}
+</style>
+	</head>
+	<body>
+		<div class="title">Experimental - Simple Gesture</div>
+
+		<!-- Pages -->
+
+		<div class="page" id="basicGestures">
+			<div class="item">
+			<b>SimpleGesture.doCommand()</b><br>
+			<br>
+			You can use "SimpleGesture.doCommand()" to execute Simple-Gesture's command on custome-gestures.<br>
+			e.g.<br>
+			<div class="code">
+				SimpleGesture.doCommand('reload');<br>
+			</div>
+			<br>
+			Note1:<br>
+			TAKE CARE NOT TO MAKE AN INFINITE LOOP.<br>
+			<br>
+			Note2:<br>
+			This api can't change a target of some commands.<br>
+			e.g.<br>
+			<div class="code">
+				// when<br>
+				// TAB-A = the current tab<br>
+				// TAB-B = the next tab<br>
+				<br>
+				// show TAB-B<br>
+				SimpleGesture.doCommand('nextTab');<br>
+				<br>
+				// reload TAB-A (<b>NOT TAB-B</b>)<br>
+				SimpleGesture.doCommand('reload');<br>
+				<br>
+				// <b>Simple-Gesture can't realod TAB-B on this version</b>, sorry.
+	 		</div>
+			<br>
+			Note3:<br>
+			Some commands are executed asynchronously.<br>
+			e.g. custom-gestures, 'close', 'nextTab', 'prevTab', etc...<br>
+			<br>
+			If you want to do something that is not simple,
+			then create custom event on custom-gesutre,
+			and catch it with greasemonkey or others.
+			</div>
+		</div>
+	</body>
+</html>
+

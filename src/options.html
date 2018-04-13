@@ -65,7 +65,7 @@
 			</div>
 			<div class="item">
 				<label for="toast" class="checkbox-label">
-					<span class="caption">displayCommand</span>
+					<span class="caption checkbox-caption">displayCommand</span>
 					<input id="toast" class="checkbox js-binding" type="checkbox" value="true">
 					<label for="toast" class="checkbox-image"></label>
 				</label>
@@ -82,6 +82,16 @@
 						<input id="color_toastBackground" class="color-input" type="color">
 					</div>
 					<input id="toastBackground" class="text-input color-text-input js-binding">
+				</div>
+			</div>
+			<div class="item">
+				<label for="experimental" class="checkbox-label">
+					<span class="caption checkbox-caption icon-flask">EnableExperimentalFeatures</span>
+					<input id="experimental" class="checkbox js-binding js-binding-exData" type="checkbox" value="true">
+					<label for="experimental" class="checkbox-image"></label>
+				</label>
+				<div class="sub-item">
+					<a href="./experimental.html" target="_blank">readme(en)</a>
 				</div>
 			</div>
 		</div>
@@ -146,7 +156,9 @@
 				<input id="customGestureUrl" type="url" class="text-input" placeholder="http://www.example.com/">
 				<textarea id="customGestureScript" class="text-input" placeholder="alert('Hello World');"></textarea>
 				<div id="customGestureScriptNote">
-					<select id="addCommandToScript" class="button"><option value="" class="caption">addCommandToScript</option></select><i class="flask"></i>
+					<div class="experimental">
+						<select id="addCommandToScript" class="button"><option value="" class="caption">addCommandToScript</option></select><i class="icon-flask"></i>
+					</div>
 					<span class="caption note">scriptWorksOnlyWhen</span>
 					<span class="caption note">dontSetUntrustedScript</span>
 				</div>

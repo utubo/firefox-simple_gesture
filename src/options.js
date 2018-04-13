@@ -72,8 +72,8 @@
 	// utils for Simple gesture
 	const saveIni = () => {
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
+		browser.storage.local.set({ simple_gesture_exdata: exData });
 		resetTimer('reloadAllTabsIni', reloadAllTabsIni, 1000);
-
 	};
 
 	const reloadAllTabsIni = () => {
@@ -416,17 +416,19 @@
 	const saveBindingValues = e => {
 		clearTimeout(TIMERS.saveBindingValues);
 		for (let elm of bidingForms) {
+			let ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
-				SimpleGesture.ini[elm.id] = elm.checked;
+				ini[elm.id] = elm.checked;
 			} else if (elm.value === INSTEAD_OF_EMPTY[elm.id]) {
-				SimpleGesture.ini[elm.id] = null;
+				ini[elm.id] = null;
 			} else if (elm.type === 'number' && elm.value.match(/[^\d]/)) {
 				continue; // ignore invalid number.
 			} else {
-				SimpleGesture.ini[elm.id] = elm.value;
+				ini[elm.id] = elm.value;
 			}
 		}
 		saveIni();
+		toggleExperimental();
 	};
 
 	const saveBindingValuesDelay = e => {
@@ -462,6 +464,11 @@
 			toggleClass(!e.target.checked, 'disabled', elm);
 		}
 	};
+	const toggleExperimental = () => {
+		for (let elm of allByClass('experimental')) {
+			toggleClass(!exData.experimental, 'hide', elm);
+		}
+	};
 	const setupOtherOptions = () => {
 		for (let caption of allByClass('caption')) {
 			caption.textContent = getMessage(caption.textContent);
@@ -471,11 +478,12 @@
 		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
 		for (let elm of bidingForms) {
+			let ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
-				elm.checked = !!SimpleGesture.ini[elm.id];
+				elm.checked = !!ini[elm.id];
 				elm.addEventListener('change', onChecked);
 			} else {
-				elm.value = SimpleGesture.ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
+				elm.value = ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
 			}
 			elm.addEventListener('change', saveBindingValues);
 			elm.addEventListener('input', saveBindingValuesDelay);
@@ -486,6 +494,7 @@
 			elm.addEventListener('input', onChangeColorText);
 			byId(`color_${elm.id}`).addEventListener('change', onChangeColor);
 		}
+		toggleExperimental();
 	};
 
 	// control Back button

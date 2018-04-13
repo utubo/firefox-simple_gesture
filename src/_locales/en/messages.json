@@ -82,6 +82,9 @@
 	"toastBackground": {
 		"message": "Background"
 	},
+	"EnableExperimentalFeatures": {
+		"message": "Enable experimental features"
+	},
 	"drawSquare": {
 		"message": "Draw a small square."
 	},

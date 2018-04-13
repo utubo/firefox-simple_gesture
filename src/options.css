@@ -111,6 +111,9 @@ body {
 	position: relative;
 	transition: .2s;
 }
+.checkbox-caption {
+	max-width: calc(100% - 2.4rem);
+}
 .checkbox {
 	display: none;
 }
@@ -287,7 +290,9 @@ body {
 	text-align: left;
 }
 #addCommandToScript {
-	max-width: calc(100% - 1.5em);
+	font-size: .9rem;
+	max-width: calc(100% - 1.6rem);
+	padding: 0;
 }
 #customGestureScriptNote::after {
 	background: linear-gradient(rgba(249,249,250,0) 0,rgba(249,249,250,1) 100%);
@@ -355,11 +360,11 @@ body {
 }
 
 /* icon */
-.flask::before {
+.icon-flask::after {
 	display: inline-block;
-	height: 1em;
-	margin: 0.2em;
-	width: 1em;
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="%236668" d="M4 10l8 0l2 4h-12z"/><path fill="none" stroke="%23666" stroke-width="1.5" stroke-linejoin="round" d="M9.5 2v3l5 9h-13l5-9v-3"/></svg>');
+	height: 1.2rem;
+	margin: 0.2rem;
+	width: 1.2rem;
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle fill="%23ffcc33" cx="8" cy="8" r="8"/><path fill="%233338" d="M5 7l6 0l2 4h-10z"/><path fill="none" stroke="%23333" stroke-width="1.5" stroke-linejoin="round" d="M9.5 2v3l3.5 6h-10l3.5-6v-3"/></svg>');
 }
 

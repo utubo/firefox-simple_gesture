@@ -82,6 +82,9 @@
 	"toastBackground": {
 		"message": "Hintergrundfarbe"
 	},
+	"EnableExperimentalFeatures": {
+		"message": "Experimentelle Funktion"
+	},
 	"drawSquare": {
 		"message": "Zeichne ein kleines Quadrat."
 	},
