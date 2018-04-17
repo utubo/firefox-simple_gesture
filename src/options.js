@@ -266,8 +266,7 @@
 		browser.storage.local.remove(`simple_gesture_${id}`);
 		exData.customGestureList = exData.customGestureList.filter((v, i, a) => v.id !== id);
 		browser.storage.local.set({ simple_gesture_exdata: exData });
-		const item = byId(`${id}_item`);
-		item.parentNode.removeChild(item);
+		byId(`${id}_item`).remove();
 		gestureNames.some((v,i) => {
 			if (v === id) gestureNames.splice(i, 1);
 		});
@@ -559,7 +558,7 @@
 	const removeCover = () => {
 		const cover = byId('cover');
 		setTimeout(() => { fadeout(cover); });
-		setTimeout(() => { cover.parentNode.removeChild(cover); }, 500);
+		setTimeout(() => { cover.remove(); }, 500);
 	};
 	const setupSettingItems = () => {
 		setupGestureList();
