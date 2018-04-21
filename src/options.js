@@ -310,14 +310,14 @@
 		toggleClass(customGestureType.value !== 'url', 'hide', customGestureUrl);
 		toggleClass(customGestureType.value !== 'script', 'hide', customGestureScript, byId('customGestureScriptNote'));
 		if (customGestureType.value !== 'script') return;
-		let s = byId('addCommandToScript');
-		let f = document.createDocumentFragment();
+		const s = byId('addCommandToScript');
+		const f = document.createDocumentFragment();
 		f.appendChild(s.firstChild.cloneNode(true));
 		for (let i of allByClass('gesture-item')) {
-			let name = i.id.replace(/_item/, '');
+			const name = i.id.replace(/_item/, '');
 			if (name === dlgs.editDlg.targetId) continue;
 			if (!name) continue;
-			let o = document.createElement('OPTION');
+			const o = document.createElement('OPTION');
 			o.value = name;
 			o.textContent = byClass(i, 'gesture-caption').textContent;
 			f.appendChild(o);
@@ -337,11 +337,11 @@
 		}
 	};
 	const addCommand = e => {
-		let name = e.target.value;
+		const name = e.target.value;
 		if (!name) return;
 		let script = `\nSimpleGesture.doCommand('${name}');\n`;
 		if (name[0] === CUSTOM_GESTURE_PREFIX) {
-			let title = findCustomGesture(name).title.replace(/\*/, ' ');
+			const title = findCustomGesture(name).title.replace(/\*/, ' ');
 			script = `/* ${title} */${script}\n`;
 		}
 		customGestureScript.value += script;
@@ -415,7 +415,7 @@
 	const saveBindingValues = e => {
 		clearTimeout(TIMERS.saveBindingValues);
 		for (let elm of bidingForms) {
-			let ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
+			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
 				ini[elm.id] = elm.checked;
 			} else if (elm.value === INSTEAD_OF_EMPTY[elm.id]) {
@@ -477,7 +477,7 @@
 		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
 		for (let elm of bidingForms) {
-			let ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
+			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
 				elm.checked = !!ini[elm.id];
 				elm.addEventListener('change', onChecked);
