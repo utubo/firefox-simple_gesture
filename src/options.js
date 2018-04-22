@@ -341,8 +341,8 @@
 		if (!name) return;
 		let script = `\nSimpleGesture.doCommand('${name}');\n`;
 		if (name[0] === CUSTOM_GESTURE_PREFIX) {
-			const title = findCustomGesture(name).title.replace(/\*/, ' ');
-			script = `/* ${title} */${script}\n`;
+			const title = findCustomGesture(name).title.replace(/\/\*\s+|\s+\*\//g, '');
+			script = `\n/* ${title} */${script}`;
 		}
 		customGestureScript.value += script;
 		window.requestAnimationFrame(() => { e.target.selectedIndex = 0; });
