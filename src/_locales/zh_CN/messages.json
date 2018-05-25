@@ -85,6 +85,18 @@
 	"EnableExperimentalFeatures": {
 		"message": "实验功能"
 	},
+	"fromEdge-L": {
+		"message": "从屏幕的左边缘"
+	},
+	"fromEdge-R": {
+		"message": "从屏幕的右边缘"
+	},
+	"fromEdge-T": {
+		"message": "从屏幕的顶部边缘"
+	},
+	"fromEdge-B": {
+		"message": "从屏幕的底部边缘"
+	},
 	"drawSquare": {
 		"message": "画一个小方块。"
 	},

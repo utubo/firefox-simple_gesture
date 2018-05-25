@@ -85,6 +85,15 @@
 		return exData.customGestureList.find((e, i, a) => e.id === id);
 	};
 
+	/** e.g.
+	 * 'T:L-R' to ['T', 'L-R']
+	 * 'U-D' to ['', 'U-D']
+	 * '' to ['', '']
+	 */
+	const toStartPointAndUdlr = s => {
+		return s ? s[1] === ':' ? s.split(':') : ['', s] : ['', ''];
+	};
+
 	const ifById = id => (typeof id === 'string') ? byId(id): id;
 	const fadeout = elm => { ifById(elm).classList.add('transparent'); };
 	const fadein = elm => { ifById(elm).classList.remove('transparent'); };
@@ -94,6 +103,7 @@
 	const gestureTemplate = byClass(templates, 'gesture-item');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
 	const inputedGesture = byId('inputedGesture');
+	const inputedStartPoint = byId('inputedStartPoint');
 	const dupName = byId('dupName');
 	const customGestureList = byId('customGestureList');
 	const customGestureTitle = byId('customGestureTitle');
@@ -104,26 +114,36 @@
 	const strokeSize = byId('strokeSize');
 	const bidingForms = allByClass('js-binding');
 
-	// edit UDLR ---------
-	const refreshUDLRLabel = (label, udlr) => {
-		label.textContent = udlr || INSTEAD_OF_EMPTY.noGesture;
+	// edit U-D-L-R ------
+	const updateUdlrLabel = (labelUdlr, labelStartPoint, sudlr) => {
+		let [startPoint, udlr] = toStartPointAndUdlr(sudlr);
+		labelUdlr.textContent = udlr || INSTEAD_OF_EMPTY.noGesture;
+		labelStartPoint.textContent = startPoint ? `(${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)})` : '';
+		return [startPoint, udlr];
+	};
+	const updateGestureItem = (label, sudlr) => {
+		let note = byClass(label.parentNode, 'udlr-note');
+		let [startPoint, udlr] = updateUdlrLabel(label, note, sudlr);
+		toggleClass(!startPoint, 'hide', note);
 		toggleClass(!udlr, 'udlr-na', label);
+		label.setAttribute('x-sudlr', sudlr || '');
 	};
 
 	const CLEAR_GESTURE = 'n/a'; // magic number
-	const updateGesture = udlr => {
+	const updateGesture = (udlr, startPoint) => {
 		if (udlr) {
-			if (udlr === CLEAR_GESTURE) {
-				udlr = null;
+			let sudlr = (startPoint || '') + udlr;
+			if (sudlr === CLEAR_GESTURE) {
+				sudlr = null;
 			} else {
-				SimpleGesture.ini.gestures[udlr] = null;
+				SimpleGesture.ini.gestures[sudlr] = null;
 			}
 			const udlrs = swapKeyValue(SimpleGesture.ini.gestures);
-			udlrs[target.name] = udlr;
+			udlrs[target.name] = sudlr;
 			SimpleGesture.ini.gestures = swapKeyValue(udlrs);
 			saveIni();
 			for (let name of gestureNames) {
-				 refreshUDLRLabel(byId(`${name}_udlr`), udlrs[name]);
+				 updateGestureItem(byId(`${name}_udlr`), udlrs[name]);
 			}
 		}
 		history.back();
@@ -136,8 +156,14 @@
 			target.udlr = byId(`${target.name}_udlr`);
 			toggleClass(true, 'editing', target.caption, target.udlr);
 			byId('editTarget').textContent = target.caption.textContent;
-			inputedGesture.textContent = target.udlr.textContent;
-			inputedGesture.classList.remove('dup', 'canceled');
+			let [startPoint, udlr] = updateUdlrLabel(
+				inputedGesture,
+				inputedStartPoint,
+				target.udlr.getAttribute('x-sudlr')
+			);
+			toggleClass(!startPoint, 'hide', inputedStartPoint);
+			toggleClass(false, 'dup', inputedGesture, inputedStartPoint);
+			toggleClass(false, 'canceled', inputedGesture);
 			dupName.textContent = '';
 		},
 		onHide: () => {
@@ -147,7 +173,7 @@
 		}
 	};
 
-	const getUDLR = name => {
+	const getUdlr = name => {
 		for (let g in SimpleGesture.ini.gestures) {
 			if (SimpleGesture.ini.gestures[g] === name) return g;
 		}
@@ -158,7 +184,7 @@
 		item.id = `${name}_item`;
 		const label = byClass(item, 'udlr');
 		label.id = `${name}_udlr`;
-		refreshUDLRLabel(label, getUDLR(name));
+		updateGestureItem(label, getUdlr(name));
 		const caption = byClass(item, 'gesture-caption');
 		caption.id = `${name}_caption`;
 		caption.textContent = name;
@@ -217,25 +243,30 @@
 		SimpleGesture.clearGestureTimeoutTimer(); // Don't timeout, when editing gesture.
 		e.preventDefault();
 	};
-	SimpleGesture.onInputGesture = (e, gesture) => {
+	SimpleGesture.onInputGesture = (e, gesture, startPoint) => {
 		if (!target) return;
 		if (gesture.length > SimpleGesture.MAX_LENGTH) {
 			inputedGesture.classList.add('canceled');
 		}
-		inputedGesture.textContent = gesture.substring(0, MAX_LENGTH);
-		let d = SimpleGesture.ini.gestures[inputedGesture.textContent];
-		d = (d && d !== target.name) ? `\u00a0(${getMessage(d)})` : '';
-		dupName.textContent = d;
-		toggleClass(d, 'dup', inputedGesture);
+		toggleClass(!startPoint, 'hide', inputedStartPoint);
+		updateUdlrLabel(
+			inputedGesture,
+			inputedStartPoint,
+			startPoint + gesture.substring(0, MAX_LENGTH)
+		);
+		let dup = SimpleGesture.ini.gestures[startPoint + inputedGesture.textContent];
+		dup = (dup && dup !== target.name) ? `\u00a0(${getMessage(dup)})` : '';
+		dupName.textContent = dup;
+		toggleClass(dup, 'dup', inputedGesture, inputedStartPoint);
 		e.preventDefault();
 		return false;
 	};
-	SimpleGesture.onGestured = (e, gesture) => {
+	SimpleGesture.onGestured = (e, gesture, startPoint) => {
 		if (!target) return;
 		if (inputedGesture.classList.contains('canceled')) {
 			history.back();
 		} else {
-			updateGesture(gesture.substring(0, MAX_LENGTH));
+			updateGesture(gesture.substring(0, MAX_LENGTH), startPoint);
 		}
 		e.preventDefault();
 		return false;

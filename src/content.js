@@ -23,19 +23,24 @@ var SimpleGesture = {};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
 
 	// fields ------------
-	let gesture = null;
+	let gesture = null; // e.g. 'L-R-U-D'
+	let startPoint = null; // e.g. 'L:', 'R:', 'T:' or 'B:'
 	let lx = 0; // last X
 	let ly = 0; // last Y
 	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let timeoutId = null;
 	let isGestureEnabled = true;
+	// for screen size
+	let lastInnerWidth = 0;
+	let lastInnerHeight = 0;
 	let size = SimpleGesture.ini.strokeSize;
+	// others
 	let toast;
 	let exData;
 
 	// utils -------------
-	SimpleGesture.getXY = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.pageX, e.pageY];
+	SimpleGesture.getXY = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
 
 	SimpleGesture.clearGestureTimeoutTimer = () => { // options.js uses this function. TODO: Fix this dirty code.
 		if (timeoutId) {
@@ -59,13 +64,13 @@ var SimpleGesture = {};
 		resetGesture({ withTimeout: true });
 	};
 
-	let lastInnerWidth = 0;
 	const fixSize = () => {
 		const w = window.innerWidth;
 		if (w === lastInnerWidth) return;
-		const z = Math.min(w, window.innerHeight) / 320;
-		size = (SimpleGesture.ini.strokeSize * z)^0;
 		lastInnerWidth = w;
+		lastInnerHeight = window.innerHeight;
+		const z = Math.min(w, lastInnerHeight) / 320;
+		size = (SimpleGesture.ini.strokeSize * z)^0;
 	};
 
 	// touch-events ------
@@ -78,6 +83,7 @@ var SimpleGesture = {};
 		SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e);
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
+		setupStartPoint(lx, ly);
 		target = e.target;
 	};
 
@@ -101,7 +107,7 @@ var SimpleGesture = {};
 		lx = x;
 		ly = y;
 		lg = g;
-		if (SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture) === false) return;
+		if (SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture, startPoint) === false) return;
 		showGesture();
 	};
 
@@ -109,8 +115,8 @@ var SimpleGesture = {};
 		try {
 			SimpleGesture.clearGestureTimeoutTimer();
 			hideToast();
-			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture) === false) return;
-			const g = SimpleGesture.ini.gestures[gesture];
+			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture, startPoint) === false) return;
+			const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
 			if (!g) return;
 			if (!isGestureEnabled && g !== 'disableGesture') return;
 			SimpleGesture.doCommand(g);
@@ -118,6 +124,21 @@ var SimpleGesture = {};
 			e.preventDefault();
 		} finally {
 			gesture = null;
+		}
+	};
+
+	const setupStartPoint = async (x, y) => {
+		let a = (Math.min(lastInnerWidth, lastInnerHeight) / 10)^0;
+		if (x < a) {
+			startPoint = 'L:';
+		} else if (x > lastInnerWidth - a) {
+			startPoint = 'R:';
+		} else if (y < a) {
+			startPoint = 'T:';
+		} else if (y > lastInnerHeight - a) {
+			startPoint = 'B:';
+		} else {
+			startPoint = '';
 		}
 	};
 
@@ -169,8 +190,13 @@ var SimpleGesture = {};
 	};
 	const showGesture = async () => {
 		if (!SimpleGesture.ini.toast) return;
-		const g = SimpleGesture.ini.gestures[gesture];
-		if (!g && !gesture[1]) return;
+		let sUdlr = startPoint + gesture;
+		let g = SimpleGesture.ini.gestures[sUdlr];
+		if (!g) {
+			sUdlr = gesture;
+			g = SimpleGesture.ini.gestures[sUdlr];
+		}
+		if (!g && !sUdlr[1]) return;
 		let name;
 		if (!g) {
 			name = '';
@@ -197,7 +223,7 @@ var SimpleGesture = {};
 			`; // TODO: I don't like this z-index. :(
 			document.body.appendChild(toast);
 		}
-		toast.textContent = `${name}(${gesture})`;
+		toast.textContent = `${name}(${sUdlr})`;
 		showToast();
 	};
 

@@ -85,6 +85,18 @@
 	"EnableExperimentalFeatures": {
 		"message": "実験的な機能を有効にする"
 	},
+	"fromEdge-L": {
+		"message": "画面左端から"
+	},
+	"fromEdge-R": {
+		"message": "画面右端から"
+	},
+	"fromEdge-T": {
+		"message": "画面上端から"
+	},
+	"fromEdge-B": {
+		"message": "画面下端から"
+	},
 	"drawSquare": {
 		"message": "指で小さめに四角を描いてください"
 	},

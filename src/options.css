@@ -225,12 +225,25 @@ body {
 	background: #fff;
 	content: ' ';
 	display: block;
-	height: 60vmin;
-	left: calc( 50% - 30vmin );
+	height: 54vmin;
+	left: calc( 50% - 27vmin );
 	position: fixed;
-	top: calc( 50% - 30vmin );
+	top: calc( 50% - 27vmin );
 	transition: .3s;
-	width: 60vmin;
+	width: 54vmin;
+}
+.inputed-gesture-container {
+	overflow: visible;
+	overflow-x: hide;
+}
+#inputedStartPoint {
+    bottom: -1rem;
+    font-size: 1rem;
+	font-weight: normal;
+    line-height: 1rem;
+    position: absolute;
+    text-align: center;
+    width: 100%;
 }
 #inputedGesture {
 	display: inline-block;

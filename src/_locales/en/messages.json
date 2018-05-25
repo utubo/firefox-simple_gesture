@@ -85,6 +85,18 @@
 	"EnableExperimentalFeatures": {
 		"message": "Enable experimental features"
 	},
+	"fromEdge-L": {
+		"message": "From the left edge of screen."
+	},
+	"fromEdge-R": {
+		"message": "From the right edge of screen."
+	},
+	"fromEdge-T": {
+		"message": "From the top edge of screen."
+	},
+	"fromEdge-B": {
+		"message": "From the bottm edge of screen."
+	},
 	"drawSquare": {
 		"message": "Draw a small square."
 	},

@@ -85,6 +85,18 @@
 	"EnableExperimentalFeatures": {
 		"message": "Experimentelle Funktion"
 	},
+	"fromEdge-L": {
+		"message": "Von der linken Bildschirmkante."
+	},
+	"fromEdge-R": {
+		"message": "Von der rechten Bildschirmkante."
+	},
+	"fromEdge-T": {
+		"message": "Von der oberen Bildschirmkante."
+	},
+	"fromEdge-B": {
+		"message": "Von der unteren Bildschirmkante."
+	},
 	"drawSquare": {
 		"message": "Zeichne ein kleines Quadrat."
 	},
