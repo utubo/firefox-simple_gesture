@@ -108,7 +108,7 @@ var SimpleGesture = {};
 		ly = y;
 		lg = g;
 		if (SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture, startPoint) === false) return;
-		showGesture();
+		if (SimpleGesture.ini.toast) showGesture();
 	};
 
 	const onTouchEnd = e => {
@@ -178,7 +178,6 @@ var SimpleGesture = {};
 		if (toast.style.opacity === '1') return;
 		const z = Math.min(window.innerWidth, window.innerHeight) / 100;
 		toast.style.fontSize = ((5 * z)^0) + 'px';
-		toast.style.lineHeight =  ((8 * z)^0) + 'px';
 		toast.style.color = SimpleGesture.ini.toastForeground || '#ffffff';
 		toast.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
 		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
@@ -189,7 +188,6 @@ var SimpleGesture = {};
 		toast.style.opacity = '0';
 	};
 	const showGesture = async () => {
-		if (!SimpleGesture.ini.toast) return;
 		let sUdlr = startPoint + gesture;
 		let g = SimpleGesture.ini.gestures[sUdlr];
 		if (!g) {
@@ -213,6 +211,7 @@ var SimpleGesture = {};
 			toast.style.cssText = `
 				box-sizing: border-box;
 				left: 0;
+				line-height: 1.5;
 				opacity: 0;
 				overflow: hidden;
 				pointer-events: none;
