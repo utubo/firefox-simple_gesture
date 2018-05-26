@@ -178,7 +178,7 @@ var SimpleGesture = {};
 		if (toast.style.opacity === '1') return;
 		const z = Math.min(window.innerWidth, window.innerHeight) / 100;
 		toast.style.fontSize = ((5 * z)^0) + 'px';
-		toast.style.padding = ((1 * z)^0) + 'px';
+		toast.style.lineHeight =  ((8 * z)^0) + 'px';
 		toast.style.color = SimpleGesture.ini.toastForeground || '#ffffff';
 		toast.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
 		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
@@ -193,8 +193,10 @@ var SimpleGesture = {};
 		let sUdlr = startPoint + gesture;
 		let g = SimpleGesture.ini.gestures[sUdlr];
 		if (!g) {
-			sUdlr = gesture;
-			g = SimpleGesture.ini.gestures[sUdlr];
+			g = SimpleGesture.ini.gestures[gesture];
+			if (g) {
+				sUdlr = gesture;
+			}
 		}
 		if (!g && !sUdlr[1]) return;
 		let name;
