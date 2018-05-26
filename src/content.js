@@ -37,6 +37,8 @@ var SimpleGesture = {};
 	let size = SimpleGesture.ini.strokeSize;
 	// others
 	let toast;
+	let toastMain;
+	let toastSub;
 	let exData;
 
 	// utils -------------
@@ -53,7 +55,7 @@ var SimpleGesture = {};
 		gesture = null;
 		timeoutId = null;
 		if (e.withTimeout && toast) {
-			toast.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
+			toastMain.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
 			window.setTimeout(hideToast, 1000);
 		} else {
 			hideToast();
@@ -179,7 +181,8 @@ var SimpleGesture = {};
 		const z = Math.min(window.innerWidth, window.innerHeight) / 100;
 		toast.style.fontSize = ((5 * z)^0) + 'px';
 		toast.style.color = SimpleGesture.ini.toastForeground || '#ffffff';
-		toast.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
+		toastMain.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
+		toastSub.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
 		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
 	};
 	const hideToast = () => {
@@ -187,16 +190,38 @@ var SimpleGesture = {};
 		if (toast.style.opacity === '0') return;
 		toast.style.opacity = '0';
 	};
+	const setupToast = () => {
+		if (toast) return;
+		toast = document.createElement('DIV');
+		toast.style.cssText = `
+			box-sizing: border-box;
+			left: 0;
+			line-height: 1.5;
+			opacity: 0;
+			overflow: hidden;
+			pointer-events: none;
+			position: fixed;
+			text-align: center;
+			top: 0;
+			transition: opacity .3s;
+			width: 100%;
+			z-index: 2147483647;
+		`; // TODO: I don't like this z-index. :(
+		toastMain = document.createElement('DIV');
+		toastSub = document.createElement('DIV');
+		toastSub.style.cssText = `
+			font-size: 60%;
+			opacity: .7;
+			padding-right: .5em;
+			text-align: right;
+		`;
+		toast.appendChild(toastMain);
+		toast.appendChild(toastSub);
+		document.body.appendChild(toast);
+	};
 	const showGesture = async () => {
-		let sUdlr = startPoint + gesture;
-		let g = SimpleGesture.ini.gestures[sUdlr];
-		if (!g) {
-			g = SimpleGesture.ini.gestures[gesture];
-			if (g) {
-				sUdlr = gesture;
-			}
-		}
-		if (!g && !sUdlr[1]) return;
+		let g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
+		if (!g && !gesture[1] && !startPoint) return;
 		let name;
 		if (!g) {
 			name = '';
@@ -206,25 +231,12 @@ var SimpleGesture = {};
 		} else {
 			name = browser.i18n.getMessage(g);
 		}
-		if (!toast) {
-			toast = document.createElement('DIV');
-			toast.style.cssText = `
-				box-sizing: border-box;
-				left: 0;
-				line-height: 1.5;
-				opacity: 0;
-				overflow: hidden;
-				pointer-events: none;
-				position: fixed;
-				text-align: center;
-				top: 0;
-				transition: opacity .3s;
-				width: 100%;
-				z-index: 2147483647;
-			`; // TODO: I don't like this z-index. :(
-			document.body.appendChild(toast);
+		setupToast();
+		toastMain.textContent = `${name}(${gesture})`;
+		if (toast.getAttribute('x-startPoint') !== startPoint) {
+			toast.setAttribute('x-startPoint', startPoint);
+			toastSub.textContent = `${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)}`;
 		}
-		toast.textContent = `${name}(${sUdlr})`;
 		showToast();
 	};
 
