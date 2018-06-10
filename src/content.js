@@ -179,7 +179,7 @@ var SimpleGesture = {};
 		if (!toast) return;
 		if (toast.style.opacity === '1') return;
 		const z = Math.min(window.innerWidth, window.innerHeight) / 100;
-		toast.style.fontSize = ((5 * z)^0) + 'px';
+		toast.style.fontSize = ((5 * z)^0) + 'px'; // "vmin" of CSS has a problem when the page is zoomed.
 		toast.style.color = SimpleGesture.ini.toastForeground || '#ffffff';
 		toastMain.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
 		toastSub.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
