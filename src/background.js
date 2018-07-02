@@ -42,6 +42,13 @@
 				browser.tabs.remove(tabs[i].id);
 			}
 		},
+		closeOthers : async tab => {
+			const tabs = await browser.tabs.query({});
+			for (let i = tabs.length - 1; 0 <= i; i --) {
+				if (tabs[i].id !== tab.id)
+					browser.tabs.remove(tabs[i].id);
+			}
+		},
 		showTab: async targetIndex => {
 			const tabs = await browser.tabs.query({ index: targetIndex });
 			if (tabs[0]) {

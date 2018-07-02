@@ -40,6 +40,9 @@
 	"closeAll": {
 		"message": "Close all tabs"
 	},
+	"closeOthers": {
+		"message": "Close other tabs"
+	},
 	"nextTab": {
 		"message": "Next tab"
 	},
