@@ -68,10 +68,11 @@ var SimpleGesture = {};
 
 	const fixSize = () => {
 		const w = window.innerWidth;
-		if (w === lastInnerWidth) return;
+		const h = window.innerHeight;
+		if (w === lastInnerWidth && h === lastInnerHeight) return;
 		lastInnerWidth = w;
-		lastInnerHeight = window.innerHeight;
-		const z = Math.min(w, lastInnerHeight) / 320;
+		lastInnerHeight = h;
+		const z = Math.min(w, h) / 320;
 		size = (SimpleGesture.ini.strokeSize * z)^0;
 	};
 
