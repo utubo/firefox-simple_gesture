@@ -12,6 +12,7 @@
 	border-radius: 4pt;
 	color: #eee;
 	padding: 2pt;
+	margin: 2pt;
 }
 </style>
 	</head>
@@ -28,6 +29,20 @@
 				e.g.<br>
 				<div class="code">
 					SimpleGesture.doCommand('reload');<br>
+				</div>
+				<br>
+				'toggleUserAgent' has options.<br>
+				toggle 'ABC' &lt;-&gt; default<br>
+				<div class="code">
+					SimpleGesture.doCommand('toggleUserAgent', { userAgent: 'ABC' });<br>
+				</div>
+				change to 'ABC'.<br>
+				<div class="code">
+					SimpleGesture.doCommand('toggleUserAgent', { userAgent: 'ABC', force: true });<br>
+				</div>
+				reset.<br>
+				<div class="code">
+					SimpleGesture.doCommand('toggleUserAgent', { userAgent: null });
 				</div>
 				<br>
 				Note1:<br>

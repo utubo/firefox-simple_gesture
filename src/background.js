@@ -24,28 +24,28 @@
 	};
 
 	const exec = {
-		newTab: async tab => {
+		newTab: async arg => {
 			const url = await iniValue('newTabUrl');
 			browser.tabs.create({ active: true, url: url });
 		},
-		close: async tab => {
+		close: async arg => {
 			let a = await iniValue('afterClose');
 			switch (a) {
-				case 'prevTab': await exec.prevTab(tab); break;
-				case 'nextTab': await exec.nextTab(tab); break;
+				case 'prevTab': await exec.prevTab(arg); break;
+				case 'nextTab': await exec.nextTab(arg); break;
 			}
-			browser.tabs.remove(tab.id);
+			browser.tabs.remove(arg.tab.id);
 		},
-		closeAll: async tab => {
+		closeAll: async arg => {
 			const tabs = await browser.tabs.query({});
 			for (let i = tabs.length - 1; 0 <= i; i --) {
 				browser.tabs.remove(tabs[i].id);
 			}
 		},
-		closeOthers : async tab => {
+		closeOthers : async arg => {
 			const tabs = await browser.tabs.query({});
 			for (let i = tabs.length - 1; 0 <= i; i --) {
-				if (tabs[i].id !== tab.id)
+				if (tabs[i].id !== arg.tab.id)
 					browser.tabs.remove(tabs[i].id);
 			}
 		},
@@ -56,37 +56,39 @@
 				return true;
 			}
 		},
-		prevTab: async tab => {
-			if (tab.index) {
-				exec.showTab(tab.index - 1);
+		prevTab: async arg => {
+			if (arg.tab.index) {
+				exec.showTab(arg.tab.index - 1);
 			} else {
 				let all = await browser.tabs.query({});
 				exec.showTab(all.length - 1);
 			}
 		},
-		nextTab: async tab => {
-			(await exec.showTab(tab.index + 1)) || exec.showTab(0);
+		nextTab: async arg => {
+			(await exec.showTab(arg.tab.index + 1)) || exec.showTab(0);
 		},
-		toggleUserAgent: async tab => {
-			if (userAgent) {
+		toggleUserAgent: async arg => {
+			if (userAgent && !arg.force || arg.userAgent === null) {
 				userAgent = null;
 				browser.webRequest.onBeforeSendHeaders.removeListener(rewriteUserAgentHeader);
-				browser.tabs.reload(tab.id);
-				return;
+			} else {
+				userAgent =
+					arg.userAgent ||
+					(await iniValue('userAgent')) ||
+					navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux');
+				browser.webRequest.onBeforeSendHeaders.addListener(
+					rewriteUserAgentHeader,
+					{ urls: [ '*://*/*' ] },
+					[ "blocking", "requestHeaders" ]
+				);
 			}
-			userAgent = (await iniValue('userAgent')) || navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux');
-			browser.webRequest.onBeforeSendHeaders.addListener(
-				rewriteUserAgentHeader,
-				{ urls: [ '*://*/*' ] },
-				[ "blocking", "requestHeaders" ]
-			);
-			browser.tabs.reload(tab.id);
+			browser.tabs.reload(arg.tab.id);
 		},
-		openAddonSettings: tab => {
+		openAddonSettings: arg => {
 			browser.tabs.create({ active: true, url: 'options.html' });
 		},
-		customGesture: async (tab, id) => {
-			const key = 'simple_gesture_' + id;
+		customGesture: async arg => {
+			const key = 'simple_gesture_' + arg.command;
 			const c = (await browser.storage.local.get(key))[key];
 			if (c.url) {
 				browser.tabs.create({ active: true, url: c.url });
@@ -106,7 +108,7 @@
 					browser.tabs.create({
 						url: r.url,
 						active: (!('active' in r) || r.active)
-						//openerTabId: tab.id // Firefox for Android does not support this.
+						//openerTabId: arg.tab.id // Firefox for Android does not support this.
 					});
 				} catch (e) {
 					if (
@@ -129,13 +131,24 @@
 		}
 	};
 
-	browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-		const f = msg[0] === '$' ? exec.customGesture : exec[msg]; // '$' is custom-gesture prefix.
+	browser.runtime.onMessage.addListener((command, sender, sendResponse) => {
+		let arg;
+		if (command[0] === '{') {
+			arg = JSON.parse(command);
+			command = arg.command;
+		} else {
+			arg = { command: command };
+		}
+		const f = command[0] === '$' ? exec.customGesture : exec[command]; // '$' is custom-gesture prefix.
 		if (sender.tab) {
-			f(sender.tab, msg);
+			arg.tab = sender.tab;
+			f(arg);
 		} else {
 			// Somtimes sender.tab is undefined.
-			browser.tabs.query({ active: true, currentWindow: true }).then(tabs => { f(tabs[0], msg); });
+			browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
+				arg.tab = tabs[0];
+				f(arg);
+			});
 		}
 	});
 

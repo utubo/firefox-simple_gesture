@@ -145,7 +145,7 @@ var SimpleGesture = {};
 		}
 	};
 
-	SimpleGesture.doCommand = g => {
+	SimpleGesture.doCommand = (g, o) => {
 		switch (g) {
 			case 'forward': history.forward(); break;
 			case 'back': history.back(); break;
@@ -158,6 +158,10 @@ var SimpleGesture = {};
 			default:
 				if (g[0] === '$') { // '$' is custom-gesture prefix.
 					setCustomGestureTarget();
+				}
+				if (o) {
+					o.command = g;
+					g = JSON.stringify(o);
 				}
 				browser.runtime.sendMessage(g);
 		}
