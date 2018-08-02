@@ -81,18 +81,15 @@
 		SimpleGesture.loadIni();
 	};
 
-	const findCustomGesture = id => {
-		return exData.customGestureList.find((e, i, a) => e.id === id);
-	};
+	const findCustomGesture = id => exData.customGestureList.find((e, i, a) => e.id === id);
 
-	/** e.g.
+	/**
+	 * e.g.
 	 * 'T:L-R' to ['T', 'L-R']
 	 * 'U-D' to ['', 'U-D']
 	 * '' to ['', '']
 	 */
-	const toStartPointAndUdlr = s => {
-		return s ? s[1] === ':' ? s.split(':') : ['', s] : ['', ''];
-	};
+	const toStartPointAndUdlr = s => (s ? s[1] === ':' ? s.split(':') : ['', s] : ['', '']);
 
 	const ifById = id => (typeof id === 'string') ? byId(id): id;
 	const fadeout = elm => { ifById(elm).classList.add('transparent'); };

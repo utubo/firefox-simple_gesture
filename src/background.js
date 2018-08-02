@@ -131,7 +131,7 @@
 		}
 	};
 
-	browser.runtime.onMessage.addListener((command, sender, sendResponse) => {
+	browser.runtime.onMessage.addListener(async (command, sender, sendResponse) => {
 		let arg;
 		if (command[0] === '{') {
 			arg = JSON.parse(command);
@@ -139,17 +139,9 @@
 		} else {
 			arg = { command: command };
 		}
+		arg.tab = sender.tab || (await browser.tabs.query({ active: true, currentWindow: true }))[0]; // Somtimes sender.tab is undefined.
 		const f = command[0] === '$' ? exec.customGesture : exec[command]; // '$' is custom-gesture prefix.
-		if (sender.tab) {
-			arg.tab = sender.tab;
-			f(arg);
-		} else {
-			// Somtimes sender.tab is undefined.
-			browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
-				arg.tab = tabs[0];
-				f(arg);
-			});
-		}
+		f(arg);
 	});
 
 })();
