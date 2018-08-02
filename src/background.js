@@ -113,7 +113,7 @@
 				} catch (e) {
 					if (
 						e.message !== 'SimpleGestureExit' &&
-						e.message.indexOf('result is non-structured-clonable data') === -1 // Ignore invalid value.
+						e.message.indexOf('result is non-structured-clonable data') === -1 // Ignore the invalid return value.
 					) {
 						const msg = e.message.replace(/(['\\])/g, '\\$1');
 						const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
