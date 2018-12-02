@@ -87,6 +87,12 @@
 		openAddonSettings: arg => {
 			browser.tabs.create({ active: true, url: 'options.html' });
 		},
+		reloadAllTabsIni: async () => {
+			const tabs = await browser.tabs.query({});
+			for (let tab of tabs) {
+				browser.tabs.executeScript(tab.id, { code: 'SimpleGesture.loadIni();' });
+			}
+		},
 		customGesture: async arg => {
 			const key = 'simple_gesture_' + arg.command;
 			const c = (await browser.storage.local.get(key))[key];
@@ -95,38 +101,58 @@
 				return;
 			}
 			if (c.script) {
-				const userScript = `{
-					SimpleGesture.target = document.getElementsByClassName('simple-gesture-target')[0];
-					SimpleGesture.exit = v => { throw new Error('SimpleGestureExit'); };
-					${c.script}
-				}`;
-				try {
-					const result = await browser.tabs.executeScript({ code: userScript });
-					const r = result && result[0];
-					if (!r) return;
-					if (!r.url) return;
-					browser.tabs.create({
-						url: r.url,
-						active: (!('active' in r) || r.active)
-						//openerTabId: arg.tab.id // Firefox for Android does not support this.
-					});
-				} catch (e) {
-					if (
-						e.message !== 'SimpleGestureExit' &&
-						e.message.indexOf('result is non-structured-clonable data') === -1 // Ignore the invalid return value.
-					) {
-						const msg = e.message.replace(/(['\\])/g, '\\$1');
-						const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
-						browser.tabs.executeScript({ code: code });
-						return;
-					}
-				}
+				exec.executeScript({ tabId: arg.tab.id, code: c.script });
 			}
 		},
-		reloadAllTabsIni: async () => {
-			const tabs = await browser.tabs.query({});
-			for (let tab of tabs) {
-				browser.tabs.executeScript(tab.id, { code: 'SimpleGesture.loadIni();' });
+		open: async arg => {
+			const active = !('active' in arg) || !!arg.active;
+			const code = arg.code || arg.script;
+			// open in new tab
+			if (arg.inNewTab || !('inNewTab' in arg)) {
+				let tab = await browser.tabs.create({ active: active, url: arg.url });// Firefox for Android does not support openerTabId.
+				code && exec.executeScript({ tabId: tab.id, code: code});
+				return;
+			}
+			// open in current tab
+			if (code) {
+				const timer = setTimeout(() => { browser.tabs.onUpdated.removeListener(f); }, 5000); // when the tab doesn't complete.
+				const f = (tabId, changeInfo, tab) => {
+					if (changeInfo.status !== 'complete') return;
+					if (tabId !== arg.tab.id) return;
+					clearTimeout(timer);
+					browser.tabs.onUpdated.removeListener(f);
+					exec.executeScript({ tabId: tabId, code: code});
+				};
+				browser.tabs.onUpdated.addListener(f); // Firefox for Android doesn't support extraParameter.tabId.
+			}
+			browser.tabs.update({ url: arg.url });
+		},
+		executeScript: async arg => {
+			const userScript = `{
+				SimpleGesture.target = document.getElementsByClassName('simple-gesture-target')[0];
+				SimpleGesture.exit = v => { throw new Error('SimpleGestureExit'); };
+				SimpleGesture.open = (url, options) => {
+					let msg = Object.assign({ command: 'open', url: url }, options);
+					browser.runtime.sendMessage(JSON.stringify(msg));
+				};
+				${arg.code || arg.script}
+			}`;
+			try {
+				const result = await browser.tabs.executeScript(arg.tabId, { code: userScript });
+				const r = result && result[0];
+				if (r && r.url) {
+					exec.open(r);
+				}
+			} catch (e) {
+				if (
+					e.message !== 'SimpleGestureExit' &&
+					e.message.indexOf('result is non-structured-clonable data') === -1 // Ignore the invalid return value.
+				) {
+					const msg = e.message.replace(/(['\\])/g, '\\$1');
+					const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
+					browser.tabs.executeScript({ code: code });
+					return;
+				}
 			}
 		}
 	};
