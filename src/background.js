@@ -137,16 +137,15 @@
 				};
 				${arg.code || arg.script}
 			}`;
-			try {
-				const result = await browser.tabs.executeScript(arg.tabId, { code: userScript });
-				result && result[0] && result[0].url && exec.open(result[0]);
-			} catch (e) {
+			browser.tabs.executeScript(arg.tabId, { code: userScript })
+			.then(result => { result && result[0] && result[0].url && exec.open(result[0]); })
+			.catch (e => {
 				if (e.message === 'SimpleGestureExit') return;
 				if (e.message.indexOf('result is non-structured-clonable data') !== -1) return;// Ignore the invalid return value.
 				const msg = e.message.replace(/(['\\])/g, '\\$1');
 				const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
 				browser.tabs.executeScript({ code: code });
-			}
+			});
 		}
 	};
 
