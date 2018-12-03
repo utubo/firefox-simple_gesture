@@ -162,11 +162,15 @@
 			toggleClass(false, 'dup', inputedGesture, inputedStartPoint);
 			toggleClass(false, 'canceled', inputedGesture);
 			dupName.textContent = '';
+			if (window.innerWidth === document.body.clientWidth) { // prevent blink scroll bar.
+				document.body.style.overflow = 'hidden';// prevent touch scroll.
+			}
 		},
 		onHide: () => {
 			if (!target) return;
 			toggleClass(false, 'editing', target.caption, target.udlr);
 			target = null;
+			document.body.style.overflow = null;
 		}
 	};
 
