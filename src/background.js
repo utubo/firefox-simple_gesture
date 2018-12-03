@@ -109,21 +109,21 @@
 			const code = arg.code || arg.script;
 			// open in new tab
 			if (arg.inNewTab || !('inNewTab' in arg)) {
-				let tab = await browser.tabs.create({ active: active, url: arg.url });// Firefox for Android does not support openerTabId.
+				let tab = await browser.tabs.create({ active: active, url: arg.url });// Firefox for Android doesn't support openerTabId.
 				code && exec.executeScript({ tabId: tab.id, code: code});
 				return;
 			}
 			// open in current tab
 			if (code) {
-				const timer = setTimeout(() => { browser.tabs.onUpdated.removeListener(f); }, 5000); // when the tab doesn't complete.
+				const removeListener = () => { browser.tabs.onUpdated.removeListener(f); };
+				const timer = setTimeout(removeListener, 5000); // when the tab doesn't complete.
 				const f = (tabId, changeInfo, tab) => {
-					if (changeInfo.status !== 'complete') return;
-					if (tabId !== arg.tab.id) return;
+					if (changeInfo.status !== 'complete' || tabId !== arg.tab.id) return;
 					clearTimeout(timer);
-					browser.tabs.onUpdated.removeListener(f);
+					removeListener();
 					exec.executeScript({ tabId: tabId, code: code});
 				};
-				browser.tabs.onUpdated.addListener(f); // Firefox for Android doesn't support extraParameter.tabId.
+				browser.tabs.onUpdated.addListener(f);// Firefox for Android doesn't support extraParameter.tabId.
 			}
 			browser.tabs.update({ url: arg.url });
 		},
@@ -139,20 +139,13 @@
 			}`;
 			try {
 				const result = await browser.tabs.executeScript(arg.tabId, { code: userScript });
-				const r = result && result[0];
-				if (r && r.url) {
-					exec.open(r);
-				}
+				result && result[0] && result[0].url && exec.open(result[0]);
 			} catch (e) {
-				if (
-					e.message !== 'SimpleGestureExit' &&
-					e.message.indexOf('result is non-structured-clonable data') === -1 // Ignore the invalid return value.
-				) {
-					const msg = e.message.replace(/(['\\])/g, '\\$1');
-					const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
-					browser.tabs.executeScript({ code: code });
-					return;
-				}
+				if (e.message === 'SimpleGestureExit') return;
+				if (e.message.indexOf('result is non-structured-clonable data') !== -1) return;// Ignore the invalid return value.
+				const msg = e.message.replace(/(['\\])/g, '\\$1');
+				const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
+				browser.tabs.executeScript({ code: code });
 			}
 		}
 	};
