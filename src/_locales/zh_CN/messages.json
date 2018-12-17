@@ -43,6 +43,21 @@
 	"closeOthers": {
 		"message": "关闭其他所有标签页"
 	},
+	"closeSameUrl": {
+		"message": "关闭相同的URL"
+	},
+	"fullMatch": {
+		"message": "全文匹配"
+	},
+	"domain": {
+		"message": "Domain"
+	},
+	"contextRoot": {
+		"message": "Context root"
+	},
+	"closeSameUrlNote": {
+		"message": "标签的状态通常在启动时被损坏。所以这不能很好地运作。"
+	},
 	"nextTab": {
 		"message": "下一个标签页"
 	},

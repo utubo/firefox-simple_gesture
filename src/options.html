@@ -32,13 +32,12 @@
 
 		<div class="page" id="tabGestures">
 			<div class="page-header caption">tabGestures</div>
-			<div class="gesture-list" data-gestures="nextTab prevTab close closeAll closeOthers newTab"></div>
+			<div class="gesture-list" data-gestures="nextTab prevTab close closeAll closeOthers closeSameUrl newTab"></div>
 		</div>
 
 		<div class="page" id="otherGestures">
 			<div class="page-header caption">otherGestures</div>
-			<div class="gesture-list" data-gestures="toggleUserAgent disableGesture openAddonSettings">
-			</div>
+			<div class="gesture-list" data-gestures="toggleUserAgent disableGesture openAddonSettings"></div>
 		</div>
 
 		<div class="page" id="customGestures">
@@ -116,6 +115,14 @@
 					<option value="nextTab" class="caption">nextTab</option>
 				</select>
 			</div>
+			<div id="closeSameUrlMatchType_item" class="sub-item">
+				<select id="closeSameUrlMatchType" class="js-binding">
+					<option value="" class="caption">fullMatch</option>
+					<option value="domain" class="caption">domain</option>
+					<option value="contextRoot" class="caption">contextRoot</option>
+				</select>
+				<div class="caption note note-alert">closeSameUrlNote</div>
+			</div>
 			<div id="newTabUrl_item" class="sub-item">
 				<label for="newTabUrl" class="caption sub">newTabUrl</label>
 				<input id="newTabUrl" type="url" class="text-input js-binding">
@@ -125,6 +132,7 @@
 				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
 				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
 			</div>
+			<i class="icon-flask"></i>
 		</div>
 
 		<div id="gestureDlg" class="dlg transparent">

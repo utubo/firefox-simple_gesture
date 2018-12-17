@@ -42,11 +42,25 @@
 				browser.tabs.remove(tabs[i].id);
 			}
 		},
-		closeOthers : async arg => {
+		closeOthers: async arg => {
 			const tabs = await browser.tabs.query({});
 			for (let i = tabs.length - 1; 0 <= i; i --) {
 				if (tabs[i].id !== arg.tab.id)
 					browser.tabs.remove(tabs[i].id);
+			}
+		},
+		closeSameUrl: async arg => {
+			const matchType = arg.matchType || await iniValue('closeSameUrlMatchType');
+			let f;
+			switch (matchType) {
+				case 'domain' : f = url => url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1'); break;
+				case 'contextRoot' : f = url => url.replace(/^([^/]+:\/\/[^/?#]+\/[^/?#]+).*/, '$1'); break;
+				default: f = url => url;
+			}
+			const current = f(arg.tab.url);
+			const tabs = await browser.tabs.query({});
+			for (let i = tabs.length - 1; 0 <= i; i --) {
+				if (current === f(tabs[i].url)) browser.tabs.remove(tabs[i].id);
 			}
 		},
 		showTab: async targetIndex => {

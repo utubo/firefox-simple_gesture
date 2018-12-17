@@ -43,6 +43,21 @@
 	"closeOthers": {
 		"message": "Alle anderen tabs schließen"
 	},
+	"closeSameUrl": {
+		"message": "Gleiche URL schließen"
+	},
+	"fullMatch": {
+		"message": "Volle URL"
+	},
+	"domain": {
+		"message": "Domain"
+	},
+	"contextRoot": {
+		"message": "Kontextstammverzeichnis"
+	},
+	"closeSameUrlNote": {
+		"message": "Die Zustände von Registerkarten sind häufig beschädigt, beim Start. Das kann also nicht gut funktionieren."
+	},
 	"nextTab": {
 		"message": "Nächster Tab"
 	},

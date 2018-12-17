@@ -70,6 +70,22 @@ body {
 	font-size: .8rem;
 	color: #666;
 }
+.note-alert::before {
+	background: #fc3;
+	border-radius: 50%;
+	content: '!';
+	display: inline-block;
+	font-weight: bold;
+	height: 1rem;
+	line-height: 1rem;
+	margin: .1rem .1rem .1rem -1rem;
+	text-align: center;
+	vertical-align: bottom;
+	width: 1rem;
+}
+.note-alert {
+	margin-left: 1rem;
+}
 
 /* form */
 .text-input {

@@ -43,6 +43,21 @@
 	"closeOthers": {
 		"message": "他のタブを全て閉じる"
 	},
+	"closeSameUrl": {
+		"message": "同じURLのタブを閉じる"
+	},
+	"fullMatch": {
+		"message": "完全一致"
+	},
+	"domain": {
+		"message": "ドメイン"
+	},
+	"contextRoot": {
+		"message": "コンテキストルート"
+	},
+	"closeSameUrlNote": {
+		"message": "Firefox起動時などにタブの情報が壊れるので、上手く動かないことがあります"
+	},
 	"nextTab": {
 		"message": "次のタブ"
 	},

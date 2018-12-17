@@ -43,6 +43,21 @@
 	"closeOthers": {
 		"message": "Close other tabs"
 	},
+	"closeSameUrl": {
+		"message": "Close same URL"
+	},
+	"fullMatch": {
+		"message": "Full"
+	},
+	"domain": {
+		"message": "Domain"
+	},
+	"contextRoot": {
+		"message": "Context root"
+	},
+	"closeSameUrlNote": {
+		"message": "The states of tabs are often broken, eg at startup. So, this may not work well."
+	},
 	"nextTab": {
 		"message": "Next tab"
 	},

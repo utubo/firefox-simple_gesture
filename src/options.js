@@ -505,6 +505,8 @@
 			caption.textContent = getMessage(caption.textContent);
 		}
 		byId('close_item').appendChild(byId('afterClose_item'));
+		byId('closeSameUrl_item').appendChild(byId('closeSameUrlMatchType_item'));
+		byId('closeSameUrl_caption').appendChild(byClass(templates, 'icon-flask'));
 		byId('newTab_item').appendChild(byId('newTabUrl_item'));
 		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
