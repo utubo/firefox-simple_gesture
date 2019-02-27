@@ -29,7 +29,7 @@ var SimpleGesture = {};
 	let ly = 0; // last Y
 	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
 	let target = null;
-	let timeoutId = null;
+	let timer = null;
 	let isGestureEnabled = true;
 	// for screen size
 	let lastInnerWidth = 0;
@@ -44,16 +44,14 @@ var SimpleGesture = {};
 	// utils -------------
 	SimpleGesture.getXY = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
 
-	SimpleGesture.clearGestureTimeoutTimer = () => { // options.js uses this function. TODO: Fix this dirty code.
-		if (timeoutId) {
-			window.clearTimeout(timeoutId);
-			timeoutId = null;
-		}
+	const resetTimer = () => {
+		window.clearTimeout(timer);
+		timer = SimpleGesture.ini.timeout ? window.setTimeout(timeoutGesture, SimpleGesture.ini.timeout) : null;
 	};
 
 	const resetGesture = e => {
 		gesture = null;
-		timeoutId = null;
+		timer = null;
 		if (e.withTimeout && toast) {
 			toastMain.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
 			window.setTimeout(hideToast, 1000);
@@ -81,13 +79,12 @@ var SimpleGesture = {};
 		fixSize();
 		if (!size) return;
 		gesture = '';
-		SimpleGesture.clearGestureTimeoutTimer();
-		timeoutId = window.setTimeout(timeoutGesture, SimpleGesture.ini.timeout);
-		SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e);
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
 		setupStartPoint(lx, ly);
 		target = e.target;
+		if (SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e) === false) return;
+		resetTimer();
 	};
 
 	const onTouchMove = e => {
@@ -112,11 +109,12 @@ var SimpleGesture = {};
 		lg = g;
 		if (SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture, startPoint) === false) return;
 		if (SimpleGesture.ini.toast) showGesture();
+		resetTimer();
 	};
 
 	const onTouchEnd = e => {
 		try {
-			SimpleGesture.clearGestureTimeoutTimer();
+			window.clearTimeout(timer);
 			hideToast();
 			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture, startPoint) === false) return;
 			const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];

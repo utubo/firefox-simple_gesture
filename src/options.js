@@ -241,8 +241,8 @@
 	// inject settings-page behavior
 	SimpleGesture.onGestureStart = e => {
 		if (!target) return;
-		SimpleGesture.clearGestureTimeoutTimer(); // Don't timeout, when editing gesture.
 		e.preventDefault();
+		return false;
 	};
 	SimpleGesture.onInputGesture = (e, gesture, startPoint) => {
 		if (!target) return;
@@ -416,7 +416,7 @@
 				size *= 0.8; // margin
 				size ^= 0; // to integer;
 				if (10 < size) {
-					SimpleGesture.ini.timeout = new Date() - startTime + 300; // margin 300ms
+					SimpleGesture.ini.timeout = new Date() - startTime + 300; // margin 300ms. It seems better not to dvide this by 4.
 					SimpleGesture.ini.strokeSize = size;
 					saveIni();
 					timeout.value = SimpleGesture.ini.timeout;
