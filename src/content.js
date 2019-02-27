@@ -44,7 +44,7 @@ var SimpleGesture = {};
 	// utils -------------
 	SimpleGesture.getXY = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
 
-	const resetTimer = () => {
+	const restartTimer = () => {
 		window.clearTimeout(timer);
 		timer = SimpleGesture.ini.timeout ? window.setTimeout(timeoutGesture, SimpleGesture.ini.timeout) : null;
 	};
@@ -84,7 +84,7 @@ var SimpleGesture = {};
 		setupStartPoint(lx, ly);
 		target = e.target;
 		if (SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e) === false) return;
-		resetTimer();
+		restartTimer();
 	};
 
 	const onTouchMove = e => {
@@ -109,7 +109,7 @@ var SimpleGesture = {};
 		lg = g;
 		if (SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture, startPoint) === false) return;
 		if (SimpleGesture.ini.toast) showGesture();
-		resetTimer();
+		restartTimer();
 	};
 
 	const onTouchEnd = e => {
