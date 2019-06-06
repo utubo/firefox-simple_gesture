@@ -21,6 +21,7 @@ var SimpleGesture = {};
 		'toast': false
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
+	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 
 	// fields ------------
 	let gesture = null; // e.g. 'L-R-U-D'
@@ -35,8 +36,6 @@ var SimpleGesture = {};
 	let lastInnerWidth = 0;
 	let lastInnerHeight = 0;
 	let size = SimpleGesture.ini.strokeSize;
-	// viewport
-	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 	// others
 	let toast;
 	let toastMain;
