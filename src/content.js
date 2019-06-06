@@ -192,8 +192,12 @@ var SimpleGesture = {};
 		toast.style.color = SimpleGesture.ini.toastForeground || '#ffffff';
 		toastMain.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
 		toastSub.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
+		toast.style.transition = 'opacity .3s';
 		fixToastPosition();
 		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
+		setTimeout(() => {
+			toast.style.transition += ',left .3s .1s, top .3s .1s';
+		}, 300);
 	};
 	const fixToastPosition = () => {
 		if (VV.isDummy) return;
@@ -222,7 +226,7 @@ var SimpleGesture = {};
 			position: fixed;
 			text-align: center;
 			top: 0;
-			transition: opacity .3s, left .1s step-start, top .1s step-start;
+			transition: opacity .3s;
 			width: 100%;
 			z-index: 2147483647;
 		`; // TODO: I don't like this z-index. :(
@@ -287,7 +291,7 @@ var SimpleGesture = {};
 		fixToastPosition();
 		onTouchMove(e);
 	});
-	VV.addEventListener('resize', fixSize);
+	//VV.addEventListener('resize', fixSize); this is called too many times, and instead of touchdown.
 	SimpleGesture.loadIni();
 })();
 
