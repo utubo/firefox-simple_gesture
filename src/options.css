@@ -346,6 +346,22 @@ body {
 	width: 100%;
 	z-index: 99;
 }
+.code, .inline-code {
+	background: #999;
+	border-radius: 4pt;
+	border: none;
+	color: #eee;
+	margin: 2pt;
+	max-width: 100%;
+	padding: 2pt;
+	word-break: break-all;
+}
+.inline-code {
+	display: inline;
+	padding: 0 2pt;
+	text-overflow: ellipsis;
+	word-break: break-word;
+}
 
 /* buttons */
 .buttons {

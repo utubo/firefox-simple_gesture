@@ -35,14 +35,20 @@ var SimpleGesture = {};
 	let lastInnerWidth = 0;
 	let lastInnerHeight = 0;
 	let size = SimpleGesture.ini.strokeSize;
+	// viewport
+	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 	// others
 	let toast;
 	let toastMain;
 	let toastSub;
+	let isToastVisible;
 	let exData;
 
 	// utils -------------
-	SimpleGesture.getXY = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
+	SimpleGesture.getXY = e => {
+		const p = e.touches ? e.touches[0] : e;
+		return p.clientX !== undefined ? [p.clientX - VV.offsetLeft, p.clientY - VV.offsetTop] : [lx, ly];
+	};
 
 	const restartTimer = () => {
 		window.clearTimeout(timer);
@@ -180,17 +186,28 @@ var SimpleGesture = {};
 	// others -------------
 	const showToast = () => {
 		if (!toast) return;
-		if (toast.style.opacity === '1') return;
+		if (isToastVisible) return;
+		isToastVisible = true;
 		const z = Math.min(window.innerWidth, window.innerHeight) / 100;
 		toast.style.fontSize = ((5 * z)^0) + 'px'; // "vmin" of CSS has a problem when the page is zoomed.
 		toast.style.color = SimpleGesture.ini.toastForeground || '#ffffff';
 		toastMain.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
 		toastSub.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
+		fixToastPosition();
 		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
+	};
+	const fixToastPosition = () => {
+		if (VV.isDummy) return;
+		if (!toast) return;
+		if (!isToastVisible) return;
+		toast.style.top = VV.offsetTop + 'px';
+		toast.style.left = VV.offsetLeft + 'px';
+		toast.style.width = window.innerWidth;
 	};
 	const hideToast = () => {
 		if (!toast) return;
-		if (toast.style.opacity === '0') return;
+		if (!isToastVisible) return;
+		isToastVisible = false;
 		toast.style.opacity = '0';
 	};
 	const setupToast = () => {
@@ -206,7 +223,7 @@ var SimpleGesture = {};
 			position: fixed;
 			text-align: center;
 			top: 0;
-			transition: opacity .3s;
+			transition: opacity .3s, left .1s step-start, top .1s step-start;
 			width: 100%;
 			z-index: 2147483647;
 		`; // TODO: I don't like this z-index. :(
@@ -249,7 +266,6 @@ var SimpleGesture = {};
 		target.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', events.start);
 		target.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', events.move);
 		target.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', events.end);
-		//window.visualViewport.addEventListener('resize', fixSize); VisualViewport is draft. :(
 	};
 
 	const loadExData = async b => {
@@ -268,6 +284,11 @@ var SimpleGesture = {};
 
 	// START HERE ! ------
 	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
+	VV.addEventListener('scroll', e => {
+		fixToastPosition();
+		onTouchMove(e);
+	});
+	VV.addEventListener('resize', fixSize);
 	SimpleGesture.loadIni();
 })();
 
