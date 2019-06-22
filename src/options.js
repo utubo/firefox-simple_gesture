@@ -528,7 +528,7 @@
 			byId(`color_${elm.id}`).addEventListener('change', onChangeColor);
 		}
 		toggleExperimental();
-		byId('vvURL').addEventListener('click', e => { document.getSelection().selectAllChildren(e.target); });
+		byId('visualviewportSettingUrl').addEventListener('click', e => { document.getSelection().selectAllChildren(e.target); });
 	};
 
 	// control Back button
