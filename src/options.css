@@ -356,6 +356,9 @@ body {
 	padding: 2pt;
 	word-break: break-all;
 }
+.code {
+	user-select: element;
+}
 .inline-code {
 	display: inline;
 	padding: 0 2pt;
