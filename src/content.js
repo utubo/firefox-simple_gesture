@@ -196,7 +196,7 @@ var SimpleGesture = {};
 		fixToastPosition();
 		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
 		setTimeout(() => {
-			toast.style.transition += ',left .3s .1s, top .3s .1s';
+			toast.style.transition += ',left .2s .1s, top .2s .1s';
 		}, 300);
 	};
 	const fixToastPosition = () => {
@@ -205,7 +205,7 @@ var SimpleGesture = {};
 		if (!isToastVisible) return;
 		toast.style.top = VV.offsetTop + 'px';
 		toast.style.left = VV.offsetLeft + 'px';
-		toast.style.width = window.innerWidth;
+		toast.style.width = VV.width + 'px';
 	};
 	const hideToast = () => {
 		if (!toast) return;
