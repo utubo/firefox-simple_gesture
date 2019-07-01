@@ -187,17 +187,23 @@ var SimpleGesture = {};
 		if (!toast) return;
 		if (isToastVisible) return;
 		isToastVisible = true;
-		const z = Math.min(window.innerWidth, window.innerHeight) / 100;
-		toast.style.fontSize = ((5 * z)^0) + 'px'; // "vmin" of CSS has a problem when the page is zoomed.
 		toast.style.color = SimpleGesture.ini.toastForeground || '#ffffff';
 		toastMain.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
 		toastSub.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
 		toast.style.transition = 'opacity .3s';
+		fixToastSize();
 		fixToastPosition();
 		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
 		setTimeout(() => {
 			toast.style.transition += ',left .2s .1s, top .2s .1s';
 		}, 300);
+	};
+	const fixToastSize = () => {
+		const w = VV.isDummy ? window.innerWidth : VV.width;
+		const h = VV.isDummy ? window.innerHeight : VV.height;
+		const z = Math.min(w, h) / 100;
+		toast.style.fontSize = ((5 * z)^0) + 'px'; // "vmin" of CSS has a problem when the page is zoomed.
+		toast.style.width = w + 'px';
 	};
 	const fixToastPosition = () => {
 		if (VV.isDummy) return;
@@ -205,7 +211,6 @@ var SimpleGesture = {};
 		if (!isToastVisible) return;
 		toast.style.top = VV.offsetTop + 'px';
 		toast.style.left = VV.offsetLeft + 'px';
-		toast.style.width = VV.width + 'px';
 	};
 	const hideToast = () => {
 		if (!toast) return;
@@ -265,10 +270,17 @@ var SimpleGesture = {};
 
 	// utils for setup ----
 	SimpleGesture.addTouchEventListener = (target, events) => {
-		// mouse event is for Test on Desktop
-		target.addEventListener('ontouchstart' in window ? 'touchstart' : 'mousedown', events.start);
-		target.addEventListener('ontouchmove' in window ? 'touchmove' : 'mousemove', events.move);
-		target.addEventListener('ontouchend' in window ? 'touchend' : 'mouseup', events.end);
+		if ('ontouchstart' in window) {
+			target.addEventListener('touchstart', events.start);
+			target.addEventListener('touchmove', events.move);
+			target.addEventListener('touchend', events.end);
+			target.addEventListener('touchcancel', events.end);
+		} else {
+			// for test on Desktop
+			target.addEventListener('mousedown', events.start);
+			target.addEventListener('mousemove', events.move);
+			target.addEventListener('mouseup', events.end);
+		}
 	};
 
 	const loadExData = async b => {
