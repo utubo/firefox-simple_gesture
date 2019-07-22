@@ -371,6 +371,9 @@ body {
 	margin-top: .5rem;
 	text-align: center;
 }
+.buttons-vertical {
+	margin-top: 1rem;
+}
 
 .button {
 	background: #666;

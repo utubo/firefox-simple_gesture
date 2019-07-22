@@ -500,6 +500,27 @@
 			toggleClass(!exData.experimental, 'hide', elm);
 		}
 	};
+	const importSetting = text => {
+		try {
+			const obj = JSON.parse(text);
+			SimpleGesture.ini = obj.ini;
+			exData = obj.exData;
+			saveIni();
+			location.reload();
+		} catch (e) {
+			alert(e.message);
+		}
+	};
+	const exportSetting = () => {
+		const data = {
+			ini: SimpleGesture.ini,
+			exData: exData
+		};
+		const href = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(data));
+		const link = byId('export_setting_link');
+		link.setAttribute('href', href);
+		link.click();
+	};
 	const setupOtherOptions = () => {
 		for (let caption of allByClass('caption')) {
 			caption.textContent = getMessage(caption.textContent);
@@ -529,6 +550,17 @@
 		}
 		toggleExperimental();
 		byId('visualviewportSettingUrl').addEventListener('click', e => { document.getSelection().selectAllChildren(e.target); });
+		byId('import_setting').addEventListener('change', e => {
+			try {
+				if (!e.target.files[0]) return;
+				const reader = new FileReader();
+				reader.onload = e2 => { importSetting(reader.result); };
+				reader.readAsText(e.target.files[0]);
+			} catch (error) {
+				alert(error.message);
+			}
+		});
+		byId('export_setting').addEventListener('click', exportSetting);
 	};
 
 	// control Back button
