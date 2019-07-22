@@ -638,8 +638,13 @@
 	};
 
 	// START HERE ! ------
-	SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
-	exData = (await storageValue('simple_gesture_exdata')) || exData;
-	setupSettingItems();
+	try {
+		SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
+		exData = (await storageValue('simple_gesture_exdata')) || exData;
+		setupSettingItems();
+	} catch (e) {
+		byId('debuglog').classList.remove('hide');
+		byId('debuglog').textContent = `ERROR !!\n${e}\n${e.messsage || ''}`;
+	}
 })();
 

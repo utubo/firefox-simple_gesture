@@ -365,6 +365,10 @@ body {
 	text-overflow: ellipsis;
 	word-break: break-word;
 }
+#debuglog {
+	color: #fca;
+	white-space: pre;
+}
 
 /* buttons */
 .buttons {
