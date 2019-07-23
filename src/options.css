@@ -366,8 +366,14 @@ body {
 	word-break: break-word;
 }
 #debuglog {
-	color: #fca;
 	white-space: pre;
+}
+.errorlog {
+	color: #fca;
+}
+.stacktrace {
+	color: #fca;
+	margin-left: 1em;
 }
 
 /* buttons */

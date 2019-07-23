@@ -65,6 +65,7 @@
 			const v = await browser.storage.local.get(name);
 			return v ? v[name] : null;
 		} catch (e) {
+			addErrorLog(new Error(`failed to load setting. key=${name}.`), e);
 			return null;
 		}
 	};
@@ -624,6 +625,7 @@
 	};
 	const removeCover = () => {
 		const cover = byId('cover');
+		if (!cover) return;
 		setTimeout(() => { fadeout(cover); });
 		setTimeout(() => { cover.remove(); }, 500);
 	};
@@ -637,14 +639,46 @@
 		removeCover();
 	};
 
+	// error handling
+	const MAX_LOG_COUNT = 10;
+	const addLog = div => {
+		const debuglogDiv = document.getElementById('debuglog');
+		const count = debuglogDiv.childNodes.length;
+		for (let i = 0; i < count - MAX_LOG_COUNT; i ++) {
+			debuglogDiv.removeChild(debuglogDiv.firstChild);
+		}
+		debuglogDiv.appendChild(div);
+		debuglogDiv.classList.remove('hide');
+		removeCover();
+	};
+	const addErrorLog = (e, cause) => {
+		const err = e.error || e;
+		const div = document.createElement('DIV');
+		const msg = document.createElement('DIV');
+		msg.classList.add('errorlog');
+		msg.textContent = `${err.message || err}`;
+		div.appendChild(msg);
+		const stack = [];
+		if (cause) stack.push(cause.message || `${cause}`);
+		if (cause && cause.stack) stack.push(cause.stack.split('\n').slice(0, 2).join('\n'));
+		if (err.stack) stack.push(err.stack);
+		if (stack.length) {
+			const s = document.createElement('DIV');
+			s.classList.add('stacktrace');
+			s.textContent = stack.join('\n');
+			div.appendChild(s);
+		}
+		addLog(div);
+	};
+	addEventListener('error',  addErrorLog);
+
 	// START HERE ! ------
 	try {
 		SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
 		exData = (await storageValue('simple_gesture_exdata')) || exData;
 		setupSettingItems();
 	} catch (e) {
-		byId('debuglog').classList.remove('hide');
-		byId('debuglog').textContent = `ERROR !!\n${e}\n${e.messsage || ''}`;
+		addErrorLog(e);
 	}
 })();
 
