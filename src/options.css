@@ -366,6 +366,8 @@ body {
 	word-break: break-word;
 }
 #debuglog {
+	max-width: 100%;
+	overflow: auto;
 	white-space: pre;
 }
 .errorlog {
@@ -418,6 +420,12 @@ body {
 }
 #saveCustomGesture::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 1v14h14v-12l-2-2h-1v5h-8v-5zM8 1h2v3h-2z"/></svg>');
+}
+.export-setting::before {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="white" stroke-width="2" fill="none"><path d="M2 10v4h12v-4M8 2v8m-3-5l3-3l3 3"/></svg>');
+}
+.import-setting::before {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="white" stroke-width="2" fill="none"><path d="M2 10v4h12v-4M8 2v8m-3-3l3 3l3-3"/></svg>');
 }
 
 /* icon */

@@ -257,7 +257,8 @@
 			startPoint + gesture.substring(0, MAX_LENGTH)
 		);
 		let dup = SimpleGesture.ini.gestures[startPoint + inputedGesture.textContent];
-		dup = (dup && dup !== target.name) ? `\u00a0(${getMessage(dup)})` : '';
+		dup = (dup && dup !== target.name) ? getMessage(dup) : '';
+		dup = dup ? `\u00a0(${dup})` : '';
 		dupName.textContent = dup;
 		toggleClass(dup, 'dup', inputedGesture, inputedStartPoint);
 		e.preventDefault();
@@ -470,7 +471,8 @@
 	const getMessage = s => {
 		if (!s) return s;
 		if (s[0] === CUSTOM_GESTURE_PREFIX) {
-			return findCustomGesture(s).title;
+			const c = findCustomGesture(s);
+			return c && c.title || '';
 		} else {
 			return chrome.i18n.getMessage(s) || s;
 		}
@@ -501,24 +503,37 @@
 			toggleClass(!exData.experimental, 'hide', elm);
 		}
 	};
-	const importSetting = text => {
+	const importSetting = async text => {
 		try {
 			const obj = JSON.parse(text);
 			SimpleGesture.ini = obj.ini;
 			exData = obj.exData;
 			saveIni();
+			if (obj.customGestureDetails) {
+				for (let c of obj.customGestureDetails) {
+					const d = {};
+					d[c.id] = c.detail;
+					await browser.storage.local.set(d);
+				}
+			}
 			location.reload();
 		} catch (e) {
 			alert(e.message);
 		}
 	};
-	const exportSetting = () => {
+	const exportSetting = async () => {
 		const data = {
 			ini: SimpleGesture.ini,
-			exData: exData
+			exData: exData,
+			customGestureDetails: []
 		};
+		for (let c of exData.customGestureList) {
+			const id = `simple_gesture_${c.id}`;
+			const detail = await storageValue(id);
+			data.customGestureDetails.push({ id: id, detail:detail });
+		}
 		const href = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(data));
-		const link = byId('export_setting_link');
+		const link = byId('exportSettingLink');
 		link.setAttribute('href', href);
 		link.click();
 	};
@@ -551,7 +566,7 @@
 		}
 		toggleExperimental();
 		byId('visualviewportSettingUrl').addEventListener('click', e => { document.getSelection().selectAllChildren(e.target); });
-		byId('import_setting').addEventListener('change', e => {
+		byId('importSetting').addEventListener('change', e => {
 			try {
 				if (!e.target.files[0]) return;
 				const reader = new FileReader();
@@ -561,7 +576,7 @@
 				alert(error.message);
 			}
 		});
-		byId('export_setting').addEventListener('click', exportSetting);
+		byId('exportSetting').addEventListener('click', exportSetting);
 	};
 
 	// control Back button
