@@ -100,6 +100,7 @@
 	const templates = byId('templates');
 	const gestureTemplate = byClass(templates, 'gesture-item');
 	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
+	const blacklistTemplate = byClass(templates, 'blacklist-item');
 	const inputedGesture = byId('inputedGesture');
 	const inputedStartPoint = byId('inputedStartPoint');
 	const dupName = byId('dupName');
@@ -228,9 +229,18 @@
 				}
 				return;
 			}
+			if (e.target.classList.contains('delete-blacklist')) {
+				const blacklistItem = parentByClass(e.target, 'blacklist-item');
+				byClass(blacklistItem, 'blacklist-input').value = "";
+				if (blacklistItem.nextSibling) {
+					blacklistItem.remove();
+				}
+				return;
+			}
 			const item = parentByClass(e.target, 'gesture-item');
 			if (item) {
 				changeState({dlg: 'gestureDlg', targetId: item.id});
+				return;
 			}
 		});
 		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
@@ -445,6 +455,48 @@
 		}
 	};
 
+	// blacklist dlg ----
+	dlgs.blacklistDlg = {
+		onShow: () => {
+			const blacklist = byId('blacklist');
+			const newList = blacklist.cloneNode(false);
+			if (SimpleGesture.ini.blacklist) {
+				for (let urlPattern of SimpleGesture.ini.blacklist) {
+					const item = blacklistTemplate.cloneNode(true);
+					byClass(item, 'blacklist-input').value = urlPattern.url;
+					newList.appendChild(item);
+				}
+			}
+			const newItem = blacklistTemplate.cloneNode(true);
+			newList.appendChild(newItem);
+			blacklist.parentNode.replaceChild(newList, blacklist);
+		},
+		onHide: () => {
+		}
+	};
+	byId('cancelBlacklist').addEventListener('click', e => { history.back(); });
+	byId('saveBlacklist').addEventListener('click', e => {
+		const list = [];
+		for (let input of allByClass('blacklist-input')) {
+			if (input.value) {
+				list.push({url: input.value});
+			}
+		}
+		SimpleGesture.ini.blacklist = list;
+		saveIni();
+		history.back();
+	});
+	window.addEventListener('input', e => {
+		if (e.target.classList.contains('blacklist-input')) {
+			if (!e.target.parentNode.nextSibling) {
+				const newItem = blacklistTemplate.cloneNode(true);
+				byId('blacklist').appendChild(newItem);
+			}
+			return;
+		}
+
+	});
+
 	// edit text values --
 	const saveBindingValues = e => {
 		clearTimeout(TIMERS.saveBindingValues);
@@ -577,6 +629,9 @@
 			}
 		});
 		byId('exportSetting').addEventListener('click', exportSetting);
+		byId('blacklistEdit').addEventListener('click', () => {
+			changeState({dlg: 'blacklistDlg'});
+		});
 	};
 
 	// control Back button

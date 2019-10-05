@@ -154,6 +154,9 @@
 	"dontSetUntrustedScript": {
 		"message": "信頼できないスクリプトをセットしないで下さい。セキュリティ上の問題が発生する場合があります。"
 	},
+	"Blacklist": {
+		"message": "ジェスチャ無効URL"
+	},
 	"advanced": {
 		"message": "高度な設定"
 	},

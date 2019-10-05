@@ -334,6 +334,12 @@ body {
 	z-index: 1;
 }
 
+/* blacklist */
+.blacklist-input {
+	vertical-align: middle;
+	width: calc(100% - 3em);
+}
+
 /* others */
 #cover {
 	background: #fff;
@@ -405,20 +411,19 @@ body {
 	vertical-align: middle;
 	width: 1em;
 }
-.custom-gesture-delete::before,
-#clearGesture::before {
+.icon-delete::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 5l2 10s0.2 1 1 1h7s1 0.2 1-1l2-10z"/><g transform="rotate(-8) translate(-1.9,1.2)"><path d="M2 3.5h13s0-2-2-2h-9s-2 0-2 2zM7 1.5a 1.5 1.5 1.5 1 1 3-0z"/></g></svg>');
 }
-.custom-gesture-edit::before {
+.icon-edit::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M0 16h4l9-9l-4-4l-9 9zM10 2l4 4l2-2l-4-4z"/></svg>');
 }
-#addCustomGesture::before {
+.icon-add::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M6 1h4v5h5v4h-5v5h-4v-5h-5v-4h5z"/></svg>');
 }
-#cancelCustomGesture::before {
+.icon-cancel::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 4l3-3 4 4 4-4 3 3-4 4 4 4-3 3-4-4-4 4-3-3 4-4-4-4z"/></svg>');
 }
-#saveCustomGesture::before {
+.icon-save::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 1v14h14v-12l-2-2h-1v5h-8v-5zM8 1h2v3h-2z"/></svg>');
 }
 .export-setting::before {

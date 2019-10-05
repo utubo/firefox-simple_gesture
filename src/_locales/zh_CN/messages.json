@@ -154,6 +154,9 @@
 	"dontSetUntrustedScript": {
 		"message": "不要设置不受信任的脚本，因为这可能会导致安全问题。"
 	},
+	"Blacklist": {
+		"message": "黑名单"
+	},
 	"advanced": {
 		"message": "高等的"
 	},

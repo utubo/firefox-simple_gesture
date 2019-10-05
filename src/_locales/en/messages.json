@@ -154,6 +154,9 @@
 	"dontSetUntrustedScript": {
 		"message": "Don't set untrusted script, as this could lead to a security issue."
 	},
+	"Blakclist": {
+		"message": "Blacklist"
+	},
 	"advanced": {
 		"message": "Advanced"
 	},

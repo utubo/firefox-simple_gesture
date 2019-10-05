@@ -18,7 +18,8 @@ var SimpleGesture = {};
 		},
 		'strokeSize': 50,
 		'timeout': 1500,
-		'toast': false
+		'toast': false,
+		'blacklist': []
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
@@ -31,6 +32,7 @@ var SimpleGesture = {};
 	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let timer = null;
+	let hideToastTimer = null;
 	let isGestureEnabled = true;
 	// for screen size
 	let lastInnerWidth = 0;
@@ -59,7 +61,7 @@ var SimpleGesture = {};
 		timer = null;
 		if (e.withTimeout && toast) {
 			toastMain.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
-			window.setTimeout(hideToast, 1000);
+			hideToast(1000);
 		} else {
 			hideToast();
 		}
@@ -105,13 +107,13 @@ var SimpleGesture = {};
 		const absX = dx < 0 ? -dx : dx;
 		const absY = dy < 0 ? -dy : dy;
 		if (absX < size && absY < size) return;
-		const g = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
-		if (g === lg) return;
-		if (gesture) gesture += '-';
-		gesture += g;
 		lx = x;
 		ly = y;
+		const g = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
+		if (g === lg) return;
 		lg = g;
+		if (gesture) gesture += '-';
+		gesture += g;
 		if (SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture, startPoint) === false) return;
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
@@ -212,11 +214,16 @@ var SimpleGesture = {};
 		toast.style.top = VV.offsetTop + 'px';
 		toast.style.left = VV.offsetLeft + 'px';
 	};
-	const hideToast = () => {
+	const hideToast = delay => {
 		if (!toast) return;
 		if (!isToastVisible) return;
+		if (delay) {
+			hideToastTimer = setTimeout(hideToast, delay);
+			return;
+		}
+		clearTimeout(hideToastTimer);
 		isToastVisible = false;
-		toast.style.opacity = '0';
+		window.requestAnimationFrame(() => { toast.style.opacity = '0'; });
 	};
 	const setupToast = () => {
 		if (toast) return;
@@ -298,12 +305,19 @@ var SimpleGesture = {};
 	};
 
 	// START HERE ! ------
+	//VV.addEventListener('resize', fixSize); this is called too many times, and instead of touchdown.
+	await SimpleGesture.loadIni();
+	if (SimpleGesture.ini.blacklist) {
+		for (let urlPattern of SimpleGesture.ini.blacklist) {
+			if (urlPattern.url && location.href.startsWith(urlPattern.url)) {
+				return;
+			}
+		}
+	}
 	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
 	VV.addEventListener('scroll', e => {
 		fixToastPosition();
 		onTouchMove(e);
 	});
-	//VV.addEventListener('resize', fixSize); this is called too many times, and instead of touchdown.
-	SimpleGesture.loadIni();
 })();
 

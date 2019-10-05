@@ -43,7 +43,7 @@
 		<div class="page" id="customGestures">
 			<div class="page-header caption">customGestures</div>
 			<div id="customGestureList" class="gesture-list"></div>
-			<div id="addCustomGesture" class="caption button">addCustomGesture</div>
+			<div id="addCustomGesture" class="caption button icon-add">addCustomGesture</div>
 		</div>
 
 		<hr class="page-break">
@@ -84,6 +84,10 @@
 				</div>
 			</div>
 			<div class="item">
+				<label class="caption">Blacklist</label>
+				<label id="blacklistEdit" class="caption button buttons-vertical icon-edit">Edit</label><a id="exportSettingLink" download="simple-gesture.json" class="hide"></a><br>
+			</div>
+			<div class="item">
 				<label for="experimental" class="checkbox-label">
 					<span class="caption checkbox-caption icon-flask">EnableExperimentalFeatures</span>
 					<input id="experimental" class="checkbox js-binding js-binding-exData" type="checkbox" value="true">
@@ -119,8 +123,8 @@
 				<div class="udlr-note note"></div>
 			</div>
 			<div class="custom-gesture-buttons">
-				<div class="custom-gesture-edit button"></div>
-				<div class="custom-gesture-delete button"></div>
+				<div class="custom-gesture-edit button icon-edit"></div>
+				<div class="custom-gesture-delete button icon-delete"></div>
 			</div>
 			<div id="afterClose_item" class="sub-item">
 				<label for="afterClose" class="caption sub">afterClose</label>
@@ -147,6 +151,9 @@
 				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
 				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
 			</div>
+			<div class="blacklist-item">
+				<input type="url" class="text-input blacklist-input" placeholder="https://url.is.starts/with/this"><span class="delete-blacklist button icon-delete"></span>
+			</div>
 			<i class="icon-flask"></i>
 		</div>
 
@@ -159,7 +166,7 @@
 			</div>
 			<div class="gesture-area"></div>
 			<div class="dlg-buttons">
-				<div id="clearGesture" class="caption button">clear</div>
+				<div id="clearGesture" class="caption button icon-delete">clear</div>
 			</div>
 		</div>
 
@@ -188,9 +195,21 @@
 					<span class="caption note">dontSetUntrustedScript</span>
 				</div>
 				<div class="buttons">
-					<span id="cancelCustomGesture" class="caption button">cancel</span>
-					<span id="saveCustomGesture" class="caption button">save</span>
+					<span id="cancelCustomGesture" class="caption button icon-cancel">cancel</span>
+					<span id="saveCustomGesture" class="caption button icon-save">save</span>
 				</div>
+			</div>
+		</div>
+
+		<div id="blacklistDlg" class="dlg transparent">
+			<div class="dlg-container">
+				<label class="caption">Blacklist</label>
+				<div id="blacklist"></div>
+				<div class="buttons">
+					<span id="cancelBlacklist" class="caption button icon-cancel">cancel</span>
+					<span id="saveBlacklist" class="caption button icon-save">save</span>
+				</div>
+				<div class="note">After saving, You need to reload the page.</div>
 			</div>
 		</div>
 
