@@ -164,15 +164,11 @@
 			toggleClass(false, 'dup', inputedGesture, inputedStartPoint);
 			toggleClass(false, 'canceled', inputedGesture);
 			dupName.textContent = '';
-			if (window.innerWidth === document.body.clientWidth) { // prevent blink scroll bar.
-				document.body.style.overflow = 'hidden';// prevent touch scroll.
-			}
 		},
 		onHide: () => {
 			if (!target) return;
 			toggleClass(false, 'editing', target.caption, target.udlr);
 			target = null;
-			document.body.style.overflow = null;
 		}
 	};
 
@@ -389,6 +385,8 @@
 			script = `\n/* ${title} */${script}`;
 		}
 		customGestureScript.value += script;
+		customGestureScript.selectStart = customGestureScript.value.length;
+		customGestureScript.scrollTop = customGestureScript.scrollHeight;
 		window.requestAnimationFrame(() => { e.target.selectedIndex = 0; });
 	};
 	const setupEditDlg = () => {
@@ -607,7 +605,6 @@
 		}
 		byId('close_item').appendChild(byId('afterClose_item'));
 		byId('closeSameUrl_item').appendChild(byId('closeSameUrlMatchType_item'));
-		byId('closeSameUrl_caption').appendChild(byClass(templates, 'icon-flask'));
 		byId('newTab_item').appendChild(byId('newTabUrl_item'));
 		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
@@ -659,10 +656,16 @@
 			dlgs[openedDlg.id].onHide();
 			fadeout(openedDlg);
 			openedDlg = null;
+			// ennable touch scroll.
+			document.body.style.overflow = null;
 		} else if (state.dlg) {
 			dlgs[state.dlg].onShow(state.targetId);
 			openedDlg = byId(state.dlg);
 			fadein(openedDlg);
+			// prevent touch scroll.
+			if (window.innerWidth === document.body.clientWidth) { // prevent blink scroll bar.
+				document.body.style.overflow = 'hidden';
+			}
 		} else {
 			setTimeout(() => { window.scrollTo(0, state.y); });
 		}
