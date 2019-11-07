@@ -461,6 +461,7 @@
 			urls.push(item.url);
 			if (5 < ++count) {
 				urls.push('...');
+				break;
 			}
 		}
 		byId('blacklistSummary').textContent = count ? urls.join(', ') : chrome.i18n.getMessage('None');
