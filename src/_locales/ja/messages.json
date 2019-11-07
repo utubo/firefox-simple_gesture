@@ -157,6 +157,9 @@
 	"Blacklist": {
 		"message": "ジェスチャ無効URL"
 	},
+	"None": {
+		"message": "無し"
+	},
 	"advanced": {
 		"message": "高度な設定"
 	},

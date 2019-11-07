@@ -456,6 +456,17 @@
 	};
 
 	// blacklist dlg ----
+	const setupBlacklistSummary = () => {
+		let count = 0;
+		let urls = [];
+		for (let item of (SimpleGesture.ini.blacklist || [])) {
+			urls.push(item.url);
+			if (5 < ++count) {
+				urls.push('...');
+			}
+		}
+		byId('blacklistSummary').textContent = count ? urls.join(', ') : chrome.i18n.getMessage('None');
+	};
 	dlgs.blacklistDlg = {
 		onShow: () => {
 			const blacklist = byId('blacklist');
@@ -484,6 +495,7 @@
 		}
 		SimpleGesture.ini.blacklist = list;
 		saveIni();
+		setupBlacklistSummary();
 		history.back();
 	});
 	window.addEventListener('input', e => {
@@ -590,7 +602,7 @@
 		link.click();
 	};
 	const setupOtherOptions = () => {
-		for (let caption of allByClass('caption')) {
+		for (let caption of allByClass('i18n')) {
 			caption.textContent = getMessage(caption.textContent);
 		}
 		byId('close_item').appendChild(byId('afterClose_item'));
@@ -632,6 +644,7 @@
 		byId('blacklistEdit').addEventListener('click', () => {
 			changeState({dlg: 'blacklistDlg'});
 		});
+		setupBlacklistSummary();
 	};
 
 	// control Back button

@@ -157,6 +157,9 @@
 	"Blacklist": {
 		"message": "Schwarze Liste"
 	},
+	"None": {
+		"message": "Keiner"
+	},
 	"advanced": {
 		"message": "Fortgeschritten"
 	},

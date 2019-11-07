@@ -157,6 +157,9 @@
 	"Blacklist": {
 		"message": "黑名单"
 	},
+	"None": {
+		"message": "沒"
+	},
 	"advanced": {
 		"message": "高等的"
 	},

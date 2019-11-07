@@ -157,6 +157,9 @@
 	"Blakclist": {
 		"message": "Blacklist"
 	},
+	"None": {
+		"message": "None"
+	},
 	"advanced": {
 		"message": "Advanced"
 	},

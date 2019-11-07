@@ -6,7 +6,7 @@ body {
 	scroll-behavior: smooth;
 }
 .hide {
-	display: none;
+	display: none !important;
 }
 .transparent {
 	opacity: 0 !important;
@@ -31,8 +31,8 @@ body {
 }
 .page-header {
 	border-bottom: 2px solid #d7d7db;
-	color: #888 !important;
-	font-size: 1rem !important;
+	color: #888;
+	display: block;
 	margin: 0 1.2rem;
 }
 .page-break {
@@ -58,17 +58,29 @@ body {
 .active {
 	background: #efeff0;
 }
+.gesture-caption,
 .caption {
 	color: #0c0c0d;
 	display: block;
 	font-size: 1.2rem;
 }
-.sub {
-	font-size: 1rem;
+.sub-caption {
+	color: #0c0c0d;
+	display: block;
+}
+.summary {
+	color: #666;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.explanation {
+	padding: .4rem 0;
 }
 .note {
-	font-size: .8rem;
 	color: #666;
+	display: block;
+	font-size: .8rem;
 }
 .note-alert::before {
 	background: #fc3;
@@ -127,7 +139,7 @@ body {
 	position: relative;
 	transition: .2s;
 }
-.checkbox-caption {
+.with-checkbox {
 	max-width: calc(100% - 2.4rem);
 }
 .checkbox {
@@ -170,9 +182,6 @@ body {
 }
 
 /* gestures */
-.gesture-caption {
-	min-height: 1em;
-}
 .udlr {
 	color: #666;
 }
@@ -181,7 +190,7 @@ body {
 	border-radius: 3px;
 	color: #f33;
 	text-align: center;
-	width: 3em;/* don't "em" */
+	width: 3em;
 }
 .gesture-caption,
 .udlr,
@@ -401,7 +410,6 @@ body {
 	color: #ccc;
 	cursor: default;
 	display: inline-block;
-	font-size: 1rem;
 	padding: .2rem .8rem;
 }
 .button::before {

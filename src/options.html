@@ -13,93 +13,93 @@
 		<!-- Pages -->
 
 		<div class="page" id="index">
-			<div class="item caption" data-targetPage="basicGestures">basicGestures</div>
-			<div class="item caption" data-targetPage="tabGestures">tabGestures</div>
-			<div class="item caption" data-targetPage="otherGestures">otherGestures</div>
+			<div class="item caption i18n" data-targetPage="basicGestures">basicGestures</div>
+			<div class="item caption i18n" data-targetPage="tabGestures">tabGestures</div>
+			<div class="item caption i18n" data-targetPage="otherGestures">otherGestures</div>
 			<div class="item" data-targetPage="customGestures">
-				<span class="caption note">advanced</span>
-				<span class="caption">customGestures</span>
+				<span class="note i18n">advanced</span>
+				<span class="caption i18n">customGestures</span>
 			</div>
-			<div class="item caption" data-targetPage="configurations">configurations</div>
+			<div class="item caption i18n" data-targetPage="configurations">configurations</div>
 		</div>
 
 		<hr class="page-break">
 
 		<div class="page" id="basicGestures">
-			<div class="page-header caption">basicGestures</div>
+			<div class="page-header i18n">basicGestures</div>
 			<div class="gesture-list" data-gestures="forward back reload top bottom pageUp pageDown"></div>
 		</div>
 
 		<div class="page" id="tabGestures">
-			<div class="page-header caption">tabGestures</div>
+			<div class="page-header i18n">tabGestures</div>
 			<div class="gesture-list" data-gestures="nextTab prevTab close closeAll closeOthers closeSameUrl newTab"></div>
 		</div>
 
 		<div class="page" id="otherGestures">
-			<div class="page-header caption">otherGestures</div>
+			<div class="page-header i18n">otherGestures</div>
 			<div class="gesture-list" data-gestures="toggleUserAgent disableGesture openAddonSettings"></div>
 		</div>
 
 		<div class="page" id="customGestures">
-			<div class="page-header caption">customGestures</div>
+			<div class="page-header i18n">customGestures</div>
 			<div id="customGestureList" class="gesture-list"></div>
-			<div id="addCustomGesture" class="caption button icon-add">addCustomGesture</div>
+			<div id="addCustomGesture" class="18n button icon-add i18n">addCustomGesture</div>
 		</div>
 
 		<hr class="page-break">
 
 		<div class="page" id="configurations">
-			<div class="page-header caption">configurations</div>
+			<div class="page-header i18n">configurations</div>
 			<div id="timeoutAndStrokeSize" class="item">
-				<label class="caption">TimeoutAndStrokeSize</label>
+				<label class="caption i18n">TimeoutAndStrokeSize</label>
 				<div class="sub-item">
-					<label class="caption sub">timeout</label><!-- don't add 'for="..."' -->
+					<label class="sub-caption i18n">timeout</label><!-- don't add 'for="..."' -->
 					<input id="timeout" class="number-input js-binding" type="number" min="0" max="9999" size="5">ms
 				</div>
 				<div class="sub-item">
-					<label class="caption sub">strokeSize</label><!-- don't add 'for="..."' -->
-					<div class="caption note">basedOn320x480</div>
+					<label class="sub-caption i18n">strokeSize</label><!-- don't add 'for="..."' -->
+					<div class="note i18n">basedOn320x480</div>
 					<input id="strokeSize" class="number-input js-binding" type="number" min="1" max="999" size="5">px
 				</div>
 			</div>
 			<div class="item">
 				<label for="toast" class="checkbox-label">
-					<span class="caption checkbox-caption">displayCommand</span>
+					<span class="caption with-checkbox i18n">displayCommand</span>
 					<input id="toast" class="checkbox js-binding" type="checkbox" value="true">
 					<label for="toast" class="checkbox-image"></label>
 				</label>
 				<div class="sub-item js-linked-toast">
-					<label for="color_toastForeground" class="caption sub">toastForeground</label>
+					<label for="color_toastForeground" class="sub-caption i18n">toastForeground</label>
 					<div class="color-preview">
 						<input id="color_toastForeground" class="color-input" type="color">
 					</div>
 					<input id="toastForeground" class="text-input color-text-input js-binding">
 				</div>
 				<div class="sub-item js-linked-toast">
-					<label for="color_toastBackground" class="caption sub">toastBackground</label>
+					<label for="color_toastBackground" class="sub-caption i18n">toastBackground</label>
 					<div class="color-preview">
 						<input id="color_toastBackground" class="color-input" type="color">
 					</div>
 					<input id="toastBackground" class="text-input color-text-input js-binding">
 				</div>
 			</div>
-			<div class="item">
-				<label class="caption">Blacklist</label>
-				<label id="blacklistEdit" class="caption button buttons-vertical icon-edit">Edit</label><a id="exportSettingLink" download="simple-gesture.json" class="hide"></a><br>
+			<div id="blacklistEdit" class="item">
+				<label class="caption i18n">Blacklist</label>
+				<div id="blacklistSummary" class="summary sub-item">None</div>
 			</div>
 			<div class="item">
 				<label for="experimental" class="checkbox-label">
-					<span class="caption checkbox-caption icon-flask">EnableExperimentalFeatures</span>
+					<span class="caption with-checkbox icon-flask i18n">EnableExperimentalFeatures</span>
 					<input id="experimental" class="checkbox js-binding js-binding-exData" type="checkbox" value="true">
 					<label for="experimental" class="checkbox-image"></label>
 				</label>
-				<div class="sub-item">
+				<div class="explanation">
 					<a href="./experimental.html" target="_blank">readme(en)</a>
 				</div>
 			</div>
 			<div class="item">
-				<label class="caption icon-flask">On zoomed page</label>
-				<div class="sub-item">
+				<label class="caption icon-flask i18n">On zoomed page</label>
+				<div class="explanation">
 					If gesture does not work well on zoomed page,<br>
 					try set <span class="inline-code">dom.visualviewport.enabled</span> to <span class="inline-code">true</span>.<br>
 					The URL for setting is<br>
@@ -107,7 +107,7 @@
 				</div>
 			</div>
 			<div class="item">
-				<label class="caption icon-flask">Export / Import</label>
+				<label class="caption i18n">Export / Import</label>
 				<label id="exportSetting" class="export-setting button buttons-vertical">Export setting to downloads folder</label><a id="exportSettingLink" download="simple-gesture.json" class="hide"></a><br>
 				<label for="importSetting" class="import-setting button buttons-vertical">Import setting from JSON</label><input type="file" id="importSetting" class="hide">
 			</div>
@@ -118,7 +118,7 @@
 
 		<div id="templates" class="hide">
 			<div class="gesture-item item">
-				<div class="gesture-caption caption"></div>
+				<div class="gesture-caption i18n"></div>
 				<div class="udlr"></div>
 				<div class="udlr-note note"></div>
 			</div>
@@ -127,27 +127,27 @@
 				<div class="custom-gesture-delete button icon-delete"></div>
 			</div>
 			<div id="afterClose_item" class="sub-item">
-				<label for="afterClose" class="caption sub">afterClose</label>
+				<label for="afterClose" class="sub-caption i18n">afterClose</label>
 				<select id="afterClose" class="js-binding">
-					<option value="" class="caption">default</option>
-					<option value="prevTab" class="caption">prevTab</option>
-					<option value="nextTab" class="caption">nextTab</option>
+					<option value="" class="caption i18n">default</option>
+					<option value="prevTab" class="caption i18n">prevTab</option>
+					<option value="nextTab" class="caption i18n">nextTab</option>
 				</select>
 			</div>
 			<div id="closeSameUrlMatchType_item" class="sub-item">
 				<select id="closeSameUrlMatchType" class="js-binding">
-					<option value="" class="caption">fullMatch</option>
-					<option value="domain" class="caption">domain</option>
-					<option value="contextRoot" class="caption">contextRoot</option>
+					<option value="" class="caption i18n">fullMatch</option>
+					<option value="domain" class="caption i18n">domain</option>
+					<option value="contextRoot" class="caption i18n">contextRoot</option>
 				</select>
-				<div class="caption note note-alert">closeSameUrlNote</div>
+				<div class="note note-alert i18n">closeSameUrlNote</div>
 			</div>
 			<div id="newTabUrl_item" class="sub-item">
-				<label for="newTabUrl" class="caption sub">newTabUrl</label>
+				<label for="newTabUrl" class="sub-caption i18n">newTabUrl</label>
 				<input id="newTabUrl" type="url" class="text-input js-binding">
 			</div>
 			<div id="userAgent_item" class="sub-item">
-				<label for="userAgent" class="caption sub">UserAgent</label>
+				<label for="userAgent" class="sub-caption i18n">UserAgent</label>
 				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
 				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
 			</div>
@@ -166,14 +166,14 @@
 			</div>
 			<div class="gesture-area"></div>
 			<div class="dlg-buttons">
-				<div id="clearGesture" class="caption button icon-delete">clear</div>
+				<div id="clearGesture" class="button icon-delete i18n">clear</div>
 			</div>
 		</div>
 
 		<div id="adjustmentDlg" class="dlg transparent">
 			<div class="dlg-labels">
-				<div class="caption adjustment-dlg-caption">TimeoutAndStrokeSize</div>
-				<div class="caption adjustment-dlg-caption">DrawSquare</div>
+				<div class="adjustment-dlg-caption i18n">TimeoutAndStrokeSize</div>
+				<div class="adjustment-dlg-caption i18n">DrawSquare</div>
 			</div>
 			<div class="gesture-area"></div>
 		</div>
@@ -182,32 +182,32 @@
 			<div class="dlg-container">
 				<input id="customGestureTitle" class="text-input">
 				<select id="customGestureType">
-					<option value="url" class="caption">OpenURLInNewTab</option>
-					<option value="script" class="caption">ExecuteJavascript</option>
+					<option value="url" class="caption i18n">OpenURLInNewTab</option>
+					<option value="script" class="caption i18n">ExecuteJavascript</option>
 				</select>
 				<input id="customGestureUrl" type="url" class="text-input" placeholder="http://www.example.com/">
 				<textarea id="customGestureScript" class="text-input" placeholder="alert('Hello World');"></textarea>
 				<div id="customGestureScriptNote">
 					<div class="experimental">
-						<select id="addCommandToScript" class="button"><option value="" class="caption">addCommandToScript</option></select><i class="icon-flask"></i>
+						<select id="addCommandToScript" class="button"><option value="" class="caption i18n">addCommandToScript</option></select><i class="icon-flask"></i>
 					</div>
-					<span class="caption note">scriptWorksOnlyWhen</span>
-					<span class="caption note">dontSetUntrustedScript</span>
+					<span class="note i18n">scriptWorksOnlyWhen</span>
+					<span class="note i18n">dontSetUntrustedScript</span>
 				</div>
 				<div class="buttons">
-					<span id="cancelCustomGesture" class="caption button icon-cancel">cancel</span>
-					<span id="saveCustomGesture" class="caption button icon-save">save</span>
+					<span id="cancelCustomGesture" class="button icon-cancel i18n">cancel</span>
+					<span id="saveCustomGesture" class="button icon-save i18n">save</span>
 				</div>
 			</div>
 		</div>
 
 		<div id="blacklistDlg" class="dlg transparent">
 			<div class="dlg-container">
-				<label class="caption">Blacklist</label>
+				<label class="caption i18n">Blacklist</label>
 				<div id="blacklist"></div>
 				<div class="buttons">
-					<span id="cancelBlacklist" class="caption button icon-cancel">cancel</span>
-					<span id="saveBlacklist" class="caption button icon-save">save</span>
+					<span id="cancelBlacklist" class="button icon-cancel i18n">cancel</span>
+					<span id="saveBlacklist" class="button icon-save i18n">save</span>
 				</div>
 				<div class="note">After saving, You need to reload the page.</div>
 			</div>
