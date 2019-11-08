@@ -160,6 +160,9 @@
 	"None": {
 		"message": "無し"
 	},
+	"After saving, You need to reload the page.": {
+		"message": "ページを再読み込みすると反映されます。"
+	},
 	"advanced": {
 		"message": "高度な設定"
 	},

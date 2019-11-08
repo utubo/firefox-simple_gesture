@@ -160,6 +160,9 @@
 	"None": {
 		"message": "沒"
 	},
+	"After saving, You need to reload the page.": {
+		"message": "保存后，您需要重新加载页面。"
+	},
 	"advanced": {
 		"message": "高等的"
 	},

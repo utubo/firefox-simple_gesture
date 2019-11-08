@@ -160,6 +160,9 @@
 	"None": {
 		"message": "Keiner"
 	},
+	"After saving, You need to reload the page.": {
+		"message": "Nach dem Speichern müssen Sie die Seite neu laden."
+	},
 	"advanced": {
 		"message": "Fortgeschritten"
 	},
