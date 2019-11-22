@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "2.21",
+	"version": "2.22",
 	"default_locale": "en",
 	"icons": {
 		"64": "icon64.png"
@@ -42,6 +42,7 @@
 		"storage",
 		"history",
 		"tabs",
+		"clipboardRead",
 		"webRequest",
 		"webRequestBlocking"
 	]
