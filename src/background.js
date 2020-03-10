@@ -36,32 +36,33 @@
 			}
 			browser.tabs.remove(arg.tab.id);
 		},
-		closeAll: async arg => {
+		closeIf: async filter => {
 			const tabs = await browser.tabs.query({});
-			for (let i = tabs.length - 1; 0 <= i; i --) {
-				browser.tabs.remove(tabs[i].id);
-			}
+			const ids = [];
+			for (let tab of tabs)
+				if (filter(tab)) ids.push(tab.id);
+			if (ids[0])
+				browser.tabs.remove(ids);
+		},
+		closeAll: async arg => {
+			exec.closeIf(tab => true);
 		},
 		closeOthers: async arg => {
-			const tabs = await browser.tabs.query({});
-			for (let i = tabs.length - 1; 0 <= i; i --) {
-				if (tabs[i].id !== arg.tab.id)
-					browser.tabs.remove(tabs[i].id);
-			}
+			exec.closeIf(tab => tab.id !== arg.tab.id);
 		},
 		closeSameUrl: async arg => {
 			const matchType = arg.matchType || await iniValue('closeSameUrlMatchType');
-			let f;
-			switch (matchType) {
-				case 'domain' : f = url => url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1'); break;
-				case 'contextRoot' : f = url => url.replace(/^([^/]+:\/\/[^/?#]+\/[^/?#]+).*/, '$1'); break;
-				default: f = url => url;
+			if (matchType === 'domain') {
+				const domain = arg.tab.url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1');
+				exec.closeIf(tab => tab.url.startsWith(domain));
+				return;
 			}
-			const current = f(arg.tab.url);
-			const tabs = await browser.tabs.query({});
-			for (let i = tabs.length - 1; 0 <= i; i --) {
-				if (current === f(tabs[i].url)) browser.tabs.remove(tabs[i].id);
+			if (matchType === 'contextRoot') {
+				const contextRoot = arg.tab.url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1');
+				exec.closeIf(tab => tab.url.startsWith(contextRoot));
+				return;
 			}
+			exec.closeIf(tab => tab.url === arg.tab.url);
 		},
 		showTab: async targetIndex => {
 			const tabs = await browser.tabs.query({ index: targetIndex });
