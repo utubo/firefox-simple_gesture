@@ -159,7 +159,7 @@ var SimpleGesture = {};
 			case 'pageUp': window.scrollByPages(-1, { behavior: 'smooth' }); break;
 			case 'pageDown': window.scrollByPages(1, { behavior: 'smooth' }); break;
 			case 'reload': location.reload(); break;
-			case 'disableGesture': toggleIsGestureEnabled(); break;
+			case 'disableGesture': toggleEnable(); break;
 			default:
 				if (g[0] === '$') { // '$' is custom-gesture prefix.
 					setCustomGestureTarget();
@@ -179,7 +179,7 @@ var SimpleGesture = {};
 		target && target.classList && target.classList.add('simple-gesture-target');
 	};
 
-	const toggleIsGestureEnabled = () => {
+	const toggleEnable = () => {
 		isGestureEnabled = !isGestureEnabled;
 		alert(chrome.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
 	};
@@ -257,6 +257,10 @@ var SimpleGesture = {};
 	const showGesture = async () => {
 		let g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
 		if (!g && !gesture[1] && !startPoint) return;
+		if (!isGestureEnabled && g !== 'disableGesture') {
+			hideToast();
+			return;
+		}
 		let name;
 		if (!g) {
 			name = '';
