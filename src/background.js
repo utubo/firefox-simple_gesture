@@ -78,7 +78,7 @@
 				let all = await browser.tabs.query({});
 				let index = 0;
 				for (let t of all) {
-					if (index < t.index && t.hidden !== false)
+					if (index < t.index && !t.hidden)
 						index = t.index;
 				}
 				exec.showTab(index);
