@@ -76,7 +76,12 @@
 				exec.showTab(arg.tab.index - 1);
 			} else {
 				let all = await browser.tabs.query({});
-				exec.showTab(all.length - 1);
+				let index = 0;
+				for (let t of all) {
+					if (index < t.index && t.hidden !== false)
+						index = t.index;
+				}
+				exec.showTab(index);
 			}
 		},
 		nextTab: async arg => {
