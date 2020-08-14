@@ -64,28 +64,34 @@
 			}
 			exec.closeIf(tab => tab.url === arg.tab.url);
 		},
-		showTab: async targetIndex => {
-			const tabs = await browser.tabs.query({ index: targetIndex });
-			if (tabs[0]) {
-				browser.tabs.update(tabs[0].id, { active: true });
-				return true;
-			}
-		},
 		prevTab: async arg => {
-			if (arg.tab.index) {
-				exec.showTab(arg.tab.index - 1);
-			} else {
-				let all = await browser.tabs.query({});
-				let index = 0;
-				for (let t of all) {
-					if (index < t.index && !t.hidden)
-						index = t.index;
-				}
-				exec.showTab(index);
+			for (let i = arg.tab.index - 1; 0 <= i; i--) {
+				const tab = (await browser.tabs.query({ index: i }))[0];
+				if (!tab || tab.hidden) continue;
+				browser.tabs.update(tab.id, { active: true });
+				return;
 			}
+			exec.lastTab();
+		},
+		lastTab: async () => {
+			const all = await browser.tabs.query({});
+			let last = { index: -1 };
+			for (let tab of all) {
+				if (tab.hidden || tab.index < last.index) continue;
+				last = tab;
+			}
+			browser.tabs.update(last.id, { active: true });
 		},
 		nextTab: async arg => {
-			(await exec.showTab(arg.tab.index + 1)) || exec.showTab(0);
+			for (let i = arg.tab.index + 1; true; i++) {
+				const tab = (await browser.tabs.query({ index: i }))[0];
+				if (!tab) break;
+				if (tab.hidden) continue;
+				browser.tabs.update(tab.id, { active: true });
+				return;
+			}
+			// show 1st tab that is not hidden.
+			if (arg.tab.index !== -1) exec.nextTab({ tab: { index: -1 } });
 		},
 		toggleUserAgent: async arg => {
 			if (userAgent && !arg.force || arg.userAgent === null) {
