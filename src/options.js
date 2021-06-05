@@ -673,7 +673,11 @@
 	};
 	const scrollIntoView = target => {
 		onScrollEnd({ fource: true }); // For returning during scrolling.
-		target.scrollIntoView(true);
+		try {
+			target.scrollIntoView({ behavior: 'smooth' });
+		} catch (e) {
+			target.scrollIntoView(); // for Firefox 54-58
+		}
 	};
 	const onScrollEnd = e => {
 		if (openedDlg) return;
