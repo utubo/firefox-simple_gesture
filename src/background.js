@@ -155,7 +155,6 @@
 		},
 		executeScript: async arg => {
 			const userScript = `{
-				SimpleGesture = SimpleGesture || {};
 				SimpleGesture.target = document.getElementsByClassName('simple-gesture-target')[0];
 				SimpleGesture.exit = v => { throw new Error('SimpleGestureExit'); };
 				SimpleGesture.open = (url, options) => {
