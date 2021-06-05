@@ -316,7 +316,8 @@ body {
 }
 #customGestureScript {
 	flex: 1 1 auto;
-	min-height: 4em;/* don't "rem" */
+	font-size: 80%;
+	min-height: 6em;/* don't "rem" */
 	width: auto;
 	word-break: break-all;
 }
