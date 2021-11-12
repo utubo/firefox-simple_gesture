@@ -178,7 +178,7 @@
 		}
 	};
 
-	const createGestureItem = name => {
+	const createGestureItem = (name, isExperimental = false) => {
 		const item = gestureTemplate.cloneNode(true);
 		item.id = `${name}_item`;
 		const label = byClass(item, 'udlr');
@@ -193,6 +193,10 @@
 			byClass(b, 'custom-gesture-delete').setAttribute('data-targetId', name);
 			item.insertBefore(b, item.firstChild);
 		}
+		if (isExperimental) {
+			item.classList.add('experimental');
+			caption.classList.add('icon-flask');
+		}
 		return item;
 	};
 
@@ -201,8 +205,10 @@
 		for (let list of allByClass('gesture-list')) {
 			const gestures = list.getAttribute('data-gestures');
 			if (!gestures) continue;
-			for (let name of gestures.split(/\s+/)) {
-				list.appendChild(createGestureItem(name));
+			for (let nameAndOpt of gestures.split(/\s+/)) {
+				const name = nameAndOpt.replace(/!$/, '');
+				const isExperimental = nameAndOpt.match(/!$/);
+				list.appendChild(createGestureItem(name, isExperimental));
 				gestureNames.push(name);
 			}
 		}

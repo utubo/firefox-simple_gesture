@@ -10,8 +10,6 @@ var SimpleGesture = {};
 			'D-R': 'back',
 			'R-D': 'top',
 			'R-U': 'bottom',
-			'U-L': 'nextTab',
-			'U-R': 'prevTab',
 			'D-R-U': 'reload',
 			'L-D-R': 'close',
 			'R-D-L': 'newTab',
