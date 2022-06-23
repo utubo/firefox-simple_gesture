@@ -88,6 +88,11 @@
 				<div id="blacklistSummary" class="summary">None</div>
 			</div>
 			<div class="item">
+				<label class="caption i18n">Export / Import</label>
+				<label id="exportSetting" class="export-setting button buttons-vertical i18n">Export settings to downloads folder</label><a id="exportSettingLink" download="simple-gesture.json" class="hide"></a><br>
+				<label for="importSetting" class="import-setting button buttons-vertical i18n">Import settings from JSON</label><input type="file" id="importSetting" class="hide">
+			</div>
+			<div class="item">
 				<label for="experimental" class="checkbox-label">
 					<span class="caption with-checkbox icon-flask i18n">EnableExperimentalFeatures</span>
 					<input id="experimental" class="checkbox js-binding js-binding-exData" type="checkbox" value="true">
@@ -96,20 +101,6 @@
 				<div class="explanation">
 					<a href="./experimental.html" target="_blank">readme(en)</a>
 				</div>
-			</div>
-			<div class="item">
-				<label class="caption icon-flask i18n">On zoomed page</label>
-				<div class="explanation">
-					If gesture does not work well on zoomed page,<br>
-					try set <span class="inline-code">dom.visualviewport.enabled</span> to <span class="inline-code">true</span>.<br>
-					The URL for setting is<br>
-					<div id="visualviewportSettingUrl" class="code">about:config?filter=dom.visualviewport.enabled</div>
-				</div>
-			</div>
-			<div class="item">
-				<label class="caption i18n">Export / Import</label>
-				<label id="exportSetting" class="export-setting button buttons-vertical">Export settings to downloads folder</label><a id="exportSettingLink" download="simple-gesture.json" class="hide"></a><br>
-				<label for="importSetting" class="import-setting button buttons-vertical">Import settings from JSON</label><input type="file" id="importSetting" class="hide">
 			</div>
 			<div id="debuglog" class="code hide"></div>
 		</div>

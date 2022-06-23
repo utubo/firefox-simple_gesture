@@ -633,7 +633,6 @@
 			byId(`color_${elm.id}`).addEventListener('change', onChangeColor);
 		}
 		toggleExperimental();
-		byId('visualviewportSettingUrl').addEventListener('click', e => { document.getSelection().selectAllChildren(e.target); });
 		byId('importSetting').addEventListener('change', e => {
 			try {
 				if (!e.target.files[0]) return;

@@ -189,5 +189,14 @@
 	},
 	"configurations": {
 		"message": "组态"
+	},
+	"Export / Import": {
+		"message": "备份和恢复设置"
+	},
+	"Export settings to downloads folder": {
+		"message": "保存设置"
+	},
+	"Import settings from JSON" : {
+		"message": "从备份中恢复"
 	}
 }

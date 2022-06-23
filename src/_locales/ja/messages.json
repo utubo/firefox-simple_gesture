@@ -101,7 +101,7 @@
 		"message": "背景色"
 	},
 	"EnableExperimentalFeatures": {
-		"message": "実験的な機能を有効にする"
+		"message": "実験的な機能を表示する"
 	},
 	"fromEdge-L": {
 		"message": "画面左端から"
@@ -189,6 +189,15 @@
 	},
 	"configurations": {
 		"message": "詳細設定"
+	},
+	"Export / Import": {
+		"message": "設定のバックアップと復元"
+	},
+	"Export settings to downloads folder": {
+		"message": "設定を保存する"
+	},
+	"Import settings from JSON" : {
+		"message": "バックアップから復元する"
 	}
 }
 

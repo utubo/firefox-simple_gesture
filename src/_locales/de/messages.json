@@ -189,5 +189,14 @@
 	},
 	"configurations": {
 		"message": "Konfigurationen"
+	},
+	"Export / Import": {
+		"message": "Ausfuhr/Einfuhr"
+	},
+	"Export settings to downloads folder": {
+		"message": "Einstellungen exportieren"
+	},
+	"Import settings from JSON" : {
+		"message": "Importieren aus JSON"
 	}
 }
