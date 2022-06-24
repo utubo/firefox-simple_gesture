@@ -481,7 +481,7 @@ body {
 		color: #fffc;
 	}
 	.summary, .note {
-		color: #888;
+		color: #999;
 	}
 	.color-preview {
 		border-color: #999;
@@ -499,11 +499,11 @@ body {
 		color: #3cf !important;
 	}
 	.udlr {
-		color: #888;
+		color: #999;
 	}
 	.udlr-na {
-		background: #6663;
-		color: #666;
+		background: #9993;
+		color: #999;
 	}
 	/* dialog */
 	.dlg {
