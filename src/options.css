@@ -262,13 +262,13 @@ body {
 	overflow-x: hide;
 }
 #inputedStartPoint {
-    bottom: -1rem;
-    font-size: 1rem;
+	bottom: -1rem;
+	font-size: 1rem;
 	font-weight: normal;
-    line-height: 1rem;
-    position: absolute;
-    text-align: center;
-    width: 100%;
+	line-height: 1rem;
+	position: absolute;
+	text-align: center;
+	width: 100%;
 }
 #inputedGesture {
 	display: inline-block;
@@ -451,3 +451,106 @@ body {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle fill="%23ffcc33" cx="8" cy="8" r="8"/><path fill="%233338" d="M5 7l6 0l2 4h-10z"/><path fill="none" stroke="%23333" stroke-width="1.5" stroke-linejoin="round" d="M9.5 2v3l3.5 6h-10l3.5-6v-3"/></svg>');
 }
 
+@media (prefers-color-scheme: dark) {
+	body {
+		background: #000;
+		color: #fff;
+	}
+	.title {
+		background: #000;
+		border-bottom-color: #000;
+	}
+	.page-header {
+		border-bottom: none;
+		border-top: 1px solid #42414d;
+		color: #c8f;
+		margin: 0;
+		padding: .5rem 1.2rem;
+	}
+	.page-break {
+		border: none;
+	}
+	.item,
+	.sub-item {
+		border-bottom: none;
+	}
+	.active {
+		background: #42414d;
+	}
+	.gesture-caption, .caption, .sub-caption {
+		color: #fffc;
+	}
+	.summary, .note {
+		color: #888;
+	}
+	.color-preview {
+		border-color: #999;
+	}
+	.checkbox-image {
+		background: #666;
+	}
+	.checkbox:checked + .checkbox-image {
+		background: #86a;
+	}
+	.checkbox:checked + .checkbox-image::after {
+		background: #c8f;
+	}
+	.editing {
+		color: #3cf !important;
+	}
+	.udlr {
+		color: #888;
+	}
+	.udlr-na {
+		background: #6663;
+		color: #666;
+	}
+	/* dialog */
+	.dlg {
+		background: #000c;
+	}
+	.dlg-labels {
+		color: #fff;
+		text-shadow: 0px 0px 2px #fff7;
+	}
+	.adjustment-dlg-caption {
+		color: #fff;
+	}
+	.dlg-container {
+		background: #42414d;
+	}
+	.gesture-area {
+		background: transparent;
+		border: 1px solid #fff;
+	}
+	.dup {
+		color: red;
+		text-shadow: 0px 0px 2px #f007;
+	}
+	.canceled {
+		color: #999;
+		text-shadow: 0px 0px 2px #9997;
+	}
+	#customGestureScriptNote::after {
+		background: linear-gradient(rgba(66,65,77,0) 0,rgba(66,65,77,1) 100%);
+	}
+	.code, .inline-code {
+		background: #333;
+		color: #eee;
+	}
+	.errorlog, .stacktrace {
+		color: #fca;
+	}
+	.button {
+		background: transparent;
+	}
+	input, textarea, select {
+		background: #141414;
+		border: 1px solid #666;
+		border-radius: 4px;
+		color: #eee;
+	}
+	a {
+		color: #c8f;
+	}
+}
