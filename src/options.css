@@ -534,6 +534,9 @@ body {
 	#customGestureScriptNote::after {
 		background: linear-gradient(rgba(66,65,77,0) 0,rgba(66,65,77,1) 100%);
 	}
+	#cover {
+		background: #000;
+	}
 	.code, .inline-code {
 		background: #333;
 		color: #eee;
