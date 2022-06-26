@@ -173,10 +173,10 @@ input, textarea, select {
 	width: 1.2rem;
 }
 .checkbox:checked + .checkbox-image {
-	background: #9cf;
+	background: #bdbbcd;
 }
 .checkbox:checked + .checkbox-image::after {
-	background: #08f;
+	background: #2f2961;
 	transform: translateX(1rem);
 }
 .editing {
@@ -531,6 +531,7 @@ input, textarea, select {
 	}
 	input, textarea, select {
 		background: #141414;
+		color: #fbfbfe;
 	}
 	a {
 		color: #cb9eff;
