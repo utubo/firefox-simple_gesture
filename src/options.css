@@ -1,7 +1,7 @@
 /* basic */
 body {
 	background: #f9f9fa;
-	color: #444;
+	color: ##15141a;
 	margin: 0;
 	scroll-behavior: smooth;
 }
@@ -18,11 +18,10 @@ body {
 }
 .title {
 	align-items: center;
-	background: #f2f2f2;
-	border-bottom: 2px solid #0099ff;
 	display: flex;
 	font-weight: bold;
 	padding: .8rem 1rem;
+	box-shadow: 0 2px 2px #0003;
 }
 .page {
 	box-sizing: border-box;
@@ -30,19 +29,17 @@ body {
 	padding-bottom: 2rem;
 }
 .page-header {
-	border-bottom: 2px solid #d7d7db;
-	color: #888;
+	border-top: 1px solid #d7d7db;
+	color: #592acb;
 	display: block;
-	margin: 0 1.2rem;
+	padding: .5rem 1.2rem;
 }
 .page-break {
 	border: none;
-	border-top: 1px solid #d7d7db;
 	margin: 1rem 0;
 }
 .item,
 .sub-item {
-	border-bottom: 1px solid #d7d7db;
 	clear: both;
 	display: block;
 	padding: .8rem 0;
@@ -51,7 +48,6 @@ body {
 	transition: .2s;
 }
 .sub-item {
-	border-bottom: none;
 	margin-right: 0;
 	padding: .4rem 0;
 }
@@ -100,6 +96,12 @@ body {
 }
 
 /* form */
+input, textarea, select {
+	background: #f0f0f4;
+	border: none;
+	border-radius: 4px;
+	padding: .15rem;
+}
 .text-input {
 	box-sizing: border-box;
 	font-size: 1rem;
@@ -404,11 +406,9 @@ body {
 }
 
 .button {
-	background: #666;
-	border: 1px solid #ccc;
+	background: #cfcfd8;
 	border-radius: 4px;
 	box-sizing: border-box;
-	color: #ccc;
 	cursor: default;
 	display: inline-block;
 	padding: .2rem .8rem;
@@ -421,25 +421,25 @@ body {
 	width: 1em;
 }
 .icon-delete::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 5l2 10s0.2 1 1 1h7s1 0.2 1-1l2-10z"/><g transform="rotate(-8) translate(-1.9,1.2)"><path d="M2 3.5h13s0-2-2-2h-9s-2 0-2 2zM7 1.5a 1.5 1.5 1.5 1 1 3-0z"/></g></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="black"><path d="M1 5l2 10s0.2 1 1 1h7s1 0.2 1-1l2-10z"/><g transform="rotate(-8) translate(-1.9,1.2)"><path d="M2 3.5h13s0-2-2-2h-9s-2 0-2 2zM7 1.5a 1.5 1.5 1.5 1 1 3-0z"/></g></svg>');
 }
 .icon-edit::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M0 16h4l9-9l-4-4l-9 9zM10 2l4 4l2-2l-4-4z"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="black"><path d="M0 16h4l9-9l-4-4l-9 9zM10 2l4 4l2-2l-4-4z"/></svg>');
 }
 .icon-add::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M6 1h4v5h5v4h-5v5h-4v-5h-5v-4h5z"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="black"><path d="M6 1h4v5h5v4h-5v5h-4v-5h-5v-4h5z"/></svg>');
 }
 .icon-cancel::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 4l3-3 4 4 4-4 3 3-4 4 4 4-3 3-4-4-4 4-3-3 4-4-4-4z"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="black"><path d="M1 4l3-3 4 4 4-4 3 3-4 4 4 4-3 3-4-4-4 4-3-3 4-4-4-4z"/></svg>');
 }
 .icon-save::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"><path d="M1 1v14h14v-12l-2-2h-1v5h-8v-5zM8 1h2v3h-2z"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="black"><path d="M1 1v14h14v-12l-2-2h-1v5h-8v-5zM8 1h2v3h-2z"/></svg>');
 }
 .export-setting::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="white" stroke-width="2" fill="none"><path d="M2 10v4h12v-4M8 2v8m-3-3l3 3l3-3"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="2" fill="none"><path d="M2 10v4h12v-4M8 2v8m-3-3l3 3l3-3"/></svg>');
 }
 .import-setting::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="white" stroke-width="2" fill="none"><path d="M2 10v4h12v-4M8 2v8m-3-5l3-3l3 3"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="2" fill="none"><path d="M2 10v4h12v-4M8 2v8m-3-5l3-3l3 3"/></svg>');
 }
 
 /* icon */
@@ -454,31 +454,17 @@ body {
 @media (prefers-color-scheme: dark) {
 	body {
 		background: #2b2a33;
-		color: #fff;
-	}
-	.title {
-		background: none;
-		border: none;
+		color: #fbfbfe;
 	}
 	.page-header {
-		border-bottom: none;
-		border-top: 1px solid #42414d;
+		border-top-color: #42414d;
 		color: #cb9eff;
-		margin: 0;
-		padding: .5rem 1.2rem;
-	}
-	.page-break {
-		border: none;
-	}
-	.item,
-	.sub-item {
-		border-bottom: none;
 	}
 	.active {
 		background: #42414d;
 	}
 	.gesture-caption, .caption, .sub-caption {
-		color: #fffc;
+		color: #fbfbfecc;
 	}
 	.summary, .note {
 		color: #999;
@@ -510,18 +496,18 @@ body {
 		background: #000c;
 	}
 	.dlg-labels {
-		color: #fff;
-		text-shadow: 0px 0px 2px #fff7;
+		color: #fbfbfe;
+		text-shadow: 0px 0px 2px #fbfbfe77;
 	}
 	.adjustment-dlg-caption {
-		color: #fff;
+		color: #fbfbfe;
 	}
 	.dlg-container {
 		background: #42414d;
 	}
 	.gesture-area {
 		background: transparent;
-		border: 1px solid #fff;
+		border: 1px solid #fbfbfe;
 	}
 	.dup {
 		color: red;
@@ -545,14 +531,13 @@ body {
 		color: #fca;
 	}
 	.button {
-		background: transparent;
+		background: #52525e;
+	}
+	.button::before {
+		filter: invert(1);
 	}
 	input, textarea, select {
 		background: #141414;
-		border: none;
-		border-radius: 4px;
-		color: #eee;
-		padding: .15rem;
 	}
 	a {
 		color: #cb9eff;
