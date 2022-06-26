@@ -453,17 +453,17 @@ body {
 
 @media (prefers-color-scheme: dark) {
 	body {
-		background: #000;
+		background: #2b2a33;
 		color: #fff;
 	}
 	.title {
-		background: #000;
-		border-bottom-color: #000;
+		background: none;
+		border: none;
 	}
 	.page-header {
 		border-bottom: none;
 		border-top: 1px solid #42414d;
-		color: #c8f;
+		color: #cb9eff;
 		margin: 0;
 		padding: .5rem 1.2rem;
 	}
@@ -493,7 +493,7 @@ body {
 		background: #86a;
 	}
 	.checkbox:checked + .checkbox-image::after {
-		background: #c8f;
+		background: #cb9eff;
 	}
 	.editing {
 		color: #3cf !important;
@@ -502,7 +502,7 @@ body {
 		color: #999;
 	}
 	.udlr-na {
-		background: #9993;
+		background: #9996;
 		color: #999;
 	}
 	/* dialog */
@@ -535,10 +535,10 @@ body {
 		background: linear-gradient(rgba(66,65,77,0) 0,rgba(66,65,77,1) 100%);
 	}
 	#cover {
-		background: #000;
+		background: #2b2a33;
 	}
 	.code, .inline-code {
-		background: #333;
+		background: #444;
 		color: #eee;
 	}
 	.errorlog, .stacktrace {
@@ -549,11 +549,12 @@ body {
 	}
 	input, textarea, select {
 		background: #141414;
-		border: 1px solid #666;
+		border: none;
 		border-radius: 4px;
 		color: #eee;
+		padding: .15rem;
 	}
 	a {
-		color: #c8f;
+		color: #cb9eff;
 	}
 }
