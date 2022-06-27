@@ -314,8 +314,11 @@ input, textarea, select {
 	margin: 1rem 1.2rem;
 }
 #editDlg > .dlg-container {
-	height: 100%;
-	width: 100%;
+	bottom: 0;
+	left: 0;
+	position: fixed;
+	right: 0;
+	top: 0;
 }
 #customGestureTitle,
 #customGestureType,
