@@ -205,8 +205,11 @@ input, textarea, select {
 
 /* dialog */
 .dlg {
+	align-items: center;
 	background: #0007;
-	height: 100%;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
 	left: 0;
 	opacity: 1;
 	position: fixed;
@@ -242,8 +245,8 @@ input, textarea, select {
 	border-radius: 3px;
 	display: flex;
 	flex-direction: column;
-	height: calc(100% - 4rem);
 	margin: 1rem;
+	max-height: calc(100% - 4rem);
 	overflow: auto;
 	padding: 1rem;
 }
@@ -306,8 +309,13 @@ input, textarea, select {
 	}
 }
 
+/* custom gesture */
 #addCustomGesture {
 	margin: 1rem 1.2rem;
+}
+#editDlg > .dlg-container {
+	height: 100%;
+	width: 100%;
 }
 #customGestureTitle,
 #customGestureType,
@@ -347,9 +355,19 @@ input, textarea, select {
 }
 
 /* blacklist */
+#blacklistDlg > .dlg-container {
+	width: 100%;
+}
+.blacklist-item {
+	margin-bottom: .5em;
+}
 .blacklist-input {
+	margin-right: .5em;
 	vertical-align: middle;
-	width: calc(100% - 3em);
+	width: calc(100% - 3.5em);
+}
+.blacklist-item:last-child .delete-blacklist {
+	opacity: .3;
 }
 
 /* others */
