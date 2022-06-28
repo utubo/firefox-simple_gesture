@@ -207,16 +207,13 @@ input, textarea, select {
 .dlg {
 	align-items: center;
 	background: #0007;
-	bottom: 0;
 	display: flex;
+	inset: 0;
 	justify-content: center;
-	left: 0;
 	opacity: 1;
 	position: fixed;
 	text-align: center;
-	top: 0;
 	transition: opacity .5s;
-	width: 100%;
 }
 .dlg-labels {
 	bottom: calc(50% + 30vmin + .5rem);
@@ -314,11 +311,8 @@ input, textarea, select {
 	margin: 1rem 1.2rem;
 }
 #editDlg > .dlg-container {
-	bottom: 0;
-	left: 0;
+	inset: 0;
 	position: fixed;
-	right: 0;
-	top: 0;
 }
 #customGestureTitle,
 #customGestureType,
@@ -376,13 +370,10 @@ input, textarea, select {
 /* others */
 #cover {
 	background: #fff;
-	height: 100%;
-	left: 0;
+	inset: 0;
 	pointer-events: none;
 	position: fixed;
-	top: 0;
 	transition: opacity .3s;
-	width: 100%;
 	z-index: 99;
 }
 .code, .inline-code {
