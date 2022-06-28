@@ -39,6 +39,8 @@ var SimpleGesture = {};
 	// others
 	let toast;
 	let toastMain;
+	let toastText;
+	let toastUdlr;
 	let toastSub;
 	let isToastVisible;
 	let exData;
@@ -57,8 +59,9 @@ var SimpleGesture = {};
 	const resetGesture = e => {
 		gesture = null;
 		timer = null;
-		if (e.withTimeout && toast) {
-			toastMain.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
+		if (e && e.withTimeout && toast) {
+			toastText.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
+			toastUdlr.textContent = '';
 			hideToast(1000);
 		} else {
 			hideToast();
@@ -182,7 +185,45 @@ var SimpleGesture = {};
 		alert(chrome.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
 	};
 
-	// others -------------
+	// toast --------------
+	let arrowSvg = null;
+	const makeArrowSvg = () => {
+		if (arrowSvg) return arrowSvg;
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('width', '12');
+		svg.setAttribute('height', '12');
+		svg.setAttribute('viewBox', '0 0 12 12');
+		svg.style.cssText = `
+			display: none;
+			height: 1em;
+			width: 1em;
+			margin: 0 .1em;
+			stroke: currentColor;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			fill: none;
+		`;
+		const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path.setAttribute('d','M 6 10v-8m-4 4l4-4 4 4');
+		svg.appendChild(path);
+		arrowSvg = svg;
+		return svg;
+	};
+	SimpleGesture.toArrows = (udlr, label) => {
+		const arrow = makeArrowSvg();
+		const f = document.createElement('SPAN');
+		f.style.cssText = 'display: inline-block; max-height: 1em; vertical-align:text-top;';
+		for (const g of udlr.split('-')) {
+			const svg = arrow.cloneNode(true);
+			const r = g === 'U' ? 0 : g === 'D' ? 180 : g === 'L' ? 270 : 90;
+			svg.style.transform = `rotate(${r}deg)`;
+			svg.style.display = 'inline-block';
+			f.appendChild(svg);
+		}
+		// label.replaceChild(f, label.firstChild);
+		label.firstChild ? label.replaceChild(f, label.firstChild) : label.appendChild(f);
+	};
+
 	const showToast = () => {
 		if (!toast) return;
 		if (isToastVisible) return;
@@ -241,6 +282,8 @@ var SimpleGesture = {};
 			z-index: 2147483647;
 		`; // TODO: I don't like this z-index. :(
 		toastMain = document.createElement('DIV');
+		toastText = document.createElement('SPAN');
+		toastUdlr = document.createElement('SPAN');
 		toastSub = document.createElement('DIV');
 		toastSub.style.cssText = `
 			font-size: 60%;
@@ -248,6 +291,8 @@ var SimpleGesture = {};
 			padding-right: .5em;
 			text-align: right;
 		`;
+		toastMain.appendChild(toastText);
+		toastMain.appendChild(toastUdlr);
 		toast.appendChild(toastMain);
 		toast.appendChild(toastSub);
 		document.body.appendChild(toast);
@@ -269,7 +314,8 @@ var SimpleGesture = {};
 			name = browser.i18n.getMessage(g);
 		}
 		setupToast();
-		toastMain.textContent = `${name}(${gesture})`;
+		toastText.textContent = name;
+		SimpleGesture.toArrows(gesture, toastUdlr);
 		if (toast.getAttribute('x-startPoint') !== startPoint) {
 			toast.setAttribute('x-startPoint', startPoint);
 			toastSub.textContent = `${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)}`;

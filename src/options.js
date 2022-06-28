@@ -116,7 +116,11 @@
 	// edit U-D-L-R ------
 	const updateUdlrLabel = (labelUdlr, labelStartPoint, sudlr) => {
 		let [startPoint, udlr] = toStartPointAndUdlr(sudlr);
-		labelUdlr.textContent = udlr || INSTEAD_OF_EMPTY.noGesture;
+		if (udlr) {
+			SimpleGesture.toArrows(udlr, labelUdlr);
+		} else {
+			labelUdlr.textContent = INSTEAD_OF_EMPTY.noGesture;
+		}
 		labelStartPoint.textContent = startPoint ? `(${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)})` : '';
 		return [startPoint, udlr];
 	};
@@ -263,12 +267,13 @@
 			inputedGesture.classList.add('canceled');
 		}
 		toggleClass(!startPoint, 'hide', inputedStartPoint);
+		const sudlr = startPoint + gesture.substring(0, MAX_LENGTH);
 		updateUdlrLabel(
 			inputedGesture,
 			inputedStartPoint,
-			startPoint + gesture.substring(0, MAX_LENGTH)
+			sudlr
 		);
-		let dup = SimpleGesture.ini.gestures[startPoint + inputedGesture.textContent];
+		let dup = SimpleGesture.ini.gestures[sudlr];
 		dup = (dup && dup !== target.name) ? getMessage(dup) : '';
 		dup = dup ? `\u00a0(${dup})` : '';
 		dupName.textContent = dup;
