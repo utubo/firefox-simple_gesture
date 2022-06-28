@@ -209,7 +209,7 @@ var SimpleGesture = {};
 		arrowSvg = svg;
 		return svg;
 	};
-	SimpleGesture.toArrows = (udlr, label) => {
+	SimpleGesture.drawArrows = (udlr, label) => {
 		const arrow = makeArrowSvg();
 		const f = document.createElement('SPAN');
 		f.style.cssText = 'display: inline-block; max-height: 1em; vertical-align:text-top;';
@@ -315,7 +315,7 @@ var SimpleGesture = {};
 		}
 		setupToast();
 		toastText.textContent = name;
-		SimpleGesture.toArrows(gesture, toastUdlr);
+		SimpleGesture.drawArrows(gesture, toastUdlr);
 		if (toast.getAttribute('x-startPoint') !== startPoint) {
 			toast.setAttribute('x-startPoint', startPoint);
 			toastSub.textContent = `${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)}`;

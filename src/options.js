@@ -117,7 +117,7 @@
 	const updateUdlrLabel = (labelUdlr, labelStartPoint, sudlr) => {
 		let [startPoint, udlr] = toStartPointAndUdlr(sudlr);
 		if (udlr) {
-			SimpleGesture.toArrows(udlr, labelUdlr);
+			SimpleGesture.drawArrows(udlr, labelUdlr);
 		} else {
 			labelUdlr.textContent = INSTEAD_OF_EMPTY.noGesture;
 		}
