@@ -289,7 +289,7 @@ var SimpleGesture = {};
 			z-index: 2147483647;
 		`; // TODO: I don't like this z-index. :(
 		toastMain = document.createElement('DIV');
-		toastMain.style.padding = '.2em 0';
+		toastMain.style.cssText = 'padding: .2em 0; line-height: 1;';
 		toastText = document.createElement('SPAN');
 		toastUdlr = document.createElement('SPAN');
 		toastSub = document.createElement('DIV');
