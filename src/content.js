@@ -187,6 +187,7 @@ var SimpleGesture = {};
 
 	// toast --------------
 	let arrowSvg = null;
+	let arrowContainer = null;
 	const makeArrowSvg = () => {
 		if (arrowSvg) return arrowSvg;
 		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -197,7 +198,6 @@ var SimpleGesture = {};
 			display: none;
 			height: 1em;
 			width: 1em;
-			margin: 0 .1em;
 			stroke: currentColor;
 			stroke-linecap: round;
 			stroke-linejoin: round;
@@ -207,21 +207,28 @@ var SimpleGesture = {};
 		path.setAttribute('d','M 6 10v-8m-4 4l4-4 4 4');
 		svg.appendChild(path);
 		arrowSvg = svg;
-		return svg;
+		arrowContainer = document.createElement('SPAN');
+		arrowContainer.style.cssText = `
+			display: inline-block;
+			height: 1em;
+			margin: 0 .1em;
+			vertical-align: bottom;
+		`;
 	};
 	SimpleGesture.drawArrows = (udlr, label) => {
-		const arrow = makeArrowSvg();
-		const f = document.createElement('SPAN');
-		f.style.cssText = 'display: inline-block; max-height: 1em; vertical-align:text-top;';
+		makeArrowSvg();
+		const f = document.createDocumentFragment();
 		for (const g of udlr.split('-')) {
-			const svg = arrow.cloneNode(true);
+			const a = arrowSvg.cloneNode(true);
 			const r = g === 'U' ? 0 : g === 'D' ? 180 : g === 'L' ? 270 : 90;
-			svg.style.transform = `rotate(${r}deg)`;
-			svg.style.display = 'inline-block';
-			f.appendChild(svg);
+			a.style.transform = `rotate(${r}deg)`;
+			a.style.display = 'inline-block';
+			const c = arrowContainer.cloneNode();
+			c.appendChild(a);
+			f.appendChild(c);
 		}
-		// label.replaceChild(f, label.firstChild);
-		label.firstChild ? label.replaceChild(f, label.firstChild) : label.appendChild(f);
+		label.textContent = '';
+		label.appendChild(f);
 	};
 
 	const showToast = () => {
@@ -282,6 +289,7 @@ var SimpleGesture = {};
 			z-index: 2147483647;
 		`; // TODO: I don't like this z-index. :(
 		toastMain = document.createElement('DIV');
+		toastMain.style.padding = '.2em 0';
 		toastText = document.createElement('SPAN');
 		toastUdlr = document.createElement('SPAN');
 		toastSub = document.createElement('DIV');
