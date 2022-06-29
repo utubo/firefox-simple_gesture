@@ -105,6 +105,7 @@
 	const inputedStartPoint = byId('inputedStartPoint');
 	const dupName = byId('dupName');
 	const customGestureList = byId('customGestureList');
+	const customGestureDlgContainer = byId('customGestureDlgContainer');
 	const customGestureTitle = byId('customGestureTitle');
 	const customGestureType = byId('customGestureType');
 	const customGestureURl = byId('customGestureUrl');
@@ -358,6 +359,7 @@
 		history.back();
 	};
 	const toggleEditor = e => {
+		toggleClass(customGestureType.value !== 'url', 'dlg-fill', customGestureDlgContainer);
 		toggleClass(customGestureType.value !== 'url', 'hide', customGestureUrl);
 		toggleClass(customGestureType.value !== 'script', 'hide', customGestureScript, byId('customGestureScriptNote'));
 		if (customGestureType.value !== 'script') return;

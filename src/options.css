@@ -215,6 +215,12 @@ input, textarea, select {
 	text-align: center;
 	transition: opacity .5s;
 }
+.dlg-fill {
+	height: unset !important;
+	inset: 0;
+	position: fixed;
+	width: unset !important;
+}
 .dlg-labels {
 	bottom: calc(50% + 30vmin + .5rem);
 	color: #fff;
@@ -310,9 +316,8 @@ input, textarea, select {
 #addCustomGesture {
 	margin: 1rem 1.2rem;
 }
-#editDlg > .dlg-container {
-	inset: 0;
-	position: fixed;
+#customGestureDlgContainer {
+	width: 100%;
 }
 #customGestureTitle,
 #customGestureType,
