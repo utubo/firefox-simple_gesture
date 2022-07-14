@@ -206,7 +206,7 @@ input, textarea, select {
 /* dialog */
 .dlg {
 	align-items: center;
-	background: #0007;
+	background: #0008;
 	display: flex;
 	inset: 0;
 	justify-content: center;
@@ -510,7 +510,7 @@ input, textarea, select {
 	}
 	/* dialog */
 	.dlg {
-		background: #000c;
+		background: #000a;
 	}
 	.dlg-labels {
 		color: #fbfbfe;
@@ -548,9 +548,13 @@ input, textarea, select {
 	}
 	input, textarea, select {
 		background: #141414;
+		caret-color: #75747a;
 		color: #fbfbfe;
 	}
 	a {
 		color: #cb9eff;
+	}
+	::selection {
+		background: #75747a;
 	}
 }

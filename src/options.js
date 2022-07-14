@@ -11,13 +11,11 @@
 		toastBackground: '#21a1de',
 	};
 	const TIMERS = {};
-	const HAS_HISTORY = 1 < history.length;
 	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
 	SimpleGesture.MAX_LENGTH += 9; // margin of cancel to input. 5 moves + 4 hyphens = 9 chars.
 
 	// fields ------------
 	let gestureNames = [];
-	let dlgs = {};
 	let target = null;
 	let minX;
 	let maxX;
@@ -26,6 +24,7 @@
 	let startTime = null;
 	let exData = { customGestureList: [] };
 	let openedDlg;
+	const dlgs = {};
 
 	// utils -------------
 	const byId = id => document.getElementById(id);
@@ -41,14 +40,35 @@
 	};
 
 	const toggleClass = (b, clazz, ...elms) => {
-		for (let elm of elms) {
+		for (const elm of elms) {
 			b ? elm.classList.add(clazz) : elm.classList.remove(clazz);
 		}
 	};
 
+	const hilightEditStart = (...elms) => {
+		for (const elm of elms) {
+			elm.classList.add('editing');
+			elm.removeAttribute('data-unhilightEditEnd');
+		}
+	};
+
+	const unhilightEditEnd = (...elms) => {
+		for (const elm of elms) {
+			elm.setAttribute('data-unhilightEditEnd', 1);
+		}
+		setTimeout(() => {
+			for (const elm of elms) {
+				if (elm.getAttribute('data-unhilightEditEnd')) {
+					elm.classList.remove('editing');
+					elm.removeAttribute('data-unhilightEditEnd');
+				}
+			}
+		}, 1000);
+	};
+
 	const swapKeyValue = m => {
 		const s = {};
-		for (let key in m) {
+		for (const key in m) {
 			const value = m[key];
 			if (value) s[value] = key;
 		}
@@ -108,7 +128,7 @@
 	const customGestureDlgContainer = byId('customGestureDlgContainer');
 	const customGestureTitle = byId('customGestureTitle');
 	const customGestureType = byId('customGestureType');
-	const customGestureURl = byId('customGestureUrl');
+	const customGestureUrl = byId('customGestureUrl');
 	const customGestureScript = byId('customGestureScript');
 	const timeout = byId('timeout');
 	const strokeSize = byId('strokeSize');
@@ -116,7 +136,7 @@
 
 	// edit U-D-L-R ------
 	const updateUdlrLabel = (labelUdlr, labelStartPoint, sudlr) => {
-		let [startPoint, udlr] = toStartPointAndUdlr(sudlr);
+		const [startPoint, udlr] = toStartPointAndUdlr(sudlr);
 		if (udlr) {
 			SimpleGesture.drawArrows(udlr, labelUdlr);
 		} else {
@@ -126,8 +146,8 @@
 		return [startPoint, udlr];
 	};
 	const updateGestureItem = (label, sudlr) => {
-		let note = byClass(label.parentNode, 'udlr-note');
-		let [startPoint, udlr] = updateUdlrLabel(label, note, sudlr);
+		const note = byClass(label.parentNode, 'udlr-note');
+		const [startPoint, udlr] = updateUdlrLabel(label, note, sudlr);
 		toggleClass(!startPoint, 'hide', note);
 		toggleClass(!udlr, 'udlr-na', label);
 		label.setAttribute('x-sudlr', sudlr || '');
@@ -146,7 +166,7 @@
 			udlrs[target.name] = sudlr;
 			SimpleGesture.ini.gestures = swapKeyValue(udlrs);
 			saveIni();
-			for (let name of gestureNames) {
+			for (const name of gestureNames) {
 				 updateGestureItem(byId(`${name}_udlr`), udlrs[name]);
 			}
 		}
@@ -158,9 +178,9 @@
 			target = { name: id.replace(/_[^_]+$/, '') };
 			target.caption = byId(`${target.name}_caption`);
 			target.udlr = byId(`${target.name}_udlr`);
-			toggleClass(true, 'editing', target.caption, target.udlr);
+			hilightEditStart(target.udlr);
 			byId('editTarget').textContent = target.caption.textContent;
-			let [startPoint, udlr] = updateUdlrLabel(
+			const [startPoint, udlr] = updateUdlrLabel(
 				inputedGesture,
 				inputedStartPoint,
 				target.udlr.getAttribute('x-sudlr')
@@ -172,13 +192,13 @@
 		},
 		onHide: () => {
 			if (!target) return;
-			toggleClass(false, 'editing', target.caption, target.udlr);
+			unhilightEditEnd(target.udlr);
 			target = null;
 		}
 	};
 
 	const getUdlr = name => {
-		for (let g in SimpleGesture.ini.gestures) {
+		for (const g in SimpleGesture.ini.gestures) {
 			if (SimpleGesture.ini.gestures[g] === name) return g;
 		}
 	};
@@ -207,17 +227,17 @@
 
 	const setupGestureList = () => {
 		gestureNames = [];
-		for (let list of allByClass('gesture-list')) {
+		for (const list of allByClass('gesture-list')) {
 			const gestures = list.getAttribute('data-gestures');
 			if (!gestures) continue;
-			for (let nameAndOpt of gestures.split(/\s+/)) {
+			for (const nameAndOpt of gestures.split(/\s+/)) {
 				const name = nameAndOpt.replace(/!$/, '');
 				const isExperimental = nameAndOpt.match(/!$/);
 				list.appendChild(createGestureItem(name, isExperimental));
 				gestureNames.push(name);
 			}
 		}
-		for (let c of exData.customGestureList) {
+		for (const c of exData.customGestureList) {
 			customGestureList.appendChild(createGestureItem(c.id));
 			gestureNames.push(c.id);
 		}
@@ -333,9 +353,13 @@
 			customGestureType.value = details.type;
 			customGestureUrl.value = details.type === 'url' ? details.url : '';
 			customGestureScript.value = details.type === 'script' ? details.script : '';
+			const c = findCustomGesture(dlgs.editDlg.targetId);
+			hilightEditStart(byId(`${c.id}_caption`));
 			toggleEditor();
 		},
 		onHide: () => {
+			const c = findCustomGesture(dlgs.editDlg.targetId);
+			unhilightEditEnd(byId(`${c.id}_caption`));
 			dlgs.editDlg.targetId = null;
 		}
 	};
@@ -366,7 +390,7 @@
 		const s = byId('addCommandToScript');
 		const f = document.createDocumentFragment();
 		f.appendChild(s.firstChild.cloneNode(true));
-		for (let i of allByClass('gesture-item')) {
+		for (const i of allByClass('gesture-item')) {
 			const name = i.id.replace(/_item/, '');
 			if (name === dlgs.editDlg.targetId) continue;
 			if (!name) continue;
@@ -458,19 +482,19 @@
 		onShow: () => {
 			fadein('adjustmentDlg');
 			clearTimeout(TIMERS.strokeSizeChanged);
-			toggleClass(true, 'editing', timeout, strokeSize);
+			hilightEditStart(timeout, strokeSize);
 		},
 		onHide: () => {
 			startTime = null;
-			resetTimer('strokeSizeChanged', () => { toggleClass(false, 'editing', timeout, strokeSize); }, 2000);
+			unhilightEditEnd(timeout, strokeSize);
 		}
 	};
 
 	// blacklist dlg ----
 	const setupBlacklistSummary = () => {
 		let count = 0;
-		let urls = [];
-		for (let item of (SimpleGesture.ini.blacklist || [])) {
+		const urls = [];
+		for (const item of (SimpleGesture.ini.blacklist || [])) {
 			urls.push(item.url);
 			if (5 < ++count) {
 				urls.push('...');
@@ -484,7 +508,7 @@
 			const blacklist = byId('blacklist');
 			const newList = blacklist.cloneNode(false);
 			if (SimpleGesture.ini.blacklist) {
-				for (let urlPattern of SimpleGesture.ini.blacklist) {
+				for (const urlPattern of SimpleGesture.ini.blacklist) {
 					const item = blacklistTemplate.cloneNode(true);
 					byClass(item, 'blacklist-input').value = urlPattern.url;
 					newList.appendChild(item);
@@ -500,7 +524,7 @@
 	byId('cancelBlacklist').addEventListener('click', e => { history.back(); });
 	byId('saveBlacklist').addEventListener('click', e => {
 		const list = [];
-		for (let input of allByClass('blacklist-input')) {
+		for (const input of allByClass('blacklist-input')) {
 			if (input.value) {
 				list.push({url: input.value});
 			}
@@ -524,7 +548,7 @@
 	// edit text values --
 	const saveBindingValues = e => {
 		clearTimeout(TIMERS.saveBindingValues);
-		for (let elm of bidingForms) {
+		for (const elm of bidingForms) {
 			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
 				ini[elm.id] = elm.checked;
@@ -570,12 +594,12 @@
 		}, 500);
 	};
 	const onChecked = e => {
-		for (let elm of allByClass(`js-linked-${e.target.id}`)) {
+		for (const elm of allByClass(`js-linked-${e.target.id}`)) {
 			toggleClass(!e.target.checked, 'disabled', elm);
 		}
 	};
 	const toggleExperimental = () => {
-		for (let elm of allByClass('experimental')) {
+		for (const elm of allByClass('experimental')) {
 			toggleClass(!exData.experimental, 'hide', elm);
 		}
 	};
@@ -586,7 +610,7 @@
 			exData = obj.exData;
 			saveIni();
 			if (obj.customGestureDetails) {
-				for (let c of obj.customGestureDetails) {
+				for (const c of obj.customGestureDetails) {
 					const d = {};
 					d[c.id] = c.detail;
 					await browser.storage.local.set(d);
@@ -603,7 +627,7 @@
 			exData: exData,
 			customGestureDetails: []
 		};
-		for (let c of exData.customGestureList) {
+		for (const c of exData.customGestureList) {
 			const id = `simple_gesture_${c.id}`;
 			const detail = await storageValue(id);
 			data.customGestureDetails.push({ id: id, detail:detail });
@@ -614,7 +638,7 @@
 		link.click();
 	};
 	const setupOtherOptions = () => {
-		for (let caption of allByClass('i18n')) {
+		for (const caption of allByClass('i18n')) {
 			caption.textContent = getMessage(caption.textContent);
 		}
 		byId('close_item').appendChild(byId('afterClose_item'));
@@ -622,7 +646,7 @@
 		byId('newTab_item').appendChild(byId('newTabUrl_item'));
 		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
-		for (let elm of bidingForms) {
+		for (const elm of bidingForms) {
 			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
 				elm.checked = !!ini[elm.id];
@@ -633,7 +657,7 @@
 			elm.addEventListener('change', saveBindingValues);
 			elm.addEventListener('input', saveBindingValuesDelay);
 		}
-		for (let elm of allByClass('color-text-input')) {
+		for (const elm of allByClass('color-text-input')) {
 			elm.setAttribute('placeholder', INSTEAD_OF_EMPTY[elm.id]);
 			onChangeColorText({ target: elm });
 			elm.addEventListener('input', onChangeColorText);
