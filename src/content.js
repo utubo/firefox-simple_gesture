@@ -137,7 +137,7 @@ var SimpleGesture = {};
 	};
 
 	const setupStartPoint = async (x, y) => {
-		let a = (Math.min(lastInnerWidth, lastInnerHeight) / 10)^0;
+		const a = (Math.min(lastInnerWidth, lastInnerHeight) / 10)^0;
 		if (x < a) {
 			startPoint = 'L:';
 		} else if (x > lastInnerWidth - a) {
@@ -306,7 +306,7 @@ var SimpleGesture = {};
 		document.body.appendChild(toast);
 	};
 	const showGesture = async () => {
-		let g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
+		const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
 		if (!g && !gesture[1] && !startPoint) return;
 		if (!isGestureEnabled && g !== 'disableGesture') {
 			hideToast();
