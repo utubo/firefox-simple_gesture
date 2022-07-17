@@ -10,82 +10,73 @@
 	<body>
 		<div class="title">Experimental - Simple Gesture</div>
 
-		<!-- Pages -->
+		<div class="item">
+			<h2>Gestures for tab operations</h2>
+			The gestures for tab operations doesn't work well after Firefox for android version 68.
+			<ul>
+				<li>nextTab</li>
+				<li>prevTab</li>
+				<li>closeAll</li>
+				<li>closeOthers</li>
+				<li>closeSameUrl</li>
+			</ul>
 
-		<div class="page" id="basicGestures">
-			<div class="item">
-				<b>Gestures for tab operations</b><br>
-				<br>
-				The gestures for tab operations doesn't work well after Firefox for android version 68.
-				<ul>
-					<li>nextTab</li>
-					<li>prevTab</li>
-					<li>closeAll</li>
-					<li>closeOthers</li>
-					<li>closeSameUrl</li>
-				</ul>
+			<h2>Fix the stroke size on zoomed page</h2>
+			If gesture does not work well on zoomed page,<br>
+			open <span class="inline-code">about:config</span> and set <span class="inline-code">dom.visualviewport.enabled</span> to <span class="inline-code">true</span>.<br>
+
+			<h2>SimpleGesture.doCommand()</h2>
+			You can use "SimpleGesture.doCommand()" to execute Simple-Gesture's command on custome-gestures.<br>
+			e.g.<br>
+			<div class="code">
+				SimpleGesture.doCommand('reload');<br>
 			</div>
-			<div class="item">
-				<b>Fix the stroke size on zoomed page</b><br>
-				<br>
-				If gesture does not work well on zoomed page,<br>
-				open <span class="inline-code">about:config</span> and set <span class="inline-code">dom.visualviewport.enabled</span> to <span class="inline-code">true</span>.<br>
+			<br>
+			'toggleUserAgent' has options.<br>
+			toggle 'ABC' &lt;-&gt; default<br>
+			<div class="code">
+				SimpleGesture.doCommand('toggleUserAgent', { userAgent: 'ABC' });<br>
 			</div>
-			<div class="item">
-				<b>SimpleGesture.doCommand()</b><br>
-				<br>
-				You can use "SimpleGesture.doCommand()" to execute Simple-Gesture's command on custome-gestures.<br>
-				e.g.<br>
-				<div class="code">
-					SimpleGesture.doCommand('reload');<br>
-				</div>
-				<br>
-				'toggleUserAgent' has options.<br>
-				toggle 'ABC' &lt;-&gt; default<br>
-				<div class="code">
-					SimpleGesture.doCommand('toggleUserAgent', { userAgent: 'ABC' });<br>
-				</div>
-				change to 'ABC'.<br>
-				<div class="code">
-					SimpleGesture.doCommand('toggleUserAgent', { userAgent: 'ABC', force: true });<br>
-				</div>
-				reset.<br>
-				<div class="code">
-					SimpleGesture.doCommand('toggleUserAgent', { userAgent: null });
-				</div>
-				<br>
-				Note1:<br>
-				TAKE CARE NOT TO MAKE AN INFINITE LOOP.<br>
-				<br>
-				Note2:<br>
-				This API can't change a target of some commands.<br>
-				e.g.<br>
-				<div class="code">
-					// when<br>
-					// TAB-A = the current tab<br>
-					// TAB-B = the next tab<br>
-					<br>
-					// show TAB-B<br>
-					SimpleGesture.doCommand('nextTab');<br>
-					<br>
-					// reload TAB-A (<b>NOT TAB-B</b>)<br>
-					SimpleGesture.doCommand('reload');<br>
-					<br>
-					// <b>Simple-Gesture can't realod TAB-B on this version</b>, sorry.
-				</div>
-				<br>
-				Note3:<br>
-				This API is executed asynchronously.<br>
-				<br>
-				Note4:<br>
-				JavaScript will be suspended, when page is closed or reloaded.<br>
-				e.g.<br>
-				You can't make a gesture to "Reload and scroll to bottom".<br>
-				<br>
-				If you want to do something that is not simple,
-				then execute "browser.runtime.sendMessage(...)" or create a custom event with custom-gesutre,
-				and catch it with greasemonkey or others.
+			change to 'ABC'.<br>
+			<div class="code">
+				SimpleGesture.doCommand('toggleUserAgent', { userAgent: 'ABC', force: true });<br>
 			</div>
+			reset.<br>
+			<div class="code">
+				SimpleGesture.doCommand('toggleUserAgent', { userAgent: null });
+			</div>
+			<br>
+			Note1:<br>
+			TAKE CARE NOT TO MAKE AN INFINITE LOOP.<br>
+			<br>
+			Note2:<br>
+			This API can't change a target of some commands.<br>
+			e.g.<br>
+			<div class="code">
+				// when<br>
+				// TAB-A = the current tab<br>
+				// TAB-B = the next tab<br>
+				<br>
+				// show TAB-B<br>
+				SimpleGesture.doCommand('nextTab');<br>
+				<br>
+				// reload TAB-A (<b>NOT TAB-B</b>)<br>
+				SimpleGesture.doCommand('reload');<br>
+				<br>
+				// <b>Simple-Gesture can't realod TAB-B on this version</b>, sorry.
+			</div>
+			<br>
+			Note3:<br>
+			This API is executed asynchronously.<br>
+			<br>
+			Note4:<br>
+			JavaScript will be suspended, when page is closed or reloaded.<br>
+			e.g.<br>
+			You can't make a gesture to "Reload and scroll to bottom".<br>
+			<br>
+			If you want to do something that is not simple,
+			then execute "browser.runtime.sendMessage(...)" or create a custom event with custom-gesutre,
+			and catch it with greasemonkey or others.
 		</div>
 		<script src="content.js"></script>
 	</body>

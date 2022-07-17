@@ -28,11 +28,20 @@ body {
 	/* min-height: 100vh; this setting has probrem of scroll position. */
 	padding-bottom: 2rem;
 }
-.page-header {
+.page-header, h2 {
 	border-top: 1pt solid #d7d7db;
 	color: #592acb;
 	display: block;
 	padding: .5rem 1.2rem;
+}
+h2 {
+	font-size: 100%;
+	margin-top: 2rem;
+	padding: .5rem 0;
+}
+h2:first-child {
+	border: none;
+	margin-top: 0;
 }
 .page-break {
 	border: none;
@@ -473,7 +482,7 @@ input, textarea, select {
 		background: #2b2a33;
 		color: #fbfbfe;
 	}
-	.page-header {
+	.page-header, h2 {
 		border-color: #42414d;
 		color: #cb9eff;
 	}
@@ -523,7 +532,7 @@ input, textarea, select {
 		background: #42414d;
 	}
 	.gesture-area {
-		background: transparent;
+		background: #141414aa;
 		border: 1px solid #fbfbfe;
 	}
 	.canceled {
