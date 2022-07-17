@@ -275,6 +275,7 @@ var SimpleGesture = {};
 		if (toast) return;
 		toast = document.createElement('DIV');
 		toast.style.cssText = `
+			all: initial;
 			box-sizing: border-box;
 			left: 0;
 			line-height: 1.5;
