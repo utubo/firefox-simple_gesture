@@ -335,15 +335,15 @@ var SimpleGesture = {};
 	// utils for setup ----
 	SimpleGesture.addTouchEventListener = (target, events) => {
 		if ('ontouchstart' in window) {
-			target.addEventListener('touchstart', events.start);
-			target.addEventListener('touchmove', events.move);
-			target.addEventListener('touchend', events.end);
-			target.addEventListener('touchcancel', events.end);
+			target.addEventListener('touchstart', events.start, true);
+			target.addEventListener('touchmove', events.move, true);
+			target.addEventListener('touchend', events.end, true);
+			target.addEventListener('touchcancel', events.end, true);
 		} else {
 			// for test on Desktop
-			target.addEventListener('mousedown', events.start);
-			target.addEventListener('mousemove', events.move);
-			target.addEventListener('mouseup', events.end);
+			target.addEventListener('mousedown', events.start, true);
+			target.addEventListener('mousemove', events.move, true);
+			target.addEventListener('mouseup', events.end, true);
 		}
 	};
 
