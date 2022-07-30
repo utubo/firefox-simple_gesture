@@ -342,6 +342,11 @@
 		gestureNames.some((v,i) => {
 			if (v === id) gestureNames.splice(i, 1);
 		});
+		for (const g in SimpleGesture.ini.gestures) {
+			if (SimpleGesture.ini.gestures[g] === id) {
+				SimpleGesture.ini.gestures[g] = null;
+			}
+		}
 		reloadAllTabsIni();
 	};
 	dlgs.editDlg = {
@@ -679,6 +684,11 @@
 			changeState({dlg: 'blacklistDlg'});
 		});
 		setupBlacklistSummary();
+		// Firefox cant open link. bug?
+		byId('exp_readme').addEventListener('click', e => {
+			browser.tabs.create({ active: true, url: 'experimental.html' });
+			e.preventDefault();
+		});
 	};
 
 	// control Back button
