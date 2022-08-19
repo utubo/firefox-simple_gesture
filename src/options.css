@@ -1,7 +1,7 @@
 /* basic */
 body {
 	background: #f9f9fa;
-	color: ##15141a;
+	color: #15141a;
 	margin: 0;
 	scroll-behavior: smooth;
 }
@@ -18,15 +18,22 @@ body {
 }
 .title {
 	align-items: center;
+	background: #f9f9fa;
+	box-shadow: 0 2px 2px #0003;
+	box-sizing: border-box;
 	display: flex;
 	font-weight: bold;
+	height: 2.5rem;
 	padding: .8rem 1rem;
-	box-shadow: 0 2px 2px #0003;
+	position: fixed;
+	width: 100%;
+	z-index: 1;
 }
 .page {
 	box-sizing: border-box;
 	/* min-height: 100vh; this setting has probrem of scroll position. */
 	padding-bottom: 2rem;
+	padding-top: 2.5rem;
 }
 .page-header, h2 {
 	border-top: 1pt solid #d7d7db;
@@ -223,6 +230,7 @@ input, textarea, select {
 	position: fixed;
 	text-align: center;
 	transition: opacity .5s;
+	z-index: 2;
 }
 .dlg-fill {
 	height: unset !important;
@@ -481,6 +489,9 @@ input, textarea, select {
 	body {
 		background: #2b2a33;
 		color: #fbfbfe;
+	}
+	.title {
+		background: #2b2a33;
 	}
 	.page-header, h2 {
 		border-color: #42414d;
