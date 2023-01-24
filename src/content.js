@@ -362,10 +362,10 @@ var SimpleGesture = {};
 	};
 
 	// START HERE ! ------
-	//VV.addEventListener('resize', fixSize); this is called too many times, and instead of touchdown.
+	//VV.addEventListener('resize', fixSize); this is called too many times, so instead of touchdown.
 	await SimpleGesture.loadIni();
 	if (SimpleGesture.ini.blacklist) {
-		for (let urlPattern of SimpleGesture.ini.blacklist) {
+		for (const urlPattern of SimpleGesture.ini.blacklist) {
 			if (urlPattern.url && location.href.startsWith(urlPattern.url)) {
 				return;
 			}
