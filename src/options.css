@@ -21,7 +21,7 @@ body {
 	background: #f9f9fa;
 	box-shadow: 0 2px 2px #0003;
 	box-sizing: border-box;
-	display: flex;
+	display: block;
 	font-weight: bold;
 	height: 2.5rem;
 	padding: .8rem 1rem;

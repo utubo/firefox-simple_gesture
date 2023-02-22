@@ -703,7 +703,7 @@
 			dlgs[openedDlg.id].onHide();
 			fadeout(openedDlg);
 			openedDlg = null;
-			// ennable touch scroll.
+			// enable touch scroll.
 			document.body.style.overflow = null;
 		} else if (state.dlg) {
 			dlgs[state.dlg].onShow(state.targetId);
