@@ -4,7 +4,7 @@
 		"description": "Name of the extension."
 	},
 	"extensionDescription": {
-		"message": "Simple touch gesture for Android",
+		"message": "Einfache Touch-Gesten für Android",
 		"description": "Description of the extension."
 	},
 	"forward": {
@@ -20,10 +20,10 @@
 		"message": "Zum Ende scrollen"
 	},
 	"pageUp": {
-		"message": "Seitenweise hoch scrollen"
+		"message": "Eine Seite hoch scrollen"
 	},
 	"pageDown": {
-		"message": "Seitenweise runter scrollen"
+		"message": "Eine Seite runter scrollen"
 	},
 	"reload": {
 		"message": "Neu laden"
@@ -32,31 +32,31 @@
 		"message": "Tab schließen"
 	},
 	"afterClose": {
-		"message": "Und zeigen"
+		"message": "Und zeige"
 	},
 	"default": {
 		"message": "Standard"
 	},
 	"closeAll": {
-		"message": "Alle tabs schließen"
+		"message": "Alle Tabs schließen"
 	},
 	"closeOthers": {
-		"message": "Alle anderen tabs schließen"
+		"message": "Alle anderen Tabs schließen"
 	},
 	"closeSameUrl": {
 		"message": "Gleiche URL schließen"
 	},
 	"fullMatch": {
-		"message": "Volle URL"
+		"message": "Komplette URL"
 	},
 	"domain": {
 		"message": "Domain"
 	},
 	"contextRoot": {
-		"message": "Kontextstammverzeichnis"
+		"message": "Stammverzeichnis"
 	},
 	"closeSameUrlNote": {
-		"message": "Die Zustände von Registerkarten sind häufig beschädigt, beim Start. Das kann also nicht gut funktionieren."
+		"message": "Der Zustand von Tabs ist häufig beschädigt, z.B. beim Start. Deshalb kann es sein, dass dies nicht gut funktioniert."
 	},
 	"nextTab": {
 		"message": "Nächster Tab"
@@ -71,25 +71,25 @@
 		"message": "URL"
 	},
 	"toggleUserAgent": {
-		"message": "Desktop-Site umschalten"
+		"message": "Auf Desktop-Seite umschalten"
 	},
 	"userAgent": {
 		"message": "User-Agent"
 	},
 	"disableGesture": {
-		"message": "Simlpe-gesture Deaktivieren/Aktivieren"
+		"message": "Simple Gesture Deaktivieren/Aktivieren"
 	},
 	"openAddonSettings": {
 		"message": "Optionen"
 	},
 	"timeoutAndStrokeSize": {
-		"message": "Timeout und Strichgröße"
+		"message": "Timeout und Gestenlänge"
 	},
 	"timeout": {
 		"message": "Timeout"
 	},
 	"strokeSize": {
-		"message": "Strichgröße"
+		"message": "Gestenlänge"
 	},
 	"displayCommand": {
 		"message": "Befehl anzeigen"
@@ -101,7 +101,7 @@
 		"message": "Hintergrundfarbe"
 	},
 	"EnableExperimentalFeatures": {
-		"message": "Experimentelle Funktion"
+		"message": "Experimentelle Funktionen"
 	},
 	"fromEdge-L": {
 		"message": "Von der linken Bildschirmkante."
@@ -119,19 +119,19 @@
 		"message": "Zeichne ein kleines Quadrat."
 	},
 	"basedOn320x480": {
-		"message": "(Dies basiert auf Bildschirmgröße 320 x 480.)"
+		"message": "(basierend auf der Bildschirmgröße 320 x 480)"
 	},
 	"clear": {
-		"message": "klar"
+		"message": "zurücksetzen"
 	},
 	"delete": {
-		"message": "Löschen"
+		"message": "löschen"
 	},
 	"edit": {
-		"message": "Bearbeiten"
+		"message": "bearbeiten"
 	},
 	"cancel": {
-		"message": "Stornieren"
+		"message": "abbrechen"
 	},
 	"save": {
 		"message": "speichern"
@@ -143,46 +143,46 @@
 		"message": "URL in einem neuen Tab öffnen."
 	},
 	"ExecuteJavascript": {
-		"message": "Führen Sie Javascript aus."
+		"message": "Führe JavaScript aus."
 	},
 	"addCommandToScript": {
-		"message": "Fügen eines Befehl zu script"
+		"message": "Füge einen Befehl zum Script hinzu"
 	},
 	"scriptWorksOnlyWhen": {
-		"message": "Das Benutzerskript funktioniert nur, wenn die aktuelle URL \"http: // ...\" oder \"https: // ...\" lautet."
+		"message": "Das Benutzerskript funktioniert nur, wenn die aktuelle URL mit \"http: // ...\" oder \"https: // ...\" beginnt."
 	},
 	"dontSetUntrustedScript": {
-		"message": "Setzen Sie kein nicht vertrauenswürdiges Skript, da dies zu einem Sicherheitsproblem führen könnte."
+		"message": "Füge kein Skript ein, das nicht vertrauenswürdig ist, da sonst ein Sicherheitsproblem entstehen könnte."
 	},
 	"Blacklist": {
-		"message": "Schwarze Liste"
+		"message": "Blacklist"
 	},
 	"None": {
-		"message": "Keiner"
+		"message": "Keine"
 	},
 	"After saving, You need to reload the page.": {
-		"message": "Nach dem Speichern müssen Sie die Seite neu laden."
+		"message": "Nach dem Speichern muss die Seite neu geladen werden."
 	},
 	"advanced": {
-		"message": "Fortgeschritten"
+		"message": "Erweiterte Einstellungen"
 	},
 	"message_delete_confirm": {
-		"message": "Sind Sie sicher, dass Sie löschen möchten ?\n(Diese Aktion kann nicht rückgängig gemacht werden!)"
+		"message": "Soll der Eintrag wirklich gelöscht werden?\nDiese Aktion kann nicht rückgängig gemacht werden!"
 	},
 	"message_gesture_is_disabled": {
-		"message": "Simple-Simulation ist deaktiviert."
+		"message": "Simple Gesture ist deaktiviert."
 	},
 	"message_gesture_is_enabled": {
-		"message": "Simple-Simulation ist aktiviert."
+		"message": "Simple Gesture ist aktiviert."
 	},
 	"basicGestures": {
-		"message": "Grundlagen"
+		"message": "Grundlegendes"
 	},
 	"tabGestures": {
 		"message": "Tab"
 	},
 	"otherGestures": {
-		"message": "Andere"
+		"message": "Sonstiges"
 	},
 	"customGestures": {
 		"message": "Benutzerdefinierte Gesten"
@@ -191,7 +191,7 @@
 		"message": "Konfigurationen"
 	},
 	"Export / Import": {
-		"message": "Ausfuhr/Einfuhr"
+		"message": "Export/Import"
 	},
 	"Export settings to downloads folder": {
 		"message": "Einstellungen exportieren"
