@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "2.31",
+	"version": "3.00",
 	"default_locale": "en",
 	"icons": {
 		"64": "icon64.png"
@@ -11,7 +11,7 @@
 	"applications": {
 		"gecko": {
 			"id": "simple_gesture@utb.dip.jp",
-			"strict_min_version": "57.0"
+			"strict_min_version": "119.0"
 		}
 	},
 

@@ -1,4 +1,4 @@
-(() => {
+(async () => {
 	'use strict';
 
 	const iniValue = async key => {
@@ -10,7 +10,7 @@
 		}
 	};
 
-	let userAgent = null;
+	let userAgent = await browser.storage.session.get('simple_gesture_user_agent') || null;
 	const rewriteUserAgentHeader = e => {
 		if (userAgent) {
 			for (let header of e.requestHeaders) {
@@ -108,6 +108,7 @@
 					[ "blocking", "requestHeaders" ]
 				);
 			}
+			browser.storage.session.set({ 'simple_gesture_user_agent': userAgent });
 			browser.tabs.reload(arg.tab.id);
 		},
 		openAddonSettings: arg => {
