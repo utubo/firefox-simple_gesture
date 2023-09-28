@@ -204,10 +204,9 @@ input, textarea, select {
 	color: #666;
 }
 .udlr-na {
-	background: #fcc;
-	border-radius: 3px;
-	color: #f33;
-	text-align: center;
+	border: 2px dashed #666;
+	border-radius: 4px;
+	color: transparent !important;
 	width: 3em;
 }
 .gesture-caption,
@@ -525,8 +524,7 @@ input, textarea, select {
 		color: #999;
 	}
 	.udlr-na {
-		background: #9996;
-		color: #999;
+		border-color: #999;
 	}
 	/* dialog */
 	.dlg {
