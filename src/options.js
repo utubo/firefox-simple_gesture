@@ -309,7 +309,7 @@
 		if (inputedGesture.classList.contains('canceled')) {
 			history.back();
 		} else {
-			const g = gesture.substring(0, MAX_LENGTH);
+			const g = (gesture || '').substring(0, MAX_LENGTH);
 			if (g) {
 				updateGesture(g, startPoint);
 				history.back();
