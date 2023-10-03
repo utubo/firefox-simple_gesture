@@ -89,7 +89,10 @@
 		"message": "Timeout"
 	},
 	"strokeSize": {
-		"message": "Stroke-size"
+		"message": "Stroke size"
+	},
+	"doubleTapMsec": {
+		"message": "Double-tap interval"
 	},
 	"displayCommand": {
 		"message": "Display Command"

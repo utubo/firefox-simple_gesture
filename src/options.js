@@ -170,7 +170,6 @@
 				 updateGestureItem(byId(`${name}_udlr`), udlrs[name]);
 			}
 		}
-		history.back();
 	};
 
 	dlgs.gestureDlg = {
@@ -272,6 +271,7 @@
 		});
 		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
 			updateGesture(CLEAR_GESTURE);
+			history.back();
 			e.preventDefault();
 		}, move: e => {}, end: e => {} });
 	};
@@ -302,12 +302,18 @@
 		e.preventDefault();
 		return false;
 	};
+	let touchEndTimer = null;
 	SimpleGesture.onGestured = (e, gesture, startPoint) => {
+		clearTimeout(touchEndTimer);
 		if (!target) return;
 		if (inputedGesture.classList.contains('canceled')) {
 			history.back();
 		} else {
-			updateGesture(gesture.substring(0, MAX_LENGTH), startPoint);
+			const g = gesture.substring(0, MAX_LENGTH);
+			if (g) {
+				updateGesture(g, startPoint);
+				history.back();
+			}
 		}
 		e.preventDefault();
 		return false;
@@ -434,7 +440,6 @@
 	const setupEditDlg = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
-		byId('cancelCustomGesture').addEventListener('click', e => { history.back(); });
 		customGestureType.addEventListener('change', toggleEditor);
 		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
 		customGestureScript.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByScript, 1000); });
@@ -526,7 +531,6 @@
 		onHide: () => {
 		}
 	};
-	byId('cancelBlacklist').addEventListener('click', e => { history.back(); });
 	byId('saveBlacklist').addEventListener('click', e => {
 		const list = [];
 		for (const input of allByClass('blacklist-input')) {
@@ -559,8 +563,10 @@
 				ini[elm.id] = elm.checked;
 			} else if (elm.value === INSTEAD_OF_EMPTY[elm.id]) {
 				ini[elm.id] = null;
-			} else if (elm.type === 'number' && elm.value.match(/[^\d]/)) {
-				continue; // ignore invalid number.
+			} else if (elm.type === 'number') {
+				if (elm.value.match(/^\d+$/)) {
+					ini[elm.id] = Number(elm.value);
+				}
 			} else {
 				ini[elm.id] = elm.value;
 			}
@@ -690,6 +696,14 @@
 			e.preventDefault();
 		});
 	};
+
+	// common events
+	addEventListener('click', e => {
+		if (!e?.target.classList) return;
+		if (e.target.classList.contains('icon-cancel')) {
+			history.back();
+		}
+	});
 
 	// control Back button
 	const changeState = state => {

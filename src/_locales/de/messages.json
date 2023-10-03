@@ -91,6 +91,9 @@
 	"strokeSize": {
 		"message": "Gestenlänge"
 	},
+	"doubleTapMsec": {
+		"message": "Doppeltipp-Intervall"
+	},
 	"displayCommand": {
 		"message": "Befehl anzeigen"
 	},

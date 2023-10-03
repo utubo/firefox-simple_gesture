@@ -61,6 +61,10 @@
 					<div class="note i18n">basedOn320x480</div>
 					<input id="strokeSize" class="number-input js-binding" type="number" min="1" max="999" size="5">px
 				</div>
+				<div class="sub-item">
+					<label class="sub-caption i18n">doubleTapMsec</label><!-- don't add 'for="..."' -->
+					<input id="doubleTapMsec" class="number-input js-binding" type="number" min="0" max="9999" size="5">ms
+				</div>
 			</div>
 			<div class="item">
 				<label for="toast" class="checkbox-label">
@@ -158,6 +162,7 @@
 			</div>
 			<div class="gesture-area"></div>
 			<div class="dlg-buttons">
+				<span class="button icon-cancel i18n">cancel</span>
 				<div id="clearGesture" class="button icon-delete i18n">clear</div>
 			</div>
 		</div>
@@ -187,7 +192,7 @@
 					<span class="note i18n">dontSetUntrustedScript</span>
 				</div>
 				<div class="buttons">
-					<span id="cancelCustomGesture" class="button icon-cancel i18n">cancel</span>
+					<span class="button icon-cancel i18n">cancel</span>
 					<span id="saveCustomGesture" class="button icon-save i18n">save</span>
 				</div>
 			</div>
@@ -198,7 +203,7 @@
 				<label class="caption i18n">Blacklist</label>
 				<div id="blacklist"></div>
 				<div class="buttons">
-					<span id="cancelBlacklist" class="button icon-cancel i18n">cancel</span>
+					<span class="button icon-cancel i18n">cancel</span>
 					<span id="saveBlacklist" class="button icon-save i18n">save</span>
 				</div>
 				<div class="note i18n">After saving, You need to reload the page.</div>

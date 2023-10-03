@@ -91,6 +91,9 @@
 	"timeout": {
 		"message": "タイムアウト"
 	},
+	"doubleTapMsec": {
+		"message": "ダブルタップの間隔"
+	},
 	"displayCommand": {
 		"message": "コマンドを表示する"
 	},
