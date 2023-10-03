@@ -5,7 +5,7 @@
 	const CUSTOM_GESTURE_PREFIX = '$';
 	const INSTEAD_OF_EMPTY = {
 		userAgent: navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux'),
-		noGesture: '-',
+		noGesture: ' ',
 		defaultTitle: 'Custom Gesture',
 		toastForeground: '#ffffff',
 		toastBackground: '#21a1de',
@@ -700,10 +700,15 @@
 	// common events
 	addEventListener('click', e => {
 		if (!e?.target.classList) return;
-		if (e.target.classList.contains('icon-cancel')) {
+		if (e.target.classList.contains('js-history-back')) {
 			history.back();
 		}
 	});
+	// Touchstart event prevents click event in Input gesture Dialog.
+	SimpleGesture.addTouchEventListener(byId('cancelInputGesture'), { start: e => {
+		history.back();
+		e.preventDefault();
+	}, move: e => {}, end: e => {} });
 
 	// control Back button
 	const changeState = state => {
