@@ -16,7 +16,7 @@ var SimpleGesture = {};
 		},
 		'strokeSize': 50,
 		'timeout': 1500,
-		'doubleTapMsec': 300,
+		'doubleTapMsec': 200,
 		'toast': false,
 		'blacklist': []
 	};
@@ -89,7 +89,7 @@ var SimpleGesture = {};
 		fixSize();
 		if (!size) return;
 		gesture = '';
-		if (new Date().getTime - touchEndTime <= SimpleGesture.doubleTapMsec) {
+		if (new Date().getTime() - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
 			gesture += 'W';
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
@@ -198,7 +198,7 @@ var SimpleGesture = {};
 	const getSvgNode = (name, attrs) => {
 		const n = document.createElementNS('http://www.w3.org/2000/svg', name);
 		for (let key in attrs) {
-			n.setAttribute(k, attrs[key]);
+			n.setAttribute(key, attrs[key]);
 		}
 		return n;
 	}
@@ -211,7 +211,7 @@ var SimpleGesture = {};
 			margin: 0 .1em;
 			vertical-align: bottom;
 		`;
-		const svg = getSvgNode('svg', { width: 12, height: 12, viewBox '0 0 12 12' });
+		const svg = getSvgNode('svg', { width: 12, height: 12, viewBox: '0 0 12 12' });
 		svg.style.cssText = `
 			display: none;
 			height: 1em;
@@ -224,8 +224,9 @@ var SimpleGesture = {};
 		arrowSvg = svg.cloneNode(true);
 		arrowSvg.appendChild(getSvgNode('path', { d: 'M 6 10v-8m-4 4l4-4 4 4' }));
 		doubleTapSvg = svg.cloneNode(true);
-		dobuleTapSvg.appendChild(getSvgNode('path', { d: 'M3 10a5 5 0 1 1 6 0' }));
-		dobuleTapSvg.appendChild(getSvgNode('path', { d: 'M4 8a3 3 0 1 1 4 0' }));
+		doubleTapSvg.appendChild(getSvgNode('path', { d: 'M1 6a4 4 0 1 1 10 0' }));
+		doubleTapSvg.appendChild(getSvgNode('path', { d: 'M3 6a3 3 0 1 1 6 0' }));
+		doubleTapSvg.appendChild(getSvgNode('path', { d: 'M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1' }));
 	};
 	SimpleGesture.drawArrows = (udlr, label) => {
 		makeArrowSvg();
@@ -233,13 +234,13 @@ var SimpleGesture = {};
 		for (const g of udlr.split('-')) {
 			let s;
 			if (g === 'W') {
-				s = dobuleTapSvg.cloneNode(true);
+				s = doubleTapSvg.cloneNode(true);
 			} else {
 				s = arrowSvg.cloneNode(true);
 				const r = g === 'U' ? 0 : g === 'D' ? 180 : g === 'L' ? 270 : 90;
 				s.style.transform = `rotate(${r}deg)`;
-				s.style.display = 'inline-block';
 			}
+			s.style.display = 'inline-block';
 			const c = arrowContainer.cloneNode();
 			c.appendChild(s);
 			f.appendChild(c);
@@ -372,7 +373,7 @@ var SimpleGesture = {};
 	SimpleGesture.loadIni = async () => {
 		const res = await browser.storage.local.get('simple_gesture');
 		if (res && res.simple_gesture) {
-			SimpleGesture.ini = res.simple_gesture;
+			Object.assign(SimpleGesture.ini, res.simple_gesture);
 		}
 		loadExData(exData);
 		lastInnerWidth = 0; // for recalucrate stroke size on touchstart.
