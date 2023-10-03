@@ -91,6 +91,9 @@
 	"strokeSize": {
 		"message": "描边尺寸"
 	},
+	"doubleTapMsec": {
+		"message": "双击间隔"
+	},
 	"displayCommand": {
 		"message": "显示命令"
 	},

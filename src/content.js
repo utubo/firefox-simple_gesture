@@ -16,6 +16,7 @@ var SimpleGesture = {};
 		},
 		'strokeSize': 50,
 		'timeout': 1500,
+		'doubleTapMsec': 300,
 		'toast': false,
 		'blacklist': []
 	};
@@ -32,6 +33,7 @@ var SimpleGesture = {};
 	let timer = null;
 	let hideToastTimer = null;
 	let isGestureEnabled = true;
+	let touchEndTime = 0;
 	// for screen size
 	let lastInnerWidth = 0;
 	let lastInnerHeight = 0;
@@ -87,6 +89,9 @@ var SimpleGesture = {};
 		fixSize();
 		if (!size) return;
 		gesture = '';
+		if (new Date().getTime - touchEndTime <= SimpleGesture.doubleTapMsec) {
+			gesture += 'W';
+		}
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
 		setupStartPoint(lx, ly);
@@ -122,6 +127,7 @@ var SimpleGesture = {};
 
 	const onTouchEnd = e => {
 		try {
+			touchEndTime = new Date().getTime();
 			window.clearTimeout(timer);
 			hideToast();
 			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture, startPoint) === false) return;
@@ -188,12 +194,24 @@ var SimpleGesture = {};
 	// toast --------------
 	let arrowSvg = null;
 	let arrowContainer = null;
+	let doubleTapSvg = null;
+	const getSvgNode = (name, attrs) => {
+		const n = document.createElementNS('http://www.w3.org/2000/svg', name);
+		for (let key in attrs) {
+			n.setAttribute(k, attrs[key]);
+		}
+		return n;
+	}
 	const makeArrowSvg = () => {
 		if (arrowSvg) return arrowSvg;
-		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-		svg.setAttribute('width', '12');
-		svg.setAttribute('height', '12');
-		svg.setAttribute('viewBox', '0 0 12 12');
+		arrowContainer = document.createElement('SPAN');
+		arrowContainer.style.cssText = `
+			display: inline-block;
+			height: 1em;
+			margin: 0 .1em;
+			vertical-align: bottom;
+		`;
+		const svg = getSvgNode('svg', { width: 12, height: 12, viewBox '0 0 12 12' });
 		svg.style.cssText = `
 			display: none;
 			height: 1em;
@@ -203,28 +221,27 @@ var SimpleGesture = {};
 			stroke-linejoin: round;
 			fill: none;
 		`;
-		const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-		path.setAttribute('d','M 6 10v-8m-4 4l4-4 4 4');
-		svg.appendChild(path);
-		arrowSvg = svg;
-		arrowContainer = document.createElement('SPAN');
-		arrowContainer.style.cssText = `
-			display: inline-block;
-			height: 1em;
-			margin: 0 .1em;
-			vertical-align: bottom;
-		`;
+		arrowSvg = svg.cloneNode(true);
+		arrowSvg.appendChild(getSvgNode('path', { d: 'M 6 10v-8m-4 4l4-4 4 4' }));
+		doubleTapSvg = svg.cloneNode(true);
+		dobuleTapSvg.appendChild(getSvgNode('path', { d: 'M3 10a5 5 0 1 1 6 0' }));
+		dobuleTapSvg.appendChild(getSvgNode('path', { d: 'M4 8a3 3 0 1 1 4 0' }));
 	};
 	SimpleGesture.drawArrows = (udlr, label) => {
 		makeArrowSvg();
 		const f = document.createDocumentFragment();
 		for (const g of udlr.split('-')) {
-			const a = arrowSvg.cloneNode(true);
-			const r = g === 'U' ? 0 : g === 'D' ? 180 : g === 'L' ? 270 : 90;
-			a.style.transform = `rotate(${r}deg)`;
-			a.style.display = 'inline-block';
+			let s;
+			if (g === 'W') {
+				s = dobuleTapSvg.cloneNode(true);
+			} else {
+				s = arrowSvg.cloneNode(true);
+				const r = g === 'U' ? 0 : g === 'D' ? 180 : g === 'L' ? 270 : 90;
+				s.style.transform = `rotate(${r}deg)`;
+				s.style.display = 'inline-block';
+			}
 			const c = arrowContainer.cloneNode();
-			c.appendChild(a);
+			c.appendChild(s);
 			f.appendChild(c);
 		}
 		label.textContent = '';
