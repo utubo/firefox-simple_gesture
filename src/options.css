@@ -202,9 +202,10 @@ input, textarea, select {
 /* gestures */
 .udlr {
 	color: #666;
+	border: 2px dashed transparent;
 }
 .udlr-na {
-	border: 2px dashed;
+	border-color: unset;
 	border-radius: 4px;
 	white-space: pre;
 	width: 3em;
