@@ -617,7 +617,7 @@
 	const importSetting = async text => {
 		try {
 			const obj = JSON.parse(text);
-			SimpleGesture.ini = obj.ini;
+			Object.assign(SimpleGesture.ini, obj.ini);
 			exData = obj.exData;
 			saveIni();
 			if (obj.customGestureDetails) {
