@@ -88,9 +88,10 @@ var SimpleGesture = {};
 	const onTouchStart = e => {
 		fixSize();
 		if (!size) return;
-		gesture = '';
 		if (new Date().getTime() - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
-			gesture += 'W';
+			gesture = 'W';
+		} else {
+			gesture = '';
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
@@ -98,6 +99,7 @@ var SimpleGesture = {};
 		target = e.target;
 		if (SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e) === false) return;
 		restartTimer();
+		if (gesture === 'W' && SimpleGesture.ini.toast) showGesture();
 	};
 
 	const onTouchMove = e => {
