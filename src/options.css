@@ -206,8 +206,8 @@ input, textarea, select {
 .udlr-na {
 	border: 2px dashed;
 	border-radius: 4px;
+	white-space: pre;
 	width: 3em;
-	min-height: 1em;
 }
 .gesture-caption,
 .udlr,
