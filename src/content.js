@@ -13,6 +13,7 @@ var SimpleGesture = {};
 			'D-R-U': 'reload',
 			'L-D-R': 'close',
 			'R-D-L': 'newTab',
+			'L-D-R-U-L': 'openAddonSettings',
 		},
 		'strokeSize': 50,
 		'timeout': 1500,
