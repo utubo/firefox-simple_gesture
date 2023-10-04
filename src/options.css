@@ -29,6 +29,23 @@ body {
 	width: 100%;
 	z-index: 1;
 }
+.first-page {
+	flex-direction: column;
+	display: flex;
+}
+.splash {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: center;
+}
+.splash-icon {
+	width: 128px;
+}
+.splash-title {
+	font-weight: bold;
+}
 .page {
 	box-sizing: border-box;
 	/* min-height: 100vh; this setting has probrem of scroll position. */
@@ -57,6 +74,7 @@ h2:first-child {
 .item,
 .sub-item {
 	clear: both;
+	cursor: default;
 	display: block;
 	padding: .8rem 0;
 	margin: 0 1.2rem;

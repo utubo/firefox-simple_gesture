@@ -118,6 +118,9 @@
 	"fromEdge-B": {
 		"message": "从屏幕的底部边缘"
 	},
+	"Settings": {
+		"message": "设置"
+	},
 	"drawSquare": {
 		"message": "画一个小方块。"
 	},

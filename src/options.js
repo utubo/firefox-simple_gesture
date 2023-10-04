@@ -643,12 +643,13 @@
 			const detail = await storageValue(id);
 			data.customGestureDetails.push({ id: id, detail:detail });
 		}
-		const href = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(data));
+		const href = 'data:application/octet-stream,' + encodeURIComponent(JSON.stringify(data));
 		const link = byId('exportSettingLink');
 		link.setAttribute('href', href);
 		link.click();
 	};
 	const setupOtherOptions = () => {
+		byId('splashVersion').textContent = 'version ' + browser.runtime.getManifest().version;
 		for (const caption of allByClass('i18n')) {
 			caption.textContent = getMessage(caption.textContent);
 		}

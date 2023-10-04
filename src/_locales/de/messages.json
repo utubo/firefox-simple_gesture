@@ -118,6 +118,9 @@
 	"fromEdge-B": {
 		"message": "Von der unteren Bildschirmkante."
 	},
+	"Settings": {
+		"message": "Optionen"
+	},
 	"drawSquare": {
 		"message": "Zeichne ein kleines Quadrat."
 	},

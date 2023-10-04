@@ -118,6 +118,9 @@
 	"fromEdge-B": {
 		"message": "From the bottm edge of screen."
 	},
+	"Settings": {
+		"message": "Settings"
+	},
 	"drawSquare": {
 		"message": "Draw a small square."
 	},

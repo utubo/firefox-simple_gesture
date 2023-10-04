@@ -118,6 +118,9 @@
 	"fromEdge-B": {
 		"message": "画面下端から"
 	},
+	"Settings": {
+		"message": "設定"
+	},
 	"drawSquare": {
 		"message": "指で小さめに四角を描いてください"
 	},
