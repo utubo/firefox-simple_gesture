@@ -22,6 +22,7 @@ var SimpleGesture = {};
 		'blacklist': []
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
+	const SHOW_GESTURE_DELAY = 200;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 
 	// fields ------------
@@ -32,6 +33,7 @@ var SimpleGesture = {};
 	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let timer = null;
+	let showGestureTimer = null;
 	let hideToastTimer = null;
 	let isGestureEnabled = true;
 	let touchEndTime = 0;
@@ -100,7 +102,7 @@ var SimpleGesture = {};
 		target = e.target;
 		if (SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e) === false) return;
 		restartTimer();
-		if (gesture === 'W' && SimpleGesture.ini.toast) showGesture();
+		if (gesture === 'W' && SimpleGesture.ini.toast) showGestureDelay();
 	};
 
 	const onTouchMove = e => {
@@ -132,6 +134,7 @@ var SimpleGesture = {};
 		try {
 			touchEndTime = new Date().getTime();
 			window.clearTimeout(timer);
+			window.clearTimeout(showGestureTimer);
 			hideToast();
 			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture, startPoint) === false) return;
 			const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
@@ -288,7 +291,7 @@ var SimpleGesture = {};
 			hideToastTimer = setTimeout(hideToast, delay);
 			return;
 		}
-		clearTimeout(hideToastTimer);
+		window.clearTimeout(hideToastTimer);
 		isToastVisible = false;
 		window.requestAnimationFrame(() => { toast.style.opacity = '0'; });
 	};
@@ -328,6 +331,7 @@ var SimpleGesture = {};
 		document.body.appendChild(toast);
 	};
 	const showGesture = async () => {
+		window.clearTimeout(showGestureTimer);
 		const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
 		if (!g && !gesture[1] && !startPoint) return;
 		if (!isGestureEnabled && g !== 'disableGesture') {
@@ -352,6 +356,10 @@ var SimpleGesture = {};
 		}
 		showToast();
 	};
+	const showGestureDelay = () => {
+		window.clearTimeout(showGestureTimer);
+		showGestureTimer = setTimeout(showGesture, SHOW_GESTURE_DELAY);
+	}
 
 	// utils for setup ----
 	SimpleGesture.addTouchEventListener = (target, events) => {
