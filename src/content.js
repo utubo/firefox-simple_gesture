@@ -246,23 +246,22 @@ var SimpleGesture = {};
 	};
 	SimpleGesture.drawArrows = (udlr, label) => {
 		makeArrowSvg();
-		const f = document.createDocumentFragment();
+		const arrows = [];
 		for (const g of udlr.split('-')) {
-			let s;
+			let svg;
 			if (g === 'W') {
-				s = doubleTapSvg.cloneNode(true);
+				svg = doubleTapSvg.cloneNode(true);
 			} else {
-				s = arrowSvg.cloneNode(true);
+				svg = arrowSvg.cloneNode(true);
 				const r = g === 'U' ? 0 : g === 'D' ? 180 : g === 'L' ? 270 : 90;
-				s.style.transform = `rotate(${r}deg)`;
+				svg.style.transform = `rotate(${r}deg)`;
 			}
-			s.style.display = 'inline-block';
+			svg.style.display = 'inline-block';
 			const c = arrowContainer.cloneNode();
-			c.appendChild(s);
-			f.appendChild(c);
+			c.appendChild(svg);
+			arrows.push(c);
 		}
-		label.textContent = '';
-		label.appendChild(f);
+		label.replaceChildren(...arrows);
 	};
 
 	const showToast = () => {
