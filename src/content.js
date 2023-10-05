@@ -40,6 +40,7 @@ var SimpleGesture = {};
 	let lastInnerWidth = 0;
 	let lastInnerHeight = 0;
 	let size = SimpleGesture.ini.strokeSize;
+	let edgeWidth = 0;
 	// toast
 	let showToastTimer = null;
 	let hideToastTimer = null;
@@ -85,6 +86,7 @@ var SimpleGesture = {};
 		if (w === lastInnerWidth && h === lastInnerHeight) return;
 		lastInnerWidth = w;
 		lastInnerHeight = h;
+		edgeWidth = (Math.min(w, h) / 10)^0;
 		const z = Math.min(w, h) / 320;
 		size = (SimpleGesture.ini.strokeSize * z)^0;
 	};
@@ -158,14 +160,13 @@ var SimpleGesture = {};
 	};
 
 	const setupStartPoint = async (x, y) => {
-		const a = (Math.min(lastInnerWidth, lastInnerHeight) / 10)^0;
-		if (x < a) {
+		if (x < edgeWidth) {
 			startPoint = 'L:';
-		} else if (x > lastInnerWidth - a) {
+		} else if (x > lastInnerWidth - edgeWidth) {
 			startPoint = 'R:';
-		} else if (y < a) {
+		} else if (y < edgeWidth) {
 			startPoint = 'T:';
-		} else if (y > lastInnerHeight - a) {
+		} else if (y > lastInnerHeight - edgeWidth) {
 			startPoint = 'B:';
 		} else {
 			startPoint = '';
