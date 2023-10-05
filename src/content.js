@@ -5,7 +5,7 @@ var SimpleGesture = {};
 	// const -------------
 	// Default settings
 	SimpleGesture.ini = {
-		'gestures': {
+		gestures: {
 			'D-L': 'forward',
 			'D-R': 'back',
 			'R-D': 'top',
@@ -15,17 +15,18 @@ var SimpleGesture = {};
 			'R-D-L': 'newTab',
 			'L-D-R-U-L': 'openAddonSettings',
 		},
-		'strokeSize': 50,
-		'timeout': 1500,
-		'doubleTapMsec': 200,
-		'toast': false,
-		'blacklist': []
+		strokeSize: 50,
+		timeout: 1500,
+		doubleTapMsec: 200,
+		toast: false,
+		blacklist: []
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
-	const SHOW_GESTURE_DELAY = 200;
+	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 
 	// fields ------------
+	// gesture
 	let gesture = null; // e.g. 'L-R-U-D'
 	let startPoint = null; // e.g. 'L:', 'R:', 'T:' or 'B:'
 	let lx = 0; // last X
@@ -33,21 +34,22 @@ var SimpleGesture = {};
 	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let timer = null;
-	let showGestureTimer = null;
-	let hideToastTimer = null;
 	let isGestureEnabled = true;
 	let touchEndTime = 0;
-	// for screen size
+	// screen size
 	let lastInnerWidth = 0;
 	let lastInnerHeight = 0;
 	let size = SimpleGesture.ini.strokeSize;
-	// others
+	// toast
+	let showToastTimer = null;
+	let hideToastTimer = null;
 	let toast;
 	let toastMain;
 	let toastText;
 	let toastUdlr;
 	let toastSub;
 	let isToastVisible;
+	// others
 	let exData;
 
 	// utils -------------
@@ -87,11 +89,18 @@ var SimpleGesture = {};
 		size = (SimpleGesture.ini.strokeSize * z)^0;
 	};
 
+	const executeEvent = (f, e) => {
+		if (!f) return;
+		e.gesture = gesture;
+		e.startPoint = startPoint;
+		return f(e);
+	};
+
 	// touch-events ------
 	const onTouchStart = e => {
 		fixSize();
 		if (!size) return;
-		if (new Date().getTime() - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
+		if (Date.now() - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
 			gesture = 'W';
 		} else {
 			gesture = '';
@@ -100,7 +109,7 @@ var SimpleGesture = {};
 		lg = null;
 		setupStartPoint(lx, ly);
 		target = e.target;
-		if (SimpleGesture.onGestureStart && SimpleGesture.onGestureStart(e) === false) return;
+		if (executeEvent(SimpleGesture.onGestureStart, e) === false) return;
 		restartTimer();
 		if (gesture === 'W' && SimpleGesture.ini.toast) showGestureDelay();
 	};
@@ -125,18 +134,18 @@ var SimpleGesture = {};
 		lg = g;
 		if (gesture) gesture += '-';
 		gesture += g;
-		if (SimpleGesture.onInputGesture && SimpleGesture.onInputGesture(e, gesture, startPoint) === false) return;
+		if (executeEvent(SimpleGesture.onInputGesture, e) === false) return;
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
 	};
 
 	const onTouchEnd = e => {
 		try {
-			touchEndTime = new Date().getTime();
+			touchEndTime = Date.now();
 			window.clearTimeout(timer);
-			window.clearTimeout(showGestureTimer);
+			window.clearTimeout(showToastTimer);
 			hideToast();
-			if (SimpleGesture.onGestured && SimpleGesture.onGestured(e, gesture, startPoint) === false) return;
+			if (executeEvent(SimpleGesture.onGestured, e) === false) return;
 			const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
 			if (!g) return;
 			if (!isGestureEnabled && g !== 'disableGesture') return;
@@ -331,7 +340,7 @@ var SimpleGesture = {};
 		document.body.appendChild(toast);
 	};
 	const showGesture = async () => {
-		window.clearTimeout(showGestureTimer);
+		window.clearTimeout(showToastTimer);
 		const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
 		if (!g && !gesture[1] && !startPoint) return;
 		if (!isGestureEnabled && g !== 'disableGesture') {
@@ -357,8 +366,8 @@ var SimpleGesture = {};
 		showToast();
 	};
 	const showGestureDelay = () => {
-		window.clearTimeout(showGestureTimer);
-		showGestureTimer = setTimeout(showGesture, SHOW_GESTURE_DELAY);
+		window.clearTimeout(showToastTimer);
+		showToastTimer = setTimeout(showGesture, SHOW_TOAST_DELAY);
 	}
 
 	// utils for setup ----

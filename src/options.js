@@ -257,7 +257,7 @@
 			}
 			if (e.target.classList.contains('delete-blacklist')) {
 				const blacklistItem = parentByClass(e.target, 'blacklist-item');
-				byClass(blacklistItem, 'blacklist-input').value = "";
+				byClass(blacklistItem, 'blacklist-input').value = '';
 				if (blacklistItem.nextSibling) {
 					blacklistItem.remove();
 				}
@@ -282,13 +282,13 @@
 		e.preventDefault();
 		return false;
 	};
-	SimpleGesture.onInputGesture = (e, gesture, startPoint) => {
+	SimpleGesture.onInputGesture = e => {
 		if (!target) return;
-		if (gesture.length > SimpleGesture.MAX_LENGTH) {
+		if (e.gesture.length > SimpleGesture.MAX_LENGTH) {
 			inputedGesture.classList.add('canceled');
 		}
-		toggleClass(!startPoint, 'hide', inputedStartPoint);
-		const sudlr = startPoint + gesture.substring(0, MAX_LENGTH);
+		toggleClass(!e.startPoint, 'hide', inputedStartPoint);
+		const sudlr = e.startPoint + e.gesture.substring(0, MAX_LENGTH);
 		updateUdlrLabel(
 			inputedGesture,
 			inputedStartPoint,
@@ -303,15 +303,15 @@
 		return false;
 	};
 	let touchEndTimer = null;
-	SimpleGesture.onGestured = (e, gesture, startPoint) => {
+	SimpleGesture.onGestured = e => {
 		clearTimeout(touchEndTimer);
 		if (!target) return;
 		if (inputedGesture.classList.contains('canceled')) {
 			history.back();
 		} else {
-			const g = (gesture || '').substring(0, MAX_LENGTH);
+			const g = (e.gesture || '').substring(0, MAX_LENGTH);
 			if (g) {
-				updateGesture(g, startPoint);
+				updateGesture(g, e.startPoint);
 				history.back();
 			}
 		}
@@ -453,7 +453,7 @@
 			start: e => {
 				[minX, minY] = SimpleGesture.getXY(e);
 				[maxX, maxY] = [minX, minY];
-				startTime = new Date();
+				startTime = Date.now();
 				e.preventDefault();
 				e.stopPropagation();
 			},
@@ -473,7 +473,7 @@
 				size *= 0.8; // margin
 				size ^= 0; // to integer;
 				if (10 < size) {
-					SimpleGesture.ini.timeout = new Date() - startTime + 300; // margin 300ms. It seems better not to dvide this by 4.
+					SimpleGesture.ini.timeout = Date.now() - startTime + 300; // margin 300ms. It seems better not to dvide this by 4.
 					SimpleGesture.ini.strokeSize = size;
 					saveIni();
 					timeout.value = SimpleGesture.ini.timeout;
