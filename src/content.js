@@ -253,8 +253,11 @@ var SimpleGesture = {};
 				svg = doubleTapSvg.cloneNode(true);
 			} else {
 				svg = arrowSvg.cloneNode(true);
-				const r = g === 'U' ? 0 : g === 'D' ? 180 : g === 'L' ? 270 : 90;
-				svg.style.transform = `rotate(${r}deg)`;
+				switch (g) {
+					case 'R': svg.style.transform = 'rotate(90deg)'; break;
+					case 'D': svg.style.transform = 'rotate(180deg)'; break;
+					case 'L': svg.style.transform = 'rotate(270deg)'; break;
+				}
 			}
 			svg.style.display = 'inline-block';
 			const c = arrowContainer.cloneNode();
