@@ -18,7 +18,7 @@ var SimpleGesture = {};
 		strokeSize: 50,
 		timeout: 1500,
 		doubleTapMsec: 200,
-		toast: false,
+		toast: true,
 		blacklist: []
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
