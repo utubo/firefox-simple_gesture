@@ -403,7 +403,7 @@ var SimpleGesture = {};
 	};
 
 	// START HERE ! ------
-	//VV.addEventListener('resize', fixSize); this is called too many times, so instead of touchdown.
+	//VV.addEventListener('resize', fixSize); this is called too many times, so use 'touchdown' instead of 'resize'.
 	await SimpleGesture.loadIni();
 	if (SimpleGesture.ini.blacklist) {
 		for (const urlPattern of SimpleGesture.ini.blacklist) {
