@@ -2,15 +2,18 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "3.2.7",
+	"version": "3.2.8",
 	"default_locale": "en",
 	"icons": {
 		"64": "icon64.png"
 	},
 
-	"applications": {
+	"browser_specific_settings": {
 		"gecko": {
 			"id": "simple_gesture@utb.dip.jp",
+			"strict_min_version": "119.0"
+		},
+		"gecko_android": {
 			"strict_min_version": "119.0"
 		}
 	},
