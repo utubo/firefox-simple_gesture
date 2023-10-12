@@ -81,8 +81,8 @@ var SimpleGesture = {};
 	};
 
 	const fixSize = () => {
-		const w = window.innerWidth;
-		const h = window.innerHeight;
+		const w = VV.isDummy ? window.innerWidth : VV.width;
+		const h = VV.isDummy ? window.innerHeight : VV.height;
 		if (w === lastInnerWidth && h === lastInnerHeight) return;
 		lastInnerWidth = w;
 		lastInnerHeight = h;
