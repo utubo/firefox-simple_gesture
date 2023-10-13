@@ -11,7 +11,7 @@
 	};
 
 	// For suspended tabs
-	let iniTimestamp = await browser.storage.session.get('simple_gesture_ini_timestamp') || Date.now();
+	let iniTimestamp = await browser.storage.session.get('iniTimestamp')?.iniTimestamp || Date.now();
 	const reloadIni = tabId => {
 		browser.tabs.executeScript(tabId, { code: `SimpleGesture.loadIni(${iniTimestamp || 0});` });
 	};
@@ -20,7 +20,7 @@
 	});
 
 	// UserAgent switcher
-	let userAgent = await browser.storage.session.get('simple_gesture_user_agent') || null;
+	let userAgent = await browser.storage.session.get('userAgent')?.userAgent || null;
 	const rewriteUserAgentHeader = e => {
 		if (userAgent) {
 			for (let header of e.requestHeaders) {
@@ -119,7 +119,7 @@
 					[ "blocking", "requestHeaders" ]
 				);
 			}
-			browser.storage.session.set({ 'simple_gesture_user_agent': userAgent });
+			browser.storage.session.set({ userAgent });
 			browser.tabs.reload(arg.tab.id);
 		},
 		openAddonSettings: arg => {
@@ -127,7 +127,7 @@
 		},
 		reloadAllTabsIni: async () => {
 			iniTimestamp = Date.now();
-			await browser.storage.session.set('simple_gesture_ini_timestamp', iniTimestamp);
+			browser.storage.session.set({ iniTimestamp });
 			const tabs = await browser.tabs.query({ active: true });
 			if (tabs[0]) {
 				reloadIni(tabs[0].id);
