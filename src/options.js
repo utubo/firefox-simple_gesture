@@ -601,6 +601,7 @@
 			if (value !== colorInput.parentNode.style.backgroundColor) {
 				colorInput.value = value;
 				colorInput.parentNode.style.backgroundColor = value;
+				saveBindingValues();
 			}
 		}, 500);
 	};

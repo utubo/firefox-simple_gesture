@@ -51,6 +51,7 @@ var SimpleGesture = {};
 	let toastSub;
 	let isToastVisible;
 	// others
+	let iniTimestamp = 0;
 	let exData;
 
 	// utils -------------
@@ -393,7 +394,9 @@ var SimpleGesture = {};
 		exData = (await browser.storage.local.get('simple_gesture_exdata')).simple_gesture_exdata || { customGestureList: []};
 	};
 
-	SimpleGesture.loadIni = async () => {
+	SimpleGesture.loadIni = async timestamp => {
+		if (timestamp && timestamp === iniTimestamp) return;
+		iniTimestamp = timestamp;
 		const res = await browser.storage.local.get('simple_gesture');
 		if (res && res.simple_gesture) {
 			Object.assign(SimpleGesture.ini, res.simple_gesture);

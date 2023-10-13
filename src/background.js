@@ -10,6 +10,16 @@
 		}
 	};
 
+	// For suspended tabs
+	let iniTimestamp = await browser.storage.session.get('simple_gesture_ini_timestamp') || Date.now();
+	const reloadIni = tabId => {
+		browser.tabs.executeScript(tabId, { code: `SimpleGesture.loadIni(${iniTimestamp || 0});` });
+	};
+	browser.tabs.onActivated.addListener(e => {
+		reloadIni(e.tabId);
+	});
+
+	// UserAgent switcher
 	let userAgent = await browser.storage.session.get('simple_gesture_user_agent') || null;
 	const rewriteUserAgentHeader = e => {
 		if (userAgent) {
@@ -23,6 +33,7 @@
 		return { requestHeaders: e.requestHeaders };
 	};
 
+	// Gestures
 	const exec = {
 		newTab: async arg => {
 			const url = await iniValue('newTabUrl');
@@ -115,10 +126,17 @@
 			browser.tabs.create({ active: true, url: 'options.html' });
 		},
 		reloadAllTabsIni: async () => {
-			const tabs = await browser.tabs.query({});
-			for (let tab of tabs) {
-				browser.tabs.executeScript(tab.id, { code: 'SimpleGesture.loadIni();' });
+			iniTimestamp = Date.now();
+			await browser.storage.session.set('simple_gesture_ini_timestamp', iniTimestamp);
+			const tabs = await browser.tabs.query({ active: true });
+			if (tabs[0]) {
+				reloadIni(tabs[0].id);
 			}
+			// Do not send message too many tabs.
+			// const tabs = await browser.tabs.query({});
+			// for (let tab of tabs) {
+			// 	browser.tabs.executeScript(tab.id, { code: 'SimpleGesture.loadIni();' });
+			// }
 		},
 		customGesture: async arg => {
 			const key = 'simple_gesture_' + arg.command;
