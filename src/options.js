@@ -124,6 +124,7 @@
 	const inputedGesture = byId('inputedGesture');
 	const inputedStartPoint = byId('inputedStartPoint');
 	const dupName = byId('dupName');
+	const cancelInputGesture = byId('cancelInputGesture');
 	const customGestureList = byId('customGestureList');
 	const customGestureDlgContainer = byId('customGestureDlgContainer');
 	const customGestureTitle = byId('customGestureTitle');
@@ -187,6 +188,7 @@
 			toggleClass(!startPoint, 'hide', inputedStartPoint);
 			toggleClass(false, 'dup', inputedGesture, inputedStartPoint);
 			toggleClass(false, 'canceled', inputedGesture);
+			toggleClass(false, 'hover', cancelInputGesture);
 			dupName.textContent = '';
 		},
 		onHide: () => {
@@ -286,6 +288,7 @@
 		if (!target) return;
 		if (e.gesture.length > SimpleGesture.MAX_LENGTH) {
 			inputedGesture.classList.add('canceled');
+			cancelInputGesture.classList.add('hover');
 		}
 		toggleClass(!e.startPoint, 'hide', inputedStartPoint);
 		const sudlr = e.startPoint + e.gesture.substring(0, MAX_LENGTH);
@@ -707,7 +710,7 @@
 		}
 	});
 	// Touchstart event prevents click event in Input gesture Dialog.
-	SimpleGesture.addTouchEventListener(byId('cancelInputGesture'), { start: e => {
+	SimpleGesture.addTouchEventListener(cancelInputGesture, { start: e => {
 		history.back();
 		e.preventDefault();
 	}, move: e => {}, end: e => {} });
