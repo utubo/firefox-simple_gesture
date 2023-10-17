@@ -474,7 +474,7 @@ input, textarea, select {
 	width: 1em;
 }
 .icon-delete::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 5l2 10q0 1 2 1h4q2 0 2-1l2 -10z"/><g transform="rotate(-8) translate(-0.9,1.2)"><path d="M2 3.5h12s0-2-2-2h-3q0-1-1-1q-1 0-1 1h-3s-2 0-2 2z"/></g></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="black"><path d="M2 4h12M4 4v9q0 1 1 1h6q1 0 1-1v-9M6 6v6M8 6v6M10 6v6M6 4q0 -2 2-2 2 0 2 2"/></svg>');
 }
 .icon-edit::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M1 15h4l10-10q1-1 0-2l-2-2q-1-1-2 0l-10 10zM10 2l4 4"/></svg>');
