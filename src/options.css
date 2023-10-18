@@ -469,15 +469,16 @@ input, textarea, select {
 .button::before {
 	display: inline-block;
 	height: auto;
+	line-height: 16px;
 	margin: 0 2px;
-	vertical-align: middle;
+	vertical-align: bottom;
 	width: 1em;
 }
 .icon-delete::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="black"><path d="M2 4h12M4 4v9q0 1 1 1h6q1 0 1-1v-9M6 6v6M8 6v6M10 6v6M6 4q0 -2 2-2 2 0 2 2"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 4h12M4 4v9q0 1 1 1h6q1 0 1-1v-9M6 6v6M8 6v6M10 6v6M6 4q0 -2 2-2 2 0 2 2"/></svg>');
 }
 .icon-edit::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M1 15h4l10-10q1-1 0-2l-2-2q-1-1-2 0l-10 10zM10 2l4 4"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 14h4l8-8q1-1 0-2l-2-2q-1-1-2 0l-8 8zM9 3l4 4"/></svg>');
 }
 .icon-add::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1"><path d="M2 8h12M8 2v12"/></svg>');
