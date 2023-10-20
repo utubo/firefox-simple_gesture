@@ -742,7 +742,7 @@
 		}
 	};
 	const scrollIntoView = target => {
-		onScrollEnd({ fource: true }); // For returning during scrolling.
+		onScrollEnd({ force: true }); // For returning during scrolling.
 		try {
 			target.scrollIntoView({ behavior: 'smooth' });
 		} catch (e) {
@@ -753,7 +753,7 @@
 		if (openedDlg) return;
 		const hasOldY = history.state && 'y' in history.state;
 		const newY = window.pageYOffset;
-		if (newY || e && e.fource) {
+		if (newY || e && e.force) {
 			if (hasOldY) {
 				history.replaceState({ y: newY }, document.title);
 			} else {
