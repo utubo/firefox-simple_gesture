@@ -742,11 +742,11 @@
 		}
 	};
 	const scrollIntoView = target => {
-		onScrollEnd({ force: true }); // For returning during scrolling.
+		onScrollEnd({ force: true }); // Save current position.
 		try {
 			target.scrollIntoView({ behavior: 'smooth' });
 		} catch (e) {
-			target.scrollIntoView(); // for Firefox 54-58
+			target.scrollIntoView(); // For Firefox 54-58
 		}
 	};
 	const onScrollEnd = e => {
@@ -763,6 +763,7 @@
 			// Prevent to stack histories.
 			history.back();
 			// Cancel scroll by `history.back();`.
+			window.scrollTo({ top: 0, behavior: 'instant' }); // TODO: This does not work ?
 			setTimeout(() => { window.scrollTo({ top: 0, behavior: 'instant' }); });
 		}
 	};
