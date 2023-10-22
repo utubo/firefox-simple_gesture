@@ -58,6 +58,9 @@
 	"closeSameUrlNote": {
 		"message": "Der Zustand von Tabs ist häufig beschädigt, z.B. beim Start. Deshalb kann es sein, dass dies nicht gut funktioniert."
 	},
+	"reopen": {
+		"message": "Tab wiederherstellen"
+	},
 	"nextTab": {
 		"message": "Nächster Tab"
 	},

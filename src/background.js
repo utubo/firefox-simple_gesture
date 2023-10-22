@@ -75,6 +75,12 @@
 			}
 			exec.closeIf(tab => tab.url === arg.tab.url);
 		},
+		reopen: async arg => {
+			const id = await browser.sessions.getRecentlyClosed();
+			if (id) {
+				browser.sessions.restore(id.tab);
+			}
+		},
 		prevTab: async arg => {
 			for (let i = arg.tab.index - 1; 0 <= i; i--) {
 				const tab = (await browser.tabs.query({ index: i }))[0];
