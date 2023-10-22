@@ -76,9 +76,10 @@
 			exec.closeIf(tab => tab.url === arg.tab.url);
 		},
 		reopen: async arg => {
-			const id = await browser.sessions.getRecentlyClosed();
-			if (id) {
-				browser.sessions.restore(id.tab);
+			const session = (await browser.sessions.getRecentlyClosed({ maxResults: 1 }))[0];
+			if (session) {
+				browser.sessions.restore(session.tab ? session.tab.sessionId : session.window.sessionId);
+
 			}
 		},
 		prevTab: async arg => {
