@@ -24,6 +24,8 @@ var SimpleGesture = {};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
+	const vvWidth = () => VV.isDummy ? window.innerWidth : VV.width;
+	const vvHeight = () => VV.isDummy ? window.innerHeight : VV.height;
 
 	// fields ------------
 	// gesture
@@ -82,8 +84,8 @@ var SimpleGesture = {};
 	};
 
 	const fixSize = () => {
-		const w = VV.isDummy ? window.innerWidth : VV.width;
-		const h = VV.isDummy ? window.innerHeight : VV.height;
+		const w = vvWidth();
+		const h = vvHeight();
 		if (w === lastInnerWidth && h === lastInnerHeight) return;
 		lastInnerWidth = w;
 		lastInnerHeight = h;
@@ -180,8 +182,8 @@ var SimpleGesture = {};
 			case 'back': history.back(); break;
 			case 'top': window.scrollTo({ top: 0, behavior: 'smooth' }); break;
 			case 'bottom': window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); break;
-			case 'pageUp': window.scrollByPages(-1, { behavior: 'smooth' }); break;
-			case 'pageDown': window.scrollByPages(1, { behavior: 'smooth' }); break;
+			case 'pageUp': window.scrollBy({ top: - vvHeight(), behavior: 'smooth' }); break;
+			case 'pageDown': window.scrollBy({ top: vvHeight(), behavior: 'smooth' }); break;
 			case 'reload': location.reload(); break;
 			case 'disableGesture': toggleEnable(); break;
 			default:
@@ -284,8 +286,8 @@ var SimpleGesture = {};
 		}, 300);
 	};
 	const fixToastSize = () => {
-		const w = VV.isDummy ? window.innerWidth : VV.width;
-		const h = VV.isDummy ? window.innerHeight : VV.height;
+		const w = vvWidth();
+		const h = vvHeight();
 		const z = Math.min(w, h) / 100;
 		toast.style.fontSize = ((5 * z)^0) + 'px'; // "vmin" of CSS has a problem when the page is zoomed.
 		toast.style.width = w + 'px';
