@@ -143,7 +143,7 @@
 		} else {
 			labelUdlr.textContent = INSTEAD_OF_EMPTY.noGesture;
 		}
-		labelStartPoint.textContent = startPoint ? `(${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)})` : '';
+		labelStartPoint.textContent = startPoint ? `(${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)})` : '';
 		return [startPoint, udlr];
 	};
 	const updateGestureItem = (label, sudlr) => {
@@ -252,7 +252,7 @@
 				return;
 			}
 			if (e.target.classList.contains('custom-gesture-delete')) {
-				if (confirm(chrome.i18n.getMessage('message_delete_confirm'))) {
+				if (confirm(browser.i18n.getMessage('message_delete_confirm'))) {
 					deleteCustomGesture(e);
 				}
 				return;
@@ -514,7 +514,7 @@
 				break;
 			}
 		}
-		byId('blacklistSummary').textContent = count ? urls.join(', ') : chrome.i18n.getMessage('None');
+		byId('blacklistSummary').textContent = count ? urls.join(', ') : browser.i18n.getMessage('None');
 	};
 	dlgs.blacklistDlg = {
 		onShow: () => {
@@ -588,7 +588,7 @@
 			const c = findCustomGesture(s);
 			return c && c.title || '';
 		} else {
-			return chrome.i18n.getMessage(s) || s;
+			return browser.i18n.getMessage(s) || s;
 		}
 	};
 	const onChangeColor = e => {

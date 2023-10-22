@@ -207,7 +207,7 @@ var SimpleGesture = {};
 
 	const toggleEnable = () => {
 		isGestureEnabled = !isGestureEnabled;
-		alert(chrome.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
+		alert(browser.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
 	};
 
 	// toast --------------
@@ -367,7 +367,7 @@ var SimpleGesture = {};
 		SimpleGesture.drawArrows(gesture, toastUdlr);
 		if (toast.getAttribute('x-startPoint') !== startPoint) {
 			toast.setAttribute('x-startPoint', startPoint);
-			toastSub.textContent = startPoint ? `${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)}` : '';
+			toastSub.textContent = startPoint ? `${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)}` : '';
 		}
 		showToast();
 	};
