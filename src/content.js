@@ -365,7 +365,7 @@ var SimpleGesture = {};
 		SimpleGesture.drawArrows(gesture, toastUdlr);
 		if (toast.getAttribute('x-startPoint') !== startPoint) {
 			toast.setAttribute('x-startPoint', startPoint);
-			toastSub.textContent = `${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)}`;
+			toastSub.textContent = startPoint ? `${chrome.i18n.getMessage(`fromEdge-${startPoint[0]}`)}` : '';
 		}
 		showToast();
 	};
