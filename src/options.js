@@ -771,19 +771,29 @@
 	window.addEventListener('popstate', onPopState);
 
 	// setup options page
-	const doTargetPage = (e, f) => {
-		const item = parentByClass(e.target, 'item');
-		const page = item && item.getAttribute('data-targetPage');
-		page && f(item, page);
-	};
-	const setupIndex = () => {
-		const index = byId('index');
-		index.addEventListener('click', e => { doTargetPage(e, (item, page) => { scrollIntoView(byId(page)); }); });
+	const setupIndexPage = () => {
+		const indexPage = byId('index');
+		indexPage.addEventListener('click', e => {
+			const item = parentByClass(e.target, 'item');
+			const page = item && item.getAttribute('data-targetPage');
+			if (page) {
+				scrollIntoView(byId(page));
+			}
+		});
 		// Highlight when touched with JS. (css ':active' does not work.)
-		index.addEventListener('touchstart', e => { doTargetPage(e, (item, page) => { item.classList.add('active'); }); });
-		index.addEventListener('touchend', e => { doTargetPage(e, (item, page) => { item.classList.remove('active'); }); });
+		indexPage.addEventListener('touchstart', e => {
+			const item = parentByClass(e.target, 'item');
+			item.classList.add('active');
+		});
+		addEventListener('touchend', e => {
+			for (const item of indexPage.getElementsByClassName('active')) {
+				item.classList.remove('active');
+			}
+		});
 		// Fix page heights with JS. (css 'min-height: 100vh' has probrem of scroll position.)
-		setTimeout(() => { document.styleSheets.item(0).insertRule(`.page { min-height: ${innerHeight}px; }`, 0); });
+		setTimeout(() => {
+			document.styleSheets.item(0).insertRule(`.page { min-height: ${innerHeight}px; }`, 0);
+		});
 	};
 	const removeCover = () => {
 		const cover = byId('cover');
@@ -796,7 +806,7 @@
 		setupEditDlg();
 		setupOtherOptions();
 		setupAdjustmentDlg();
-		setupIndex();
+		setupIndexPage();
 		onPopState(history);
 		removeCover();
 	};
