@@ -775,7 +775,7 @@
 		const indexPage = byId('index');
 		indexPage.addEventListener('click', e => {
 			const item = parentByClass(e.target, 'item');
-			const page = item && item.getAttribute('data-targetPage');
+			const page = item?.getAttribute('data-targetPage');
 			if (page) {
 				scrollIntoView(byId(page));
 			}
@@ -783,7 +783,7 @@
 		// Highlight when touched with JS. (css ':active' does not work.)
 		indexPage.addEventListener('touchstart', e => {
 			const item = parentByClass(e.target, 'item');
-			item.classList.add('active');
+			item?.classList?.add('active');
 		});
 		addEventListener('touchend', e => {
 			for (const item of indexPage.getElementsByClassName('active')) {
