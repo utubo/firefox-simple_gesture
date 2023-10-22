@@ -79,7 +79,6 @@
 			const session = (await browser.sessions.getRecentlyClosed({ maxResults: 1 }))[0];
 			if (session) {
 				browser.sessions.restore(session.tab ? session.tab.sessionId : session.window.sessionId);
-
 			}
 		},
 		prevTab: async arg => {
