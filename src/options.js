@@ -722,7 +722,9 @@
 		history.pushState(state, document.title);
 		onPopState({ state: state });
 	};
+	let preventPopStateEvent = false;
 	const onPopState = e => {
+		if (preventPopStateEvent) return;
 		const state = e.state || history.state || { y: 0 };
 		if (openedDlg && !state.dlg) {
 			dlgs[openedDlg.id].onHide();
@@ -762,13 +764,16 @@
 			}
 		} else if (hasOldY) {
 			// Prevent to stack histories.
-			history.back();
-			// Cancel scroll by `history.back();`.
-			window.scrollTo({ top: 0, behavior: 'instant' }); // TODO: This does not work ?
-			setTimeout(() => { window.scrollTo({ top: 0, behavior: 'instant' }); });
+			try {
+				preventPopStateEvent = true;
+				history.back();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			} finally {
+				preventPopStateEvent = false;
+			}
 		}
 	};
-	window.addEventListener('scroll', e => { resetTimer('onScrollEnd', onScrollEnd, 500); });
+	window.addEventListener('scroll', e => { resetTimer('onScrollEnd', onScrollEnd, 200); });
 	window.addEventListener('popstate', onPopState);
 
 	// setup options page
