@@ -232,6 +232,7 @@
 			const gestures = list.getAttribute('data-gestures');
 			if (!gestures) continue;
 			for (const nameAndOpt of gestures.split(/\s+/)) {
+				if (!nameAndOpt) continue;
 				const name = nameAndOpt.replace(/!$/, '');
 				const isExperimental = nameAndOpt.match(/!$/);
 				list.appendChild(createGestureItem(name, isExperimental));

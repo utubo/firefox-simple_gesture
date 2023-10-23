@@ -61,11 +61,14 @@
 	"reopen": {
 		"message": "Reopen Closed Tab"
 	},
+	"duplicateTab": {
+		"message": "Duplicate Tab"
+	},
 	"nextTab": {
-		"message": "Next tab"
+		"message": "Next Tab"
 	},
 	"prevTab": {
-		"message": "Previous tab"
+		"message": "Previous Tab"
 	},
 	"newTab": {
 		"message": "Open a new tab"

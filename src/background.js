@@ -81,6 +81,13 @@
 				browser.sessions.restore(session.tab ? session.tab.sessionId : session.window.sessionId);
 			}
 		},
+		duplicateTab: async arg => {
+			if (browser.tabs.duplicate) {
+				browser.tabs.duplicate(arg.tab.id);
+			} else {
+				browser.tabs.create({ active: true, url: arg.tab.url });
+			}
+		},
 		prevTab: async arg => {
 			for (let i = arg.tab.index - 1; 0 <= i; i--) {
 				const tab = (await browser.tabs.query({ index: i }))[0];

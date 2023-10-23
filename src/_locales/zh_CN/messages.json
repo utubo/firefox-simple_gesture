@@ -59,7 +59,10 @@
 		"message": "标签的状态通常在启动时被损坏。所以这不能很好地运作。"
 	},
 	"reopen": {
-		"message": "還原分頁"
+		"message": "恢复标签页"
+	},
+	"duplicateTab": {
+		"message": "复制选项卡"
 	},
 	"nextTab": {
 		"message": "下一个标签页"
