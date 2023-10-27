@@ -407,10 +407,6 @@ var SimpleGesture = {};
 		lastInnerWidth = 0; // for recalucrate stroke size on touchstart.
 	};
 
-	SimpleGesture.alert = msg => {
-		alert(msg);
-	}
-
 	// START HERE ! ------
 	//VV.addEventListener('resize', fixSize); this is called too many times, so use 'touchdown' instead of 'resize'.
 	await SimpleGesture.loadIni();
