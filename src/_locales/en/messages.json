@@ -166,6 +166,15 @@
 	"dontSetUntrustedScript": {
 		"message": "Don't set untrusted script, as this could lead to a security issue."
 	},
+	"SendMessageToExtension": {
+		"message": "Send a message to Extension"
+	},
+	"extensionId": {
+		"message": "Extension ID"
+	},
+	"message": {
+		"message": "Message"
+	},
 	"Blacklist": {
 		"message": "Deny list"
 	},

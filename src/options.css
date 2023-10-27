@@ -288,6 +288,10 @@ input, textarea, select {
 	overflow: auto;
 	padding: 1rem;
 }
+.dlg-label {
+	text-align: left;
+	margin-top: 1em;
+}
 
 .gesture-area {
 	background: #fff;
@@ -362,6 +366,11 @@ input, textarea, select {
 	margin-bottom: .7rem;
 	width: auto;
 }
+#customGestureScriptDiv {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+}
 #customGestureScript {
 	flex: 1 1 auto;
 	font-size: 80%;
@@ -369,7 +378,7 @@ input, textarea, select {
 	width: auto;
 	word-break: break-all;
 }
-#customGestureScriptNote {
+.custom-gesture-script-note {
 	flex: 0 1 auto;
 	overflow: hidden;
 	padding: 2px;
@@ -381,7 +390,7 @@ input, textarea, select {
 	max-width: calc(100% - 1.6rem);
 	padding: 0;
 }
-#customGestureScriptNote::after {
+.custom-gesture-script-note::after {
 	background: linear-gradient(rgba(249,249,250,0) 0,rgba(249,249,250,1) 100%);
 	bottom: 0;
 	content: '';
@@ -563,7 +572,7 @@ input, textarea, select {
 		color: #999;
 		text-shadow: 0px 0px 2px #9997;
 	}
-	#customGestureScriptNote::after {
+	.custom-gesture-script-note::after {
 		background: linear-gradient(rgba(66,65,77,0) 0,rgba(66,65,77,1) 100%);
 	}
 	#cover {

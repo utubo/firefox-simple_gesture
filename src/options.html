@@ -195,15 +195,24 @@
 				<select id="customGestureType">
 					<option value="url" class="caption i18n">OpenURLInNewTab</option>
 					<option value="script" class="caption i18n">ExecuteJavascript</option>
+					<option value="message" class="caption i18n">SendMessageToExtension</option>
 				</select>
 				<input id="customGestureUrl" type="url" class="text-input" placeholder="https://www.example.com/">
-				<textarea id="customGestureScript" class="text-input" placeholder="alert('Hello World');"></textarea>
-				<div id="customGestureScriptNote">
-					<div class="experimental">
-						<select id="addCommandToScript" class="button"><option value="" class="caption i18n">addCommandToScript</option></select><i class="icon-flask"></i>
+				<div id="customGestureScriptDiv">
+					<textarea id="customGestureScript" class="text-input" placeholder="alert('Hello World');"></textarea>
+					<div class="custom-gesture-script-note">
+						<div class="experimental">
+							<select id="addCommandToScript" class="button"><option value="" class="caption i18n">addCommandToScript</option></select><i class="icon-flask"></i>
+						</div>
+						<span class="note i18n">scriptWorksOnlyWhen</span>
+						<span class="note i18n">dontSetUntrustedScript</span>
 					</div>
-					<span class="note i18n">scriptWorksOnlyWhen</span>
-					<span class="note i18n">dontSetUntrustedScript</span>
+				</div>
+				<div id="customGestureMsgDiv">
+					<label class="dlg-label sub-caption i18n">extensionId</label>
+					<input id="customGestureMsgId" class="text-input">
+					<label class="dlg-label sub-caption i18n">message</label>
+					<input id="customGestureMsgValue" class="text-input">
 				</div>
 				<div class="buttons">
 					<span class="button icon-cancel js-history-back i18n">cancel</span>

@@ -166,6 +166,15 @@
 	"dontSetUntrustedScript": {
 		"message": "不要设置不受信任的脚本，因为这可能会导致安全问题。"
 	},
+	"SendMessageToExtension": {
+		"message": "向扩展名发送消息"
+	},
+	"extensionId": {
+		"message": "扩展的 ID"
+	},
+	"message": {
+		"message": "消息"
+	},
 	"Blacklist": {
 		"message": "黑名单"
 	},

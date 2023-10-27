@@ -166,6 +166,15 @@
 	"dontSetUntrustedScript": {
 		"message": "信頼できないスクリプトをセットしないで下さい。セキュリティ上の問題が発生する場合があります。"
 	},
+	"SendMessageToExtension": {
+		"message": "拡張機能にメッセージを送信する"
+	},
+	"extensionId": {
+		"message": "拡張機能ID"
+	},
+	"message": {
+		"message": "メッセージ"
+	},
 	"Blacklist": {
 		"message": "ジェスチャ無効URL"
 	},

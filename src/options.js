@@ -131,6 +131,8 @@
 	const customGestureType = byId('customGestureType');
 	const customGestureUrl = byId('customGestureUrl');
 	const customGestureScript = byId('customGestureScript');
+	const customGestureMsgId = byId('customGestureMsgId');
+	const customGestureMsgValue = byId('customGestureMsgValue');
 	const timeout = byId('timeout');
 	const strokeSize = byId('strokeSize');
 	const bidingForms = allByClass('js-binding');
@@ -368,6 +370,8 @@
 			customGestureType.value = details.type;
 			customGestureUrl.value = details.type === 'url' ? details.url : '';
 			customGestureScript.value = details.type === 'script' ? details.script : '';
+			customGestureMsgId.value = details.type === 'message' ? details.extensionId: '';
+			customGestureMsgValue.value = details.type === 'message' ? details.message: '';
 			const c = findCustomGesture(dlgs.editDlg.targetId);
 			hilightEditStart(byId(`${c.id}_caption`));
 			toggleEditor();
@@ -388,6 +392,10 @@
 		switch(d.type) {
 			case 'url': d.url = customGestureUrl.value; break;
 			case 'script': d.script = customGestureScript.value; break;
+			case 'message':
+				d.extensionId = customGestureMsgId.value;
+				d.message = customGestureMsgValue.value;
+				break;
 		}
 		const details = {};
 		details[`simple_gesture_${c.id}`] = d;
@@ -398,9 +406,10 @@
 		history.back();
 	};
 	const toggleEditor = e => {
-		toggleClass(customGestureType.value !== 'url', 'dlg-fill', customGestureDlgContainer);
+		toggleClass(customGestureType.value === 'script', 'dlg-fill', customGestureDlgContainer);
 		toggleClass(customGestureType.value !== 'url', 'hide', customGestureUrl);
-		toggleClass(customGestureType.value !== 'script', 'hide', customGestureScript, byId('customGestureScriptNote'));
+		toggleClass(customGestureType.value !== 'script', 'hide', byId('customGestureScriptDiv'));
+		toggleClass(customGestureType.value !== 'message', 'hide', byId('customGestureMsgDiv'));
 		if (customGestureType.value !== 'script') return;
 		const s = byId('addCommandToScript');
 		const f = document.createDocumentFragment();

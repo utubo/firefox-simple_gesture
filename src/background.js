@@ -161,6 +161,13 @@
 			if (c.script) {
 				exec.executeScript({ tabId: arg.tab.id, code: c.script });
 			}
+			if (c.message) {
+				const id = c.extensionId.replace(/\\/g, '\\').replace(/`/g, '//`');
+				const msg = c.message.replace(/\\/g, '\\').replace(/`/g, '//`');
+				browser.tabs.executeScript(arg.tabId, { code: `
+					browser.runtime.sendMessage(\`${id}\`, \`${msg}\`).catch(e => { alert(e.message); });
+				` });
+			}
 		},
 		open: async arg => {
 			const active = !('active' in arg) || !!arg.active;
