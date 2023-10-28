@@ -235,7 +235,7 @@ input, textarea, select {
 	position: relative;
 	text-align: left;
 }
-.radio-label::before {
+.radio-label::before, .radio-label::after {
 	border: .12em solid;
 	border-radius: 50%;
 	box-sizing: border-box;
@@ -247,20 +247,18 @@ input, textarea, select {
 	top: .5em;
 	width: 1em;
 }
+.radio-label::after {
+	background: transparent;
+	transition: .2s;
+}
 .radio:checked + .radio-label::before {
 	border-color: var(--checked);
 }
 .radio:checked + .radio-label::after {
+	border-color: var(--checked);
 	background: var(--checked);
-	border-radius: 50%;
-	box-sizing: border-box;
-	content: "";
-	display: inline-block;
 	height: .5em;
 	margin: .25em;
-	left: 0;
-	position: absolute;
-	top: .5em;
 	width: .5em;
 }
 .editing {
