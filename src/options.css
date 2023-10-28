@@ -236,23 +236,26 @@ input, textarea, select {
 .radio-label::before {
 	border: .1em solid;
 	border-radius: 50%;
+	box-sizing: border-box;
 	content: "";
 	display: inline-block;
 	height: 1em;
 	left: 0;
 	position: absolute;
-	top: .4em;
+	top: .5em;
 	width: 1em;
 }
 .radio:checked + .radio-label::after {
 	background: var(--fg-color);
 	border-radius: 50%;
+	box-sizing: border-box;
 	content: "";
 	display: inline-block;
 	height: .6em;
-	left: .26em;
+	margin: .2em;
+	left: 0;
 	position: absolute;
-	top: .66em;
+	top: .5em;
 	width: .6em;
 }
 .editing {
