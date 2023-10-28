@@ -249,7 +249,7 @@ input, textarea, select {
 }
 .radio-label::after {
 	background: transparent;
-	transition: .2s;
+	transition: .3s;
 }
 .radio:checked + .radio-label::before {
 	border-color: var(--checked);
