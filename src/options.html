@@ -209,10 +209,22 @@
 					</div>
 				</div>
 				<div id="customGestureMsgDiv">
-					<label class="dlg-label sub-caption i18n">extensionId</label>
-					<input id="customGestureMsgId" class="text-input">
-					<label class="dlg-label sub-caption i18n">message</label>
-					<input id="customGestureMsgValue" class="text-input">
+					<form name="customGestureMsg">
+						<label class="dlg-label sub-caption i18n">extensionId</label>
+						<input id="customGestureMsgId" class="text-input">
+						<label class="dlg-label sub-caption i18n">message</label>
+						<input id="messageTypeString" type="radio" name="messageType" value="string" class="radio">
+						<label for="messageTypeString" class="radio-label">String</label>
+						<input id="messageTypeJson" type="radio" name="messageType" value="json" class="radio">
+						<label for="messageTypeJson" class="radio-label">JSON</label>
+						<input id="customGestureMsgValue" class="text-input">
+						<span class="note">
+							<i class="icon-help"></i>
+							<a target="_blank" href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage">
+								runtime.sendMessage()
+							</a>
+						</span>
+					</form>
 				</div>
 				<div class="buttons">
 					<span class="button icon-cancel js-history-back i18n">cancel</span>

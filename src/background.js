@@ -162,10 +162,14 @@
 				exec.executeScript({ tabId: arg.tab.id, code: c.script });
 			}
 			if (c.message) {
-				const id = c.extensionId.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
-				const msg = c.message.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
+				const esc = s => '`' + s.replace(/\\/g, '\\\\').replace(/`/g, '\\`') + '`';
+				const id = esc(c.extensionId);
+				let msg = esc(c.message);
+				if (c.messageType === 'json') {
+					msg = `JSON.parse(${msg})`;
+				}
 				browser.tabs.executeScript(arg.tabId, { code: `
-					browser.runtime.sendMessage(\`${id}\`, \`${msg}\`).catch(e => { alert(e.message); });
+					browser.runtime.sendMessage(${id}, ${msg}).catch(e => { alert(e.message); });
 				` });
 			}
 		},

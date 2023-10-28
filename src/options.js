@@ -131,8 +131,6 @@
 	const customGestureType = byId('customGestureType');
 	const customGestureUrl = byId('customGestureUrl');
 	const customGestureScript = byId('customGestureScript');
-	const customGestureMsgId = byId('customGestureMsgId');
-	const customGestureMsgValue = byId('customGestureMsgValue');
 	const timeout = byId('timeout');
 	const strokeSize = byId('strokeSize');
 	const bidingForms = allByClass('js-binding');
@@ -370,8 +368,9 @@
 			customGestureType.value = details.type;
 			customGestureUrl.value = details.type === 'url' ? details.url : '';
 			customGestureScript.value = details.type === 'script' ? details.script : '';
-			customGestureMsgId.value = details.type === 'message' ? details.extensionId: '';
-			customGestureMsgValue.value = details.type === 'message' ? details.message: '';
+			document.forms.customGestureMsg.customGestureMsgId.value = details.extensionId || '';
+			document.forms.customGestureMsg.customGestureMsgValue.value = details.message || '';
+			document.forms.customGestureMsg.messageType.value = details.messageType || 'string';
 			const c = findCustomGesture(dlgs.editDlg.targetId);
 			hilightEditStart(byId(`${c.id}_caption`));
 			toggleEditor();
@@ -393,8 +392,9 @@
 			case 'url': d.url = customGestureUrl.value; break;
 			case 'script': d.script = customGestureScript.value; break;
 			case 'message':
-				d.extensionId = customGestureMsgId.value;
-				d.message = customGestureMsgValue.value;
+				d.extensionId = document.forms.customGestureMsg.customGestureMsgId.value;
+				d.message = document.forms.customGestureMsg.customGestureMsgValue.value;
+				d.messageType = document.forms.customGestureMsg.messageType.value;
 				break;
 		}
 		const details = {};
