@@ -241,11 +241,11 @@ input, textarea, select {
 	box-sizing: border-box;
 	content: "";
 	display: inline-block;
-	height: 1em;
+	height: 1.2em;
 	left: 0;
 	position: absolute;
-	top: .5em;
-	width: 1em;
+	top: .4em;
+	width: 1.2em;
 }
 .radio-label::after {
 	background: transparent;
@@ -257,9 +257,9 @@ input, textarea, select {
 .radio:checked + .radio-label::after {
 	border-color: var(--checked);
 	background: var(--checked);
-	height: .5em;
-	margin: .25em;
-	width: .5em;
+	height: .6em;
+	margin: .3em;
+	width: .6em;
 }
 .editing {
 	color: #3cf !important;
@@ -313,7 +313,7 @@ input, textarea, select {
 	overflow: hidden;
 	position: fixed;
 	text-align: center;
-	text-shadow: 0px 0px 2px #fff7;
+	text-shadow: 0px 0px 2px #fbfbfe77;
 	width: 100%;
 }
 .adjustment-dlg-caption {
@@ -609,14 +609,12 @@ input, textarea, select {
 	.dlg {
 		background: #000a;
 	}
-	.dlg-labels {
-		text-shadow: 0px 0px 2px #fbfbfe77;
-	}
 	.dlg-container {
 		background: #42414d;
 	}
 	.gesture-area {
 		background: #141414aa;
+		border: 1px solid var(--fg-color);
 	}
 	.canceled {
 		color: #999;
@@ -643,7 +641,7 @@ input, textarea, select {
 		caret-color: #75747a;
 	}
 	a {
-		color: #cb9eff;
+		color: var(--accent);
 	}
 	::selection {
 		background: #75747a;
