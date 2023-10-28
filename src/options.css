@@ -3,6 +3,8 @@
 	--fg-color: #15141a;
 	--bg-color: #f9f9fa;
 	--caption: #0c0c0d;
+	--accent: #592acb;
+	--checked: #2f2961;
 }
 body {
 	background: var(--bg-color);
@@ -59,7 +61,7 @@ body {
 }
 .page-header, h2 {
 	border-top: 1pt solid #d7d7db;
-	color: #592acb;
+	color: var(--accent);
 	display: block;
 	padding: .5rem 1.2rem;
 }
@@ -220,7 +222,7 @@ input, textarea, select {
 	background: #bdbbcd;
 }
 .checkbox:checked + .checkbox-image::after {
-	background: #2f2961;
+	background: var(--checked);
 	transform: translateX(1rem);
 }
 .radio {
@@ -234,7 +236,7 @@ input, textarea, select {
 	text-align: left;
 }
 .radio-label::before {
-	border: .1em solid;
+	border: .12em solid;
 	border-radius: 50%;
 	box-sizing: border-box;
 	content: "";
@@ -245,18 +247,21 @@ input, textarea, select {
 	top: .5em;
 	width: 1em;
 }
+.radio:checked + .radio-label::before {
+	border-color: var(--checked);
+}
 .radio:checked + .radio-label::after {
-	background: var(--fg-color);
+	background: var(--checked);
 	border-radius: 50%;
 	box-sizing: border-box;
 	content: "";
 	display: inline-block;
-	height: .6em;
-	margin: .2em;
+	height: .5em;
+	margin: .25em;
 	left: 0;
 	position: absolute;
 	top: .5em;
-	width: .6em;
+	width: .5em;
 }
 .editing {
 	color: #3cf !important;
@@ -575,10 +580,11 @@ input, textarea, select {
 		--fg-color: #fbfbfe;
 		--bg-color: #2b2a33;
 		--caption: #fbfbfecc;
+		--accent: #cb9eff;
+		--checked: #cb9eff;
 	}
 	.page-header, h2 {
 		border-color: #42414d;
-		color: #cb9eff;
 	}
 	.active {
 		background: #42414d;
@@ -597,9 +603,6 @@ input, textarea, select {
 	}
 	.checkbox:checked + .checkbox-image {
 		background: #86a;
-	}
-	.checkbox:checked + .checkbox-image::after {
-		background: #cb9eff;
 	}
 	.udlr {
 		color: #999;
