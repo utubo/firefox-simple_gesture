@@ -2,6 +2,7 @@
 :root {
 	--fg-color: #15141a;
 	--bg-color: #f9f9fa;
+	--caption: #0c0c0d;
 }
 body {
 	background: var(--bg-color);
@@ -94,12 +95,12 @@ h2:first-child {
 }
 .gesture-caption,
 .caption {
-	color: #0c0c0d;
+	color: var(--caption);
 	display: block;
 	font-size: 1.2rem;
 }
 .sub-caption {
-	color: #0c0c0d;
+	color: var(--caption);
 	display: block;
 }
 .summary {
@@ -570,6 +571,7 @@ input, textarea, select {
 	:root {
 		--fg-color: #fbfbfe;
 		--bg-color: #2b2a33;
+		--caption: #fbfbfecc;
 	}
 	.page-header, h2 {
 		border-color: #42414d;
@@ -578,8 +580,8 @@ input, textarea, select {
 	.active {
 		background: #42414d;
 	}
-	.gesture-caption, .caption, .sub-caption {
-		color: #fbfbfecc;
+	.gesture-caption {
+		color: var(--caption);
 	}
 	.summary, .note {
 		color: #999;
