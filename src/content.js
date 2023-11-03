@@ -79,7 +79,7 @@ var SimpleGesture = {};
 		}
 	};
 
-	const timeoutGesture = e => {
+	const timeoutGesture = () => {
 		resetGesture({ withTimeout: true });
 	};
 
@@ -358,7 +358,7 @@ var SimpleGesture = {};
 			name = '';
 		} else if (g[0] === '$') {
 			await loadExData(!exData);
-			name = exData.customGestureList.find((e, i, a) => e.id === g).title;
+			name = exData.customGestureList.find(c => c.id === g).title;
 		} else {
 			name = browser.i18n.getMessage(g);
 		}

@@ -102,7 +102,7 @@
 		SimpleGesture.loadIni();
 	};
 
-	const findCustomGesture = id => exData.customGestureList.find((e, i, a) => e.id === id);
+	const findCustomGesture = id => exData.customGestureList.find(c => c.id === id);
 
 	/**
 	 * e.g.
@@ -276,7 +276,7 @@
 			updateGesture(CLEAR_GESTURE);
 			history.back();
 			e.preventDefault();
-		}, move: e => {}, end: e => {} });
+		}, move: () => {}, end: () => {} });
 	};
 
 	// inject settings-page behavior
@@ -324,7 +324,7 @@
 	};
 
 	// custom gesture ----
-	const addCustomGesture = e => {
+	const addCustomGesture = () => {
 		let newId;
 		do {
 			newId = CUSTOM_GESTURE_PREFIX + Math.random().toString(36).slice(-8);
@@ -346,7 +346,7 @@
 	const deleteCustomGesture = e => {
 		const id = dataTargetId(e);
 		browser.storage.local.remove(`simple_gesture_${id}`);
-		exData.customGestureList = exData.customGestureList.filter((v, i, a) => v.id !== id);
+		exData.customGestureList = exData.customGestureList.filter(c => c.id !== id);
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		byId(`${id}_item`).remove();
 		gestureNames.some((v,i) => {
@@ -381,7 +381,7 @@
 			dlgs.editDlg.targetId = null;
 		}
 	};
-	const saveCustomGesture = e => {
+	const saveCustomGesture = () => {
 		// save list
 		const c = findCustomGesture(dlgs.editDlg.targetId);
 		c.title = customGestureTitle.value;
@@ -405,7 +405,7 @@
 		reloadAllTabsIni(); // for toast
 		history.back();
 	};
-	const toggleEditor = e => {
+	const toggleEditor = () => {
 		toggleClass(customGestureType.value === 'script', 'dlg-fill', customGestureDlgContainer);
 		toggleClass(customGestureType.value !== 'url', 'hide', customGestureUrl);
 		toggleClass(customGestureType.value !== 'script', 'hide', byId('customGestureScriptDiv'));
@@ -428,13 +428,15 @@
 	};
 	const autoTitleByUrl = () => {
 		if (customGestureTitle.value && customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
-		if (customGestureUrl.value.match(/https?:\/\/([^\/]+)/)) {
-			customGestureTitle.value = RegExp.$1;
+		const m = /https?:\/\/([^\/]+)/.exec(customGestureUrl.value);
+		if (m) {
+			customGestureTitle.value = m[1];
 		}
 	};
 	const autoTitleByScript = () => {
-		if (customGestureScript.value.match(/\*\s+@name\s+(.+?)(\s*\n|\s+\*)/)) {
-			customGestureTitle.value = RegExp.$1;
+		const m = /\*\s+@name\s+(.+?)(\s*\n|\s+\*)/.exec(customGestureScript.value);
+		if (m) {
+			customGestureTitle.value = m[1];
 		}
 	};
 	const addCommand = e => {
@@ -454,8 +456,8 @@
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
 		customGestureType.addEventListener('change', toggleEditor);
-		customGestureUrl.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
-		customGestureScript.addEventListener('input', e => { resetTimer('autoTitle', autoTitleByScript, 1000); });
+		customGestureUrl.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
+		customGestureScript.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByScript, 1000); });
 		byId('addCommandToScript').addEventListener('change', addCommand);
 	};
 
@@ -480,7 +482,7 @@
 				e.preventDefault();
 				e.stopPropagation();
 			},
-			end: e => {
+			end: () => {
 				let size = Math.max(maxX - minX, maxY - minY);
 				size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
 				size *= 0.8; // margin
@@ -544,7 +546,7 @@
 		onHide: () => {
 		}
 	};
-	byId('saveBlacklist').addEventListener('click', e => {
+	byId('saveBlacklist').addEventListener('click', () => {
 		const list = [];
 		for (const input of allByClass('blacklist-input')) {
 			if (input.value) {
@@ -568,7 +570,7 @@
 	});
 
 	// edit text values --
-	const saveBindingValues = e => {
+	const saveBindingValues = () => {
 		clearTimeout(TIMERS.saveBindingValues);
 		for (const elm of bidingForms) {
 			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
@@ -588,7 +590,7 @@
 		toggleExperimental();
 	};
 
-	const saveBindingValuesDelay = e => {
+	const saveBindingValuesDelay = () => {
 		resetTimer('saveBindingValues', saveBindingValues, 3000);
 	};
 
@@ -694,7 +696,7 @@
 			try {
 				if (!e.target.files[0]) return;
 				const reader = new FileReader();
-				reader.onload = e2 => { importSetting(reader.result); };
+				reader.onload = () => { importSetting(reader.result); };
 				reader.readAsText(e.target.files[0]);
 			} catch (error) {
 				alert(error.message);
@@ -723,7 +725,7 @@
 	SimpleGesture.addTouchEventListener(cancelInputGesture, { start: e => {
 		history.back();
 		e.preventDefault();
-	}, move: e => {}, end: e => {} });
+	}, move: () => {}, end: () => {} });
 
 	// control Back button
 	const changeState = state => {
@@ -782,7 +784,7 @@
 			}
 		}
 	};
-	window.addEventListener('scroll', e => { resetTimer('onScrollEnd', onScrollEnd, 200); });
+	window.addEventListener('scroll', () => { resetTimer('onScrollEnd', onScrollEnd, 200); });
 	window.addEventListener('popstate', onPopState);
 
 	// setup options page
@@ -800,7 +802,7 @@
 			const item = parentByClass(e.target, 'item');
 			item?.classList?.add('active');
 		});
-		addEventListener('touchend', e => {
+		addEventListener('touchend', () => {
 			for (const item of indexPage.getElementsByClassName('active')) {
 				item.classList.remove('active');
 			}

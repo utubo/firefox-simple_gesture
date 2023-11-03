@@ -35,7 +35,7 @@
 
 	// Gestures
 	const exec = {
-		newTab: async arg => {
+		newTab: async () => {
 			const url = await iniValue('newTabUrl');
 			browser.tabs.create({ active: true, url: url });
 		},
@@ -55,8 +55,8 @@
 			if (ids[0])
 				browser.tabs.remove(ids);
 		},
-		closeAll: async arg => {
-			exec.closeIf(tab => true);
+		closeAll: async () => {
+			exec.closeIf(() => true);
 		},
 		closeOthers: async arg => {
 			exec.closeIf(tab => tab.id !== arg.tab.id);
@@ -75,7 +75,7 @@
 			}
 			exec.closeIf(tab => tab.url === arg.tab.url);
 		},
-		reopen: async arg => {
+		reopen: async () => {
 			const session = (await browser.sessions.getRecentlyClosed({ maxResults: 1 }))[0];
 			if (session) {
 				browser.sessions.restore(session.tab ? session.tab.sessionId : session.window.sessionId);
@@ -135,7 +135,7 @@
 			browser.storage.session.set({ userAgent });
 			browser.tabs.reload(arg.tab.id);
 		},
-		openAddonSettings: arg => {
+		openAddonSettings: () => {
 			browser.tabs.create({ active: true, url: 'options.html' });
 		},
 		reloadAllTabsIni: async () => {
@@ -186,7 +186,7 @@
 			if (code) {
 				const removeListener = () => { browser.tabs.onUpdated.removeListener(f); };
 				const timer = setTimeout(removeListener, 5000); // when the tab doesn't complete.
-				const f = (tabId, changeInfo, tab) => {
+				const f = (tabId, changeInfo) => {
 					if (changeInfo.status !== 'complete' || tabId !== arg.tab.id) return;
 					clearTimeout(timer);
 					removeListener();
@@ -218,7 +218,7 @@
 		}
 	};
 
-	browser.runtime.onMessage.addListener(async (command, sender, sendResponse) => {
+	browser.runtime.onMessage.addListener(async (command, sender) => {
 		let arg;
 		if (command[0] === '{') {
 			arg = JSON.parse(command);
