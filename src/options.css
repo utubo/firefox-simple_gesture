@@ -624,7 +624,7 @@ input, textarea, select {
 		background: linear-gradient(rgba(66,65,77,0) 0,rgba(66,65,77,1) 100%);
 	}
 	#cover {
-		background: -var(--bg-color);
+		background: var(--bg-color);
 	}
 	.code, .inline-code {
 		background: #444;
