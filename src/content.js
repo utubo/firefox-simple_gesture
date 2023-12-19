@@ -244,28 +244,26 @@ var SimpleGesture = {};
 	};
 
 	// toast --------------
-	let arrowSvg = null;
-	let arrowContainer = null;
-	let doubleTapSvg = null;
+	const arrows = {};
 	const getSvgNode = (name, attrs) => {
 		const n = document.createElementNS('http://www.w3.org/2000/svg', name);
 		for (let key in attrs) {
 			n.setAttribute(key, attrs[key]);
 		}
 		return n;
-	}
+	};
 	const makeArrowSvg = () => {
-		if (arrowSvg) return arrowSvg;
-		arrowContainer = document.createElement('SPAN');
-		arrowContainer.style.cssText = `
+		if (arrows.U) return;
+		const base = document.createElement('SPAN');
+		base.style.cssText = `
 			display: inline-block;
 			height: 1em;
 			margin: 0 .1em;
 			vertical-align: bottom;
 		`;
-		const svg = getSvgNode('svg', { width: 12, height: 12, viewBox: '0 0 12 12' });
-		svg.style.cssText = `
-			display: none;
+		base.appendChild(getSvgNode('svg', { width: 12, height: 12, viewBox: '0 0 12 12' }));
+		base.firstChild.style.cssText = `
+			display: inline-block;
 			height: 1em;
 			width: 1em;
 			stroke: currentColor;
@@ -273,34 +271,25 @@ var SimpleGesture = {};
 			stroke-linejoin: round;
 			fill: none;
 		`;
-		arrowSvg = svg.cloneNode(true);
-		arrowSvg.appendChild(getSvgNode('path', { d: 'M 6 10v-8m-4 4l4-4 4 4' }));
-		doubleTapSvg = svg.cloneNode(true);
-		doubleTapSvg.appendChild(getSvgNode('path', { d: 'M1 6a4 4 0 1 1 10 0' }));
-		doubleTapSvg.appendChild(getSvgNode('path', { d: 'M3 6a3 3 0 1 1 6 0' }));
-		doubleTapSvg.appendChild(getSvgNode('path', { d: 'M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1' }));
+		const rotate = { U: 0, R: 90, D: 180, L: 270 };
+		const arrowBase = base.cloneNode(true);
+		arrowBase.firstChild.appendChild(getSvgNode('path', { d: 'M 6 10v-8m-4 4l4-4 4 4' }));
+		for (const [key, r] of Object.entries(rotate)) {
+			arrows[key] = arrowBase.cloneNode(true);
+			arrows[key].firstChild.style.transform = `rotate(${r}deg)`;
+		}
+		arrows.W = base.cloneNode(true);
+		arrows.W.firstChild.appendChild(getSvgNode('path', {
+			d:'M1 6a4 4 0 1 1 10 0 M3 6a3 3 0 1 1 6 0 M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
+		}));
 	};
 	SimpleGesture.drawArrows = (udlr, label) => {
 		makeArrowSvg();
-		const arrows = [];
+		const a = [];
 		for (const g of udlr.split('-')) {
-			let svg;
-			if (g === 'W') {
-				svg = doubleTapSvg.cloneNode(true);
-			} else {
-				svg = arrowSvg.cloneNode(true);
-				switch (g) {
-					case 'R': svg.style.transform = 'rotate(90deg)'; break;
-					case 'D': svg.style.transform = 'rotate(180deg)'; break;
-					case 'L': svg.style.transform = 'rotate(270deg)'; break;
-				}
-			}
-			svg.style.display = 'inline-block';
-			const c = arrowContainer.cloneNode();
-			c.appendChild(svg);
-			arrows.push(c);
+			a.push(arrows[g].cloneNode(true));
 		}
-		label.replaceChildren(...arrows);
+		label.replaceChildren(...a);
 	};
 
 	const showToast = () => {
