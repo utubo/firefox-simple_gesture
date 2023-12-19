@@ -171,6 +171,11 @@
 				 updateGestureItem(byId(`${name}_udlr`), udlrs[name]);
 			}
 		}
+		updateDoubleTapNote();
+	};
+
+	const updateDoubleTapNote = () => {
+		toggleClass(!SimpleGesture.isDelaySingleTap(), 'hide', byId('doubleTapNote'));
 	};
 
 	dlgs.gestureDlg = {
@@ -243,6 +248,7 @@
 			customGestureList.appendChild(createGestureItem(c.id));
 			gestureNames.push(c.id);
 		}
+		updateDoubleTapNote();
 		window.addEventListener('click', e => {
 			if (!e.target.classList) return;
 			if (e.target.tagName === 'INPUT') return;
@@ -664,11 +670,12 @@
 		link.setAttribute('href', href);
 		link.click();
 	};
-	const setupOtherOptions = () => {
+	const setupOtherOptions = async () => {
 		byId('splashVersion').textContent = 'version ' + browser.runtime.getManifest().version;
 		for (const caption of allByClass('i18n')) {
 			caption.textContent = getMessage(caption.textContent);
 		}
+		document.documentElement.lang = await browser.i18n.getUILanguage();
 		byId('close_item').appendChild(byId('afterClose_item'));
 		byId('closeSameUrl_item').appendChild(byId('closeSameUrlMatchType_item'));
 		byId('newTab_item').appendChild(byId('newTabUrl_item'));
@@ -818,10 +825,10 @@
 		setTimeout(() => { fadeout(cover); });
 		setTimeout(() => { cover.remove(); }, 500);
 	};
-	const setupSettingItems = () => {
+	const setupSettingItems = async () => {
 		setupGestureList();
 		setupEditDlg();
-		setupOtherOptions();
+		await setupOtherOptions();
 		setupAdjustmentDlg();
 		setupIndexPage();
 		onPopState(history);
@@ -831,7 +838,7 @@
 	// error handling
 	const MAX_LOG_COUNT = 10;
 	const addLog = div => {
-		const debuglogDiv = document.getElementById('debuglog');
+		const debuglogDiv = byId('debuglog');
 		const count = debuglogDiv.childNodes.length;
 		for (let i = 0; i < count - MAX_LOG_COUNT; i ++) {
 			debuglogDiv.removeChild(debuglogDiv.firstChild);
@@ -865,7 +872,7 @@
 	try {
 		SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
 		exData = (await storageValue('simple_gesture_exdata')) || exData;
-		setupSettingItems();
+		await setupSettingItems();
 	} catch (e) {
 		addErrorLog(e);
 	}

@@ -35,6 +35,13 @@
 
 	// Gestures
 	const exec = {
+		openLinkInNewTab: async arg => {
+			browser.tabs.create({ active: true, url: arg.url });
+		},
+		openLinkInBackground: async arg => {
+			await browser.tabs.create({ active: false, url: arg.url });
+			browser.tabs.update(arg.tab.id, { active: true });
+		},
 		newTab: async () => {
 			const url = await iniValue('newTabUrl');
 			browser.tabs.create({ active: true, url: url });
@@ -178,7 +185,12 @@
 			const code = arg.code || arg.script;
 			// open in new tab
 			if (arg.inNewTab || !('inNewTab' in arg)) {
-				let tab = await browser.tabs.create({ active: active, url: arg.url });// Firefox for Android doesn't support openerTabId.
+				// Firefox for Android doesn't support `openerTabId` and `active`.
+				let tab = await browser.tabs.create({ active: active, url: arg.url });
+				if (!active) {
+					browser.tabs.update(arg.tab.id, { active: true });
+				}
+				// execute the additional script.
 				code && exec.executeScript({ tabId: tab.id, code: code});
 				return;
 			}

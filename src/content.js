@@ -12,7 +12,6 @@ var SimpleGesture = {};
 			'R-U': 'bottom',
 			'D-R-U': 'reload',
 			'L-D-R': 'close',
-			'R-D-L': 'newTab',
 			'L-D-R-U-L': 'openAddonSettings',
 		},
 		strokeSize: 50,
@@ -55,6 +54,8 @@ var SimpleGesture = {};
 	// others
 	let iniTimestamp = 0;
 	let exData;
+	const ACCEPT_SINGLE_TAP = -1;
+	const doubleTap = { timer: null, count: ACCEPT_SINGLE_TAP };
 
 	// utils -------------
 	SimpleGesture.getXY = e => {
@@ -107,8 +108,11 @@ var SimpleGesture = {};
 		if (!size) return;
 		if (Date.now() - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
 			gesture = 'W';
+			doubleTap.count = 2;
+			clearTimeout(doubleTap.timer);
 		} else {
 			gesture = '';
+			doubleTap.count = 1;
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
@@ -159,6 +163,7 @@ var SimpleGesture = {};
 			e.preventDefault();
 		} finally {
 			gesture = null;
+			target = null;
 		}
 	};
 
@@ -186,6 +191,12 @@ var SimpleGesture = {};
 			case 'pageDown': window.scrollBy({ top: vvHeight(), behavior: 'smooth' }); break;
 			case 'reload': location.reload(); break;
 			case 'disableGesture': toggleEnable(); break;
+			case 'openLinkInNewTab':
+			case 'openLinkInBackground':
+				options = options || {}
+				options.url = getLinkTag(target)?.href;
+				if (!options.url) return;
+				// not break
 			default:
 				if (g[0] === '$') { // '$' is custom-gesture prefix.
 					setCustomGestureTarget();
@@ -196,7 +207,6 @@ var SimpleGesture = {};
 				}
 				browser.runtime.sendMessage(g);
 		}
-		target = null;
 	};
 
 	const setCustomGestureTarget = () => {
@@ -208,6 +218,29 @@ var SimpleGesture = {};
 	const toggleEnable = () => {
 		isGestureEnabled = !isGestureEnabled;
 		alert(browser.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
+	};
+
+	const getLinkTag = target => {
+		let a = target;
+		while (a && !a.href) a = a.parentNode;
+		return a;
+	}
+
+	const waitForDoubleTap = e => {
+		if (doubleTap.count === ACCEPT_SINGLE_TAP)  {
+			return;
+		}
+		const a = getLinkTag(e.target);
+		if (!a || !a.href) return;
+		e.stopPropagation();
+		e.preventDefault();
+		if (doubleTap.count === 1) {
+			doubleTap.timer = setTimeout(() => {
+				doubleTap.timer = null;
+				doubleTap.count = ACCEPT_SINGLE_TAP;
+				a.click();
+			}, SimpleGesture.ini.doubleTapMsec + 1);
+		}
 	};
 
 	// toast --------------
@@ -405,6 +438,20 @@ var SimpleGesture = {};
 		}
 		loadExData(exData);
 		lastInnerWidth = 0; // for recalucrate stroke size on touchstart.
+		if (SimpleGesture.isDelaySingleTap()) {
+			addEventListener('click', waitForDoubleTap, true);
+		} else{
+			removeEventListener('click', waitForDoubleTap);
+		}
+	};
+
+	SimpleGesture.isDelaySingleTap = () => {
+		for (const [k, v] of Object.entries(SimpleGesture.ini.gestures)) {
+			if (k.indexOf('W') !== -1 && (v === 'openLinkInNewTab' || v === 'openLinkInBackground')) {
+				return true;
+			}
+		}
+		return false;
 	};
 
 	// START HERE ! ------

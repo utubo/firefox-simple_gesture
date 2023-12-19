@@ -61,6 +61,15 @@
 	"reopen": {
 		"message": "Tab wiederherstellen"
 	},
+	"openLinkInNewTab": {
+		"message": "Links in Tab öffnen"
+	},
+	"openLinkInBackground": {
+		"message": "Link im Hintergrund öffnen"
+	},
+	"Delay single tap to wait for double tap.": {
+		"message": "Einfaches Antippen verzögern, um auf doppeltes Antippen zu warten."
+	},
 	"duplicateTab": {
 		"message": "Tab duplizieren"
 	},

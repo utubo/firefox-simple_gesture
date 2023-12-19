@@ -61,6 +61,15 @@
 	"reopen": {
 		"message": "閉じたタブを開き直す"
 	},
+	"openLinkInNewTab": {
+		"message": "リンクを新しいタブで開く"
+	},
+	"openLinkInBackground": {
+		"message": "リンクをバックグラウンドで開く"
+	},
+	"Delay single tap to wait for double tap.": {
+		"message": "ダブルタップを検知するため通常のタップにも遅延が発生します。"
+	},
 	"duplicateTab": {
 		"message": "タブを複製する"
 	},

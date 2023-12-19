@@ -37,7 +37,11 @@
 				forward back reload
 				top bottom
 				pageUp pageDown
+				openLinkInNewTab openLinkInBackground
 			"></div>
+			<div class="sub-item">
+				<div id="doubleTapNote" class="hide note note-alert i18n">doubleTapNote</div>
+			</div>
 		</div>
 
 		<div class="page" id="tabGestures">
@@ -218,8 +222,8 @@
 						<input id="messageTypeJson" type="radio" name="messageType" value="json" class="radio">
 						<label for="messageTypeJson" class="radio-label">JSON</label>
 						<input id="customGestureMsgValue" class="text-input">
-						<span class="note">
-							<i class="icon-help"></i>
+						<br>
+						<span class="note note-help">
 							<a target="_blank" href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage">
 								runtime.sendMessage()
 							</a>

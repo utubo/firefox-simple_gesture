@@ -61,6 +61,15 @@
 	"reopen": {
 		"message": "恢复标签页"
 	},
+	"openLinkInNewTab": {
+		"message": "新建签页打开链接"
+	},
+	"openLinkInBackground": {
+		"message": "在后台打开链接"
+	},
+	"Delay single tap to wait for double tap.": {
+		"message": "延迟单击以等待双击"
+	},
 	"duplicateTab": {
 		"message": "复制选项卡"
 	},

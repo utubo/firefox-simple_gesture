@@ -119,7 +119,7 @@ h2:first-child {
 	display: block;
 	font-size: .8rem;
 }
-.note-alert::before {
+.note-alert::before, .note-help::before {
 	background: #fc3;
 	border-radius: 50%;
 	color: #333 !important;
@@ -133,7 +133,12 @@ h2:first-child {
 	vertical-align: bottom;
 	width: 1rem;
 }
-.note-alert {
+.note-help::before {
+	background: #33ccff;
+	color: #fff !important;
+	content: '?';
+}
+.note-alert, .note-help {
 	margin-left: 1rem;
 }
 
@@ -564,14 +569,6 @@ input, textarea, select {
 	margin: 0.2rem;
 	width: 1.2rem;
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle fill="%23ffcc33" cx="8" cy="8" r="8"/><path fill="%233338" d="M5 7l6 0l2 4h-10z"/><path fill="none" stroke="%23333" stroke-width="1.5" stroke-linejoin="round" d="M9.5 2v3l3.5 6h-10l3.5-6v-3"/></svg>');
-}
-/* icon */
-.icon-help::after {
-	display: inline-block;
-	height: 1.2rem;
-	margin: 0.2rem;
-	width: 1.2rem;
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle fill="%2333ccff" cx="8" cy="8" r="8"/><path fill="none" stroke="%23ffffff" stroke-width="1.5" d="M6 6.5q0-2 2-2 2 0 2 2 0 0.5-0.5 1-1.5 0.5-1.5 2v.5"/><circle fill="%23ffffff" cx="8" cy="11.5" r="1"/></svg>');
 }
 
 @media (prefers-color-scheme: dark) {

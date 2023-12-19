@@ -61,6 +61,15 @@
 	"reopen": {
 		"message": "Reopen Closed Tab"
 	},
+	"openLinkInNewTab": {
+		"message": "Open link in a tab"
+	},
+	"openLinkInBackground": {
+		"message": "Open link in background"
+	},
+	"doubleTapNote": {
+		"message": "Single tap is delayed to wait for double tap."
+	},
 	"duplicateTab": {
 		"message": "Duplicate Tab"
 	},
@@ -210,6 +219,15 @@
 	},
 	"configurations": {
 		"message": "Configurations"
+	},
+	"Export / Import": {
+		"message": "設定のバックアップと復元"
+	},
+	"Export settings to downloads folder": {
+		"message": "設定を保存する"
+	},
+	"Import settings from JSON" : {
+		"message": "バックアップから復元する"
 	}
 }
 
