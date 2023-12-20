@@ -17,6 +17,7 @@ var SimpleGesture = {};
 		strokeSize: 50,
 		timeout: 1500,
 		doubleTapMsec: 200,
+		delaySingleTap: false,
 		toast: true,
 		blacklist: []
 	};
@@ -220,26 +221,58 @@ var SimpleGesture = {};
 		alert(browser.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
 	};
 
-	const getLinkTag = target => {
-		let a = target;
-		while (a && !a.href) a = a.parentNode;
-		return a;
-	}
-
 	const waitForDoubleTap = e => {
 		if (doubleTap.count === ACCEPT_SINGLE_TAP)  {
 			return;
 		}
-		const a = getLinkTag(e.target);
-		if (!a || !a.href) return;
+		var tg = e.target;
+		if (!tg) return;
+		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap
+		if (onlyLinkTag) {
+			tg = getLinkTag(tg);
+			if (!tg || !tg.href) return;
+		}
 		e.stopPropagation();
 		e.preventDefault();
 		if (doubleTap.count === 1) {
 			doubleTap.timer = setTimeout(() => {
 				doubleTap.timer = null;
 				doubleTap.count = ACCEPT_SINGLE_TAP;
-				a.click();
+				const label = onlyLinkTag ? null : getLabelTag(tg);
+				if (label) {
+					clickLabel(label);
+				} else {
+					tg.click();
+				}
 			}, SimpleGesture.ini.doubleTapMsec + 1);
+		}
+	};
+
+	const getLinkTag = target => {
+		let a = target;
+		while (a && !a.href) a = a.parentNode;
+		return a;
+	}
+
+	const getLabelTag = e => {
+		var label = e.parentNode;
+		while (label && label.tagName !== 'LABEL') {
+			label = label.parentNode;
+		}
+		return label;
+	}
+
+	const clickLabel = label => {
+		const f = label.getAttribute('for');
+		if (f) {
+			document.getElementById(f).click();
+		}
+		const children = label.childNodes;
+		for (const c of children) {
+			if (c.nodeType !== 1) continue;
+			if (c.tagName === 'LABEL') continue;
+			if (c.id === f) continue;
+			c.click();
 		}
 	};
 
@@ -436,9 +469,10 @@ var SimpleGesture = {};
 
 	SimpleGesture.isDelaySingleTap = () => {
 		for (const [k, v] of Object.entries(SimpleGesture.ini.gestures)) {
-			if (k.indexOf('W') !== -1 && (v === 'openLinkInNewTab' || v === 'openLinkInBackground')) {
-				return true;
-			}
+			if (k.indexOf('W') === -1) continue;
+			if (SimpleGesture.ini.delaySingleTap) return true;
+			if (v === 'openLinkInNewTab') return true;
+			if (v === 'openLinkInBackground') return true;
 		}
 		return false;
 	};

@@ -171,11 +171,15 @@
 				 updateGestureItem(byId(`${name}_udlr`), udlrs[name]);
 			}
 		}
-		updateDoubleTapNote();
+		toggleDoubleTapNote();
 	};
 
-	const updateDoubleTapNote = () => {
-		toggleClass(!SimpleGesture.isDelaySingleTap(), 'hide', byId('doubleTapNote'));
+	const toggleDoubleTapNote = () => {
+		toggleClass(
+			!SimpleGesture.isDelaySingleTap() || SimpleGesture.ini.delaySingleTap,
+			'hide',
+			byId('doubleTapNote')
+		);
 	};
 
 	dlgs.gestureDlg = {
@@ -248,7 +252,7 @@
 			customGestureList.appendChild(createGestureItem(c.id));
 			gestureNames.push(c.id);
 		}
-		updateDoubleTapNote();
+		toggleDoubleTapNote();
 		window.addEventListener('click', e => {
 			if (!e.target.classList) return;
 			if (e.target.tagName === 'INPUT') return;
@@ -594,6 +598,7 @@
 		}
 		saveIni();
 		toggleExperimental();
+		toggleDoubleTapNote();
 	};
 
 	const saveBindingValuesDelay = () => {

@@ -79,10 +79,18 @@
 					<div class="note i18n">basedOn320x480</div>
 					<input id="strokeSize" class="number-input js-binding" type="number" min="1" max="999" size="5">px
 				</div>
+			</div>
+			<div id="timeoutAndStrokeSize" class="item">
+				<label class="caption i18n">doubleTap</label>
 				<div class="sub-item">
-					<label class="sub-caption i18n">doubleTapMsec</label><!-- don't add 'for="..."' -->
+					<label class="sub-caption i18n">doubleTapMsec</label>
 					<input id="doubleTapMsec" class="number-input js-binding" type="number" min="0" max="9999" size="5">ms
 				</div>
+				<label for="delaySingleTap" class="sub-item checkbox-label experimental">
+					<span class="sub-caption with-checkbox icon-flask i18n">delaySingleTap</span>
+					<input id="delaySingleTap" class="checkbox js-binding" type="checkbox" value="true">
+					<label for="delaySingleTap" class="checkbox-image"></label>
+				</label>
 			</div>
 			<div class="item">
 				<label for="toast" class="checkbox-label">

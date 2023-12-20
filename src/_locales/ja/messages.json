@@ -67,8 +67,8 @@
 	"openLinkInBackground": {
 		"message": "リンクをバックグラウンドで開く"
 	},
-	"Delay single tap to wait for double tap.": {
-		"message": "ダブルタップを検知するため通常のタップにも遅延が発生します。"
+	"doubleTapNote": {
+		"message": "ダブルタップを検知するため通常のタップが遅延されます"
 	},
 	"duplicateTab": {
 		"message": "タブを複製する"
@@ -106,8 +106,14 @@
 	"timeout": {
 		"message": "タイムアウト"
 	},
+	"doubleTap": {
+		"message": "ダブルタップ"
+	},
 	"doubleTapMsec": {
 		"message": "ダブルタップの間隔"
+	},
+	"delaySingleTap": {
+		"message": "ダブルタップを検知するために通常のタップを遅延させる"
 	},
 	"displayCommand": {
 		"message": "コマンドを表示する"

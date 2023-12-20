@@ -106,8 +106,14 @@
 	"strokeSize": {
 		"message": "Stroke size"
 	},
+	"doubleTap": {
+		"message": "Double tap"
+	},
 	"doubleTapMsec": {
-		"message": "Double-tap interval"
+		"message": "Double tap interval"
+	},
+	"delaySingleTap": {
+		"message": "Delay single tap to wait for double tap"
 	},
 	"displayCommand": {
 		"message": "Display Command"

@@ -67,7 +67,7 @@
 	"openLinkInBackground": {
 		"message": "在后台打开链接"
 	},
-	"Delay single tap to wait for double tap.": {
+	"doubleTapNote": {
 		"message": "延迟单击以等待双击"
 	},
 	"duplicateTab": {
@@ -106,8 +106,14 @@
 	"strokeSize": {
 		"message": "描边尺寸"
 	},
+	"doubleTap": {
+		"message": "双击"
+	},
 	"doubleTapMsec": {
 		"message": "双击间隔"
+	},
+	"delaySingleTap": {
+		"message": "延迟单击以等待双击"
 	},
 	"displayCommand": {
 		"message": "显示命令"

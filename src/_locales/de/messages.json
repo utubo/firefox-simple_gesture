@@ -67,7 +67,7 @@
 	"openLinkInBackground": {
 		"message": "Link im Hintergrund öffnen"
 	},
-	"Delay single tap to wait for double tap.": {
+	"doubleTapNote": {
 		"message": "Einfaches Antippen verzögern, um auf doppeltes Antippen zu warten."
 	},
 	"duplicateTab": {
@@ -106,8 +106,14 @@
 	"strokeSize": {
 		"message": "Gestenlänge"
 	},
+	"doubleTap": {
+		"message": "Doppeltipp"
+	},
 	"doubleTapMsec": {
 		"message": "Doppeltipp-Intervall"
+	},
+	"delaySingleTap": {
+		"message": "Einfaches Antippen verzögern, um auf doppeltes Antippen zu warten"
 	},
 	"displayCommand": {
 		"message": "Befehl anzeigen"
