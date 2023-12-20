@@ -255,6 +255,9 @@ var SimpleGesture = {};
 	}
 
 	const getLabelTag = target => {
+		if ("<INPUT><SELECT><TEXTAREA>".indexOf(target.tagName) !== -1) {
+			return null;
+		}
 		var label = target;
 		while (label && label.tagName !== 'LABEL') {
 			label = label.parentNode;
@@ -264,16 +267,15 @@ var SimpleGesture = {};
 
 	// note: `click()` is not bubbling on FF for Android.
 	const clickLabel = label => {
-		const f = label.getAttribute('for');
-		if (f) {
-			document.getElementById(f).click();
+		if (label.htmlFor) {
+			document.getElementById(label.htmlFor).click();
+			return;
 		}
-		const children = label.childNodes;
-		for (const c of children) {
-			if (c.nodeType !== 1) continue;
-			if (c.tagName === 'LABEL') continue;
-			if (c.id === f) continue;
-			c.click();
+		const i = label.querySelector('INPUT,SELECT,TEXTAREA');
+		if (i) {
+			i.click();
+		} else {
+			label.click();
 		}
 	};
 
