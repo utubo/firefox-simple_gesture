@@ -20,7 +20,7 @@ body {
 	pointer-events: none;
 }
 .disabled {
-	opacity: .5;
+	opacity: .4;
 	pointer-events: none;
 }
 .title {
@@ -568,7 +568,7 @@ input, textarea, select {
 	height: 1.2rem;
 	margin: 0.2rem;
 	width: 1.2rem;
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle fill="%23ffcc33" cx="8" cy="8" r="8"/><path fill="%233338" d="M5 7l6 0l2 4h-10z"/><path fill="none" stroke="%23333" stroke-width="1.5" stroke-linejoin="round" d="M9.5 2v3l3.5 6h-10l3.5-6v-3"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle fill="%23cb9eff" cx="8" cy="8" r="8"/><path fill="%233338" d="M5 7l6 0l2 4h-10z"/><path fill="none" stroke="%23333" stroke-width="1.5" stroke-linejoin="round" d="M9.5 2v3l3.5 6h-10l3.5-6v-3"/></svg>');
 }
 
 @media (prefers-color-scheme: dark) {
