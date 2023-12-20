@@ -230,7 +230,7 @@ var SimpleGesture = {};
 		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap
 		if (onlyLinkTag) {
 			tg = getLinkTag(tg);
-			if (!tg || !tg.href) return;
+			if (!tg) return;
 		}
 		e.stopPropagation();
 		e.preventDefault();
@@ -254,14 +254,15 @@ var SimpleGesture = {};
 		return a;
 	}
 
-	const getLabelTag = e => {
-		var label = e.parentNode;
+	const getLabelTag = target => {
+		var label = target;
 		while (label && label.tagName !== 'LABEL') {
 			label = label.parentNode;
 		}
 		return label;
 	}
 
+	// note: `click()` is not bubbling on FF for Android.
 	const clickLabel = label => {
 		const f = label.getAttribute('for');
 		if (f) {
