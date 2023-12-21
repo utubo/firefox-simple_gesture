@@ -108,8 +108,8 @@ var SimpleGesture = {};
 		fixSize();
 		if (!size) return;
 		if (Date.now() - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
-			gesture = 'W';
-			doubleTap.count = 2;
+			gesture = doubleTap.count === 2 ? '': 'W';
+			doubleTap.count = doubleTap.count === 2 ? ACCEPT_SINGLE_TAP : 2;
 			clearTimeout(doubleTap.timer);
 		} else {
 			gesture = '';

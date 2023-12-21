@@ -115,6 +115,9 @@
 	"delaySingleTap": {
 		"message": "Delay single tap to wait for double tap"
 	},
+	"delaySingleTapNote": {
+		"message": "If single tap does not work, try triple tap."
+	},
 	"displayCommand": {
 		"message": "Display Command"
 	},

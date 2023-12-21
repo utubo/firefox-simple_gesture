@@ -119,7 +119,10 @@ h2:first-child {
 	display: block;
 	font-size: .8rem;
 }
-.note-alert::before, .note-help::before {
+.note-alert, .note-help, .note-info {
+	margin-left: 1rem;
+}
+.note-alert::before, .note-help::before, .note-info::before {
 	background: #fc3;
 	border-radius: 50%;
 	color: #333 !important;
@@ -138,8 +141,10 @@ h2:first-child {
 	color: #fff !important;
 	content: '?';
 }
-.note-alert, .note-help {
-	margin-left: 1rem;
+.note-info::before {
+	background: #33ccff;
+	color: #fff !important;
+	content: 'i';
 }
 
 /* form */

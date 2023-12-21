@@ -115,6 +115,9 @@
 	"delaySingleTap": {
 		"message": "ダブルタップを検知するために通常のタップを遅延させる"
 	},
+	"delaySingleTapNote": {
+		"message": "通常のタップが効かないときは、トリプルタップを試してください"
+	},
 	"displayCommand": {
 		"message": "コマンドを表示する"
 	},
