@@ -234,18 +234,23 @@ var SimpleGesture = {};
 		}
 		e.stopPropagation();
 		e.preventDefault();
-		if (doubleTap.count === 1) {
-			doubleTap.timer = setTimeout(() => {
-				doubleTap.timer = null;
-				doubleTap.count = ACCEPT_SINGLE_TAP;
-				const label = onlyLinkTag ? null : getLabelTag(tg);
-				if (label) {
-					clickLabel(label);
-				} else {
-					tg.click();
-				}
-			}, SimpleGesture.ini.doubleTapMsec + 1);
-		}
+		if (doubleTap.count !== 1) return;
+		const ev = new MouseEvent('click', {
+			bubbles: true,
+			cancelable: true,
+			clientX: e.clientX,
+			clientY: e.clientY,
+		});
+		doubleTap.timer = setTimeout(() => {
+			doubleTap.timer = null;
+			doubleTap.count = ACCEPT_SINGLE_TAP;
+			const label = onlyLinkTag ? null : getLabelTag(tg);
+			if (label) {
+				clickLabel(label);
+			} else {
+				tg.dispatchEvent(ev);
+			}
+		}, SimpleGesture.ini.doubleTapMsec + 1);
 	};
 
 	const getLinkTag = target => {
