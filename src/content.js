@@ -260,11 +260,11 @@ var SimpleGesture = {};
 	}
 
 	const getLabelTag = target => {
-		if ("<INPUT><SELECT><TEXTAREA>".indexOf(target.tagName) !== -1) {
+		if ("<INPUT><SELECT><TEXTAREA><BUTTON>".indexOf(target.tagName) !== -1) {
 			return null;
 		}
 		var label = target;
-		while (label && label.tagName !== 'LABEL') {
+		while (label && "<LABEL><BUTTON>".indexOf(label.tagName) === -1) {
 			label = label.parentNode;
 		}
 		return label;
@@ -276,7 +276,7 @@ var SimpleGesture = {};
 			document.getElementById(label.htmlFor).click();
 			return;
 		}
-		const i = label.querySelector('INPUT,SELECT,TEXTAREA');
+		const i = label.querySelector('INPUT,SELECT,TEXTAREA,BUTTON');
 		if (i) {
 			i.click();
 		} else {
