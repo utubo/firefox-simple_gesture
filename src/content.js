@@ -118,7 +118,7 @@ var SimpleGesture = {};
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
 		setupStartPoint(lx, ly);
-		target = e.target;
+		target = 'composed' in e ? e.composedPath()[0] : e.target;
 		if (executeEvent(SimpleGesture.onGestureStart, e) === false) return;
 		restartTimer();
 		if (gesture === 'W' && SimpleGesture.ini.toast) showGestureDelay();
