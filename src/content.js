@@ -377,7 +377,6 @@ var SimpleGesture = {};
 		if (toast) return;
 		toast = document.createElement('DIV');
 		toast.style.cssText = `
-			all: initial;
 			box-sizing: border-box;
 			left: 0;
 			line-height: 1.5;
@@ -404,8 +403,9 @@ var SimpleGesture = {};
 		`;
 		toastMain.appendChild(toastText);
 		toastMain.appendChild(toastUdlr);
-		toast.appendChild(toastMain);
-		toast.appendChild(toastSub);
+		const shadow = toast.attachShadow({ mode: 'open' });
+		shadow.appendChild(toastMain);
+		shadow.appendChild(toastSub);
 		document.body.appendChild(toast);
 	};
 	const showGesture = async () => {
