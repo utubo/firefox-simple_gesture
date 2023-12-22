@@ -246,7 +246,7 @@ var SimpleGesture = {};
 			doubleTap.count = ACCEPT_SINGLE_TAP;
 			const label = onlyLinkTag ? null : getLabelTag(tg);
 			if (label) {
-				clickLabel(label);
+				clickLabel(label, ev);
 			} else {
 				tg.dispatchEvent(ev);
 			}
@@ -271,9 +271,22 @@ var SimpleGesture = {};
 	}
 
 	// note: `click()` is not bubbling on FF for Android.
-	const clickLabel = label => {
+	var isHtmlForClicked = false;
+	const onHtmlForClick = () => { isHtmlForClicked = true; };
+	const clickLabel = (label, ev) => {
 		if (label.htmlFor) {
-			document.getElementById(label.htmlFor).click();
+			const htmlFor = document.getElementById(label.htmlFor);
+			if (htmlFor) {
+				isHtmlForClicked = false;
+				htmlFor.addEventListener('click', onHtmlForClick);
+				label.dispatchEvent(ev);
+				htmlFor.removeEventListener('click', onHtmlForClick);
+				if (!isHtmlForClicked) {
+					htmlFor.click();
+				}
+			} else {
+				label.click();
+			}
 			return;
 		}
 		const i = label.querySelector('INPUT,SELECT,TEXTAREA,BUTTON');
