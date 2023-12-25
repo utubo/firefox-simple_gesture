@@ -103,6 +103,33 @@ var SimpleGesture = {};
 		return f(e);
 	};
 
+	const getScrollable = d => {
+		let t = target;
+		while (t) {
+			var scrollable = false;
+			if (d < 0) {
+				scrollable = 0 < t.scrollTop;
+			} else if (t.clientHeight) {
+				scrollable = 1 <= Math.abs(t.scrollHeight - t.clientHeight - t.scrollTop);
+			}
+			if (scrollable) {
+				if (t.tagName === 'TEXTAREA') break;
+				try {
+					const o = window.getComputedStyle(t).overflowY;
+					if (o === 'auto' || o === 'scroll') break;
+				} catch {}
+			}
+			t = t.parentNode;
+		}
+		return t || document.scrollingElement;
+	}
+
+	const getLinkTag = target => {
+		let a = target;
+		while (a && !a.href) a = a.parentNode;
+		return a;
+	}
+
 	// touch-events ------
 	const onTouchStart = e => {
 		fixSize();
@@ -186,10 +213,13 @@ var SimpleGesture = {};
 		switch (g) {
 			case 'forward': history.forward(); break;
 			case 'back': history.back(); break;
-			case 'top': window.scrollTo({ top: 0, behavior: 'smooth' }); break;
-			case 'bottom': window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); break;
-			case 'pageUp': window.scrollBy({ top: - vvHeight(), behavior: 'smooth' }); break;
-			case 'pageDown': window.scrollBy({ top: vvHeight(), behavior: 'smooth' }); break;
+			case 'top': getScrollable(-1).scrollTo({ top: 0, behavior: 'smooth' }); break;
+			case 'bottom':
+				const s = getScrollable(1);
+				s.scrollTo({ top: s.scrollHeight, behavior: 'smooth' });
+				break;
+			case 'pageUp': getScrollable(-1).scrollBy({ top: - vvHeight(), behavior: 'smooth' }); break;
+			case 'pageDown': getScrollable(1).scrollBy({ top: vvHeight(), behavior: 'smooth' }); break;
 			case 'reload': location.reload(); break;
 			case 'disableGesture': toggleEnable(); break;
 			case 'openLinkInNewTab':
@@ -244,56 +274,50 @@ var SimpleGesture = {};
 		doubleTap.timer = setTimeout(() => {
 			doubleTap.timer = null;
 			doubleTap.count = ACCEPT_SINGLE_TAP;
-			const label = onlyLinkTag ? null : getLabelTag(tg);
-			if (label) {
-				clickLabel(label, ev);
+			const ctg = onlyLinkTag ? null : getClickTarget(tg);
+			if (ctg) {
+				clickTarget(ctg, ev);
 			} else {
 				tg.dispatchEvent(ev);
 			}
 		}, SimpleGesture.ini.doubleTapMsec + 1);
 	};
 
-	const getLinkTag = target => {
-		let a = target;
-		while (a && !a.href) a = a.parentNode;
-		return a;
-	}
-
-	const getLabelTag = target => {
+	const getClickTarget = target => {
 		if ("<INPUT><SELECT><TEXTAREA><BUTTON>".indexOf(target.tagName) !== -1) {
 			return null;
 		}
-		var label = target;
-		while (label && "<LABEL><BUTTON>".indexOf(label.tagName) === -1) {
-			label = label.parentNode;
+		var result = target;
+		while (result && "<LABEL><BUTTON>".indexOf(result.tagName) === -1) {
+			result = result.parentNode;
 		}
-		return label;
+		return result;
 	}
 
 	// note: `click()` is not bubbling on FF for Android.
 	var isHtmlForClicked = false;
 	const onHtmlForClick = () => { isHtmlForClicked = true; };
-	const clickLabel = (label, ev) => {
-		if (label.htmlFor) {
-			const htmlFor = document.getElementById(label.htmlFor);
+	const clickTarget = (elm, ev) => {
+		if (elm.htmlFor) {
+			const htmlFor = document.getElementById(elm.htmlFor);
 			if (htmlFor) {
 				isHtmlForClicked = false;
 				htmlFor.addEventListener('click', onHtmlForClick);
-				label.dispatchEvent(ev);
+				elm.dispatchEvent(ev);
 				htmlFor.removeEventListener('click', onHtmlForClick);
 				if (!isHtmlForClicked) {
 					htmlFor.click();
 				}
 			} else {
-				label.click();
+				elm.click();
 			}
 			return;
 		}
-		const i = label.querySelector('INPUT,SELECT,TEXTAREA,BUTTON');
+		const i = elm.querySelector('INPUT,SELECT,TEXTAREA,BUTTON');
 		if (i) {
 			i.click();
 		} else {
-			label.click();
+			elm.click();
 		}
 	};
 

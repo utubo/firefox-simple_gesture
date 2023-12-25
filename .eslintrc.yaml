@@ -2,4 +2,6 @@ root: true
 env:
   es2022: true
   browser: true
+extends:
+  - 'plugin:@typescript-eslint/eslint-recommended'
 
