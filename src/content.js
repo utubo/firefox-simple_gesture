@@ -65,8 +65,8 @@ var SimpleGesture = {};
 	};
 
 	const restartTimer = () => {
-		window.clearTimeout(timer);
-		timer = SimpleGesture.ini.timeout ? window.setTimeout(timeoutGesture, SimpleGesture.ini.timeout) : null;
+		clearTimeout(timer);
+		timer = SimpleGesture.ini.timeout ? setTimeout(timeoutGesture, SimpleGesture.ini.timeout) : null;
 	};
 
 	const resetGesture = e => {
@@ -103,6 +103,13 @@ var SimpleGesture = {};
 		return f(e);
 	};
 
+	const getLinkTag = target => {
+		let a = target;
+		while (a && !a.href) a = a.parentNode;
+		return a;
+	}
+
+	// dom control --------
 	const scroll = (d, ft) => {
 		let t = target;
 		while (t) {
@@ -126,11 +133,38 @@ var SimpleGesture = {};
 		fn.call(t, { top: top, behavior: 'smooth' });
 	};
 
-	const getLinkTag = target => {
-		let a = target;
-		while (a && !a.href) a = a.parentNode;
-		return a;
-	}
+	// note: `click()` is not bubbling on FF for Android.
+	var isLabelTargetClicked = false;
+
+	const onLabelTargetClick = () => { isLabelTargetClicked = true; };
+
+	const clickTarget = (tg, ev) => {
+		var ctg = tg;
+		if ('<INPUT><SELECT><TEXTAREA>'.indexOf(ctg.tagName) === -1) {
+			while (ctg && '<LABEL><BUTTON>'.indexOf(ctg.tagName) === -1) {
+				ctg = ctg.parentNode;
+			}
+			ctg = ctg || tg;
+		}
+		var labelTarget = null;
+		if (ctg.htmlFor) {
+			labelTarget = document.getElementById(ctg.htmlFor);
+		}
+		if (ctg.tagName === 'LABEL' && !labelTarget) {
+			labelTarget = ctg.querySelector('INPUT,SELECT,TEXTAREA,BUTTON');
+		}
+		if (labelTarget) {
+			isLabelTargetClicked = false;
+			labelTarget.addEventListener('click', onLabelTargetClick);
+			ctg.dispatchEvent(ev);
+			labelTarget.removeEventListener('click', onLabelTargetClick);
+			if (!isLabelTargetClicked) {
+				labelTarget.click();
+			}
+		} else {
+			ctg.click();
+		}
+	};
 
 	// touch-events ------
 	const onTouchStart = e => {
@@ -181,8 +215,8 @@ var SimpleGesture = {};
 	const onTouchEnd = e => {
 		try {
 			touchEndTime = Date.now();
-			window.clearTimeout(timer);
-			window.clearTimeout(showToastTimer);
+			clearTimeout(timer);
+			clearTimeout(showToastTimer);
 			hideToast();
 			if (executeEvent(SimpleGesture.onGestured, e) === false) return;
 			const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
@@ -273,55 +307,17 @@ var SimpleGesture = {};
 		doubleTap.timer = setTimeout(() => {
 			doubleTap.timer = null;
 			doubleTap.count = ACCEPT_SINGLE_TAP;
-			const ctg = onlyLinkTag ? null : getClickTarget(tg);
-			if (ctg) {
-				clickTarget(ctg, ev);
-			} else {
+			if (onlyLinkTag ) {
 				tg.dispatchEvent(ev);
+			} else {
+				clickTarget(tg, ev);
 			}
 		}, SimpleGesture.ini.doubleTapMsec + 1);
 	};
 
-	const getClickTarget = target => {
-		if ("<INPUT><SELECT><TEXTAREA><BUTTON>".indexOf(target.tagName) !== -1) {
-			return null;
-		}
-		var result = target;
-		while (result && "<LABEL><BUTTON>".indexOf(result.tagName) === -1) {
-			result = result.parentNode;
-		}
-		return result;
-	}
-
-	// note: `click()` is not bubbling on FF for Android.
-	var isHtmlForClicked = false;
-	const onHtmlForClick = () => { isHtmlForClicked = true; };
-	const clickTarget = (elm, ev) => {
-		if (elm.htmlFor) {
-			const htmlFor = document.getElementById(elm.htmlFor);
-			if (htmlFor) {
-				isHtmlForClicked = false;
-				htmlFor.addEventListener('click', onHtmlForClick);
-				elm.dispatchEvent(ev);
-				htmlFor.removeEventListener('click', onHtmlForClick);
-				if (!isHtmlForClicked) {
-					htmlFor.click();
-				}
-			} else {
-				elm.click();
-			}
-			return;
-		}
-		const i = elm.querySelector('INPUT,SELECT,TEXTAREA,BUTTON');
-		if (i) {
-			i.click();
-		} else {
-			elm.click();
-		}
-	};
-
 	// toast --------------
 	const arrows = {};
+
 	const getSvgNode = (name, attrs) => {
 		const n = document.createElementNS('http://www.w3.org/2000/svg', name);
 		for (let key in attrs) {
@@ -329,6 +325,7 @@ var SimpleGesture = {};
 		}
 		return n;
 	};
+
 	const makeArrowSvg = () => {
 		if (arrows.U) return;
 		const base = document.createElement('SPAN');
@@ -360,6 +357,7 @@ var SimpleGesture = {};
 			d:'M1 6a4 4 0 1 1 10 0 M3 6a3 3 0 1 1 6 0 M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
 		}));
 	};
+
 	SimpleGesture.drawArrows = (udlr, label) => {
 		makeArrowSvg();
 		const a = [];
@@ -384,6 +382,7 @@ var SimpleGesture = {};
 			toast.style.transition += ',left .2s .1s, top .2s .1s';
 		}, 300);
 	};
+
 	const fixToastSize = () => {
 		const w = vvWidth();
 		const h = vvHeight();
@@ -391,6 +390,7 @@ var SimpleGesture = {};
 		toast.style.fontSize = ((5 * z)^0) + 'px'; // "vmin" of CSS has a problem when the page is zoomed.
 		toast.style.width = w + 'px';
 	};
+
 	const fixToastPosition = () => {
 		if (VV.isDummy) return;
 		if (!toast) return;
@@ -398,6 +398,7 @@ var SimpleGesture = {};
 		toast.style.top = VV.offsetTop + 'px';
 		toast.style.left = VV.offsetLeft + 'px';
 	};
+
 	const hideToast = delay => {
 		if (!toast) return;
 		if (!isToastVisible) return;
@@ -405,10 +406,11 @@ var SimpleGesture = {};
 			hideToastTimer = setTimeout(hideToast, delay);
 			return;
 		}
-		window.clearTimeout(hideToastTimer);
+		clearTimeout(hideToastTimer);
 		isToastVisible = false;
 		window.requestAnimationFrame(() => { toast.style.opacity = '0'; });
 	};
+
 	const setupToast = () => {
 		if (toast) return;
 		toast = document.createElement('DIV');
@@ -444,8 +446,9 @@ var SimpleGesture = {};
 		shadow.appendChild(toastSub);
 		document.body.appendChild(toast);
 	};
+
 	const showGesture = async () => {
-		window.clearTimeout(showToastTimer);
+		clearTimeout(showToastTimer);
 		const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
 		if (!g && !gesture[1] && !startPoint) return;
 		if (!isGestureEnabled && g !== 'disableGesture') {
@@ -470,8 +473,9 @@ var SimpleGesture = {};
 		}
 		showToast();
 	};
+
 	const showGestureDelay = () => {
-		window.clearTimeout(showToastTimer);
+		clearTimeout(showToastTimer);
 		showToastTimer = setTimeout(showGesture, SHOW_TOAST_DELAY);
 	}
 
