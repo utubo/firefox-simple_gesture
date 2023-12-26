@@ -103,26 +103,28 @@ var SimpleGesture = {};
 		return f(e);
 	};
 
-	const getScrollable = d => {
+	const scroll = (d, ft) => {
 		let t = target;
 		while (t) {
-			var scrollable = false;
-			if (d < 0) {
-				scrollable = 0 < t.scrollTop;
-			} else if (t.clientHeight) {
-				scrollable = 1 <= Math.abs(t.scrollHeight - t.clientHeight - t.scrollTop);
-			}
-			if (scrollable) {
-				if (t.tagName === 'TEXTAREA') break;
-				try {
+			try {
+				let scrollable = false;
+				if (d <= 0) {
+					scrollable = 0 < t.scrollTop;
+				} else if (t.clientHeight) {
+					scrollable = 1 <= Math.abs(t.scrollHeight - t.clientHeight - t.scrollTop);
+				}
+				if (scrollable) {
+					if (t.tagName === 'TEXTAREA') break;
 					const o = window.getComputedStyle(t).overflowY;
 					if (o === 'auto' || o === 'scroll') break;
-				} catch {}
-			}
+				}
+			} catch {}
 			t = t.parentNode;
 		}
-		return t || document.scrollingElement;
-	}
+		t = t || document.scrollingElement;
+		const [fn, top] = ft(t);
+		fn.call(t, { top: top, behavior: 'smooth' });
+	};
 
 	const getLinkTag = target => {
 		let a = target;
@@ -213,13 +215,10 @@ var SimpleGesture = {};
 		switch (g) {
 			case 'forward': history.forward(); break;
 			case 'back': history.back(); break;
-			case 'top': getScrollable(-1).scrollTo({ top: 0, behavior: 'smooth' }); break;
-			case 'bottom':
-				const s = getScrollable(1);
-				s.scrollTo({ top: s.scrollHeight, behavior: 'smooth' });
-				break;
-			case 'pageUp': getScrollable(-1).scrollBy({ top: - vvHeight(), behavior: 'smooth' }); break;
-			case 'pageDown': getScrollable(1).scrollBy({ top: vvHeight(), behavior: 'smooth' }); break;
+			case 'top': scroll(-1, s => [s.scrollTo, 0]); break;
+			case 'bottom': scroll(1, s => [s.scrollTo, s.scrollHeight]); break;
+			case 'pageUp': scroll(-1, s => [s.scrollBy, -vvHeight()]); break;
+			case 'pageDown': scroll(1, s => [s.scrollBy, vvHeight()]); break;
 			case 'reload': location.reload(); break;
 			case 'disableGesture': toggleEnable(); break;
 			case 'openLinkInNewTab':
