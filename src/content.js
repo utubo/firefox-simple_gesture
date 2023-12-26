@@ -162,7 +162,7 @@ var SimpleGesture = {};
 				labelTarget.click();
 			}
 		} else {
-			ctg.click();
+			ctg.dispatchEvent(ev);
 		}
 	};
 
