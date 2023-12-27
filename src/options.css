@@ -277,18 +277,18 @@ input, textarea, select {
 }
 
 /* gestures */
-.udlr {
+.arrows {
 	color: #666;
 	border: 2px dashed transparent;
 }
-.udlr-na {
+.arrows-na {
 	border-color: unset;
 	border-radius: 4px;
 	white-space: pre;
 	width: 3em;
 }
 .gesture-caption,
-.udlr,
+.arrows,
 .number-input {
 	transition: color .5s ease;
 }
@@ -374,11 +374,14 @@ input, textarea, select {
 	line-height: 1rem;
 	position: absolute;
 	text-align: center;
+	text-shadow: 0px 0px 0px #0000;
+	transition: .2s;
 	width: 100%;
 }
 #inputedGesture {
 	display: inline-block;
 	margin: 0;
+	text-shadow: 0px 0px 0px #0000;
 	transition: .2s;
 }
 #dupName {
@@ -605,7 +608,7 @@ input, textarea, select {
 	.checkbox:checked + .checkbox-image {
 		background: #86a;
 	}
-	.udlr {
+	.arrows {
 		color: #999;
 	}
 	/* dialog */

@@ -49,7 +49,7 @@ var SimpleGesture = {};
 	let toast;
 	let toastMain;
 	let toastText;
-	let toastUdlr;
+	let toastArrows;
 	let toastSub;
 	let isToastVisible;
 	// others
@@ -74,7 +74,7 @@ var SimpleGesture = {};
 		timer = null;
 		if (e && e.withTimeout && toast) {
 			toastText.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
-			toastUdlr.textContent = '';
+			toastArrows.textContent = '';
 			hideToast(1000);
 		} else {
 			hideToast();
@@ -182,7 +182,7 @@ var SimpleGesture = {};
 		lg = null;
 		setupStartPoint(lx, ly);
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
-		if (executeEvent(!gesture ? SimpleGesture.onGestureStart : SimpleGesture.onInputGesture, e) === false) return;
+		if (executeEvent(!gesture ? SimpleGesture.onStart : SimpleGesture.onInput, e) === false) return;
 		restartTimer();
 		if (gesture === 'W' && SimpleGesture.ini.toast) showGestureDelay();
 	};
@@ -207,7 +207,7 @@ var SimpleGesture = {};
 		lg = g;
 		if (gesture) gesture += '-';
 		gesture += g;
-		if (executeEvent(SimpleGesture.onInputGesture, e) === false) return;
+		if (executeEvent(SimpleGesture.onInput, e) === false) return;
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
 	};
@@ -218,7 +218,7 @@ var SimpleGesture = {};
 			clearTimeout(timer);
 			clearTimeout(showToastTimer);
 			hideToast();
-			if (executeEvent(SimpleGesture.onGestured, e) === false) return;
+			if (executeEvent(SimpleGesture.onEnd, e) === false) return;
 			const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
 			if (!g) return;
 			if (!isGestureEnabled && g !== 'disableGesture') return;
@@ -316,7 +316,7 @@ var SimpleGesture = {};
 	};
 
 	// toast --------------
-	const arrows = {};
+	const arrowsSvg = {};
 
 	const getSvgNode = (name, attrs) => {
 		const n = document.createElementNS('http://www.w3.org/2000/svg', name);
@@ -327,7 +327,7 @@ var SimpleGesture = {};
 	};
 
 	const makeArrowSvg = () => {
-		if (arrows.U) return;
+		if (arrowsSvg.U) return;
 		const base = document.createElement('SPAN');
 		base.style.cssText = `
 			display: inline-block;
@@ -349,20 +349,20 @@ var SimpleGesture = {};
 		const arrowBase = base.cloneNode(true);
 		arrowBase.firstChild.appendChild(getSvgNode('path', { d: 'M 6 10v-8m-4 4l4-4 4 4' }));
 		for (const [key, r] of Object.entries(rotate)) {
-			arrows[key] = arrowBase.cloneNode(true);
-			arrows[key].firstChild.style.transform = `rotate(${r}deg)`;
+			arrowsSvg[key] = arrowBase.cloneNode(true);
+			arrowsSvg[key].firstChild.style.transform = `rotate(${r}deg)`;
 		}
-		arrows.W = base.cloneNode(true);
-		arrows.W.firstChild.appendChild(getSvgNode('path', {
+		arrowsSvg.W = base.cloneNode(true);
+		arrowsSvg.W.firstChild.appendChild(getSvgNode('path', {
 			d:'M1 6a4 4 0 1 1 10 0 M3 6a3 3 0 1 1 6 0 M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
 		}));
 	};
 
-	SimpleGesture.drawArrows = (udlr, label) => {
+	SimpleGesture.drawArrows = (gesture, label) => {
 		makeArrowSvg();
 		const a = [];
-		for (const g of udlr.split('-')) {
-			a.push(arrows[g].cloneNode(true));
+		for (const g of gesture.split('-')) {
+			a.push(arrowsSvg[g].cloneNode(true));
 		}
 		label.replaceChildren(...a);
 	};
@@ -431,7 +431,7 @@ var SimpleGesture = {};
 		toastMain = document.createElement('DIV');
 		toastMain.style.cssText = 'padding: .2em 0; line-height: 1;';
 		toastText = document.createElement('SPAN');
-		toastUdlr = document.createElement('SPAN');
+		toastArrows = document.createElement('SPAN');
 		toastSub = document.createElement('DIV');
 		toastSub.style.cssText = `
 			font-size: 60%;
@@ -440,7 +440,7 @@ var SimpleGesture = {};
 			text-align: right;
 		`;
 		toastMain.appendChild(toastText);
-		toastMain.appendChild(toastUdlr);
+		toastMain.appendChild(toastArrows);
 		const shadow = toast.attachShadow({ mode: 'open' });
 		shadow.appendChild(toastMain);
 		shadow.appendChild(toastSub);
@@ -466,7 +466,7 @@ var SimpleGesture = {};
 		}
 		setupToast();
 		toastText.textContent = name;
-		SimpleGesture.drawArrows(gesture, toastUdlr);
+		SimpleGesture.drawArrows(gesture, toastArrows);
 		if (toast.getAttribute('x-startPoint') !== startPoint) {
 			toast.setAttribute('x-startPoint', startPoint);
 			toastSub.textContent = startPoint ? `${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)}` : '';

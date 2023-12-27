@@ -110,7 +110,7 @@
 	 * 'U-D' to ['', 'U-D']
 	 * '' to ['', '']
 	 */
-	const toStartPointAndUdlr = s => (s ? s[1] === ':' ? s.split(':') : ['', s] : ['', '']);
+	const toStartPointAndArrows = s => (s ? s[1] === ':' ? s.split(':') : ['', s] : ['', '']);
 
 	const ifById = id => (typeof id === 'string') ? byId(id): id;
 	const fadeout = elm => { ifById(elm).classList.add('transparent'); };
@@ -136,39 +136,39 @@
 	const bidingForms = allByClass('js-binding');
 
 	// edit U-D-L-R ------
-	const updateUdlrLabel = (labelUdlr, labelStartPoint, sudlr) => {
-		const [startPoint, udlr] = toStartPointAndUdlr(sudlr);
-		if (udlr) {
-			SimpleGesture.drawArrows(udlr, labelUdlr);
+	const updateArrowsLabel = (arrowsLabel, startPointLabel, gesture) => {
+		const [startPoint, arrows] = toStartPointAndArrows(gesture);
+		if (arrows) {
+			SimpleGesture.drawArrows(arrows, arrowsLabel);
 		} else {
-			labelUdlr.textContent = INSTEAD_OF_EMPTY.noGesture;
+			arrowsLabel.textContent = INSTEAD_OF_EMPTY.noGesture;
 		}
-		labelStartPoint.textContent = startPoint ? `(${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)})` : '';
-		return [startPoint, udlr];
+		startPointLabel.textContent = startPoint ? `(${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)})` : '';
+		return [startPoint, arrows];
 	};
-	const updateGestureItem = (label, sudlr) => {
-		const note = byClass(label.parentNode, 'udlr-note');
-		const [startPoint, udlr] = updateUdlrLabel(label, note, sudlr);
+	const updateGestureItem = (label, gesture) => {
+		const note = byClass(label.parentNode, 'arrows-note');
+		const [startPoint, arrows] = updateArrowsLabel(label, note, gesture);
 		toggleClass(!startPoint, 'hide', note);
-		toggleClass(!udlr, 'udlr-na', label);
-		label.setAttribute('x-sudlr', sudlr || '');
+		toggleClass(!arrows, 'arrows-na', label);
+		label.setAttribute('data-gesture', gesture || '');
 	};
 
 	const CLEAR_GESTURE = 'n/a'; // magic number
-	const updateGesture = (udlr, startPoint) => {
-		if (udlr) {
-			let sudlr = (startPoint || '') + udlr;
-			if (sudlr === CLEAR_GESTURE) {
-				sudlr = null;
+	const updateGesture = (arrows, startPoint) => {
+		if (arrows) {
+			let gesture = (startPoint || '') + arrows;
+			if (gesture === CLEAR_GESTURE) {
+				gesture = null;
 			} else {
-				SimpleGesture.ini.gestures[sudlr] = null;
+				SimpleGesture.ini.gestures[gesture] = null;
 			}
-			const udlrs = swapKeyValue(SimpleGesture.ini.gestures);
-			udlrs[target.name] = sudlr;
-			SimpleGesture.ini.gestures = swapKeyValue(udlrs);
+			const arrowss = swapKeyValue(SimpleGesture.ini.gestures);
+			arrowss[target.name] = gesture;
+			SimpleGesture.ini.gestures = swapKeyValue(arrowss);
 			saveIni();
 			for (const name of gestureNames) {
-				 updateGestureItem(byId(`${name}_udlr`), udlrs[name]);
+				 updateGestureItem(byId(`${name}_arrows`), arrowss[name]);
 			}
 		}
 		toggleDoubleTapNote();
@@ -186,13 +186,13 @@
 		onShow: id => {
 			target = { name: id.replace(/_[^_]+$/, '') };
 			target.caption = byId(`${target.name}_caption`);
-			target.udlr = byId(`${target.name}_udlr`);
-			hilightEditStart(target.udlr);
+			target.arrows = byId(`${target.name}_arrows`);
+			hilightEditStart(target.arrows);
 			byId('editTarget').textContent = target.caption.textContent;
-			const [startPoint, udlr] = updateUdlrLabel(
+			const [startPoint, _] = updateArrowsLabel(
 				inputedGesture,
 				inputedStartPoint,
-				target.udlr.getAttribute('x-sudlr')
+				target.arrows.getAttribute('data-gesture')
 			);
 			toggleClass(!startPoint, 'hide', inputedStartPoint);
 			toggleClass(false, 'dup', inputedGesture, inputedStartPoint);
@@ -202,12 +202,12 @@
 		},
 		onHide: () => {
 			if (!target) return;
-			unhilightEditEnd(target.udlr);
+			unhilightEditEnd(target.arrows);
 			target = null;
 		}
 	};
 
-	const getUdlr = name => {
+	const getGesture = name => {
 		for (const g in SimpleGesture.ini.gestures) {
 			if (SimpleGesture.ini.gestures[g] === name) return g;
 		}
@@ -216,9 +216,9 @@
 	const createGestureItem = (name, isExperimental = false) => {
 		const item = gestureTemplate.cloneNode(true);
 		item.id = `${name}_item`;
-		const label = byClass(item, 'udlr');
-		label.id = `${name}_udlr`;
-		updateGestureItem(label, getUdlr(name));
+		const label = byClass(item, 'arrows');
+		label.id = `${name}_arrows`;
+		updateGestureItem(label, getGesture(name));
 		const caption = byClass(item, 'gesture-caption');
 		caption.id = `${name}_caption`;
 		caption.textContent = name;
@@ -290,34 +290,29 @@
 	};
 
 	// inject settings-page behavior
-	SimpleGesture.onGestureStart = e => {
+	SimpleGesture.onStart = e => {
 		if (!target) return;
 		e.preventDefault();
 		return false;
 	};
-	SimpleGesture.onInputGesture = e => {
+	SimpleGesture.onInput = e => {
 		if (!target) return;
 		if (e.gesture.length > SimpleGesture.MAX_LENGTH) {
 			inputedGesture.classList.add('canceled');
 			cancelInputGesture.classList.add('hover');
 		}
 		toggleClass(!e.startPoint, 'hide', inputedStartPoint);
-		const sudlr = e.startPoint + e.gesture.substring(0, MAX_LENGTH);
-		updateUdlrLabel(
-			inputedGesture,
-			inputedStartPoint,
-			sudlr
-		);
-		let dup = SimpleGesture.ini.gestures[sudlr];
+		const gesture = e.startPoint + e.gesture.substring(0, MAX_LENGTH);
+		updateArrowsLabel(inputedGesture, inputedStartPoint, gesture);
+		let dup = SimpleGesture.ini.gestures[gesture];
 		dup = (dup && dup !== target.name) ? getMessage(dup) : '';
-		dup = dup ? `\u00a0(${dup})` : '';
-		dupName.textContent = dup;
+		dupName.textContent = dup ? `\u00a0(${dup})` : '';
 		toggleClass(dup, 'dup', inputedGesture, inputedStartPoint);
 		e.preventDefault();
 		return false;
 	};
 	let touchEndTimer = null;
-	SimpleGesture.onGestured = e => {
+	SimpleGesture.onEnd = e => {
 		clearTimeout(touchEndTimer);
 		if (!target) return;
 		if (inputedGesture.classList.contains('canceled')) {
@@ -460,7 +455,7 @@
 		customGestureScript.value += script;
 		customGestureScript.selectStart = customGestureScript.value.length;
 		customGestureScript.scrollTop = customGestureScript.scrollHeight;
-		window.requestAnimationFrame(() => { e.target.selectedIndex = 0; });
+		requestAnimationFrame(() => { e.target.selectedIndex = 0; });
 	};
 	const setupEditDlg = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
