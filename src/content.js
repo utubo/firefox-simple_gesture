@@ -182,7 +182,7 @@ var SimpleGesture = {};
 		lg = null;
 		setupStartPoint(lx, ly);
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
-		if (executeEvent(SimpleGesture.onGestureStart, e) === false) return;
+		if (executeEvent(!gesture ? SimpleGesture.onGestureStart : SimpleGesture.onInputGesture, e) === false) return;
 		restartTimer();
 		if (gesture === 'W' && SimpleGesture.ini.toast) showGestureDelay();
 	};
