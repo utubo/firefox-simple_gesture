@@ -5,6 +5,7 @@
 	--caption: #0c0c0d;
 	--accent: #592acb;
 	--checked: #2f2961;
+	--secondery: #666;
 }
 body {
 	background: var(--bg-color);
@@ -29,9 +30,10 @@ body {
 	box-shadow: 0 2px 2px #0003;
 	box-sizing: border-box;
 	display: block;
+	font-size: 1.2rem;
 	font-weight: bold;
-	height: 2.5rem;
-	padding: .8rem 1rem;
+	line-height: 3.4rem;
+	padding-left: 1rem;
 	position: fixed;
 	width: 100%;
 	z-index: 1;
@@ -99,14 +101,14 @@ h2:first-child {
 .caption {
 	color: var(--caption);
 	display: block;
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 }
 .sub-caption {
 	color: var(--caption);
 	display: block;
 }
 .summary {
-	color: #666;
+	color: var(--secondery);
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
@@ -115,7 +117,7 @@ h2:first-child {
 	padding: .4rem 0;
 }
 .note {
-	color: #666;
+	color: var(--secondery);
 	display: block;
 	font-size: .8rem;
 }
@@ -126,7 +128,6 @@ h2:first-child {
 	background: #fc3;
 	border-radius: 50%;
 	color: #333 !important;
-	content: '!';
 	display: inline-block;
 	font-weight: bold;
 	height: 1rem;
@@ -145,6 +146,12 @@ h2:first-child {
 	background: #33ccff;
 	color: #fff !important;
 	content: 'i';
+}
+.note-alert::before {
+	border-radius: 0;
+	background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="%23ffcc33" fill="%23ffcc33" stroke-linejoin="round"><path d="M4 14h-2q-1 0-1-1l6-11 q1-1 2 0l6 11q0 1-1 1z"/></svg>');
+	background-size: contain;
+	content: '!';
 }
 
 /* form */
@@ -278,7 +285,7 @@ input, textarea, select {
 
 /* gestures */
 .arrows {
-	color: #666;
+	color: var(--secondery);
 	border: 2px dashed transparent;
 }
 .arrows-na {
@@ -549,10 +556,10 @@ input, textarea, select {
 	width: 1em;
 }
 .icon-delete::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 4h12M4 4v9q0 1 1 1h6q1 0 1-1v-9M6 6v6M8 6v6M10 6v6M6 4q0 -2 2-2 2 0 2 2"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 4h12M4 4v9q0 1 1 1h6q1 0 1-1v-9M6.5 6v6M9.5 6v6M6 4q0 -2 2-2 2 0 2 2"/></svg>');
 }
 .icon-edit::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 14h4l8-8q1-1 0-2l-2-2q-1-1-2 0l-8 8zM9 3l4 4"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M14 14h-4l-8-8q-1-1 0-2l2-2q1-1 2 0l8 8zM3 7l4-4"/></svg>');
 }
 .icon-add::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1"><path d="M2 8h12M8 2v12"/></svg>');
@@ -561,13 +568,13 @@ input, textarea, select {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1"><path d="M2 2l12 12M2 14l12-12"/></svg>');
 }
 .icon-save::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 9l4 5q1 1 2 0l6-11"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 6l5 5 7-7"/></svg>');
 }
 .export-setting::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 10v3q0 1 1 1h10q1 0 1-1v-3M8 2v8m-3-3l3 3l3-3"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none" stroke-linejoin="round"><path d="M11.5 10v4h-9v-12h9v4M8 8h7"/><path fill="black" d="M13 8v-2l2 2-2 2z"/></svg>');
 }
 .import-setting::before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 10v3q0 1 1 1h10q1 0 1-1v-3M8 2v8m-3-5l3-3l3 3"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none" stroke-linejoin="round"><path d="M4.5 10v4h9v-12h-9v4M2 8h7"/><path fill="black" d="M7 8v-2l2 2-2 2z"/></svg>');
 }
 
 /* icon */
@@ -586,6 +593,7 @@ input, textarea, select {
 		--caption: #fbfbfecc;
 		--accent: #cb9eff;
 		--checked: #cb9eff;
+		--secondery: #fbfbfeaa;
 	}
 	.page-header, h2 {
 		border-color: #42414d;
@@ -596,9 +604,6 @@ input, textarea, select {
 	.gesture-caption {
 		color: var(--caption);
 	}
-	.summary, .note {
-		color: #999;
-	}
 	.color-preview {
 		border-color: #999;
 	}
@@ -607,9 +612,6 @@ input, textarea, select {
 	}
 	.checkbox:checked + .checkbox-image {
 		background: #86a;
-	}
-	.arrows {
-		color: #999;
 	}
 	/* dialog */
 	.dlg {
