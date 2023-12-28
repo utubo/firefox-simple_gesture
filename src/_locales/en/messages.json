@@ -196,6 +196,9 @@
 	"Blacklist": {
 		"message": "Deny list"
 	},
+	"disableWhileZoomedIn": {
+		"message": "Disable while zoomed in"
+	},
 	"None": {
 		"message": "None"
 	},

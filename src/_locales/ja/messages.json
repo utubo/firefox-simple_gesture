@@ -196,6 +196,9 @@
 	"Blacklist": {
 		"message": "ジェスチャ無効URL"
 	},
+	"disableWhileZoomedIn": {
+		"message": "拡大表示中は無効にする"
+	},
 	"None": {
 		"message": "無し"
 	},

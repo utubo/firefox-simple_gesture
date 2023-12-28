@@ -196,6 +196,9 @@
 	"Blacklist": {
 		"message": "黑名单"
 	},
+	"disableWhileZoomedIn": {
+		"message": "放大时停用"
+	},
 	"None": {
 		"message": "沒"
 	},

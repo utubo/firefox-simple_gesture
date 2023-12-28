@@ -19,7 +19,8 @@ var SimpleGesture = {};
 		doubleTapMsec: 200,
 		delaySingleTap: false,
 		toast: true,
-		blacklist: []
+		blacklist: [],
+		disableWhileZoomedIn: false
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
@@ -190,6 +191,7 @@ var SimpleGesture = {};
 	const onTouchMove = e => {
 		if (gesture === null) return;
 		if (gesture.length > SimpleGesture.MAX_LENGTH) return;
+		if (!gesture && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
 		if (e.touches && e.touches[1]) { // not support two fingers
 			resetGesture();
 			return;

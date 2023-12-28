@@ -773,7 +773,7 @@
 	const onScrollEnd = e => {
 		if (openedDlg) return;
 		const hasOldY = history.state && 'y' in history.state;
-		const newY = window.pageYOffset;
+		const newY = window.scrollY;
 		if (newY || e && e.force) {
 			if (hasOldY) {
 				history.replaceState({ y: newY }, document.title);

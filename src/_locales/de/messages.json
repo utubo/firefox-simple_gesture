@@ -196,6 +196,9 @@
 	"Blacklist": {
 		"message": "Blacklist"
 	},
+	"disableWhileZoomedIn": {
+		"message": "Deaktivieren bei Vergrößerung"
+	},
 	"None": {
 		"message": "Keine"
 	},
