@@ -359,6 +359,19 @@ input, textarea, select {
 	margin-top: 1em;
 }
 
+#preventPullToRefresh {
+	height: 100vh;
+	left: 0;
+	opacity: 0;
+	overflow: auto;
+	position: fixed;
+	top: 0;
+	width: 100vw;
+}
+.prevent-pull-to-refresh {
+	height: calc(100vh + 2000px);
+	width: calc(100vw + 2000px);
+}
 .gesture-area {
 	background: #fff;
 	content: ' ';

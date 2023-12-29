@@ -199,6 +199,8 @@
 			toggleClass(false, 'canceled', inputedGesture);
 			toggleClass(false, 'hover', cancelInputGesture);
 			dupName.textContent = '';
+			byId('preventPullToRefresh').scrollTop = 1000;
+			byId('preventPullToRefresh').scrollLeft = 1000;
 		},
 		onHide: () => {
 			if (!target) return;
