@@ -59,7 +59,7 @@ body {
 	box-sizing: border-box;
 	/* min-height: 100vh; this setting has probrem of scroll position. */
 	padding-bottom: 2rem;
-	padding-top: 2.5rem;
+	padding-top: 3.3rem;
 }
 .page-header, h2 {
 	border-top: 1pt solid #d7d7db;
