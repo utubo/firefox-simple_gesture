@@ -160,11 +160,17 @@ form {
 	margin: 0;
 }
 input, textarea, select {
+	accent-color: var(--accent) !important;
 	background: #f0f0f4;
 	border: none;
 	border-radius: 4px;
+	caret-color: var(--accent) !important;
 	color: var(--fg-color);
+	outline-color: var(--accent);
 	padding: .15rem;
+}
+textarea:selection, input:selection {
+	background: #666;
 }
 .text-input {
 	box-sizing: border-box;
