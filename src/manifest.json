@@ -19,8 +19,8 @@
 	},
 
 	"options_ui": {
-			"page": "options.html",
-			"open_in_tab": true
+		"page": "options.html",
+		"open_in_tab": true
 	},
 
 	"content_scripts": [
@@ -32,7 +32,7 @@
 	],
 
 	"background": {
-			"scripts": ["background.js"]
+		"scripts": ["background.js"]
 	},
 
 	"permissions": [
