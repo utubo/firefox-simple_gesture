@@ -233,13 +233,13 @@
 		"message": "Configurations"
 	},
 	"Export / Import": {
-		"message": "設定のバックアップと復元"
+		"message": "Export / Import"
 	},
 	"Export settings to downloads folder": {
-		"message": "設定を保存する"
+		"message": "Export settings to downloads folder"
 	},
 	"Import settings from JSON" : {
-		"message": "バックアップから復元する"
+		"message": "Import settings from JSON"
 	}
 }
 
