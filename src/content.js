@@ -253,8 +253,8 @@ var SimpleGesture = {};
 			case 'back': history.back(); break;
 			case 'top': scroll(-1, s => [s.scrollTo, 0]); break;
 			case 'bottom': scroll(1, s => [s.scrollTo, s.scrollHeight]); break;
-			case 'pageUp': scroll(-1, s => [s.scrollBy, -vvHeight()]); break;
-			case 'pageDown': scroll(1, s => [s.scrollBy, vvHeight()]); break;
+			case 'pageUp': scroll(-1, s => [s.scrollBy, -s.clientHeight]); break;
+			case 'pageDown': scroll(1, s => [s.scrollBy, s.clientHeight]); break;
 			case 'reload': location.reload(); break;
 			case 'disableGesture': toggleEnable(); break;
 			case 'openLinkInNewTab':
