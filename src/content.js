@@ -111,7 +111,7 @@ var SimpleGesture = {};
 	}
 
 	// dom control --------
-	const scroll = (d, ft) => {
+	const scroll = (d, cb) => {
 		let t = target;
 		while (t) {
 			try {
@@ -129,8 +129,8 @@ var SimpleGesture = {};
 			} catch {}
 			t = t.parentNode;
 		}
-		t = t || document.scrollingElement;
-		const [fn, top] = ft(t);
+		t = t && t.tagName !== 'BODY' ? t : document.documentElement;
+		const [fn, top] = cb(t);
 		fn.call(t, { top: top, behavior: 'smooth' });
 	};
 
