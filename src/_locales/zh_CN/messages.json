@@ -67,6 +67,9 @@
 	"openLinkInBackground": {
 		"message": "在后台打开链接"
 	},
+	"New tab opened": {
+		"message": "已打开新标签页"
+	},
 	"doubleTapNote": {
 		"message": "延迟单击以等待双击"
 	},

@@ -67,6 +67,9 @@
 	"openLinkInBackground": {
 		"message": "リンクをバックグラウンドで開く"
 	},
+	"New tab opened": {
+		"message": "新しいタブを開きました"
+	},
 	"doubleTapNote": {
 		"message": "ダブルタップを検知するため通常のタップが遅延されます"
 	},

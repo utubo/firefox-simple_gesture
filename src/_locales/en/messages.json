@@ -67,6 +67,9 @@
 	"openLinkInBackground": {
 		"message": "Open link in background"
 	},
+	"New tab opened": {
+		"message": "New tab opened"
+	},
 	"doubleTapNote": {
 		"message": "Single tap is delayed to wait for double tap."
 	},

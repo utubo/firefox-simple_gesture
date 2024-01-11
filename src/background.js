@@ -39,8 +39,9 @@
 			browser.tabs.create({ active: true, url: arg.url });
 		},
 		openLinkInBackground: async arg => {
-			await browser.tabs.create({ active: false, url: arg.url });
-			browser.tabs.update(arg.tab.id, { active: true });
+			const newTab = await browser.tabs.create({ active: false, url: arg.url });
+			await browser.tabs.update(arg.tab.id, { active: true });
+			browser.tabs.executeScript(arg.tabId, { code: `SimpleGesture.showToastForNewTab(${newTab.id});` });
 		},
 		newTab: async () => {
 			const url = await iniValue('newTabUrl');
@@ -123,6 +124,9 @@
 			}
 			// show 1st tab that is not hidden.
 			if (arg.tab.index !== -1) exec.nextTab({ tab: { index: -1 } });
+		},
+		showTab: async arg => {
+			browser.tabs.update(arg.tabId, { active: true });
 		},
 		toggleUserAgent: async arg => {
 			if (userAgent && !arg.force || arg.userAgent === null) {

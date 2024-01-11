@@ -67,6 +67,9 @@
 	"openLinkInBackground": {
 		"message": "Link im Hintergrund öffnen"
 	},
+	"New tab opened": {
+		"message": "Neuer Tab geöffnet"
+	},
 	"doubleTapNote": {
 		"message": "Einfaches Antippen verzögern, um auf doppeltes Antippen zu warten."
 	},
