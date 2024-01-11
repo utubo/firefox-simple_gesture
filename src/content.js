@@ -491,6 +491,7 @@ var SimpleGesture = {};
 			toastForNewTab.style.cssText = `
 				position: fixed;
 				transform: translateZ(0);
+				transform-origin: top left;
 				transition-duration: .2s;
 				transition-property: opacity, top;
 				z-index: 2147483647;
@@ -521,16 +522,16 @@ var SimpleGesture = {};
 			toastForNewTab.style.left = `${VV.offsetLeft}px`;
 			toastForNewTab.style.opacity = '1';
 			toastForNewTab.style.pointerEvents = 'auto';
-			toastForNewTab.style.top = `${vvHeight() + VV.offsetTop - 116}px`;
-			toastForNewTab.style.transform = `scale(${1 / VV.scale}) transrateZ(0)`;
-			toastForNewTab.style.width = `${vvWidth()}px`;
+			toastForNewTab.style.top = `${vvHeight() + VV.offsetTop - 116 / VV.scale}px`;
+			toastForNewTab.style.transform = `scale(${1 / VV.scale}) translateZ(0)`;
+			toastForNewTab.style.width = `${vvWidth() * VV.scale }px`;
 		}, 200);
 		setTimeout(hideToastForNewTab, 2500);
 	}
 	const hideToastForNewTab = () => {
 		toastForNewTab.style.opacity = '0';
 		toastForNewTab.style.pointerEvents = 'none';
-		toastForNewTab.style.top = `${vvHeight() + VV.offsetTop - 50}px`;
+		toastForNewTab.style.top = `${vvHeight() + VV.offsetTop - 50 / VV.scale}px`;
 	}
 
 	// utils for setup ----
