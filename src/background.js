@@ -41,7 +41,9 @@
 		openLinkInBackground: async arg => {
 			const newTab = await browser.tabs.create({ active: false, url: arg.url });
 			await browser.tabs.update(arg.tab.id, { active: true });
-			browser.tabs.executeScript(arg.tabId, { code: `SimpleGesture.showToastForNewTab(${newTab.id});` });
+			browser.tabs.executeScript(arg.tabId, { code: `
+				SimpleGesture.mod('toastForNewTab', m => m.show(${newTab.id}));
+			` });
 		},
 		newTab: async () => {
 			const url = await iniValue('newTabUrl');
