@@ -481,7 +481,7 @@ var SimpleGesture = {};
 		showToastTimer = setTimeout(showGesture, SHOW_TOAST_DELAY);
 	}
 
-	// uncomomn modules ---
+	// uncommon modules ---
 	SimpleGesture.mod = (name, fn) => {
 		import(browser.runtime.getURL(`/modules/${name}.js`)).then(fn);
 	}
