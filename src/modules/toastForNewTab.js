@@ -16,8 +16,8 @@ export const show = tabId => {
 			transition-property: opacity, top;
 			z-index: 2147483647;
 		`;
-		const toastForNewTabContent = document.createElement('DIV');
-		toastForNewTabContent.style.cssText = `
+		const content = document.createElement('DIV');
+		content.style.cssText = `
 			background: ${matchMedia('(prefers-color-scheme: dark)').matches ? '#7542e5' : '#312a64'};
 			border-radius: 9px;
 			box-shadow: 0 4px 4px #0002;
@@ -27,9 +27,10 @@ export const show = tabId => {
 			margin: 0 24px;
 			overflow: hidden;
 			padding: 15px 24px;
+			text-align: left;
 		`;
-		toastForNewTabContent.textContent = browser.i18n.getMessage('New tab opened');
-		toastForNewTab.appendChild(toastForNewTabContent);
+		content.textContent = browser.i18n.getMessage('New tab opened');
+		toastForNewTab.attachShadow({ mode: 'open' }).appendChild(content);
 		document.body.appendChild(toastForNewTab);
 		toastForNewTab.addEventListener('click', () => {
 			toastForNewTab.style.display = 'none';
