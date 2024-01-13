@@ -30,12 +30,12 @@ export const show = tabId => {
 			text-align: left;
 		`;
 		content.textContent = browser.i18n.getMessage('New tab opened');
-		toastForNewTab.attachShadow({ mode: 'open' }).appendChild(content);
-		document.body.appendChild(toastForNewTab);
-		toastForNewTab.addEventListener('click', () => {
+		content.addEventListener('click', () => {
 			toastForNewTab.style.display = 'none';
 			browser.runtime.sendMessage(JSON.stringify({ command: 'showTab', tabId: toastForNewTabTabId }));
 		});
+		toastForNewTab.attachShadow({ mode: 'open' }).appendChild(content);
+		document.body.appendChild(toastForNewTab);
 	}
 	hideToastForNewTab();
 	toastForNewTab.style.display = 'block';
