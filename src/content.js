@@ -287,9 +287,8 @@ var SimpleGesture = {};
 	};
 
 	const waitForDoubleTap = e => {
-		if (doubleTap.count === ACCEPT_SINGLE_TAP)  {
-			return;
-		}
+		if (!isGestureEnabled) return;
+		if (doubleTap.count === ACCEPT_SINGLE_TAP) return;
 		var tg = 'composed' in e ? e.composedPath()[0] : e.target;
 		if (!tg) return;
 		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap
