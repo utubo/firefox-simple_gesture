@@ -1,16 +1,16 @@
-let toastForNewTab = null;
-let toastForNewTabTabId = null;
+let toast = null;
+let tabId = null;
 let position = '';
 const VV = window.visualViewport || { offsetLeft: 0, offsetTop: 0, scale: 1 };
 const vvWidth = () => VV.isDummy ? window.innerWidth : VV.width;
 const vvHeight = () => VV.isDummy ? window.innerHeight : VV.height;
 
-export const show = (tabId, pos) => {
-	toastForNewTabTabId = tabId;
+export const show = (_tabId, pos) => {
+	tabId = _tabId;
 	position = pos;
-	if (!toastForNewTab) {
-		toastForNewTab = document.createElement('DIV');
-		toastForNewTab.style.cssText = `
+	if (!toast) {
+		toast = document.createElement('DIV');
+		toast.style.cssText = `
 			position: fixed;
 			transform: translateZ(0);
 			transform-origin: top left;
@@ -33,29 +33,29 @@ export const show = (tabId, pos) => {
 		`;
 		content.textContent = browser.i18n.getMessage('New tab opened');
 		content.addEventListener('click', () => {
-			toastForNewTab.style.display = 'none';
-			browser.runtime.sendMessage(JSON.stringify({ command: 'showTab', tabId: toastForNewTabTabId }));
+			toast.style.display = 'none';
+			browser.runtime.sendMessage(JSON.stringify({ command: 'showTab', tabId: tabId}));
 		});
-		toastForNewTab.attachShadow({ mode: 'open' }).appendChild(content);
-		document.body.appendChild(toastForNewTab);
+		toast.attachShadow({ mode: 'open' }).appendChild(content);
+		document.body.appendChild(toast);
 	}
-	hideToastForNewTab();
-	toastForNewTab.style.display = 'block';
+	hide();
+	toast.style.display = 'block';
 	setTimeout(() => {
-		toastForNewTab.style.left = `${VV.offsetLeft}px`;
-		toastForNewTab.style.opacity = '1';
-		toastForNewTab.style.pointerEvents = 'auto';
-		toastForNewTab.style.top = `${calcTop(116)}px`;
-		toastForNewTab.style.transform = `scale(${1 / VV.scale}) translateZ(0)`;
-		toastForNewTab.style.width = `${vvWidth() * VV.scale }px`;
+		toast.style.left = `${VV.offsetLeft}px`;
+		toast.style.opacity = '1';
+		toast.style.pointerEvents = 'auto';
+		toast.style.top = `${calcTop(116)}px`;
+		toast.style.transform = `scale(${1 / VV.scale}) translateZ(0)`;
+		toast.style.width = `${vvWidth() * VV.scale }px`;
 	}, 200);
-	setTimeout(hideToastForNewTab, 2500);
+	setTimeout(hide, 2500);
 }
 
-const hideToastForNewTab = () => {
-	toastForNewTab.style.opacity = '0';
-	toastForNewTab.style.pointerEvents = 'none';
-	toastForNewTab.style.top = `${calcTop(50)}px`;
+const hide = () => {
+	toast.style.opacity = '0';
+	toast.style.pointerEvents = 'none';
+	toast.style.top = `${calcTop(50)}px`;
 }
 
 const calcTop = (margin) => {
