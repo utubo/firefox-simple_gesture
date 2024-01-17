@@ -39,10 +39,14 @@
 			browser.tabs.create({ active: true, url: arg.url });
 		},
 		openLinkInBackground: async arg => {
+			// open Net tab
 			const newTab = await browser.tabs.create({ active: false, url: arg.url });
 			await browser.tabs.update(arg.tab.id, { active: true });
+			// show toast
+			const pos = await iniValue('toastForNewTabPosition') || '';
+			if (pos === 'none') return;
 			browser.tabs.executeScript(arg.tabId, { code: `
-				SimpleGesture.mod('toastForNewTab', m => m.show(${newTab.id}));
+				SimpleGesture.mod('toastForNewTab', m => m.show(${newTab.id}, '${pos}'));
 			` });
 		},
 		newTab: async () => {

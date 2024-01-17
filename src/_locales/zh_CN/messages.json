@@ -67,6 +67,18 @@
 	"openLinkInBackground": {
 		"message": "在后台打开链接"
 	},
+	"toastForNewTabPosition": {
+		"message": "通知显示位置"
+	},
+	"toastForNewTabPositionTop": {
+		"message": "顶部"
+	},
+	"toastForNewTabPositionBottom": {
+		"message": "底部(默认)"
+	},
+	"toastForNewTabPositionNone": {
+		"message": "未示出"
+	},
 	"New tab opened": {
 		"message": "已打开新标签页"
 	},

@@ -678,10 +678,11 @@
 			caption.textContent = getMessage(caption.textContent);
 		}
 		document.documentElement.lang = await browser.i18n.getUILanguage();
-		byId('close_item').appendChild(byId('afterClose_item'));
-		byId('closeSameUrl_item').appendChild(byId('closeSameUrlMatchType_item'));
-		byId('newTab_item').appendChild(byId('newTabUrl_item'));
-		byId('toggleUserAgent_item').appendChild(byId('userAgent_item'));
+		for (const sub of allByClass('sub-item')) {
+			const parentId = sub.getAttribute('data-parent');
+			const p = parentId && byId(parentId);
+			if (p) p.appendChild(sub);
+		}
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
 		for (const elm of bidingForms) {
 			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;

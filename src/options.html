@@ -39,6 +39,14 @@
 				pageUp pageDown
 				openLinkInNewTab openLinkInBackground
 			"></div>
+			<div class="sub-item" data-parent="openLinkInBackground_item">
+				<label for="toastForNewTabPosition" class="sub-caption i18n">toastForNewTabPosition</label>
+				<select id="toastForNewTabPosition" class="js-binding">
+					<option value="top" class="caption i18n">toastForNewTabPositionTop</option>
+					<option value="" class="caption i18n">toastForNewTabPositionBottom</option>
+					<option value="none" class="caption i18n">toastForNewTabPositionNone</option>
+				</select>
+			</div>
 			<div class="sub-item">
 				<div id="doubleTapNote" class="hide note note-alert i18n">doubleTapNote</div>
 			</div>
@@ -51,11 +59,36 @@
 				close closeAll! closeOthers! closeSameUrl!
 				newTab reopen! duplicateTab!
 			"></div>
+			<div class="sub-item experimental" data-parent="close_item">
+				<label for="afterClose" class="sub-caption icon-flask i18n">afterClose</label>
+				<select id="afterClose" class="js-binding">
+					<option value="" class="caption i18n">default</option>
+					<option value="prevTab" class="caption i18n">prevTab</option>
+					<option value="nextTab" class="caption i18n">nextTab</option>
+				</select>
+			</div>
+			<div class="sub-item" data-parent="closeSameUrl_item">
+				<select id="closeSameUrlMatchType" class="js-binding">
+					<option value="" class="caption i18n">fullMatch</option>
+					<option value="domain" class="caption i18n">domain</option>
+					<option value="contextRoot" class="caption i18n">contextRoot</option>
+				</select>
+				<div class="note note-alert i18n">closeSameUrlNote</div>
+			</div>
+			<div class="sub-item" data-parent="newTab_item">
+				<label for="newTabUrl" class="sub-caption i18n">newTabUrl</label>
+				<input id="newTabUrl" type="url" class="text-input js-binding" placeholder="https://www.example.com/">
+			</div>
 		</div>
 
 		<div class="page" id="otherGestures">
 			<div class="page-header i18n">otherGestures</div>
 			<div class="gesture-list" data-gestures="toggleUserAgent disableGesture openAddonSettings"></div>
+			<div class="sub-item" data-parent="toggleUserAgent_item">
+				<label for="userAgent" class="sub-caption i18n">UserAgent</label>
+				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
+				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
+			</div>
 		</div>
 
 		<div class="page" id="customGestures">
@@ -156,31 +189,6 @@
 			<div class="custom-gesture-buttons">
 				<div class="custom-gesture-edit button icon-edit"></div>
 				<div class="custom-gesture-delete button icon-delete"></div>
-			</div>
-			<div id="afterClose_item" class="sub-item experimental">
-				<label for="afterClose" class="sub-caption icon-flask i18n">afterClose</label>
-				<select id="afterClose" class="js-binding">
-					<option value="" class="caption i18n">default</option>
-					<option value="prevTab" class="caption i18n">prevTab</option>
-					<option value="nextTab" class="caption i18n">nextTab</option>
-				</select>
-			</div>
-			<div id="closeSameUrlMatchType_item" class="sub-item">
-				<select id="closeSameUrlMatchType" class="js-binding">
-					<option value="" class="caption i18n">fullMatch</option>
-					<option value="domain" class="caption i18n">domain</option>
-					<option value="contextRoot" class="caption i18n">contextRoot</option>
-				</select>
-				<div class="note note-alert i18n">closeSameUrlNote</div>
-			</div>
-			<div id="newTabUrl_item" class="sub-item">
-				<label for="newTabUrl" class="sub-caption i18n">newTabUrl</label>
-				<input id="newTabUrl" type="url" class="text-input js-binding" placeholder="https://www.example.com/">
-			</div>
-			<div id="userAgent_item" class="sub-item">
-				<label for="userAgent" class="sub-caption i18n">UserAgent</label>
-				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
-				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
 			</div>
 			<div class="blacklist-item">
 				<input type="url" class="text-input blacklist-input" placeholder="https://url.starts.with/this"><span class="delete-blacklist button icon-delete"></span>

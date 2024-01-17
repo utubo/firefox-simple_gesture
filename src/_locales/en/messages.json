@@ -67,6 +67,18 @@
 	"openLinkInBackground": {
 		"message": "Open link in background"
 	},
+	"toastForNewTabPosition": {
+		"message": "Toast position"
+	},
+	"toastForNewTabPositionTop": {
+		"message": "Top"
+	},
+	"toastForNewTabPositionBottom": {
+		"message": "Bottom(default)"
+	},
+	"toastForNewTabPositionNone": {
+		"message": "None"
+	},
 	"New tab opened": {
 		"message": "New tab opened"
 	},
