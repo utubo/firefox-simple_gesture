@@ -229,7 +229,7 @@ var SimpleGesture = {};
 			e.preventDefault();
 		} finally {
 			gesture = null;
-			target = null;
+			//target = null; Keep target for Custom gesture
 		}
 	};
 
