@@ -487,7 +487,7 @@ var SimpleGesture = {};
 
 	// utils for setup ----
 	SimpleGesture.addTouchEventListener = (target, events) => {
-		if ('ontouchstart' in window) {
+		if ('ontouchstart' in window || navigator.maxTouchPoints) {
 			target.addEventListener('touchstart', events.start, true);
 			target.addEventListener('touchmove', events.move, true);
 			target.addEventListener('touchend', events.end, true);
