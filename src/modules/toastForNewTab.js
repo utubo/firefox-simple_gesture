@@ -1,13 +1,15 @@
 let toast = null;
 let tabId = null;
-let position = '';
 const VV = window.visualViewport || { offsetLeft: 0, offsetTop: 0, scale: 1 };
 const vvWidth = () => VV.isDummy ? window.innerWidth : VV.width;
 const vvHeight = () => VV.isDummy ? window.innerHeight : VV.height;
 
 export const show = (_tabId, pos) => {
 	tabId = _tabId;
-	position = pos;
+	if (pos === 'top') {
+		SimpleGesture.showTextToast(browser.i18n.getMessage('New tab opened'));
+		return;
+	}
 	if (!toast) {
 		toast = document.createElement('DIV');
 		toast.style.cssText = `
@@ -60,6 +62,6 @@ const hide = () => {
 
 const calcTop = (margin) => {
 	const m = margin / VV.scale;
-	return position === 'top' ? m : vvHeight() + VV.offsetTop - m;
+	return vvHeight() + VV.offsetTop - m;
 }
 

@@ -74,9 +74,7 @@ var SimpleGesture = {};
 		gesture = null;
 		timer = null;
 		if (e && e.withTimeout && toast) {
-			toastText.textContent = `( ${browser.i18n.getMessage('timeout')} )`;
-			toastArrows.textContent = '';
-			hideToast(1000);
+			SimpleGesture.showTextToast(`( ${browser.i18n.getMessage('timeout')} )`);
 		} else {
 			hideToast();
 		}
@@ -283,7 +281,7 @@ var SimpleGesture = {};
 
 	const toggleEnable = () => {
 		isGestureEnabled = !isGestureEnabled;
-		alert(browser.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
+		SimpleGesture.showTextToast(browser.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
 	};
 
 	const waitForDoubleTap = e => {
@@ -478,6 +476,15 @@ var SimpleGesture = {};
 	const showGestureDelay = () => {
 		clearTimeout(showToastTimer);
 		showToastTimer = setTimeout(showGesture, SHOW_TOAST_DELAY);
+	}
+
+	SimpleGesture.showTextToast = text => {
+		setupToast();
+		toastText.textContent = text;
+		toastArrows.textContent = '';
+		toastSub.textContent = '';
+		showToast();
+		hideToast(1000);
 	}
 
 	// uncommon modules ---
