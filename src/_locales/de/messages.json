@@ -70,11 +70,11 @@
 	"toastForNewTabPosition": {
 		"message": "Toast Position"
 	},
+	"toastForNewTabPositionDefault": {
+		"message": "Standard"
+	},
 	"toastForNewTabPositionTop": {
 		"message": "Oben"
-	},
-	"toastForNewTabPositionBottom": {
-		"message": "Unten (Standard)"
 	},
 	"toastForNewTabPositionNone": {
 		"message": "Keine"

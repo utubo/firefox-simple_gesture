@@ -70,11 +70,11 @@
 	"toastForNewTabPosition": {
 		"message": "トーストの表示位置"
 	},
+	"toastForNewTabPositionDefault": {
+		"message": "デフォルト"
+	},
 	"toastForNewTabPositionTop": {
 		"message": "上部"
-	},
-	"toastForNewTabPositionBottom": {
-		"message": "下部(デフォルト)"
 	},
 	"toastForNewTabPositionNone": {
 		"message": "非表示"

@@ -70,11 +70,11 @@
 	"toastForNewTabPosition": {
 		"message": "通知显示位置"
 	},
+	"toastForNewTabPositionDefault": {
+		"message": "默认"
+	},
 	"toastForNewTabPositionTop": {
 		"message": "顶部"
-	},
-	"toastForNewTabPositionBottom": {
-		"message": "底部(默认)"
 	},
 	"toastForNewTabPositionNone": {
 		"message": "未示出"
