@@ -13,6 +13,7 @@ export const show = (_tabId, pos) => {
 	if (!toast) {
 		toast = document.createElement('DIV');
 		toast.style.cssText = `
+			all: initial;
 			position: fixed;
 			transform: translateZ(0);
 			transform-origin: top left;
