@@ -319,8 +319,8 @@ var SimpleGesture = {};
 
 	const getSvgNode = (name, attrs) => {
 		const n = document.createElementNS('http://www.w3.org/2000/svg', name);
-		for (let key in attrs) {
-			n.setAttribute(key, attrs[key]);
+		for (const [k, v] of Object.entries(attrs)) {
+			n.setAttribute(k, v);
 		}
 		return n;
 	};
