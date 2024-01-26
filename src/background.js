@@ -150,7 +150,11 @@
 				);
 			}
 			browser.storage.session.set({ userAgent });
-			browser.tabs.reload(arg.tab.id);
+			await browser.tabs.reload(arg.tab.id);
+			const msg = `${browser.i18n.getMessage('toggleUserAgent')}: ${userAgent ? 'ON' : 'OFF'}`;
+			browser.tabs.executeScript(arg.tabId, { code: `
+				SimpleGesture.showTextToast('${msg}');
+			` });
 		},
 		openAddonSettings: () => {
 			browser.tabs.create({ active: true, url: 'options.html' });
