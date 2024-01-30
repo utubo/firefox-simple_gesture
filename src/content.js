@@ -467,10 +467,7 @@ var SimpleGesture = {};
 		setupToast();
 		toastText.textContent = name;
 		SimpleGesture.drawArrows(gesture, toastArrows);
-		if (toast.getAttribute('x-startPoint') !== startPoint) {
-			toast.setAttribute('x-startPoint', startPoint);
-			toastSub.textContent = startPoint ? `${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)}` : '';
-		}
+		toastSub.textContent = startPoint ? `${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)}` : '';
 		showToast();
 	};
 
