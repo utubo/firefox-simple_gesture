@@ -73,7 +73,7 @@ var SimpleGesture = {};
 	const resetGesture = e => {
 		gesture = null;
 		timer = null;
-		if (e && e.withTimeout && toast) {
+		if (e && e.withTimeout && toast && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${browser.i18n.getMessage('timeout')} )`);
 		} else {
 			hideToast();
