@@ -18,6 +18,7 @@ var SimpleGesture = {};
 		timeout: 1500,
 		doubleTapMsec: 200,
 		delaySingleTap: false,
+		delaySingleTapOnShadowDOM: false,
 		toast: true,
 		blacklist: [],
 		disableWhileZoomedIn: false
@@ -287,7 +288,11 @@ var SimpleGesture = {};
 	const waitForDoubleTap = e => {
 		if (!isGestureEnabled) return;
 		if (doubleTap.count === ACCEPT_SINGLE_TAP) return;
-		var tg = 'composed' in e ? e.composedPath()[0] : e.target;
+		var tg = e.target;
+		if ('composed' in e) {
+			if (!SimpleGesture.ini.delaySingleTapOnShadowDOM) return;
+			tg = e.composedPath()[0];
+		}
 		if (!tg) return;
 		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap
 		if (onlyLinkTag) {

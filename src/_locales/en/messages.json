@@ -133,6 +133,9 @@
 	"delaySingleTapNote": {
 		"message": "If single tap does not work, try triple tap."
 	},
+	"delaySingleTapOnShadowDOM": {
+		"message": "Delay single tap to wait for double tap on shadow DOMs"
+	},
 	"displayCommand": {
 		"message": "Display Command"
 	},
