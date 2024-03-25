@@ -133,9 +133,6 @@
 	"delaySingleTapNote": {
 		"message": "如果单击不起作用，请尝试三击"
 	},
-	"delaySingleTapOnShadowDOM": {
-		"message": "在Shadow DOM上延迟单击以等待双击"
-	},
 	"displayCommand": {
 		"message": "显示命令"
 	},

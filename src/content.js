@@ -18,7 +18,6 @@ var SimpleGesture = {};
 		timeout: 1500,
 		doubleTapMsec: 200,
 		delaySingleTap: false,
-		delaySingleTapOnShadowDOM: false,
 		toast: true,
 		blacklist: [],
 		disableWhileZoomedIn: false
@@ -288,16 +287,19 @@ var SimpleGesture = {};
 	const waitForDoubleTap = e => {
 		if (!isGestureEnabled) return;
 		if (doubleTap.count === ACCEPT_SINGLE_TAP) return;
-		var tg = e.target;
-		if ('composed' in e) {
-			if (!SimpleGesture.ini.delaySingleTapOnShadowDOM) return;
-			tg = e.composedPath()[0];
-		}
-		if (!tg) return;
-		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap
+		const paths =  e.composedPath();
+		var tg = paths[0];
+		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap // not allways
 		if (onlyLinkTag) {
 			tg = getLinkTag(tg);
 			if (!tg) return;
+		} else if (!paths.some(p => (
+			p.tagName === 'A' ||
+			p.tagName === 'LABEL' ||
+			p.tagName === 'BUTTON' ||
+			p.tagName === 'INPUT' && p.type.match(/button|submit|cancel|clear|checkbox|radio/i)
+		))) {
+			return;
 		}
 		e.stopPropagation();
 		e.preventDefault();
@@ -311,7 +313,7 @@ var SimpleGesture = {};
 		doubleTap.timer = setTimeout(() => {
 			doubleTap.timer = null;
 			doubleTap.count = ACCEPT_SINGLE_TAP;
-			if (onlyLinkTag ) {
+			if (onlyLinkTag) {
 				tg.dispatchEvent(ev);
 			} else {
 				clickTarget(tg, ev);

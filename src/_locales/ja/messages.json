@@ -133,9 +133,6 @@
 	"delaySingleTapNote": {
 		"message": "通常のタップが効かないときは、トリプルタップを試してください"
 	},
-	"delaySingleTapOnShadowDOM": {
-		"message": "Shadow DOM上でもダブルタップを検知するために通常のタップを遅延させる"
-	},
 	"displayCommand": {
 		"message": "コマンドを表示する"
 	},

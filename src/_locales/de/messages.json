@@ -133,9 +133,6 @@
 	"delaySingleTapNote": {
 		"message": "Wenn das einfache Antippen nicht funktioniert, versuchen Sie es mit dem dreifachen Antippen."
 	},
-	"delaySingleTapOnShadowDOM": {
-		"message": "Einfaches Antippen verzögern, um auf doppeltes Antippen zu warten des schatten-DOMs"
-	},
 	"displayCommand": {
 		"message": "Befehl anzeigen"
 	},
