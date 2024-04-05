@@ -61,6 +61,9 @@
 	"reopen": {
 		"message": "恢复标签页"
 	},
+	"No recently closed tabs": {
+		"message": "没有最近关闭的标签页"
+	},
 	"openLinkInNewTab": {
 		"message": "新建签页打开链接"
 	},

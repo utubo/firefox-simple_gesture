@@ -61,6 +61,9 @@
 	"reopen": {
 		"message": "Reopen Closed Tab"
 	},
+	"No recently closed tabs": {
+		"message": "No recently closed tabs"
+	},
 	"openLinkInNewTab": {
 		"message": "Open link in a tab"
 	},

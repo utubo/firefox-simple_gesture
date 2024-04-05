@@ -61,6 +61,9 @@
 	"reopen": {
 		"message": "閉じたタブを開き直す"
 	},
+	"No recently closed tabs": {
+		"message": "閉じたタブの情報が見つかりません"
+	},
 	"openLinkInNewTab": {
 		"message": "リンクを新しいタブで開く"
 	},

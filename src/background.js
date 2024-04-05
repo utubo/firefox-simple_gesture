@@ -10,6 +10,10 @@
 		}
 	};
 
+	const showTextToast = msg => {
+		browser.tabs.executeScript({ code: `SimpleGesture.showTextToast('${msg}');` });
+	};
+
 	// For suspended tabs
 	let iniTimestamp = await browser.storage.session.get('iniTimestamp')?.iniTimestamp || Date.now();
 	const reloadIni = tabId => {
@@ -32,6 +36,31 @@
 		}
 		return { requestHeaders: e.requestHeaders };
 	};
+
+	// For reopen closed tabs without browser.sessions.
+	let allTabs = null;
+	let closedTabs = null;
+	if (!browser.sessions) {
+		const MAX_CLOSED_TABS = 100;
+		allTabs = new Map();
+		closedTabs = await browser.storage.session.get('closedTabs')?.closedTabs || [];
+		browser.tabs.onUpdated.addListener((id, _, tab) => { allTabs.set(id, tab.url); });
+		browser.tabs.onRemoved.addListener(async id => {
+			const url = allTabs.get(id);
+			allTabs.delete(id);
+			if (!url) return;
+			if (url.startsWith('about:')) return;
+			const index = closedTabs.indexOf(url);
+			if (index !== -1) {
+				closedTabs.splice(index, 1);
+			}
+			if (MAX_CLOSED_TABS <= closedTabs.length) {
+				closedTabs.splice(closedTabs.length - MAX_CLOSED_TABS);
+			}
+			closedTabs.push(url);
+			browser.storage.session.set('closedTabs', closedTabs);
+		});
+	}
 
 	// Gestures
 	const exec = {
@@ -90,10 +119,22 @@
 			exec.closeIf(tab => tab.url === arg.tab.url);
 		},
 		reopen: async () => {
-			const session = (await browser.sessions.getRecentlyClosed({ maxResults: 1 }))[0];
-			if (session) {
-				browser.sessions.restore(session.tab ? session.tab.sessionId : session.window.sessionId);
+			if (browser.sessions) {
+				// for Firefox for Desktop
+				const session = (await browser.sessions.getRecentlyClosed({ maxResults: 1 }))[0];
+				if (session) {
+					browser.sessions.restore(session.tab ? session.tab.sessionId : session.window.sessionId);
+					return;
+				}
+			} else {
+				// for Firefox for Android
+				const url = closedTabs.pop();
+				if (url) {
+					browser.tabs.create({ active: true, url: url });
+					return;
+				}
 			}
+			showTextToast(browser.i18n.getMessage('No recently closed tabs'));
 		},
 		duplicateTab: async arg => {
 			if (browser.tabs.duplicate) {
@@ -151,10 +192,7 @@
 			}
 			browser.storage.session.set({ userAgent });
 			await browser.tabs.reload(arg.tab.id);
-			const msg = `${browser.i18n.getMessage('toggleUserAgent')}: ${userAgent ? 'ON' : 'OFF'}`;
-			browser.tabs.executeScript(arg.tabId, { code: `
-				SimpleGesture.showTextToast('${msg}');
-			` });
+			showTextToast(`${browser.i18n.getMessage('toggleUserAgent')}: ${userAgent ? 'ON' : 'OFF'}`);
 		},
 		openAddonSettings: () => {
 			browser.tabs.create({ active: true, url: 'options.html' });
