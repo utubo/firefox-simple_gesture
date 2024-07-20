@@ -117,23 +117,23 @@
 	const fadein = elm => { ifById(elm).classList.remove('transparent'); };
 
 	// node --------------
-	const templates = byId('templates');
-	const gestureTemplate = byClass(templates, 'gesture-item');
-	const buttonsTamplate = byClass(templates, 'custom-gesture-buttons');
-	const blacklistTemplate = byClass(templates, 'blacklist-item');
-	const inputedGesture = byId('inputedGesture');
-	const inputedStartPoint = byId('inputedStartPoint');
-	const dupName = byId('dupName');
-	const cancelInputGesture = byId('cancelInputGesture');
-	const customGestureList = byId('customGestureList');
-	const customGestureDlgContainer = byId('customGestureDlgContainer');
-	const customGestureTitle = byId('customGestureTitle');
-	const customGestureType = byId('customGestureType');
-	const customGestureUrl = byId('customGestureUrl');
-	const customGestureScript = byId('customGestureScript');
-	const timeout = byId('timeout');
-	const strokeSize = byId('strokeSize');
-	const bidingForms = allByClass('js-binding');
+	const $templates = byId('templates');
+	const $gestureTemplate = byClass($templates, 'gesture-item');
+	const $buttonsTamplate = byClass($templates, 'custom-gesture-buttons');
+	const $blacklistTemplate = byClass($templates, 'blacklist-item');
+	const $inputedGesture = byId('inputedGesture');
+	const $inputedStartPoint = byId('inputedStartPoint');
+	const $dupName = byId('dupName');
+	const $cancelInputGesture = byId('cancelInputGesture');
+	const $customGestureList = byId('customGestureList');
+	const $customGestureDlgContainer = byId('customGestureDlgContainer');
+	const $customGestureTitle = byId('customGestureTitle');
+	const $customGestureType = byId('customGestureType');
+	const $customGestureUrl = byId('customGestureUrl');
+	const $customGestureScript = byId('customGestureScript');
+	const $timeout = byId('timeout');
+	const $strokeSize = byId('strokeSize');
+	const $bidingForms = allByClass('js-binding');
 
 	// edit U-D-L-R ------
 	const updateArrowsLabel = (arrowsLabel, startPointLabel, gesture) => {
@@ -190,15 +190,15 @@
 			hilightEditStart(target.arrows);
 			byId('editTarget').textContent = target.caption.textContent;
 			const [startPoint, _] = updateArrowsLabel(
-				inputedGesture,
-				inputedStartPoint,
+				$inputedGesture,
+				$inputedStartPoint,
 				target.arrows.getAttribute('data-gesture')
 			);
-			toggleClass(!startPoint, 'hide', inputedStartPoint);
-			toggleClass(false, 'dup', inputedGesture, inputedStartPoint);
-			toggleClass(false, 'canceled', inputedGesture);
-			toggleClass(false, 'hover', cancelInputGesture);
-			dupName.textContent = '';
+			toggleClass(!startPoint, 'hide', $inputedStartPoint);
+			toggleClass(false, 'dup', $inputedGesture, $inputedStartPoint);
+			toggleClass(false, 'canceled', $inputedGesture);
+			toggleClass(false, 'hover', $cancelInputGesture);
+			$dupName.textContent = '';
 			byId('preventPullToRefresh').scrollTop = 1000;
 			byId('preventPullToRefresh').scrollLeft = 1000;
 		},
@@ -216,7 +216,7 @@
 	};
 
 	const createGestureItem = (name, isExperimental = false) => {
-		const item = gestureTemplate.cloneNode(true);
+		const item = $gestureTemplate.cloneNode(true);
 		item.id = `${name}_item`;
 		const label = byClass(item, 'arrows');
 		label.id = `${name}_arrows`;
@@ -225,7 +225,7 @@
 		caption.id = `${name}_caption`;
 		caption.textContent = name;
 		if (name[0] === CUSTOM_GESTURE_PREFIX) {
-			const b = buttonsTamplate.cloneNode(true);
+			const b = $buttonsTamplate.cloneNode(true);
 			byClass(b, 'custom-gesture-edit').setAttribute('data-targetId', name);
 			byClass(b, 'custom-gesture-delete').setAttribute('data-targetId', name);
 			item.insertBefore(b, item.firstChild);
@@ -251,7 +251,7 @@
 			}
 		}
 		for (const c of exData.customGestureList) {
-			customGestureList.appendChild(createGestureItem(c.id));
+			$customGestureList.appendChild(createGestureItem(c.id));
 			gestureNames.push(c.id);
 		}
 		toggleDoubleTapNote();
@@ -300,16 +300,16 @@
 	SimpleGesture.onInput = e => {
 		if (!target) return;
 		if (e.gesture.length > SimpleGesture.MAX_LENGTH) {
-			inputedGesture.classList.add('canceled');
-			cancelInputGesture.classList.add('hover');
+			$inputedGesture.classList.add('canceled');
+			$cancelInputGesture.classList.add('hover');
 		}
-		toggleClass(!e.startPoint, 'hide', inputedStartPoint);
+		toggleClass(!e.startPoint, 'hide', $inputedStartPoint);
 		const gesture = e.startPoint + e.gesture.substring(0, MAX_LENGTH);
-		updateArrowsLabel(inputedGesture, inputedStartPoint, gesture);
+		updateArrowsLabel($inputedGesture, $inputedStartPoint, gesture);
 		let dup = SimpleGesture.ini.gestures[gesture];
 		dup = (dup && dup !== target.name) ? getMessage(dup) : '';
-		dupName.textContent = dup ? `\u00a0(${dup})` : '';
-		toggleClass(dup, 'dup', inputedGesture, inputedStartPoint);
+		$dupName.textContent = dup ? `\u00a0(${dup})` : '';
+		toggleClass(dup, 'dup', $inputedGesture, $inputedStartPoint);
 		e.preventDefault();
 		return false;
 	};
@@ -317,7 +317,7 @@
 	SimpleGesture.onEnd = e => {
 		clearTimeout(touchEndTimer);
 		if (!target) return;
-		if (inputedGesture.classList.contains('canceled')) {
+		if ($inputedGesture.classList.contains('canceled')) {
 			history.back();
 		} else {
 			const g = (e.gesture || '').substring(0, MAX_LENGTH);
@@ -346,7 +346,7 @@
 		details[`simple_gesture_${newId}`] = { type: 'url', url: '' };
 		browser.storage.local.set(details);
 		// update list
-		customGestureList.appendChild(createGestureItem(c.id));
+		$customGestureList.appendChild(createGestureItem(c.id));
 		byId(`${newId}_caption`).textContent = c.title;
 	};
 	const dataTargetId = e => e.target.getAttribute('data-targetId');
@@ -370,11 +370,11 @@
 		targetId: null,
 		onShow: async id => {
 			dlgs.editDlg.targetId = id;
-			customGestureTitle.value = findCustomGesture(id).title;
+			$customGestureTitle.value = findCustomGesture(id).title;
 			const details = await storageValue(`simple_gesture_${id}`);
-			customGestureType.value = details.type;
-			customGestureUrl.value = details.type === 'url' ? details.url : '';
-			customGestureScript.value = details.type === 'script' ? details.script : '';
+			$customGestureType.value = details.type;
+			$customGestureUrl.value = details.type === 'url' ? details.url : '';
+			$customGestureScript.value = details.type === 'script' ? details.script : '';
 			document.forms.customGestureMsg.customGestureMsgId.value = details.extensionId || '';
 			document.forms.customGestureMsg.customGestureMsgValue.value = details.message || '';
 			document.forms.customGestureMsg.messageType.value = details.messageType || 'string';
@@ -391,13 +391,13 @@
 	const saveCustomGesture = () => {
 		// save list
 		const c = findCustomGesture(dlgs.editDlg.targetId);
-		c.title = customGestureTitle.value;
+		c.title = $customGestureTitle.value;
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		// save detail
-		const d = { type: customGestureType.value };
+		const d = { type: $customGestureType.value };
 		switch(d.type) {
-			case 'url': d.url = customGestureUrl.value; break;
-			case 'script': d.script = customGestureScript.value; break;
+			case 'url': d.url = $customGestureUrl.value; break;
+			case 'script': d.script = $customGestureScript.value; break;
 			case 'message':
 				d.extensionId = document.forms.customGestureMsg.customGestureMsgId.value;
 				d.message = document.forms.customGestureMsg.customGestureMsgValue.value;
@@ -413,11 +413,11 @@
 		history.back();
 	};
 	const toggleEditor = () => {
-		toggleClass(customGestureType.value === 'script', 'dlg-fill', customGestureDlgContainer);
-		toggleClass(customGestureType.value !== 'url', 'hide', customGestureUrl);
+		toggleClass(customGestureType.value === 'script', 'dlg-fill', $customGestureDlgContainer);
+		toggleClass(customGestureType.value !== 'url', 'hide', $customGestureUrl);
 		toggleClass(customGestureType.value !== 'script', 'hide', byId('customGestureScriptDiv'));
 		toggleClass(customGestureType.value !== 'message', 'hide', byId('customGestureMsgDiv'));
-		if (customGestureType.value !== 'script') return;
+		if ($customGestureType.value !== 'script') return;
 		const s = byId('addCommandToScript');
 		const f = document.createDocumentFragment();
 		f.appendChild(s.firstChild.cloneNode(true));
@@ -434,16 +434,16 @@
 		s.appendChild(f);
 	};
 	const autoTitleByUrl = () => {
-		if (customGestureTitle.value && customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
-		const m = /https?:\/\/([^\/]+)/.exec(customGestureUrl.value);
+		if ($customGestureTitle.value && $customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
+		const m = /https?:\/\/([^\/]+)/.exec($customGestureUrl.value);
 		if (m) {
-			customGestureTitle.value = m[1];
+			$customGestureTitle.value = m[1];
 		}
 	};
 	const autoTitleByScript = () => {
-		const m = /\*\s+@name\s+(.+?)(\s*\n|\s+\*)/.exec(customGestureScript.value);
+		const m = /\*\s+@name\s+(.+?)(\s*\n|\s+\*)/.exec($customGestureScript.value);
 		if (m) {
-			customGestureTitle.value = m[1];
+			$customGestureTitle.value = m[1];
 		}
 	};
 	const addCommand = e => {
@@ -454,17 +454,17 @@
 			const title = findCustomGesture(name).title.replace(/\/\*\s+|\s+\*\//g, '');
 			script = `\n/* ${title} */${script}`;
 		}
-		customGestureScript.value += script;
-		customGestureScript.selectStart = customGestureScript.value.length;
-		customGestureScript.scrollTop = customGestureScript.scrollHeight;
+		$customGestureScript.value += script;
+		$customGestureScript.selectStart = $customGestureScript.value.length;
+		$customGestureScript.scrollTop = $customGestureScript.scrollHeight;
 		requestAnimationFrame(() => { e.target.selectedIndex = 0; });
 	};
 	const setupEditDlg = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
 		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
-		customGestureType.addEventListener('change', toggleEditor);
-		customGestureUrl.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
-		customGestureScript.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByScript, 1000); });
+		$customGestureType.addEventListener('change', toggleEditor);
+		$customGestureUrl.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
+		$customGestureScript.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByScript, 1000); });
 		byId('addCommandToScript').addEventListener('change', addCommand);
 	};
 
@@ -498,8 +498,8 @@
 					SimpleGesture.ini.timeout = Date.now() - startTime + 300; // margin 300ms. It seems better not to dvide this by 4.
 					SimpleGesture.ini.strokeSize = size;
 					saveIni();
-					timeout.value = SimpleGesture.ini.timeout;
-					strokeSize.value = SimpleGesture.ini.strokeSize;
+					$timeout.value = SimpleGesture.ini.timeout;
+					$strokeSize.value = SimpleGesture.ini.strokeSize;
 				}
 				history.back();
 			}
@@ -514,11 +514,11 @@
 		onShow: () => {
 			fadein('adjustmentDlg');
 			clearTimeout(TIMERS.strokeSizeChanged);
-			hilightEditStart(timeout, strokeSize);
+			hilightEditStart($timeout, $strokeSize);
 		},
 		onHide: () => {
 			startTime = null;
-			unhilightEditEnd(timeout, strokeSize);
+			unhilightEditEnd($timeout, $strokeSize);
 		}
 	};
 
@@ -541,12 +541,12 @@
 			const newList = blacklist.cloneNode(false);
 			if (SimpleGesture.ini.blacklist) {
 				for (const urlPattern of SimpleGesture.ini.blacklist) {
-					const item = blacklistTemplate.cloneNode(true);
+					const item = $blacklistTemplate.cloneNode(true);
 					byClass(item, 'blacklist-input').value = urlPattern.url;
 					newList.appendChild(item);
 				}
 			}
-			const newItem = blacklistTemplate.cloneNode(true);
+			const newItem = $blacklistTemplate.cloneNode(true);
 			newList.appendChild(newItem);
 			blacklist.parentNode.replaceChild(newList, blacklist);
 		},
@@ -568,7 +568,7 @@
 	window.addEventListener('input', e => {
 		if (e.target.classList.contains('blacklist-input')) {
 			if (!e.target.parentNode.nextSibling) {
-				const newItem = blacklistTemplate.cloneNode(true);
+				const newItem = $blacklistTemplate.cloneNode(true);
 				byId('blacklist').appendChild(newItem);
 			}
 			return;
@@ -579,7 +579,7 @@
 	// edit text values --
 	const saveBindingValues = () => {
 		clearTimeout(TIMERS.saveBindingValues);
-		for (const elm of bidingForms) {
+		for (const elm of $bidingForms) {
 			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
 				ini[elm.id] = elm.checked;
@@ -684,7 +684,7 @@
 			if (p) p.appendChild(sub);
 		}
 		byId('defaultUserAgent').value = INSTEAD_OF_EMPTY.userAgent;
-		for (const elm of bidingForms) {
+		for (const elm of $bidingForms) {
 			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
 				elm.checked = !!ini[elm.id];
@@ -732,7 +732,7 @@
 		}
 	});
 	// Touchstart event prevents click event in Input gesture Dialog.
-	SimpleGesture.addTouchEventListener(cancelInputGesture, { start: e => {
+	SimpleGesture.addTouchEventListener($cancelInputGesture, { start: e => {
 		history.back();
 		e.preventDefault();
 	}, move: () => {}, end: () => {} });
