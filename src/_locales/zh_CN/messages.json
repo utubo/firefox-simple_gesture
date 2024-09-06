@@ -70,6 +70,9 @@
 	"openLinkInBackground": {
 		"message": "在后台打开链接"
 	},
+	"openLinkInBackgroundDiscarded": {
+		"message": "当激活标签页时，将加载标签页的内容"
+	},
 	"toastForNewTabPosition": {
 		"message": "通知显示位置"
 	},

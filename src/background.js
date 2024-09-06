@@ -62,14 +62,18 @@
 		});
 	}
 
+	const decrateUrl = arg => (arg.discarded ? 'modules/discarded.html?' : '') + arg.url;
+
 	// Gestures
 	const exec = {
 		openLinkInNewTab: async arg => {
 			browser.tabs.create({ active: true, url: arg.url });
 		},
 		openLinkInBackground: async arg => {
-			// open Net tab
-			const newTab = await browser.tabs.create({ active: false, url: arg.url });
+			// Firefox for Android doesn't support `openerTabId`, `discarded` and `active`.
+			arg.discarded = await iniValue('openLinkInBackgroundDiscarded');
+			const url = decrateUrl(arg);
+			const newTab = await browser.tabs.create({ active: false, url: url });
 			await browser.tabs.update(arg.tab.id, { active: true });
 			// show toast
 			const pos = await iniValue('toastForNewTabPosition') || '';
@@ -237,8 +241,8 @@
 			const code = arg.code || arg.script;
 			// open in new tab
 			if (arg.inNewTab || !('inNewTab' in arg)) {
-				// Firefox for Android doesn't support `openerTabId` and `active`.
-				let tab = await browser.tabs.create({ active: active, url: arg.url });
+				// Firefox for Android doesn't support `openerTabId`, `discarded` and `active`.
+				let tab = await browser.tabs.create({ active: active, url: decrateUrl(arg.url) });
 				if (!active) {
 					browser.tabs.update(arg.tab.id, { active: true });
 				}

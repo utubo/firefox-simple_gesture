@@ -260,6 +260,7 @@
 			if (e.target.tagName === 'INPUT') return;
 			if (e.target.tagName === 'LABEL') return;
 			if (e.target.tagName === 'SELECT') return;
+			if (e.target.classList.contains('with-checkbox')) return;
 			if (e.target.classList.contains('custom-gesture-edit')) {
 				changeState({dlg: 'editDlg', targetId: dataTargetId(e)});
 				return;

@@ -70,6 +70,9 @@
 	"openLinkInBackground": {
 		"message": "Link im Hintergrund öffnen"
 	},
+	"openLinkInBackgroundDiscarded": {
+		"message": "Der Inhalt der Registerkarte wird geladen, wenn die Registerkarte aktiviert wird."
+	},
 	"toastForNewTabPosition": {
 		"message": "Toast Position"
 	},

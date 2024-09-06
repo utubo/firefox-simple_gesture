@@ -70,6 +70,9 @@
 	"openLinkInBackground": {
 		"message": "Open link in background"
 	},
+	"openLinkInBackgroundDiscarded": {
+		"message": "The tab's content is loaded when the tab is activated."
+	},
 	"toastForNewTabPosition": {
 		"message": "Toast position"
 	},
