@@ -62,7 +62,7 @@
 		});
 	}
 
-	const decrateUrl = arg => (arg.discarded ? 'modules/discarded.html?' : '') + arg.url;
+	const decorateUrl = arg => (arg.discarded ? 'modules/discarded.html?' : '') + arg.url;
 
 	// Gestures
 	const exec = {
@@ -72,7 +72,7 @@
 		openLinkInBackground: async arg => {
 			// Firefox for Android doesn't support `openerTabId`, `discarded` and `active`.
 			arg.discarded = await iniValue('openLinkInBackgroundDiscarded');
-			const url = decrateUrl(arg);
+			const url = decorateUrl(arg);
 			const newTab = await browser.tabs.create({ active: false, url: url });
 			await browser.tabs.update(arg.tab.id, { active: true });
 			// show toast
@@ -242,7 +242,7 @@
 			// open in new tab
 			if (arg.inNewTab || !('inNewTab' in arg)) {
 				// Firefox for Android doesn't support `openerTabId`, `discarded` and `active`.
-				let tab = await browser.tabs.create({ active: active, url: decrateUrl(arg.url) });
+				let tab = await browser.tabs.create({ active: active, url: decorateUrl(arg) });
 				if (!active) {
 					browser.tabs.update(arg.tab.id, { active: true });
 				}
