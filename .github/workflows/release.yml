@@ -20,8 +20,28 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get last release tag
+        id: last_release
+        run: |
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "LAST_TAG=$last_tag" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          if [ -z "${{ steps.last_release.outputs.LAST_TAG }}" ]; then
+            commits=$(git log --pretty=format:"- %s" --reverse)
+          else  
+            commits=$(git log ${{ steps.last_release.outputs.LAST_TAG }}..HEAD --pretty=format:"- %s" --reverse)
+          fi
+          echo "COMMITS<<EOF" >> $GITHUB_OUTPUT
+          echo "$commits" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create assets
         run: |
@@ -36,6 +56,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
+          body: ${{ steps.release_notes.outputs.COMMITS }}
           draft: false
           prerelease: false
 
