@@ -10,14 +10,22 @@
 		}
 	};
 
-	const showTextToast = msg => {
-		browser.tabs.executeScript({ code: `SimpleGesture.showTextToast('${msg}');` });
+	const showTextToast = (tabId, msg) => {
+		browser.scripting.executeScript({
+			target: { tabId: tabId },
+			args: [msg],
+			func: msg => SimpleGesture.showTextToast(msg)
+		});
 	};
 
 	// For suspended tabs
 	let iniTimestamp = await browser.storage.session.get('iniTimestamp')?.iniTimestamp || Date.now();
 	const reloadIni = tabId => {
-		browser.tabs.executeScript(tabId, { code: `SimpleGesture.loadIni(${iniTimestamp || 0});` });
+		browser.scripting.executeScript({
+			target: { tabId: tabId },
+			args: [iniTimestamp],
+			func: (iniTimestamp) => SimpleGesture.loadIni(iniTimestamp)
+		});
 	};
 	browser.tabs.onActivated.addListener(e => {
 		reloadIni(e.tabId);
@@ -78,9 +86,12 @@
 			// show toast
 			const pos = await iniValue('toastForNewTabPosition') || '';
 			if (pos === 'none') return;
-			browser.tabs.executeScript(arg.tabId, { code: `
-				SimpleGesture.mod('toastForNewTab', m => m.show(${newTab.id}, '${pos}'));
-			` });
+			browser.scripting.executeScript({
+				target: { tabId: arg.tab.id },
+				args: [newTab.id, pos],
+				func: (newTabId, pos) => 
+					SimpleGesture.mod('toastForNewTab', m => m.show(newTabId, pos))
+			});
 		},
 		newTab: async () => {
 			const url = await iniValue('newTabUrl');
@@ -122,7 +133,7 @@
 			}
 			exec.closeIf(tab => tab.url === arg.tab.url);
 		},
-		reopen: async () => {
+		reopen: async arg => {
 			if (browser.sessions) {
 				// for Firefox for Desktop
 				const session = (await browser.sessions.getRecentlyClosed({ maxResults: 1 }))[0];
@@ -138,7 +149,7 @@
 					return;
 				}
 			}
-			showTextToast(browser.i18n.getMessage('No recently closed tabs'));
+			showTextToast(arg.tab.id, browser.i18n.getMessage('No recently closed tabs'));
 		},
 		duplicateTab: async arg => {
 			if (browser.tabs.duplicate) {
@@ -196,7 +207,7 @@
 			}
 			browser.storage.session.set({ userAgent });
 			await browser.tabs.reload(arg.tab.id);
-			showTextToast(`${browser.i18n.getMessage('toggleUserAgent')}: ${userAgent ? 'ON' : 'OFF'}`);
+			showTextToast(arg.tab.id, `${browser.i18n.getMessage('toggleUserAgent')}: ${userAgent ? 'ON' : 'OFF'}`);
 		},
 		openAddonSettings: () => {
 			browser.tabs.create({ active: true, url: 'options.html' });
@@ -208,10 +219,13 @@
 			if (tabs[0]) {
 				reloadIni(tabs[0].id);
 			}
-			// Do not send message too many tabs.
+			// DO NOT SEND MESSAGE TOO MANY TABS.
 			// const tabs = await browser.tabs.query({});
 			// for (let tab of tabs) {
-			// 	browser.tabs.executeScript(tab.id, { code: 'SimpleGesture.loadIni();' });
+			// 	browser.scripting.executeScript({
+			// 		target: tab.id,
+			// 		func: () => SimpleGesture.loadIni()
+			// 	});
 			// }
 		},
 		customGesture: async arg => {
@@ -231,9 +245,13 @@
 				if (c.messageType === 'json') {
 					msg = `JSON.parse(${msg})`;
 				}
-				browser.tabs.executeScript(arg.tabId, { code: `
-					browser.runtime.sendMessage(${id}, ${msg}).catch(e => { alert(e.message); });
-				` });
+				browser.scripting.executeScript({
+					target: { tabId: arg.tab.id },
+					args: [id, msg],
+					func: (id, msg) =>
+						browser.runtime.sendMessage(id, msg)
+							.catch(e => { alert(e.message); })
+				});
 			}
 		},
 		open: async arg => {
@@ -274,14 +292,18 @@
 				};
 				${arg.code || arg.script}
 			}`;
+			// TODO: Migrate to Manifest V3.
 			browser.tabs.executeScript(arg.tabId, { code: userScript })
 			.then(result => { result && result[0] && result[0].url && exec.open(result[0]); })
 			.catch (e => {
 				if (e.message === 'SimpleGestureExit') return;
 				if (e.message.indexOf('result is non-structured-clonable data') !== -1) return;// Ignore the invalid return value.
 				const msg = e.message.replace(/(['\\])/g, '\\$1');
-				const code = `alert('${msg}');`; // TODO: Always e.lineNumber is 0.
-				browser.tabs.executeScript({ code: code });
+				browser.tabs.executeScript({
+					target: { tabId: arg.tabId },
+					args: [msg],
+					func: (msg) => alert(msg),
+				});
 			});
 		}
 	};
