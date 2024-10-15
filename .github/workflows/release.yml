@@ -48,13 +48,13 @@ jobs:
           sh ./make.sh
 
       - name: Create release
-          uses: softprops/action-gh-release@v1
-          with:
-            name: ${{ github.ref }}
-            tag_name: ${{ github.ref }}
-            body: ${{ steps.release_notes.outputs.COMMITS }}
-            generate_release_notes: true
-            files: |
-              simple-gesture.xpi
-              simple-gesture-v3.zip
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref }}
+          tag_name: ${{ github.ref }}
+          body: ${{ steps.release_notes.outputs.COMMITS }}
+          generate_release_notes: true
+          files: |
+            simple-gesture.xpi
+            simple-gesture-v3.zip
 
