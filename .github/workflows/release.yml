@@ -48,24 +48,13 @@ jobs:
           sh ./make.sh
 
       - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: ${{ steps.release_notes.outputs.COMMITS }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Assets
-        id: upload-release-assets
-        uses: dwenegar/upload-release-assets@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ steps.create_release.outputs.id }}
-          assets_path: simple-gesture.xpi
+          uses: softprops/action-gh-release@v1
+          with:
+            name: ${{ github.ref }}
+            tag_name: ${{ github.ref }}
+            body: ${{ steps.release_notes.outputs.COMMITS }}
+            generate_release_notes: true
+            files: |
+              simple-gesture.xpi
+              simple-gesture-v3.zip
 
