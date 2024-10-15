@@ -250,9 +250,15 @@
 				gestureNames.push(name);
 			}
 		}
-		for (const c of exData.customGestureList) {
-			$customGestureList.appendChild(createGestureItem(c.id));
-			gestureNames.push(c.id);
+		if (browser.runtime.getManifest().manifest_version === 3) {
+			byId('doesNotSupportCustomGesture').classList.remove('hidden')
+			byId('customGestureList').classList.add('disabled')
+			byId('addCustomGesture').classList.add('disabled')
+		} else {
+			for (const c of exData.customGestureList) {
+				$customGestureList.appendChild(createGestureItem(c.id));
+				gestureNames.push(c.id);
+			}
 		}
 		toggleDoubleTapNote();
 		window.addEventListener('click', e => {
