@@ -42,9 +42,13 @@
 		"scripting",
 		"activeTab",
 		"sessions",
-		"clipboardRead",
 		"webRequest",
 		"webRequestBlocking"
+	],
+
+	"optional_permissions": [
+		"clipboardRead",
+		"clipboardWrite"
 	]
 }
 

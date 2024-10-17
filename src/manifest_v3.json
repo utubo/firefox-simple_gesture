@@ -51,7 +51,8 @@
 	],
 
 	"optional_permissions": [
-		"clipboardRead"
+		"clipboardRead",
+		"clipboardWrite"
 	]
 }
 
