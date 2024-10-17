@@ -13,6 +13,7 @@ mv -f simple-gesture.zip simple-gesture.xpi
 cd $SCRIPT_DIR/src
 mv manifest.json manifest_v2.json
 mv manifest_v3.json manifest.json
+rm -f ../simple-gesture-v3.zip
 zip -r ../simple-gesture-v3.zip * -x "manifest_v2.json"
 cd ..
 # Kiwi supports .zip instead of .xpi
