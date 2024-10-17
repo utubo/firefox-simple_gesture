@@ -251,7 +251,7 @@
 			}
 		}
 		if (browser.runtime.getManifest().manifest_version === 3) {
-			byId('doesNotSupportCustomGesture').classList.remove('hidden')
+			byId('doesNotSupportCustomGesture').classList.remove('hide')
 			byId('customGestureList').classList.add('disabled')
 			byId('addCustomGesture').classList.add('disabled')
 		} else {
