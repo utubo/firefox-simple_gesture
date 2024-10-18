@@ -24,11 +24,11 @@ body {
 	opacity: .4;
 	pointer-events: none;
 }
-.disabled-mv3 {
+.mv3 .disabled-mv3 {
 	opacity: .4;
 	pointer-events: none;
 }
-.disabled-mv3::before {
+.mv3 .disabled-mv3::before {
 	content: 'Sorry this version does not support this.';
 	display: block;
 	font-size: 1rem;
