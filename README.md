@@ -5,7 +5,7 @@ This is an add-on that adds simple touch gestures for Firfox for Android.
 ## More info and Installation on Firefox for Android
 https://addons.mozilla.org/firefox/addon/simple-gesture/
 
-## This can also be installed on the Kiwi Browser
+## This can also be installed on Kiwi Browser
 
 > [!CAUTION]
 > This is an add-on for Firefox for Android.
