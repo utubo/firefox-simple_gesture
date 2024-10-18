@@ -8,16 +8,6 @@
 		"64": "icon64.png"
 	},
 
-	"browser_specific_settings": {
-		"gecko": {
-			"id": "simple_gesture@utb.dip.jp",
-			"strict_min_version": "119.0"
-		},
-		"gecko_android": {
-			"strict_min_version": "119.0"
-		}
-	},
-
 	"options_ui": {
 		"page": "options.html",
 		"open_in_tab": true
@@ -45,9 +35,7 @@
 		"tabs",
 		"scripting",
 		"activeTab",
-		"sessions",
-		"webRequest",
-		"webRequestBlocking"
+		"sessions"
 	],
 
 	"optional_permissions": [

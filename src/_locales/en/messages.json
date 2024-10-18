@@ -61,7 +61,7 @@
 	"reopen": {
 		"message": "Reopen Closed Tab"
 	},
-	"No recently closed tabs": {
+	"No_recently_closed_tabs": {
 		"message": "No recently closed tabs"
 	},
 	"openLinkInNewTab": {
@@ -85,7 +85,7 @@
 	"toastForNewTabPositionNone": {
 		"message": "None"
 	},
-	"New tab opened": {
+	"New_tab_opened": {
 		"message": "New tab opened"
 	},
 	"doubleTapNote": {
@@ -151,16 +151,16 @@
 	"EnableExperimentalFeatures": {
 		"message": "Enable experimental features"
 	},
-	"fromEdge-L": {
+	"fromEdge_L": {
 		"message": "From the left edge of screen."
 	},
-	"fromEdge-R": {
+	"fromEdge_R": {
 		"message": "From the right edge of screen."
 	},
-	"fromEdge-T": {
+	"fromEdge_T": {
 		"message": "From the top edge of screen."
 	},
-	"fromEdge-B": {
+	"fromEdge_B": {
 		"message": "From the bottm edge of screen."
 	},
 	"Settings": {
@@ -223,7 +223,7 @@
 	"None": {
 		"message": "None"
 	},
-	"After saving, You need to reload the page.": {
+	"After_saving__You_need_to_reload_the_page_": {
 		"message": "After saving, You need to reload the page."
 	},
 	"advanced": {
@@ -253,14 +253,14 @@
 	"configurations": {
 		"message": "Configurations"
 	},
-	"Export / Import": {
+	"Export___Import": {
 		"message": "Export / Import"
 	},
-	"Export settings to downloads folder": {
+	"Export_settings_to_downloads_folder": {
 		"message": "Export settings to downloads folder"
 	},
-	"Import settings from JSON" : {
-		"message": "Import settings from JSON"
+	"Import_settings_from_JSON": {
+		"message": "Import_settings_from_JSON"
 	}
 }
 

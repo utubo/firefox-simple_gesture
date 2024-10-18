@@ -1,4 +1,13 @@
 var SimpleGesture = {};
+if (typeof browser === 'undefined') {
+	strageOrg = chrome.storage; // global scope for options.js
+	browser = chrome;
+	browser.strage = {
+		local: {
+			get: key => new Promise(resolve => { chromeOrg.storage.local.get(key, resolve); }),
+		}
+	}
+}
 (async () => {
 	'use strict';
 
@@ -129,7 +138,9 @@ var SimpleGesture = {};
 		}
 		t = t && t.tagName !== 'BODY' ? t : document.documentElement;
 		const [fn, top] = cb(t);
-		fn.call(t, { top: top, behavior: 'smooth' });
+		requestAnimationFrame(() => {
+			fn.call(t, { top: top, behavior: 'smooth' });
+		});
 	};
 
 	// note: `click()` is not bubbling on FF for Android.
@@ -224,7 +235,7 @@ var SimpleGesture = {};
 			if (!isGestureEnabled && g !== 'disableGesture') return;
 			SimpleGesture.doCommand(g);
 			e.stopPropagation();
-			e.preventDefault();
+			e.cancelable && e.preventDefault();
 		} finally {
 			gesture = null;
 			//target = null; Keep target for Custom gesture
@@ -302,7 +313,7 @@ var SimpleGesture = {};
 			return;
 		}
 		e.stopPropagation();
-		e.preventDefault();
+		e.cancelable && e.preventDefault();
 		if (doubleTap.count !== 1) return;
 		const ev = new MouseEvent('click', {
 			bubbles: true,

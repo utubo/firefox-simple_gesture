@@ -1,3 +1,10 @@
+if (!browser.storage.local.set) {
+	browser.storage.local = {
+		...browser.storage.local,
+		set: obj => new Promise(resolve => { storageOrg.local.set(obj, resolve); }),
+		remove: key => new Promise(resolve => { storageOrg.local.remove(key, resolve); }),
+	};
+}
 (async () => {
 	'use strict';
 
@@ -89,6 +96,14 @@
 			return null;
 		}
 	};
+
+	const safePreventDefault = e => {
+		try {
+			e.preventDefault();
+		} catch {
+			// nop
+		}
+	}
 
 	// utils for Simple gesture
 	const saveIni = () => {
@@ -250,16 +265,6 @@
 				gestureNames.push(name);
 			}
 		}
-		if (browser.runtime.getManifest().manifest_version === 3) {
-			byId('doesNotSupportCustomGesture').classList.remove('hide')
-			byId('customGestureList').classList.add('disabled')
-			byId('addCustomGesture').classList.add('disabled')
-		} else {
-			for (const c of exData.customGestureList) {
-				$customGestureList.appendChild(createGestureItem(c.id));
-				gestureNames.push(c.id);
-			}
-		}
 		toggleDoubleTapNote();
 		window.addEventListener('click', e => {
 			if (!e.target.classList) return;
@@ -294,14 +299,14 @@
 		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
 			updateGesture(CLEAR_GESTURE);
 			history.back();
-			e.preventDefault();
+			safePreventDefault(e);
 		}, move: () => {}, end: () => {} });
 	};
 
 	// inject settings-page behavior
 	SimpleGesture.onStart = e => {
 		if (!target) return;
-		e.preventDefault();
+		safePreventDefault(e);
 		return false;
 	};
 	SimpleGesture.onInput = e => {
@@ -317,7 +322,7 @@
 		dup = (dup && dup !== target.name) ? getMessage(dup) : '';
 		$dupName.textContent = dup ? `\u00a0(${dup})` : '';
 		toggleClass(dup, 'dup', $inputedGesture, $inputedStartPoint);
-		e.preventDefault();
+		safePreventDefault(e);
 		return false;
 	};
 	let touchEndTimer = null;
@@ -333,7 +338,7 @@
 				history.back();
 			}
 		}
-		e.preventDefault();
+		safePreventDefault(e);
 		return false;
 	};
 
@@ -483,7 +488,7 @@
 				[minX, minY] = SimpleGesture.getXY(e);
 				[maxX, maxY] = [minX, minY];
 				startTime = Date.now();
-				e.preventDefault();
+				safePreventDefault(e);
 				e.stopPropagation();
 			},
 			move: e => {
@@ -493,7 +498,7 @@
 				minY = Math.min(y, minY);
 				maxX = Math.max(x, maxX);
 				maxY = Math.max(y, maxY);
-				e.preventDefault();
+				safePreventDefault(e);
 				e.stopPropagation();
 			},
 			end: () => {
@@ -615,7 +620,11 @@
 			const c = findCustomGesture(s);
 			return c && c.title || '';
 		} else {
-			return browser.i18n.getMessage(s) || s;
+			try {
+				return browser.i18n.getMessage(s) || s;
+			} catch {
+				return s;
+			}
 		}
 	};
 	const onChangeColor = e => {
@@ -727,7 +736,7 @@
 		// Firefox cant open link. bug?
 		byId('exp_readme').addEventListener('click', e => {
 			browser.tabs.create({ active: true, url: 'experimental.html' });
-			e.preventDefault();
+			safePreventDefault(e);
 		});
 	};
 
@@ -739,10 +748,14 @@
 		}
 	});
 	// Touchstart event prevents click event in Input gesture Dialog.
-	SimpleGesture.addTouchEventListener($cancelInputGesture, { start: e => {
-		history.back();
-		e.preventDefault();
-	}, move: () => {}, end: () => {} });
+	SimpleGesture.addTouchEventListener($cancelInputGesture, {
+		start: () => {},
+		move: () => {},
+		end: e => {
+			history.back();
+			safePreventDefault(e);
+		}
+	});
 
 	// control Back button
 	const changeState = state => {
@@ -795,7 +808,9 @@
 			try {
 				preventPopStateEvent = true;
 				history.back();
-				window.scrollTo({ top: 0, behavior: 'smooth' });
+				requestAnimationFrame(() => {
+					window.scrollTo({ top: 0, behavior: 'instant' });
+				});
 			} finally {
 				preventPopStateEvent = false;
 			}
@@ -836,6 +851,7 @@
 		setTimeout(() => { cover.remove(); }, 500);
 	};
 	const setupSettingItems = async () => {
+		document.body.classList.add(`mv${browser.runtime.getManifest().manifest_version}`);
 		setupGestureList();
 		setupEditDlg();
 		await setupOtherOptions();

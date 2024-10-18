@@ -1,3 +1,16 @@
+if (typeof browser === 'undefined') {
+	const storageOrg = chrome.storage;
+	self.browser = chrome;
+	chrome.storage = {
+		local: {
+			get: key => new Promise(resolve => { storageOrg.local.get(key, resolve); }),
+		},
+		session: {
+			get: key => new Promise(resolve => { storageOrg.session.get(key, resolve); }),
+			set: obj => new Promise(resolve => { storageOrg.session.set(obj, resolve); }),
+		}
+	}
+}
 (async () => {
 	'use strict';
 
@@ -66,7 +79,7 @@
 				closedTabs.splice(closedTabs.length - MAX_CLOSED_TABS);
 			}
 			closedTabs.push(url);
-			browser.storage.session.set('closedTabs', closedTabs);
+			browser.storage.session.set({ 'closedTabs': closedTabs });
 		});
 	}
 

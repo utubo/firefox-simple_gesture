@@ -61,7 +61,7 @@
 	"reopen": {
 		"message": "恢复标签页"
 	},
-	"No recently closed tabs": {
+	"No_recently_closed_tabs": {
 		"message": "没有最近关闭的标签页"
 	},
 	"openLinkInNewTab": {
@@ -85,7 +85,7 @@
 	"toastForNewTabPositionNone": {
 		"message": "未示出"
 	},
-	"New tab opened": {
+	"New_tab_opened": {
 		"message": "已打开新标签页"
 	},
 	"doubleTapNote": {
@@ -151,16 +151,16 @@
 	"EnableExperimentalFeatures": {
 		"message": "实验功能"
 	},
-	"fromEdge-L": {
+	"fromEdge_L": {
 		"message": "从屏幕的左边缘"
 	},
-	"fromEdge-R": {
+	"fromEdge_R": {
 		"message": "从屏幕的右边缘"
 	},
-	"fromEdge-T": {
+	"fromEdge_T": {
 		"message": "从屏幕的顶部边缘"
 	},
-	"fromEdge-B": {
+	"fromEdge_B": {
 		"message": "从屏幕的底部边缘"
 	},
 	"Settings": {
@@ -223,7 +223,7 @@
 	"None": {
 		"message": "沒"
 	},
-	"After saving, You need to reload the page.": {
+	"After_saving__You_need_to_reload_the_page_": {
 		"message": "保存后，您需要重新加载页面。"
 	},
 	"advanced": {
@@ -253,13 +253,13 @@
 	"configurations": {
 		"message": "组态"
 	},
-	"Export / Import": {
+	"Export___Import": {
 		"message": "备份和恢复设置"
 	},
-	"Export settings to downloads folder": {
+	"Export_settings_to_downloads_folder": {
 		"message": "保存设置"
 	},
-	"Import settings from JSON" : {
+	"Import_settings_from_JSON" : {
 		"message": "从备份中恢复"
 	}
 }

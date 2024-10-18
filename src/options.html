@@ -90,19 +90,19 @@
 
 		<div class="page" id="otherGestures">
 			<div class="page-header i18n">otherGestures</div>
-			<div class="gesture-list" data-gestures="toggleUserAgent disableGesture openAddonSettings"></div>
+			<div class="gesture-list disabled-mv3" data-gestures="toggleUserAgent"></div>
 			<div class="sub-item" data-parent="toggleUserAgent_item">
 				<label for="userAgent" class="sub-caption i18n">UserAgent</label>
 				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
 				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
 			</div>
+			<div class="gesture-list" data-gestures="disableGesture openAddonSettings"></div>
 		</div>
 
-		<div class="page" id="customGestures">
+		<div class="page disabled-mv3" id="customGestures">
 			<div class="page-header i18n">customGestures</div>
 			<div id="customGestureList" class="gesture-list"></div>
 			<div id="addCustomGesture" class="button icon-add i18n">addCustomGesture</div>
-			<div class="hide i18n" id="doesNotSupportCustomGesture">Sorry, this version does not support Custom Gesture.</div>
 			</div>
 		</div>
 

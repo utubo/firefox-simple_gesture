@@ -61,7 +61,7 @@
 	"reopen": {
 		"message": "Tab wiederherstellen"
 	},
-	"No recently closed tabs": {
+	"No_recently_closed_tabs": {
 		"message": "Keine kürzlich geschlossenen Tabs"
 	},
 	"openLinkInNewTab": {
@@ -85,7 +85,7 @@
 	"toastForNewTabPositionNone": {
 		"message": "Keine"
 	},
-	"New tab opened": {
+	"New_tab_opened": {
 		"message": "Neuer Tab geöffnet"
 	},
 	"doubleTapNote": {
@@ -151,16 +151,16 @@
 	"EnableExperimentalFeatures": {
 		"message": "Experimentelle Funktionen"
 	},
-	"fromEdge-L": {
+	"fromEdge_L": {
 		"message": "Von der linken Bildschirmkante."
 	},
-	"fromEdge-R": {
+	"fromEdge_R": {
 		"message": "Von der rechten Bildschirmkante."
 	},
-	"fromEdge-T": {
+	"fromEdge_T": {
 		"message": "Von der oberen Bildschirmkante."
 	},
-	"fromEdge-B": {
+	"fromEdge_B": {
 		"message": "Von der unteren Bildschirmkante."
 	},
 	"Settings": {
@@ -223,7 +223,7 @@
 	"None": {
 		"message": "Keine"
 	},
-	"After saving, You need to reload the page.": {
+	"After_saving__You_need_to_reload_the_page_": {
 		"message": "Nach dem Speichern muss die Seite neu geladen werden."
 	},
 	"advanced": {
@@ -253,13 +253,13 @@
 	"configurations": {
 		"message": "Konfigurationen"
 	},
-	"Export / Import": {
+	"Export___Import": {
 		"message": "Export/Import"
 	},
-	"Export settings to downloads folder": {
+	"Export_settings_to_downloads_folder": {
 		"message": "Einstellungen exportieren"
 	},
-	"Import settings from JSON" : {
+	"Import_settings_from_JSON" : {
 		"message": "Importieren aus JSON"
 	}
 }

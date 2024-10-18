@@ -61,7 +61,7 @@
 	"reopen": {
 		"message": "閉じたタブを開き直す"
 	},
-	"No recently closed tabs": {
+	"No_recently_closed_tabs": {
 		"message": "閉じたタブの情報が見つかりません"
 	},
 	"openLinkInNewTab": {
@@ -85,7 +85,7 @@
 	"toastForNewTabPositionNone": {
 		"message": "非表示"
 	},
-	"New tab opened": {
+	"New_tab_opened": {
 		"message": "新しいタブを開きました"
 	},
 	"doubleTapNote": {
@@ -151,16 +151,16 @@
 	"EnableExperimentalFeatures": {
 		"message": "実験的な機能を表示する"
 	},
-	"fromEdge-L": {
+	"fromEdge_L": {
 		"message": "画面左端から"
 	},
-	"fromEdge-R": {
+	"fromEdge_R": {
 		"message": "画面右端から"
 	},
-	"fromEdge-T": {
+	"fromEdge_T": {
 		"message": "画面上端から"
 	},
-	"fromEdge-B": {
+	"fromEdge_B": {
 		"message": "画面下端から"
 	},
 	"Settings": {
@@ -223,7 +223,7 @@
 	"None": {
 		"message": "無し"
 	},
-	"After saving, You need to reload the page.": {
+	"After_saving__You_need_to_reload_the_page_": {
 		"message": "ページを再読み込みすると反映されます。"
 	},
 	"advanced": {
@@ -253,13 +253,13 @@
 	"configurations": {
 		"message": "詳細設定"
 	},
-	"Export / Import": {
+	"Export___Import": {
 		"message": "設定のバックアップと復元"
 	},
-	"Export settings to downloads folder": {
+	"Export_settings_to_downloads_folder": {
 		"message": "設定を保存する"
 	},
-	"Import settings from JSON" : {
+	"Import_settings_from_JSON" : {
 		"message": "バックアップから復元する"
 	}
 }
