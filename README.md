@@ -7,7 +7,7 @@ https://addons.mozilla.org/firefox/addon/simple-gesture/
 
 ## This can also be installed on the Kiwi Browser
 
-> [CAUTION]
+> [!CAUTION]
 > This is an add-on for Firefox for Android.
 > You can install this on Kiwi, but I have not tested this on Kiwi or other browsers.
 
