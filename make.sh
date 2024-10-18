@@ -1,25 +1,22 @@
 #!/usr/bin/sh
 
-CUR=$(pwd)
+CURRENT_DIR=$(pwd)
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-# manifest_v2
+# manifest_firefox
 cd $SCRIPT_DIR/src
-zip -r ../simple-gesture.zip * -x "manifest_v3.json"
+zip -r ../simple-gesture.zip * -x "manifest_*.json"
 cd ..
 mv -f simple-gesture.zip simple-gesture.xpi
 
 # for Kiwi browser
-# manifest_v3
+# manifest_chrome
 cd $SCRIPT_DIR/src
-mv manifest.json manifest_v2.json
-mv manifest_v3.json manifest.json
-rm -f ../simple-gesture-v3.zip
-zip -r ../simple-gesture-v3.zip * -x "manifest_v2.json"
-cd ..
-# Kiwi supports .zip instead of .xpi
-# mv -f simple-gesture-v3.zip simple-gesture-v3.xpi
-cd src
-mv manifest.json manifest_v3.json
-mv manifest_v2.json manifest.json
-cd $CUR
+mv manifest.json manifest_firefox.json
+mv manifest_chrome.json manifest.json
+rm -f ../simple-gesture-chrome.zip
+zip -r ../simple-gesture-chrome.zip * -x "manifest_*.json"
+mv manifest.json manifest_chrome.json
+mv manifest_firefox.json manifest.json
+
+cd $CURRENT_DIR
 
