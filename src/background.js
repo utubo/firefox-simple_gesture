@@ -162,7 +162,7 @@ if (typeof browser === 'undefined') {
 					return;
 				}
 			}
-			showTextToast(arg.tab.id, browser.i18n.getMessage('No recently closed tabs'));
+			showTextToast(arg.tab.id, browser.i18n.getMessage('No_recently_closed_tabs'));
 		},
 		duplicateTab: async arg => {
 			if (browser.tabs.duplicate) {

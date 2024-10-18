@@ -74,6 +74,8 @@ if (typeof browser === 'undefined') {
 		return p.clientX !== undefined ? [p.clientX - VV.offsetLeft, p.clientY - VV.offsetTop] : [lx, ly];
 	};
 
+	const getMessage = s => browser.i18n.getMessage(s.replace(/[^0-9a-zA-Z_]/g, '_'));
+
 	const restartTimer = () => {
 		clearTimeout(timer);
 		timer = SimpleGesture.ini.timeout ? setTimeout(timeoutGesture, SimpleGesture.ini.timeout) : null;
@@ -83,7 +85,7 @@ if (typeof browser === 'undefined') {
 		gesture = null;
 		timer = null;
 		if (e && e.withTimeout && toast && SimpleGesture.ini.toast) {
-			SimpleGesture.showTextToast(`( ${browser.i18n.getMessage('timeout')} )`);
+			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
 		} else {
 			hideToast();
 		}
@@ -292,7 +294,7 @@ if (typeof browser === 'undefined') {
 
 	const toggleEnable = () => {
 		isGestureEnabled = !isGestureEnabled;
-		SimpleGesture.showTextToast(browser.i18n.getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
+		SimpleGesture.showTextToast(getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
 	};
 
 	const waitForDoubleTap = e => {
@@ -480,12 +482,12 @@ if (typeof browser === 'undefined') {
 			await loadExData(!exData);
 			name = exData.customGestureList.find(c => c.id === g).title;
 		} else {
-			name = browser.i18n.getMessage(g);
+			name = getMessage(g);
 		}
 		setupToast();
 		toastText.textContent = name;
 		SimpleGesture.drawArrows(gesture, toastArrows);
-		toastSub.textContent = startPoint ? `${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)}` : '';
+		toastSub.textContent = startPoint ? `${getMessage(`fromEdge-${startPoint[0]}`)}` : '';
 		showToast();
 	};
 

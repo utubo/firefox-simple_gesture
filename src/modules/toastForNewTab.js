@@ -7,7 +7,7 @@ const vvHeight = () => VV.isDummy ? window.innerHeight : VV.height;
 export const show = (_tabId, pos) => {
 	tabId = _tabId;
 	if (pos === 'top') {
-		SimpleGesture.showTextToast(browser.i18n.getMessage('New tab opened'));
+		SimpleGesture.showTextToast(browser.i18n.getMessage('New_tab_opened'));
 		return;
 	}
 	if (!toast) {
@@ -34,7 +34,7 @@ export const show = (_tabId, pos) => {
 			padding: 15px 24px;
 			text-align: left;
 		`;
-		content.textContent = browser.i18n.getMessage('New tab opened');
+		content.textContent = browser.i18n.getMessage('New_tab_opened');
 		content.addEventListener('click', () => {
 			toast.style.display = 'none';
 			browser.runtime.sendMessage(JSON.stringify({ command: 'showTab', tabId: tabId}));

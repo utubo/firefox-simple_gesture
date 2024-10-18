@@ -158,7 +158,7 @@ if (!browser.storage.local.set) {
 		} else {
 			arrowsLabel.textContent = INSTEAD_OF_EMPTY.noGesture;
 		}
-		startPointLabel.textContent = startPoint ? `(${browser.i18n.getMessage(`fromEdge-${startPoint[0]}`)})` : '';
+		startPointLabel.textContent = startPoint ? `(${getMessage(`fromEdge-${startPoint[0]}`)})` : '';
 		return [startPoint, arrows];
 	};
 	const updateGestureItem = (label, gesture) => {
@@ -265,6 +265,10 @@ if (!browser.storage.local.set) {
 				gestureNames.push(name);
 			}
 		}
+		for (const c of exData.customGestureList) {
+			$customGestureList.appendChild(createGestureItem(c.id));
+			gestureNames.push(c.id);
+		}
 		toggleDoubleTapNote();
 		window.addEventListener('click', e => {
 			if (!e.target.classList) return;
@@ -277,7 +281,7 @@ if (!browser.storage.local.set) {
 				return;
 			}
 			if (e.target.classList.contains('custom-gesture-delete')) {
-				if (confirm(browser.i18n.getMessage('message_delete_confirm'))) {
+				if (confirm(getMessage('message_delete_confirm'))) {
 					deleteCustomGesture(e);
 				}
 				return;
@@ -545,7 +549,7 @@ if (!browser.storage.local.set) {
 				break;
 			}
 		}
-		byId('blacklistSummary').textContent = count ? urls.join(', ') : browser.i18n.getMessage('None');
+		byId('blacklistSummary').textContent = count ? urls.join(', ') : getMessage('None');
 	};
 	dlgs.blacklistDlg = {
 		onShow: () => {
@@ -621,7 +625,7 @@ if (!browser.storage.local.set) {
 			return c && c.title || '';
 		} else {
 			try {
-				return browser.i18n.getMessage(s) || s;
+				return browser.i18n.getMessage(s.replace(/[^0-9a-zA-Z_]/g, '_')) || s;
 			} catch {
 				return s;
 			}
