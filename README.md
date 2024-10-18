@@ -17,6 +17,10 @@ https://addons.mozilla.org/firefox/addon/simple-gesture/
 4. Click `+(from .zip/.crx/.user.js)`.
 5. Select simple-gesture-chrome.zip.
 
+**Known issues**
+- This does not support Toggle Desktop site (switch USER-AGENT) and Custom Gesture.
+- Toast of `Open link in background` in not shown.
+
 ## Licenses
 SimpleGesutre is released under the [MPL2.0 license](http://www.mozilla.org/MPL/2.0/).  
 Copyright 2017 utubo  
