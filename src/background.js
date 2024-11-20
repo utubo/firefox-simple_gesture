@@ -102,7 +102,7 @@ if (typeof browser === 'undefined') {
 			browser.scripting.executeScript({
 				target: { tabId: arg.tab.id },
 				args: [newTab.id, pos],
-				func: (newTabId, pos) => 
+				func: (newTabId, pos) =>
 					SimpleGesture.mod('toastForNewTab', m => m.show(newTabId, pos))
 			});
 		},
