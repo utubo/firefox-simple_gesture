@@ -442,6 +442,7 @@ if (typeof browser === 'undefined') {
 		toast = document.createElement('DIV');
 		toast.style.cssText = `
 			all: initial;
+			backdrop-filter: blur(.1rem);
 			box-sizing: border-box;
 			left: 0;
 			line-height: 1.5;
