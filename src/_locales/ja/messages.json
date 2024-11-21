@@ -148,6 +148,12 @@
 	"toastBackground": {
 		"message": "背景色"
 	},
+	"suggestNext": {
+		"message": "入力中に候補を表示する"
+	},
+	"toastMinStroke": {
+		"message": "候補表示する最小ストローク数"
+	},
 	"EnableExperimentalFeatures": {
 		"message": "実験的な機能を表示する"
 	},

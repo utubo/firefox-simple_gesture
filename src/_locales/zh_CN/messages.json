@@ -148,6 +148,12 @@
 	"toastBackground": {
 		"message": "背景颜色"
 	},
+	"suggestNext": {
+		"message": "显示下一步所有可能的操作"
+	},
+	"toastMinStroke": {
+		"message": "显示的最小笔画数"
+	},
 	"EnableExperimentalFeatures": {
 		"message": "实验功能"
 	},

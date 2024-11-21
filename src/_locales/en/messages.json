@@ -148,6 +148,12 @@
 	"toastBackground": {
 		"message": "Background"
 	},
+	"suggestNext": {
+		"message": "Show next all possible actions"
+	},
+	"toastMinStroke": {
+		"message": "Minimum number of strokes to display"
+	},
 	"EnableExperimentalFeatures": {
 		"message": "Enable experimental features"
 	},

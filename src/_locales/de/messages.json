@@ -148,6 +148,12 @@
 	"toastBackground": {
 		"message": "Hintergrundfarbe"
 	},
+	"suggestNext": {
+		"message": "Als nächstes alle möglichen Aktionen anzeigen"
+	},
+	"toastMinStroke": {
+		"message": "Mindestanzahl der anzuzeigenden Anschläge"
+	},
 	"EnableExperimentalFeatures": {
 		"message": "Experimentelle Funktionen"
 	},

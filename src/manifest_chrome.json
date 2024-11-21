@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "3.17",
+	"version": "3.18",
 	"default_locale": "en",
 	"icons": {
 		"64": "icon64.png"
@@ -20,6 +20,14 @@
 			"run_at": "document_start"
 		}
 	],
+
+	"web_accessible_resources": [{
+		"resources": [
+			"modules/*",
+			"experimental.html"
+		],
+		"matches": ["*://*/*"]
+	}],
 
 	"background": {
 		"service_worker": "background.js",

@@ -99,7 +99,9 @@ if (!browser.storage.local.set) {
 
 	const safePreventDefault = e => {
 		try {
-			e.preventDefault();
+			if (e && e.cancelable) {
+				e.preventDefault();
+			}
 		} catch {
 			// nop
 		}
