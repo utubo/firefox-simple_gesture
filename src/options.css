@@ -509,6 +509,52 @@ textarea:selection, input:selection {
 	text-align: left;
 }
 
+/* color dlg */
+#pallet {
+	overflow: auto;
+}
+.color-tile {
+	border: none;
+	display: inline-block;
+	width: 4rem;
+	height: 4rem;
+}
+.checker {
+	background-color: #fff;
+	background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" fill="rgba(0,0,0,.1)" width="4" height="4"><path d="M0 0 0 2 4 2 4 4 2 4 2 0"/></svg>');
+	background-size: 16px;
+	background-position: center;
+	display: inline-block;
+}
+.slider {
+	-webkit-appearance: none;
+	appearance: none;
+	border-radius: 12px;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: block;
+	height: 20px;
+	margin: 0;
+	text-align: center;
+	outline: none;
+	position: relative;
+	width: calc(300px - 32px);
+	z-index: 2;
+}
+.slider::-webkit-slider-thumb,
+.slider::-moz-range-thumb {
+	background: #333;
+	border: 2pt solid #fff;
+	border-radius: 50%;
+	box-sizing: border-box;
+	height: 20px;
+	width: 20px;
+	z-index: 3;
+}
+.checker.slider {
+	margin: 1rem auto;
+}
+
 /* blacklist */
 #blacklistDlg > .dlg-container {
 	width: 100%;
@@ -690,53 +736,4 @@ textarea:selection, input:selection {
 	::selection {
 		background: #75747a;
 	}
-}
-/* color dlg */
-#pallet {
-	overflow: auto;
-}
-.color-tile {
-	border: none;
-	display: inline-block;
-	width: 4rem;
-	height: 4rem;
-}
-.checker {
-	background-color: #fff;
-	background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" fill="rgba(0,0,0,.1)" width="4" height="4"><path d="M0 0 0 2 4 2 4 4 2 4 2 0"/></svg>');
-	background-size: 16px;
-	background-position: center;
-	display: inline-block;
-}
-.checker.slider {
-	margin: 1rem auto;
-}
-.slider {
-	-webkit-appearance: none;
-	appearance: none;
-	border-radius: 12px;
-	box-sizing: border-box;
-	cursor: pointer;
-	display: block;
-	height: 20px;
-	margin: auto;
-	text-align: center;
-	outline: none;
-	position: relative;
-	width: calc(300px - 32px);
-	z-index: 2;
-}
-.slider::-webkit-slider-thumb,
-.slider::-moz-range-thumb {
-	background: #333;
-	border: 2pt solid #fff;
-	border-radius: 50%;
-	box-sizing: border-box;
-	height: 20px;
-	width: 20px;
-	z-index: 3;
-}
-#slider_a {
-	background: linear-gradient(to right, transparent, #39f);
-	margin: 0;
 }
