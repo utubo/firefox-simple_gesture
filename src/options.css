@@ -203,7 +203,7 @@ textarea:selection, input:selection {
 	padding: 0;
 	width: 1.5rem;
 }
-.color-preview {
+.color-preview-container {
 	border: 1px solid #999;
 	border-radius: 2px;
 	display: inline-block;
@@ -212,6 +212,12 @@ textarea:selection, input:selection {
 	overflow: hidden;
 	vertical-align: bottom;
 	width: 1.5rem;
+}
+.color-preview {
+	display: inline-block;
+	height: 100%;
+	transition: .2s;
+	width: 100%;
 }
 .color-text-input {
 	display: inline-block;
@@ -684,4 +690,53 @@ textarea:selection, input:selection {
 	::selection {
 		background: #75747a;
 	}
+}
+/* color dlg */
+#pallet {
+	overflow: auto;
+}
+.color-tile {
+	border: none;
+	display: inline-block;
+	width: 4rem;
+	height: 4rem;
+}
+.checker {
+	background-color: #fff;
+	background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" fill="rgba(0,0,0,.1)" width="4" height="4"><path d="M0 0 0 2 4 2 4 4 2 4 2 0"/></svg>');
+	background-size: 16px;
+	background-position: center;
+	display: inline-block;
+}
+.checker.slider {
+	margin: 1rem auto;
+}
+.slider {
+	-webkit-appearance: none;
+	appearance: none;
+	border-radius: 12px;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: block;
+	height: 20px;
+	margin: auto;
+	text-align: center;
+	outline: none;
+	position: relative;
+	width: calc(300px - 32px);
+	z-index: 2;
+}
+.slider::-webkit-slider-thumb,
+.slider::-moz-range-thumb {
+	background: #333;
+	border: 2pt solid #fff;
+	border-radius: 50%;
+	box-sizing: border-box;
+	height: 20px;
+	width: 20px;
+	z-index: 3;
+}
+#slider_a {
+	background: linear-gradient(to right, transparent, #39f);
+	margin: 0;
 }

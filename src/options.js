@@ -15,7 +15,8 @@ if (!browser.storage.local.set) {
 		noGesture: ' ',
 		defaultTitle: 'Custom Gesture',
 		toastForeground: '#ffffff',
-		toastBackground: '#21a1de',
+		toastBackground: '#21a1de99',
+		toastMinStroke: 2,
 	};
 	const TIMERS = {};
 	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
@@ -568,31 +569,87 @@ if (!browser.storage.local.set) {
 			newList.appendChild(newItem);
 			blacklist.parentNode.replaceChild(newList, blacklist);
 		},
-		onHide: () => {
-		}
+		onHide: () => {},
+		onSubmit: () => {
+			const list = [];
+			for (const input of allByClass('blacklist-input')) {
+				if (input.value) {
+					list.push({url: input.value});
+				}
+			}
+			SimpleGesture.ini.blacklist = list;
+			saveIni();
+			setupBlacklistSummary();
+		},
+		init: () => {
+			window.addEventListener('input', e => {
+				if (e.target.classList.contains('blacklist-input')) {
+					if (!e.target.parentNode.nextSibling) {
+						const newItem = $blacklistTemplate.cloneNode(true);
+						byId('blacklist').appendChild(newItem);
+					}
+					return;
+				}
+			});
+		},
 	};
-	byId('saveBlacklist').addEventListener('click', () => {
-		const list = [];
-		for (const input of allByClass('blacklist-input')) {
-			if (input.value) {
-				list.push({url: input.value});
-			}
-		}
-		SimpleGesture.ini.blacklist = list;
-		saveIni();
-		setupBlacklistSummary();
-		history.back();
-	});
-	window.addEventListener('input', e => {
-		if (e.target.classList.contains('blacklist-input')) {
-			if (!e.target.parentNode.nextSibling) {
-				const newItem = $blacklistTemplate.cloneNode(true);
-				byId('blacklist').appendChild(newItem);
-			}
-			return;
-		}
 
-	});
+	// color dlg ----
+	const hex = d => Number(d).toString(16).padStart(2, '0');
+	dlgs.colorDlg = {
+		targetId: null,
+		rgb: null,
+		setRGB: rgb => {
+			byId('sliderA').style.background =
+				`linear-gradient(to right, transparent, ${rgb})`;
+			dlgs.colorDlg.rgb = rgb;
+		},
+		onShow: id => {
+			dlgs.colorDlg.targetId = id;
+			const elm = byId(id);
+			const a = byId('sliderA');
+			a.style.color = elm.value;
+			requestAnimationFrame(() => {
+				const rgba = getComputedStyle(a).color.match(/[0-9.]+/g);
+				a.value = rgba.length === 4 ? Math.round(Number(rgba[3]) * 255) : 255;
+				const hexRGB = `#${hex(rgba[0])}${hex(rgba[1])}${hex(rgba[2])}`;
+				dlgs.colorDlg.setRGB(hexRGB);
+			});
+		},
+		onHide: () => {},
+		onSubmit: () => {
+			const a = Number(byId('sliderA').value) || 0;
+			const t = byId(dlgs.colorDlg.targetId);
+			t.value = dlgs.colorDlg.rgb + (a !== 255 ? hex(a) : '');
+			onChangeColorText({ target: t });
+		},
+		init: () => {
+			const f = document.createDocumentFragment();
+			for (const c of [
+				'#23222b',
+				'#afafba',
+				'#f9f9fa',
+				'#3fe1b0',
+				'#00b3f4',
+				'#9059ff',
+				'#ff6bba',
+				'#ff7139',
+				'#ffd567',
+			]) {
+				const t = document.createElement('div');
+				t.className = 'color-tile';
+				t.style.background = c;
+				t.setAttribute('data-c', c);
+				f.appendChild(t);
+			}
+			const p = byId('pallet');
+			p.appendChild(f);
+			p.addEventListener('click', e => {
+				if (e.target.className !== 'color-tile') return;
+				dlgs.colorDlg.setRGB(e.target.getAttribute('data-c'));
+			});
+		},
+	};
 
 	// edit text values --
 	const saveBindingValues = () => {
@@ -633,21 +690,13 @@ if (!browser.storage.local.set) {
 			}
 		}
 	};
-	const onChangeColor = e => {
-		e.target.parentNode.style.backgroundColor = e.target.value;
-		byId(e.target.id.replace(/^color_/, '')).value = e.target.value;
-		saveBindingValues();
-	};
+	const colorPreview = i => byClass(i.parentNode, 'color-preview');
 	const onChangeColorText = e => {
 		const id = e.target.id;
 		resetTimer(`onchangecolortext_${id}`, () => {
-			const colorInput = byId(`color_${id}`);
-			const value = byId(id).value || INSTEAD_OF_EMPTY[id];
-			if (value !== colorInput.parentNode.style.backgroundColor) {
-				colorInput.value = value;
-				colorInput.parentNode.style.backgroundColor = value;
-				saveBindingValues();
-			}
+			const value = e.target.value || INSTEAD_OF_EMPTY[id];
+			colorPreview(e.target).style.backgroundColor = value;
+			saveBindingValues();
 		}, 500);
 	};
 	const onChecked = e => {
@@ -721,7 +770,9 @@ if (!browser.storage.local.set) {
 			elm.setAttribute('placeholder', INSTEAD_OF_EMPTY[elm.id]);
 			onChangeColorText({ target: elm });
 			elm.addEventListener('input', onChangeColorText);
-			byId(`color_${elm.id}`).addEventListener('change', onChangeColor);
+			colorPreview(elm).addEventListener('click', e => {
+				changeState({dlg: 'colorDlg', targetId: dataTargetId(e)});
+			});
 		}
 		toggleExperimental();
 		byId('importSetting').addEventListener('change', e => {
@@ -750,6 +801,12 @@ if (!browser.storage.local.set) {
 	addEventListener('click', e => {
 		if (!e?.target.classList) return;
 		if (e.target.classList.contains('js-history-back')) {
+			history.back();
+			return;
+		}
+		if (e.target.classList.contains('js-dlg-submit')) {
+			const f = dlgs[openedDlg.id].onSubmit;
+			f && f();
 			history.back();
 		}
 	});
@@ -780,7 +837,13 @@ if (!browser.storage.local.set) {
 			// enable touch scroll.
 			document.body.style.overflow = null;
 		} else if (state.dlg) {
-			dlgs[state.dlg].onShow(state.targetId);
+			const d = dlgs[state.dlg];
+			const i = d.init;
+			if (i) {
+				i();
+				d.init = null;
+			}
+			d.onShow(state.targetId);
 			openedDlg = byId(state.dlg);
 			fadein(openedDlg);
 			// prevent touch scroll.

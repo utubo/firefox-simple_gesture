@@ -144,16 +144,16 @@
 					<label for="toast" class="checkbox-image"></label>
 				</label>
 				<div class="sub-item js-linked-toast">
-					<label for="color_toastForeground" class="sub-caption i18n">toastForeground</label>
-					<div class="color-preview">
-						<input id="color_toastForeground" class="color-input" type="color">
+					<label for="toastForeground" class="sub-caption i18n">toastForeground</label>
+					<div class="color-preview-container checker">
+						<div class="color-preview" data-targetId="toastForeground"></div>
 					</div>
 					<input id="toastForeground" class="text-input color-text-input js-binding">
 				</div>
 				<div class="sub-item js-linked-toast">
-					<label for="color_toastBackground" class="sub-caption i18n">toastBackground</label>
-					<div class="color-preview">
-						<input id="color_toastBackground" class="color-input" type="color">
+					<label class="sub-caption i18n">toastBackground</label>
+					<div class="color-preview-container checker">
+						<div class="color-preview" data-targetId="toastBackground"></div>
 					</div>
 					<input id="toastBackground" class="text-input color-text-input js-binding">
 				</div>
@@ -292,9 +292,22 @@
 				<div id="blacklist"></div>
 				<div class="buttons">
 					<span class="button icon-cancel js-history-back i18n">cancel</span>
-					<span id="saveBlacklist" class="button icon-save i18n">save</span>
+					<span class="button icon-save js-dlg-submit i18n">save</span>
 				</div>
 				<div class="note i18n">After saving, You need to reload the page.</div>
+			</div>
+		</div>
+
+		<div id="colorDlg" class="dlg transparent">
+			<div class="dlg-container">
+				<div id="pallet"></div>
+				<div class="checker slider">
+					<input id="sliderA" class="slider" type="range" min="0" max="255" value="255">
+				</div>
+				<div class="buttons">
+					<span class="button icon-cancel js-history-back i18n">cancel</span>
+					<span class="button icon-save js-dlg-submit i18n">save</span>
+				</div>
 			</div>
 		</div>
 

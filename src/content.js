@@ -35,7 +35,7 @@ if (typeof browser === 'undefined') {
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
-	const SUGGEST_OPACITY = 0.6;
+	const SUGGEST_OPACITY = 0.5;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 	const vvWidth = () => VV.isDummy ? window.innerWidth : VV.width;
 	const vvHeight = () => VV.isDummy ? window.innerHeight : VV.height;
@@ -398,8 +398,8 @@ if (typeof browser === 'undefined') {
 		if (isToastVisible) return;
 		isToastVisible = true;
 		toast.style.color = SimpleGesture.ini.toastForeground || '#ffffff';
-		toastMain.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
-		toastSub.style.background = SimpleGesture.ini.toastBackground || '#21a1de';
+		toastMain.style.background = SimpleGesture.ini.toastBackground || '#21a1de99';
+		toastSub.style.background = SimpleGesture.ini.toastBackground || '#21a1de99';
 		toast.style.transition = 'opacity .3s';
 		fixToastSize();
 		fixToastPosition();
@@ -444,6 +444,7 @@ if (typeof browser === 'undefined') {
 			all: initial;
 			backdrop-filter: blur(.1rem);
 			box-sizing: border-box;
+			font-feature-settings: palt;
 			left: 0;
 			line-height: 1.5;
 			max-height: 100vh;
