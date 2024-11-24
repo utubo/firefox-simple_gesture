@@ -193,7 +193,7 @@ if (typeof browser === 'undefined') {
 			const rulesetIds = await browser.declarativeNetRequest.getEnabledRulesets();
 			var onOff = 'OFF';
 			if (rulesetIds[0] && !arg.force || arg.userAgent === null) {
-				chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: rulesetIds });
+				await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: rulesetIds });
 			} else {
 				const userAgent =
 					arg.userAgent ||
@@ -217,7 +217,7 @@ if (typeof browser === 'undefined') {
 						}
 					}],
 				};
-				chrome.declarativeNetRequest.updateDynamicRules(rules);
+				await chrome.declarativeNetRequest.updateDynamicRules(rules);
 				onOff = 'ON';
 			}
 			await browser.tabs.reload(arg.tab.id);
