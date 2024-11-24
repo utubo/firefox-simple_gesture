@@ -44,20 +44,6 @@ if (typeof browser === 'undefined') {
 		reloadIni(e.tabId);
 	});
 
-	// UserAgent switcher
-	let userAgent = await browser.storage.session.get('userAgent')?.userAgent || null;
-	const rewriteUserAgentHeader = e => {
-		if (userAgent) {
-			for (let header of e.requestHeaders) {
-				if (header.name.toLowerCase() === "user-agent") {
-					header.value = userAgent;
-					break;
-				}
-			}
-		}
-		return { requestHeaders: e.requestHeaders };
-	};
-
 	// For reopen closed tabs without browser.sessions.
 	let allTabs = null;
 	let closedTabs = null;
@@ -204,23 +190,38 @@ if (typeof browser === 'undefined') {
 			browser.tabs.update(arg.tabId, { active: true });
 		},
 		toggleUserAgent: async arg => {
-			if (userAgent && !arg.force || arg.userAgent === null) {
-				userAgent = null;
-				browser.webRequest.onBeforeSendHeaders.removeListener(rewriteUserAgentHeader);
+			const rulesetIds = await browser.declarativeNetRequest.getEnabledRulesets();
+			var onOff = 'OFF';
+			if (rulesetIds[0] && !arg.force || arg.userAgent === null) {
+				chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: rulesetIds });
 			} else {
-				userAgent =
+				const userAgent =
 					arg.userAgent ||
 					(await iniValue('userAgent')) ||
 					navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux');
-				browser.webRequest.onBeforeSendHeaders.addListener(
-					rewriteUserAgentHeader,
-					{ urls: [ '*://*/*' ] },
-					[ "blocking", "requestHeaders" ]
-				);
+				const rules = {
+					addRules: [{
+						id: 1,
+						priority: 1,
+						action: {
+							type: 'modifyHeaders',
+							requestHeaders: [{
+								header: 'user-agent',
+								operation: 'set',
+								value: userAgent
+							}]
+						},
+						condition: {
+							urlFilter: '*',
+							resourceTypes: ['main_frame']
+						}
+					}],
+				};
+				chrome.declarativeNetRequest.updateDynamicRules(rules);
+				onOff = 'ON';
 			}
-			browser.storage.session.set({ userAgent });
 			await browser.tabs.reload(arg.tab.id);
-			showTextToast(arg.tab.id, `${browser.i18n.getMessage('toggleUserAgent')}: ${userAgent ? 'ON' : 'OFF'}`);
+			showTextToast(arg.tab.id, `${browser.i18n.getMessage('toggleUserAgent')}: ${onOff}`);
 		},
 		openAddonSettings: () => {
 			browser.tabs.create({ active: true, url: 'options.html' });

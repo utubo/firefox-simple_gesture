@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "3.19",
+	"version": "3.20",
 	"default_locale": "en",
 	"icons": {
 		"64": "icon64.png"
@@ -43,7 +43,8 @@
 		"tabs",
 		"scripting",
 		"activeTab",
-		"sessions"
+		"sessions",
+		"declarativeNetRequest"
 	],
 
 	"optional_permissions": [
