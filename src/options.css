@@ -533,8 +533,8 @@ textarea:selection, input:selection {
 }
 @media (orientation: landscape) {
 	#pallet {
-		max-width: unlet;
-		width: auto;
+		max-width: calc(64px + 64vw);
+		width: calc(64px + 32rem);
 	}
 	.color-tile {
 		max-height: 8vw;
