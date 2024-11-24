@@ -405,31 +405,30 @@ if (!browser.storage.local.set) {
 			const c = findCustomGesture(dlgs.editDlg.targetId);
 			unhilightEditEnd(byId(`${c.id}_caption`));
 			dlgs.editDlg.targetId = null;
-		}
-	};
-	const saveCustomGesture = () => {
-		// save list
-		const c = findCustomGesture(dlgs.editDlg.targetId);
-		c.title = $customGestureTitle.value;
-		browser.storage.local.set({ simple_gesture_exdata: exData });
-		// save detail
-		const d = { type: $customGestureType.value };
-		switch(d.type) {
-			case 'url': d.url = $customGestureUrl.value; break;
-			case 'script': d.script = $customGestureScript.value; break;
-			case 'message':
-				d.extensionId = document.forms.customGestureMsg.customGestureMsgId.value;
-				d.message = document.forms.customGestureMsg.customGestureMsgValue.value;
-				d.messageType = document.forms.customGestureMsg.messageType.value;
-				break;
-		}
-		const details = {};
-		details[`simple_gesture_${c.id}`] = d;
-		browser.storage.local.set(details);
-		// update list
-		byId(`${c.id}_caption`).textContent = c.title;
-		reloadAllTabsIni(); // for toast
-		history.back();
+		},
+		onSubmit: () => {
+			// save list
+			const c = findCustomGesture(dlgs.editDlg.targetId);
+			c.title = $customGestureTitle.value;
+			browser.storage.local.set({ simple_gesture_exdata: exData });
+			// save detail
+			const d = { type: $customGestureType.value };
+			switch(d.type) {
+				case 'url': d.url = $customGestureUrl.value; break;
+				case 'script': d.script = $customGestureScript.value; break;
+				case 'message':
+					d.extensionId = document.forms.customGestureMsg.customGestureMsgId.value;
+					d.message = document.forms.customGestureMsg.customGestureMsgValue.value;
+					d.messageType = document.forms.customGestureMsg.messageType.value;
+					break;
+			}
+			const details = {};
+			details[`simple_gesture_${c.id}`] = d;
+			browser.storage.local.set(details);
+			// update list
+			byId(`${c.id}_caption`).textContent = c.title;
+			reloadAllTabsIni(); // for toast
+		},
 	};
 	const toggleEditor = () => {
 		toggleClass(customGestureType.value === 'script', 'dlg-fill', $customGestureDlgContainer);
@@ -480,7 +479,6 @@ if (!browser.storage.local.set) {
 	};
 	const setupEditDlg = () => {
 		byId('addCustomGesture').addEventListener('click', addCustomGesture);
-		byId('saveCustomGesture').addEventListener('click', saveCustomGesture);
 		$customGestureType.addEventListener('change', toggleEditor);
 		$customGestureUrl.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
 		$customGestureScript.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByScript, 1000); });
@@ -626,20 +624,26 @@ if (!browser.storage.local.set) {
 		init: () => {
 			const f = document.createDocumentFragment();
 			for (const c of [
-				'#23222b',
-				'#afafba',
-				'#f9f9fa',
-				'#3fe1b0',
-				'#00b3f4',
-				'#9059ff',
-				'#ff6bba',
-				'#ff7139',
-				'#ffd567',
+				'#a4c639', // android green
+				'#3fe1b0', // green
+				'#00b3f4', // blue
+				'#9059ff', // violet
+				'#ff6bba', // pink
+				'#e22850', // red
+				'#ff8a50', // orange
+				'#ffd567', // yellow
+				'#f9f9fa', // white
+				'#afafba', // gray
+				'#23222b', // black
 			]) {
 				const t = document.createElement('div');
 				t.className = 'color-tile';
 				t.style.background = c;
 				t.setAttribute('data-c', c);
+				// only white and black have border.
+				if (c === '#f9f9fa' || c === '#23222b') {
+					t.style.borderColor = 'var(--fg-color)';
+				}
 				f.appendChild(t);
 			}
 			const p = byId('pallet');
@@ -804,7 +808,7 @@ if (!browser.storage.local.set) {
 			history.back();
 			return;
 		}
-		if (e.target.classList.contains('js-dlg-submit')) {
+		if (e.target.classList.contains('js-submit')) {
 			const f = dlgs[openedDlg.id].onSubmit;
 			f && f();
 			history.back();

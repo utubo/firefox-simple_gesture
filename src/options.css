@@ -6,6 +6,9 @@
 	--accent: #592acb;
 	--checked: #302962;
 	--secondery: #666;
+	--button: #cfcfd8;
+	--submit: #302962;
+	--submit-fg: #f9f9fa;
 }
 body {
 	background: var(--bg-color);
@@ -369,7 +372,7 @@ textarea:selection, input:selection {
 }
 .dlg-container {
 	background: var(--bg-color);
-	border-radius: 3px;
+	border-radius: .5rem;
 	display: flex;
 	flex-direction: column;
 	margin: 1rem;
@@ -511,13 +514,32 @@ textarea:selection, input:selection {
 
 /* color dlg */
 #pallet {
+	margin: auto;
+	max-width: calc(75vw + 20px);
+	line-height: 0;
 	overflow: auto;
+	width: calc(20rem + 20px);
 }
 .color-tile {
-	border: none;
+	border: 1px solid transparent;
+	border-radius: 1rem;
+	box-sizing: border-box;
 	display: inline-block;
+	margin: 4px;
+	max-height: 15vw;
+	max-width: 15vw;
 	width: 4rem;
 	height: 4rem;
+}
+@media (orientation: landscape) {
+	#pallet {
+		max-width: unlet;
+		width: auto;
+	}
+	.color-tile {
+		max-height: 8vw;
+		max-width: 8vw;
+	}
 }
 .checker {
 	background-color: #fff;
@@ -620,14 +642,20 @@ textarea:selection, input:selection {
 .buttons-vertical {
 	margin-top: 1rem;
 }
-
 .button {
-	background: #cfcfd8;
+	background: var(--button);
 	border-radius: 4px;
 	box-sizing: border-box;
 	cursor: default;
 	display: inline-block;
 	padding: .2rem .8rem;
+}
+.js-submit {
+	background: var(--submit);
+	color: var(--submit-fg);
+}
+.js-submit.button::before {
+	filter: invert(1);
 }
 .button::before {
 	display: inline-block;
@@ -676,6 +704,8 @@ textarea:selection, input:selection {
 		--accent: #cb9eff;
 		--checked: #cb9eff;
 		--secondery: #fbfbfeaa;
+		--button: #52525e;
+		--submit: #7542e5;
 	}
 	.page-header, h2 {
 		border-color: #42414d;
@@ -719,9 +749,6 @@ textarea:selection, input:selection {
 	.code, .inline-code {
 		background: #444;
 		color: #eee;
-	}
-	.button {
-		background: #52525e;
 	}
 	.button::before {
 		filter: invert(1);
