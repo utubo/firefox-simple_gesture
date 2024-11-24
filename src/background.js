@@ -190,10 +190,12 @@ if (typeof browser === 'undefined') {
 			browser.tabs.update(arg.tabId, { active: true });
 		},
 		toggleUserAgent: async arg => {
-			const rulesetIds = await browser.declarativeNetRequest.getEnabledRulesets();
+			const rulesets = await browser.declarativeNetRequest.getDynamicRules();
 			var onOff = 'OFF';
-			if (rulesetIds[0] && !arg.force || arg.userAgent === null) {
-				await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: rulesetIds });
+			if (rulesets[0] && !arg.force || arg.userAgent === null) {
+				chrome.declarativeNetRequest.updateDynamicRules(
+					{ removeRuleIds: [rulesets[0].id] }
+				);
 			} else {
 				const userAgent =
 					arg.userAgent ||
