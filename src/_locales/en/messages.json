@@ -100,23 +100,35 @@
 	"prevTab": {
 		"message": "Previous Tab"
 	},
-	"newTab": {
+	"newTab__label": {
 		"message": "Open a new tab"
+	},
+	"newTab": {
+		"message": "New tab"
 	},
 	"newTabUrl": {
 		"message": "URL"
 	},
-	"toggleUserAgent": {
+	"toggleUserAgent__label": {
 		"message": "Toggle Desktop-site"
+	},
+	"toggleUserAgent": {
+		"message": "Desktop-site"
 	},
 	"userAgent": {
 		"message": "User-Agent"
 	},
-	"disableGesture": {
+	"disableGesture__label": {
 		"message": "Toggle disable/enable gestures"
 	},
-	"openAddonSettings": {
+	"disableGesture": {
+		"message": "Disable/Enable"
+	},
+	"openAddonSettings__label": {
 		"message": "Open addon settings"
+	},
+	"openAddonSettings": {
+		"message": "Settings"
 	},
 	"timeoutAndStrokeSize": {
 		"message": "Timeout and Stroke-size"
@@ -197,10 +209,10 @@
 		"message": "Add Custom-Gesture"
 	},
 	"OpenURLInNewTab": {
-		"message": "Open URL in a new tab."
+		"message": "Open URL in a new tab"
 	},
 	"ExecuteJavascript": {
-		"message": "Execute javascript."
+		"message": "Execute javascript"
 	},
 	"addCommandToScript": {
 		"message": "Add a command to script"

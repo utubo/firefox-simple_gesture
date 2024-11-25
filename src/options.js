@@ -681,14 +681,18 @@ if (!browser.storage.local.set) {
 		resetTimer('saveBindingValues', saveBindingValues, 3000);
 	};
 
-	const getMessage = s => {
+	const getMessage = (s, isGesture) => {
 		if (!s) return s;
 		if (s[0] === CUSTOM_GESTURE_PREFIX) {
 			const c = findCustomGesture(s);
 			return c && c.title || '';
 		} else {
 			try {
-				return browser.i18n.getMessage(s.replace(/[^0-9a-zA-Z_]/g, '_')) || s;
+				const key = s.replace(/[^0-9a-zA-Z_]/g, '_');
+				return isGesture &&
+					browser.i18n.getMessage(key + '__label') ||
+					browser.i18n.getMessage(key) ||
+					s;
 			} catch {
 				return s;
 			}
@@ -751,6 +755,9 @@ if (!browser.storage.local.set) {
 		byId('splashVersion').textContent = 'version ' + browser.runtime.getManifest().version;
 		for (const caption of allByClass('i18n')) {
 			caption.textContent = getMessage(caption.textContent);
+		}
+		for (const caption of allByClass('i18n-gesture')) {
+			caption.textContent = getMessage(caption.textContent, true);
 		}
 		document.documentElement.lang = await browser.i18n.getUILanguage();
 		for (const sub of allByClass('sub-item')) {

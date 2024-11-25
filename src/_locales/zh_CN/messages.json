@@ -100,11 +100,17 @@
 	"prevTab": {
 		"message": "上一个标签页"
 	},
+	"newTab__label": {
+		"message": "新标签页"
+	},
 	"newTab": {
 		"message": "新标签页"
 	},
 	"newTabUrl": {
 		"message": "URL"
+	},
+	"toggleUserAgent__label": {
+		"message": "切换桌面网站"
 	},
 	"toggleUserAgent": {
 		"message": "切换桌面网站"
@@ -112,11 +118,17 @@
 	"userAgent": {
 		"message": "User-Agent"
 	},
-	"disableGesture": {
+	"disableGesture__label": {
 		"message": "禁用/启用 Simple-Gesture"
 	},
-	"openAddonSettings": {
+	"disableGesture": {
+		"message": "禁用/启用"
+	},
+	"openAddonSettings__label": {
 		"message": "打开add-on设置"
+	},
+	"openAddonSettings": {
+		"message": "设置"
 	},
 	"timeoutAndStrokeSize": {
 		"message": "超时和描边尺寸"

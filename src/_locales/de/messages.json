@@ -100,20 +100,32 @@
 	"prevTab": {
 		"message": "Vorheriger Tab"
 	},
+	"newTab__label": {
+		"message": "Neuer Tab"
+	},
 	"newTab": {
 		"message": "Neuer Tab"
 	},
 	"newTabUrl": {
 		"message": "URL"
 	},
-	"toggleUserAgent": {
+	"toggleUserAgent__label": {
 		"message": "Auf Desktop-Seite umschalten"
+	},
+	"toggleUserAgent": {
+		"message": "Desktop-Seite"
 	},
 	"userAgent": {
 		"message": "User-Agent"
 	},
-	"disableGesture": {
+	"disableGesture__label": {
 		"message": "Simple Gesture Deaktivieren/Aktivieren"
+	},
+	"disableGesture": {
+		"message": "Deaktivieren/Aktivieren"
+	},
+	"openAddonSettings__label": {
+		"message": "Optionen"
 	},
 	"openAddonSettings": {
 		"message": "Optionen"
@@ -197,10 +209,10 @@
 		"message": "Hinzufügen"
 	},
 	"OpenURLInNewTab": {
-		"message": "URL in einem neuen Tab öffnen."
+		"message": "URL in einem neuen Tab öffnen"
 	},
 	"ExecuteJavascript": {
-		"message": "Führe JavaScript aus."
+		"message": "Führe JavaScript aus"
 	},
 	"addCommandToScript": {
 		"message": "Füge einen Befehl zum Script hinzu"

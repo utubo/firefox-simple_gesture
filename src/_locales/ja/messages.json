@@ -100,20 +100,32 @@
 	"prevTab": {
 		"message": "前のタブ"
 	},
+	"newTab__label": {
+		"message": "新しいタブ"
+	},
 	"newTab": {
 		"message": "新しいタブ"
 	},
 	"newTabUrl": {
 		"message": "新しいタブのURL"
 	},
+	"toggleUserAgent__label": {
+		"message": "PCサイトモード切替"
+	},
 	"toggleUserAgent": {
 		"message": "PCサイトモード切替"
 	},
-	"openAddonSettings": {
+	"openAddonSettings__label": {
 		"message": "ジェスチャの設定を開く"
+	},
+	"openAddonSettings": {
+		"message": "設定"
 	},
 	"userAgent": {
 		"message": "User-Agent"
+	},
+	"disableGesture__label": {
+		"message": "ジェスチャ無効/有効"
 	},
 	"disableGesture": {
 		"message": "ジェスチャ無効/有効"
