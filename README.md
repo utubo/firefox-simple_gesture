@@ -11,7 +11,7 @@ https://addons.mozilla.org/firefox/addon/simple-gesture/
 > You can install this on Chromium, but I have not tested this on Chromium or other browsers.
  
 ### From Chrome web store
-https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhoblclnckbda?authuser=0&hl=ja
+https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhoblclnckbda
 
 ### From .zip on Chromium borwser (e.g. Kiwi Browser)
 
