@@ -5,20 +5,24 @@ This is an add-on that adds simple touch gestures for Firfox for Android.
 ## More info and Installation on Firefox for Android
 https://addons.mozilla.org/firefox/addon/simple-gesture/
 
-## This can also be installed on Kiwi Browser
-
+## For other browsers
 > [!CAUTION]
 > This is an add-on for Firefox for Android.
-> You can install this on Kiwi, but I have not tested this on Kiwi or other browsers.
+> You can install this on Chromium, but I have not tested this on Chromium or other browsers.
+ 
+### From Chrome web store
+https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhoblclnckbda?authuser=0&hl=ja
+
+### From .zip on Chromium borwser (e.g. Kiwi Browser)
 
 1. Download simple-gesture-chrome.zip from [here](https://github.com/utubo/firefox-simple_gesture/releases/latest).
-2. In Kiwi Browser, opened Extensions (kiwi://extensions).
+2. In Browser, opened Extensions (e.g. kiwi://extensions).
 3. Click slider to activate Developer mode.
 4. Click `+(from .zip/.crx/.user.js)`.
 5. Select simple-gesture-chrome.zip.
 
-**Known issues**
-- This does not support Toggle Desktop site (switch USER-AGENT) and Custom Gesture.
+### Known issues
+- This does not support Custom Gesture.
 - Toast of `Open link in background` in not shown.
 
 ## Licenses
