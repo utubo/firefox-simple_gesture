@@ -16,7 +16,7 @@ https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhobl
 ### From .zip on Chromium borwser (e.g. Kiwi Browser)
 
 1. Download simple-gesture-chrome.zip from [here](https://github.com/utubo/firefox-simple_gesture/releases/latest).
-2. In Browser, opened Extensions (e.g. kiwi://extensions).
+2. In Chromium, open Extensions (e.g. kiwi://extensions).
 3. Click slider to activate Developer mode.
 4. Click `+(from .zip/.crx/.user.js)`.
 5. Select simple-gesture-chrome.zip.
