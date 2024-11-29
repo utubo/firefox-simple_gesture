@@ -247,7 +247,7 @@ if (!browser.storage.local.set) {
 			const b = $buttonsTamplate.cloneNode(true);
 			byClass(b, 'custom-gesture-edit').setAttribute('data-targetId', name);
 			byClass(b, 'custom-gesture-delete').setAttribute('data-targetId', name);
-			item.insertBefore(b, item.firstChild);
+			item.appendChild(b);
 		}
 		if (isExperimental) {
 			item.classList.add('experimental');

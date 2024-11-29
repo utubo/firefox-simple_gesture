@@ -327,7 +327,9 @@ textarea:selection, input:selection {
 	transition: color .5s ease;
 }
 .custom-gesture-buttons {
-	float: right;
+	position: absolute;
+	right: 0;
+	top: .8rem;
 }
 
 /* dialog */
