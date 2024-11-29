@@ -36,7 +36,8 @@ jobs:
         run: |
           if [ -z "${{ steps.last_release.outputs.LAST_TAG }}" ]; then
             commits=$(git log --pretty=format:"- %s" --reverse)
-          else  
+          else
+            git fetch --tags
             commits=$(git log ${{ steps.last_release.outputs.LAST_TAG }}..HEAD --pretty=format:"- %s" --reverse)
           fi
           echo "COMMITS<<EOF" >> $GITHUB_OUTPUT
