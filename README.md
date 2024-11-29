@@ -23,7 +23,7 @@ https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhobl
 
 ### Known issues
 - This does not support Custom Gesture.
-- Toast of `Open link in background` in not shown.
+- Toast of `Open link in background` is not shown.
 
 ## Licenses
 SimpleGesutre is released under the [MPL2.0 license](http://www.mozilla.org/MPL/2.0/).  
