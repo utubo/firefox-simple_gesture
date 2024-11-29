@@ -190,14 +190,14 @@ if (typeof browser === 'undefined') {
 			browser.tabs.update(arg.tabId, { active: true });
 		},
 		isUserAgentSwitched: async () => {
-			const rulesets = await browser.declarativeNetRequest.getDynamicRules();
+			const rulesets = await browser.declarativeNetRequest.getSessionRules();
 			return !!rulesets[0];
 		},
 		toggleUserAgent: async arg => {
 			const ID = 1;
 			var onOff = 'OFF';
 			if (await exec.isUserAgentSwitched() && !arg.force || arg.userAgent === null) {
-				chrome.declarativeNetRequest.updateDynamicRules(
+				chrome.declarativeNetRequest.updateSessionRules(
 					{ removeRuleIds: [ID] }
 				);
 			} else {
@@ -223,7 +223,7 @@ if (typeof browser === 'undefined') {
 						}
 					}],
 				};
-				await chrome.declarativeNetRequest.updateDynamicRules(rules);
+				await chrome.declarativeNetRequest.updateSessionRules(rules);
 				onOff = 'ON';
 			}
 			if (arg.tab.url === browser.runtime.getURL('options.html')) {

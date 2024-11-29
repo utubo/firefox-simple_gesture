@@ -671,6 +671,11 @@ if (!browser.storage.local.set) {
 			});
 			SimpleGesture.refreshUserAgentStatus();
 		});
+		document.addEventListener('visibilitychange', () => {
+			if (!document.hidden) {
+				SimpleGesture.refreshUserAgentStatus();
+			}
+		});
 	};
 
 	// edit text values --
