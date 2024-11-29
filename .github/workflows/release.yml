@@ -31,17 +31,17 @@ jobs:
           last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           echo "LAST_TAG=$last_tag" >> $GITHUB_OUTPUT
 
-      - name: Generate release notes
-        id: release_notes
-        run: |
-          if [ -z "${{ steps.last_release.outputs.LAST_TAG }}" ]; then
-            commits=$(git log --pretty=format:"- %s" --reverse)
-          else  
-            commits=$(git log ${{ steps.last_release.outputs.LAST_TAG }}..HEAD --pretty=format:"- %s" --reverse)
-          fi
-          echo "COMMITS<<EOF" >> $GITHUB_OUTPUT
-          echo "$commits" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+      # - name: Generate release notes
+      #   id: release_notes
+      #   run: |
+      #     if [ -z "${{ steps.last_release.outputs.LAST_TAG }}" ]; then
+      #       commits=$(git log --pretty=format:"- %s" --reverse)
+      #     else  
+      #       commits=$(git log ${{ steps.last_release.outputs.LAST_TAG }}..HEAD --pretty=format:"- %s" --reverse)
+      #     fi
+      #     echo "COMMITS<<EOF" >> $GITHUB_OUTPUT
+      #     echo "$commits" >> $GITHUB_OUTPUT
+      #     echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create assets
         run: |
