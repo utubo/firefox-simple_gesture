@@ -226,7 +226,14 @@ if (typeof browser === 'undefined') {
 				await chrome.declarativeNetRequest.updateDynamicRules(rules);
 				onOff = 'ON';
 			}
-			if (!arg.isSettingsPage) {
+			if (arg.tab.url === browser.runtime.getURL('options.html')) {
+				browser.scripting.executeScript({
+					target: { tabId: arg.tab.id },
+					func: () => {
+						SimpleGesture.refreshUserAgentStatus();
+					}
+				});
+			} else {
 				await browser.tabs.reload(arg.tab.id);
 			}
 			showTextToast(arg.tab.id, `${browser.i18n.getMessage('toggleUserAgent')}: ${onOff}`);

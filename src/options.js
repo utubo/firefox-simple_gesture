@@ -149,6 +149,7 @@ if (!browser.storage.local.set) {
 	const $customGestureType = byId('customGestureType');
 	const $customGestureUrl = byId('customGestureUrl');
 	const $customGestureScript = byId('customGestureScript');
+	const $userAgentStatus = byId('userAgentStatus');
 	const $timeout = byId('timeout');
 	const $strokeSize = byId('strokeSize');
 	const $bidingForms = allByClass('js-binding');
@@ -656,20 +657,21 @@ if (!browser.storage.local.set) {
 	};
 
 	// User-Agent switcher ----
-	const setupToggleUserAgent = async () => {
+	SimpleGesture.refreshUserAgentStatus = async () => {
 		const state = await browser.runtime.sendMessage('isUserAgentSwitched');
-		const $state = byId('userAgentStatus');
-		$state.checked = state;
-		$state.addEventListener('input', async () => {
+		$userAgentStatus.checked = state;
+	};
+	const setupToggleUserAgent = async () => {
+		await SimpleGesture.refreshUserAgentStatus();
+		$userAgentStatus.addEventListener('input', async () => {
 			await browser.runtime.sendMessage({
 				command: 'toggleUserAgent',
 				force: true,
-				isSettingsPage: true,
-				userAgent: $state.checked ? '' : null,
+				userAgent: $userAgentStatus.checked ? '' : null,
 			});
-			$state.checked = await browser.runtime.sendMessage('isUserAgentSwitched');
+			SimpleGesture.refreshUserAgentStatus();
 		});
-	}
+	};
 
 	// edit text values --
 	const saveBindingValues = () => {
