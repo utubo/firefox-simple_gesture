@@ -109,11 +109,8 @@
 	"newTabUrl": {
 		"message": "URL"
 	},
-	"toggleUserAgent__label": {
-		"message": "切换桌面网站"
-	},
 	"toggleUserAgent": {
-		"message": "切换桌面网站"
+		"message": "桌面网站"
 	},
 	"userAgent": {
 		"message": "User-Agent"

@@ -91,6 +91,12 @@
 		<div class="page" id="otherGestures">
 			<div class="page-header i18n">otherGestures</div>
 			<div class="gesture-list" data-gestures="toggleUserAgent"></div>
+			<div class="sub-item user-agent-status" data-parent="toggleUserAgent_caption">
+				<label for="userAgentStatus" class="checkbox-label">
+					<input id="userAgentStatus" class="checkbox" type="checkbox" value="true">
+					<label for="userAgentStatus" class="checkbox-image"></label>
+				</label>
+			</div>
 			<div class="sub-item" data-parent="toggleUserAgent_item">
 				<label for="userAgent" class="sub-caption i18n">UserAgent</label>
 				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">

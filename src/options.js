@@ -655,6 +655,22 @@ if (!browser.storage.local.set) {
 		},
 	};
 
+	// User-Agent switcher ----
+	const setupToggleUserAgent = async () => {
+		const state = await browser.runtime.sendMessage('isUserAgentSwitched');
+		const $state = byId('userAgentStatus');
+		$state.checked = state;
+		$state.addEventListener('input', async () => {
+			await browser.runtime.sendMessage({
+				command: 'toggleUserAgent',
+				force: true,
+				isSettingsPage: true,
+				userAgent: $state.checked ? '' : null,
+			});
+			$state.checked = await browser.runtime.sendMessage('isUserAgentSwitched');
+		});
+	}
+
 	// edit text values --
 	const saveBindingValues = () => {
 		clearTimeout(TIMERS.saveBindingValues);
@@ -934,6 +950,7 @@ if (!browser.storage.local.set) {
 		document.body.classList.add(`mv${browser.runtime.getManifest().manifest_version}`);
 		setupGestureList();
 		setupEditDlg();
+		await setupToggleUserAgent();
 		await setupOtherOptions();
 		setupAdjustmentDlg();
 		setupIndexPage();

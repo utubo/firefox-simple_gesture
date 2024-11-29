@@ -110,10 +110,10 @@
 		"message": "新しいタブのURL"
 	},
 	"toggleUserAgent__label": {
-		"message": "PCサイトモード切替"
+		"message": "PC版サイト"
 	},
 	"toggleUserAgent": {
-		"message": "PCサイトモード切替"
+		"message": "PC版サイト"
 	},
 	"openAddonSettings__label": {
 		"message": "ジェスチャの設定を開く"

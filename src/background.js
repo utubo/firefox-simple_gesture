@@ -189,12 +189,16 @@ if (typeof browser === 'undefined') {
 		showTab: async arg => {
 			browser.tabs.update(arg.tabId, { active: true });
 		},
-		toggleUserAgent: async arg => {
+		isUserAgentSwitched: async () => {
 			const rulesets = await browser.declarativeNetRequest.getDynamicRules();
+			return !!rulesets[0];
+		},
+		toggleUserAgent: async arg => {
+			const ID = 1;
 			var onOff = 'OFF';
-			if (rulesets[0] && !arg.force || arg.userAgent === null) {
+			if (await exec.isUserAgentSwitched() && !arg.force || arg.userAgent === null) {
 				chrome.declarativeNetRequest.updateDynamicRules(
-					{ removeRuleIds: [rulesets[0].id] }
+					{ removeRuleIds: [ID] }
 				);
 			} else {
 				const userAgent =
@@ -203,7 +207,7 @@ if (typeof browser === 'undefined') {
 					navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux');
 				const rules = {
 					addRules: [{
-						id: 1,
+						id: ID,
 						priority: 1,
 						action: {
 							type: 'modifyHeaders',
@@ -222,7 +226,9 @@ if (typeof browser === 'undefined') {
 				await chrome.declarativeNetRequest.updateDynamicRules(rules);
 				onOff = 'ON';
 			}
-			await browser.tabs.reload(arg.tab.id);
+			if (!arg.isSettingsPage) {
+				await browser.tabs.reload(arg.tab.id);
+			}
 			showTextToast(arg.tab.id, `${browser.i18n.getMessage('toggleUserAgent')}: ${onOff}`);
 		},
 		openAddonSettings: () => {
@@ -324,17 +330,25 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	browser.runtime.onMessage.addListener(async (command, sender) => {
+	const messageHandler = async (command, sender, callback) => {
 		let arg;
 		if (command[0] === '{') {
 			arg = JSON.parse(command);
+			command = arg.command;
+		} else if (command.command) {
+			arg = command;
 			command = arg.command;
 		} else {
 			arg = { command: command };
 		}
 		arg.tab = sender.tab || (await browser.tabs.query({ active: true, currentWindow: true }))[0]; // Somtimes sender.tab is undefined.
 		const f = command[0] === '$' ? exec.customGesture : exec[command]; // '$' is custom-gesture prefix.
-		f(arg);
+		const r = await f(arg);
+		callback(r);
+	};
+	browser.runtime.onMessage.addListener((command, sender, callback) => {
+		messageHandler(command, sender, callback);
+		return true;
 	});
 
 })();
