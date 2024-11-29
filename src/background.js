@@ -358,5 +358,12 @@ if (typeof browser === 'undefined') {
 		return true;
 	});
 
+	// Patch for the old settings
+	const oldRule = await browser.declarativeNetRequest.getDynamicRules()[0];
+	if (oldRule) {
+		chrome.declarativeNetRequest.updateDynamicRules(
+			{ removeRuleIds: [oldRule.id] }
+		);
+	}
 })();
 
