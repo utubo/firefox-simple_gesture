@@ -95,6 +95,7 @@ h2:first-child {
 	margin: 1rem 0;
 }
 .item,
+.link-item,
 .sub-item {
 	clear: both;
 	cursor: default;
@@ -104,12 +105,25 @@ h2:first-child {
 	position: relative;
 	transition: .2s;
 }
+.link-item::before {
+	background-image: linear-gradient(to left, #0000, #ccc5, #0000);
+	content: '';
+	height: 100%;
+	left: 25%;
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	transition: .4s;
+	width: 50%;
+}
+.link-item.active::before {
+	left: 0%;
+	opacity: 1;
+	width: 100%;
+}
 .sub-item {
 	margin-right: 0;
 	padding: .4rem 0;
-}
-.active {
-	background: #efeff0;
 }
 .gesture-caption,
 .caption {
@@ -719,9 +733,6 @@ textarea:selection, input:selection {
 	}
 	.page-header, h2 {
 		border-color: #42414d;
-	}
-	.active {
-		background: #42414d;
 	}
 	.gesture-caption {
 		color: var(--caption);

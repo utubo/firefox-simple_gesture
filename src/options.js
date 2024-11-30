@@ -923,25 +923,29 @@ if (!browser.storage.local.set) {
 	window.addEventListener('popstate', onPopState);
 
 	// setup options page
+	const highligtItem = e => {
+		const item = parentByClass(e.target, 'link-item');
+		item?.classList?.add('active');
+	};
+	const unhighligtItem = e => {
+		for (const item of allByClass('active')) {
+			item.classList.remove('active');
+		}
+	};
 	const setupIndexPage = () => {
 		const indexPage = byId('index');
 		indexPage.addEventListener('click', e => {
-			const item = parentByClass(e.target, 'item');
+			const item = parentByClass(e.target, 'link-item');
 			const page = item?.getAttribute('data-targetPage');
 			if (page) {
 				scrollIntoView(byId(page));
 			}
 		});
 		// Highlight when touched with JS. (css ':active' does not work.)
-		indexPage.addEventListener('touchstart', e => {
-			const item = parentByClass(e.target, 'item');
-			item?.classList?.add('active');
-		});
-		addEventListener('touchend', () => {
-			for (const item of indexPage.getElementsByClassName('active')) {
-				item.classList.remove('active');
-			}
-		});
+		indexPage.addEventListener('touchstart', highligtItem);
+		indexPage.addEventListener('mousedown', highligtItem);
+		addEventListener('touchend', unhighligtItem, true);
+		addEventListener('mouseup', unhighligtItem, true);
 		// Fix page heights with JS. (css 'min-height: 100vh' has probrem of scroll position.)
 		setTimeout(() => {
 			document.styleSheets.item(0).insertRule(`.page { min-height: ${innerHeight}px; }`, 0);
