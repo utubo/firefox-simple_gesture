@@ -190,7 +190,7 @@ form {
 }
 input, textarea, select {
 	accent-color: var(--accent) !important;
-	background: var(--bg-color);
+	background: transparent;
 	border: none;
 	border-bottom: 1pt solid;
 	caret-color: var(--accent) !important;
