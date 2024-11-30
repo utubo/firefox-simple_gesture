@@ -506,7 +506,7 @@ if (typeof browser === 'undefined') {
 			list[gesture] = g;
 		} else if (
 			!g &&
-			!gesture[SimpleGesture.ini.toastMinStroke - 1] &&
+			!gesture.split('-')[SimpleGesture.ini.toastMinStroke - 1] &&
 			!startPoint
 		) {
 			return false;
