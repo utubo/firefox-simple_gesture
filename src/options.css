@@ -190,13 +190,16 @@ form {
 }
 input, textarea, select {
 	accent-color: var(--accent) !important;
-	background: #f0f0f4;
+	background: var(--bg-color);
 	border: none;
-	border-radius: 4px;
+	border-bottom: 1pt solid;
 	caret-color: var(--accent) !important;
 	color: var(--fg-color);
-	outline-color: var(--accent);
+	outline: none;
 	padding: .15rem;
+}
+input:focus, textarea:focus, select:focus {
+	border-color: var(--accent);
 }
 textarea:selection, input:selection {
 	background: #666;
@@ -775,7 +778,6 @@ textarea:selection, input:selection {
 		filter: invert(1);
 	}
 	input, textarea, select {
-		background: #141414;
 		caret-color: #75747a;
 	}
 	a {

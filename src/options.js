@@ -683,11 +683,12 @@ if (!browser.storage.local.set) {
 		clearTimeout(TIMERS.saveBindingValues);
 		for (const elm of $bidingForms) {
 			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
-			if (elm.type === 'checkbox') {
+			const t = elm.getAttribute('data-type') || elm.type;
+			if (t === 'checkbox') {
 				ini[elm.id] = elm.checked;
 			} else if (elm.value === INSTEAD_OF_EMPTY[elm.id]) {
 				ini[elm.id] = null;
-			} else if (elm.type === 'number') {
+			} else if (t === 'number') {
 				if (elm.value.match(/^\d+$/)) {
 					ini[elm.id] = Number(elm.value);
 				}
