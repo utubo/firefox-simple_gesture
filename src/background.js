@@ -69,6 +69,8 @@ if (typeof browser === 'undefined') {
 		});
 	}
 
+	// Utils
+	// For open a new tab with discarded
 	const decorateUrl = arg => (arg.discarded ? 'modules/discarded.html?' : '') + arg.url;
 
 	// Gestures
@@ -268,19 +270,18 @@ if (typeof browser === 'undefined') {
 				exec.executeScript({ tabId: arg.tab.id, code: c.script });
 			}
 			if (c.message) {
-				const esc = s => '`' + s.replace(/\\/g, '\\\\').replace(/`/g, '\\`') + '`';
-				const id = esc(c.extensionId);
-				let msg = esc(c.message);
+				let msg = c.message;
 				if (c.messageType === 'json') {
-					msg = `JSON.parse(${msg})`;
+					msg = JSON.parse(msg);
 				}
 				browser.scripting.executeScript({
 					target: { tabId: arg.tab.id },
-					args: [id, msg],
-					func: (id, msg) =>
+					args: [c.extensionId, msg],
+					func: (id, msg) => {
 						browser.runtime.sendMessage(id, msg)
-							.catch(e => { alert(e.message); })
-				});
+							.catch(e => { alert(e.message); });
+					}
+				}).catch(e => { console.log(e.message); });
 			}
 		},
 		open: async arg => {
@@ -334,31 +335,62 @@ if (typeof browser === 'undefined') {
 					func: (msg) => alert(msg),
 				});
 			});
-		}
+		},
+		// For other extensions
+		enable: arg => {
+			browser.scripting.executeScript({
+				target: { tabId: arg.tab.id },
+				func: opt => { SimpleGesture.doCommand('disableGesture', true); }
+			});
+		},
+		disable: arg => {
+			browser.scripting.executeScript({
+				target: { tabId: arg.tab.id },
+				func: opt => { SimpleGesture.doCommand('disableGesture', false); }
+			});
+		},
 	};
-
-	const messageHandler = async (command, sender, callback) => {
+	const msgToArg = async (msg, sender) => {
 		let arg;
-		if (command[0] === '{') {
-			arg = JSON.parse(command);
-			command = arg.command;
-		} else if (command.command) {
-			arg = command;
-			command = arg.command;
+		if (msg.command) {
+			arg = msg;
+		} else if (msg[0] === '{') {
+			arg = JSON.parse(msg);
 		} else {
-			arg = { command: command };
+			arg = { command: msg };
 		}
-		arg.tab = sender.tab || (await browser.tabs.query({ active: true, currentWindow: true }))[0]; // Somtimes sender.tab is undefined.
-		const f = command[0] === '$' ? exec.customGesture : exec[command]; // '$' is custom-gesture prefix.
-		const r = await f(arg);
-		callback(r);
+ 		// Somtimes sender.tab is undefined.
+		arg.tab = sender.tab || (await browser.tabs.query({ active: true, currentWindow: true }))[0];
+		return arg;
+	}
+	const messageHandler = async (msg, sender, callback) => {
+		const arg = await msgToArg(msg, sender);
+		if (sender.id !== browser.runtime.id) {
+			if (['enable', 'disable'].incdlues(arg.command)) {
+				callback(null);
+			}
+		}
+		const f = arg.command[0] === '$' // '$' is custom-gesture prefix.
+			? exec.customGesture
+			: exec[arg.command];
+		try {
+			const r = await f(arg);
+			callback(r);
+		} catch (e) {
+			console.error(e);
+			console.log(JSON.stringify(arg));
+		}
 	};
-	browser.runtime.onMessage.addListener((command, sender, callback) => {
-		messageHandler(command, sender, callback);
+	browser.runtime.onMessage.addListener((msg, sender, callback) => {
+		messageHandler(msg, sender, callback);
+		return true;
+	});
+	browser.runtime.onMessageExternal.addListener((msg, sender, callback) => {
+		messageHandler(msg, sender, callback);
 		return true;
 	});
 
-	// Patch for the old settings
+	// Patch for the old settings (for v3.20-v3.22.4)
 	const oldRule = await browser.declarativeNetRequest.getDynamicRules()[0];
 	if (oldRule) {
 		chrome.declarativeNetRequest.updateDynamicRules(

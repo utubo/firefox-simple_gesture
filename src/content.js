@@ -274,7 +274,7 @@ if (typeof browser === 'undefined') {
 			case 'pageUp': scroll(-1, s => [s.scrollBy, -s.clientHeight]); break;
 			case 'pageDown': scroll(1, s => [s.scrollBy, s.clientHeight]); break;
 			case 'reload': location.reload(); break;
-			case 'disableGesture': toggleEnable(); break;
+			case 'disableGesture': toggleEnable(options); break;
 			case 'openLinkInNewTab':
 			case 'openLinkInBackground':
 				options = options || {}
@@ -299,8 +299,8 @@ if (typeof browser === 'undefined') {
 		target && target.classList && target.classList.add('simple-gesture-target');
 	};
 
-	const toggleEnable = () => {
-		isGestureEnabled = !isGestureEnabled;
+	const toggleEnable = (force = null) => {
+		isGestureEnabled = force === null ? !isGestureEnabled : force;
 		SimpleGesture.showTextToast(getMessage('message_gesture_is_' + (isGestureEnabled ? 'enabled' : 'disabled')));
 	};
 
