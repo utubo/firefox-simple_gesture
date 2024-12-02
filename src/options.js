@@ -5,6 +5,7 @@ if (!browser.storage.local.set) {
 		remove: key => new Promise(resolve => { storageOrg.local.remove(key, resolve); }),
 	};
 }
+try {
 (async () => {
 	'use strict';
 
@@ -1012,4 +1013,7 @@ if (!browser.storage.local.set) {
 		addErrorLog(e);
 	}
 })();
+} catch (globalException) {
+	alert(globalException);
+}
 

@@ -32,7 +32,7 @@ body {
 	pointer-events: none;
 }
 .mv3 .disabled-mv3::before {
-	content: 'Sorry this version does not support this.';
+	content: 'Sorry this Manifest v3 does not support this.';
 	display: block;
 	font-size: 1rem;
 	margin: 0 1.2rem;
