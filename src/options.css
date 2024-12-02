@@ -707,10 +707,10 @@ textarea:selection, input:selection {
 .icon-save::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 6l5 5 7-7"/></svg>');
 }
-.export-setting::before {
+.icon-export::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none" stroke-linejoin="round"><path d="M11.5 10v4h-9v-12h9v4M8 8h7"/><path fill="black" d="M13 8v-2l2 2-2 2z"/></svg>');
 }
-.import-setting::before {
+.icon-import::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none" stroke-linejoin="round"><path d="M4.5 10v4h9v-12h-9v4M2 8h7"/><path fill="black" d="M7 8v-2l2 2-2 2z"/></svg>');
 }
 
