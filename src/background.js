@@ -379,6 +379,7 @@ if (typeof browser === 'undefined') {
 		} catch (e) {
 			console.error(e);
 			console.log(JSON.stringify(arg));
+			callback(undefined);
 		}
 	};
 	browser.runtime.onMessage.addListener((msg, sender, callback) => {
