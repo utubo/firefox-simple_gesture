@@ -392,11 +392,13 @@ if (typeof browser === 'undefined') {
 	});
 
 	// Patch for the old settings (for v3.20-v3.22.4)
-	const oldRule = await browser.declarativeNetRequest.getDynamicRules()[0];
-	if (oldRule) {
-		chrome.declarativeNetRequest.updateDynamicRules(
-			{ removeRuleIds: [oldRule.id] }
-		);
+	if (browser.declarativeNetRequest?.getDynamicRules) {
+		const oldRule = await browser.declarativeNetRequest.getDynamicRules()[0];
+		if (oldRule) {
+			chrome.declarativeNetRequest.updateDynamicRules(
+				{ removeRuleIds: [oldRule.id] }
+			);
+		}
 	}
 })();
 
