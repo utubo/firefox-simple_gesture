@@ -109,9 +109,6 @@
 	"newTabUrl": {
 		"message": "新しいタブのURL"
 	},
-	"toggleUserAgent__label": {
-		"message": "PC版サイト"
-	},
 	"toggleUserAgent": {
 		"message": "PC版サイト"
 	},
