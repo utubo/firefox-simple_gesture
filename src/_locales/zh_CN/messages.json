@@ -88,6 +88,9 @@
 	"New_tab_opened": {
 		"message": "已打开新标签页"
 	},
+	"Switch": {
+		"message": "切换"
+	},
 	"doubleTapNote": {
 		"message": "延迟单击以等待双击"
 	},

@@ -88,6 +88,9 @@
 	"New_tab_opened": {
 		"message": "新しいタブを開きました"
 	},
+	"Switch": {
+		"message": "切り替え"
+	},
 	"doubleTapNote": {
 		"message": "ダブルタップを検知するため通常のタップが遅延されます"
 	},

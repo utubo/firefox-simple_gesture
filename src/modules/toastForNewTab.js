@@ -27,18 +27,30 @@ export const show = (_tabId, pos) => {
 			border-radius: 9px;
 			box-shadow: 0 4px 4px #0002;
 			color: #fff;
+			display: flex;
 			font-size: 19px;
-			line-height: 1;
+			font-weight: bold;
+			justify-content: space-between;
+			line-height: 19px;
 			margin: 0 24px;
 			overflow: hidden;
 			padding: 15px 24px;
 			text-align: left;
 		`;
-		content.textContent = browser.i18n.getMessage('New_tab_opened');
 		content.addEventListener('click', () => {
 			toast.style.display = 'none';
 			browser.runtime.sendMessage(JSON.stringify({ command: 'showTab', tabId: tabId}));
 		});
+		const mainText = document.createElement('SPAN');
+		mainText.textContent = browser.i18n.getMessage('New_tab_opened');
+		content.appendChild(mainText);
+		const sub = document.createElement('SPAN');
+		sub.style.cssText = `
+			font-size: 14px;
+			text-align: right;
+		`;
+		sub.textContent = browser.i18n.getMessage('Switch');
+		content.appendChild(sub);
 		toast.attachShadow({ mode: 'open' }).appendChild(content);
 		document.body.appendChild(toast);
 	}

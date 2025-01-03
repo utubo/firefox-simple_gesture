@@ -88,6 +88,9 @@
 	"New_tab_opened": {
 		"message": "New tab opened"
 	},
+	"Switch": {
+		"message": "SWITCH"
+	},
 	"doubleTapNote": {
 		"message": "Single tap is delayed to wait for double tap."
 	},

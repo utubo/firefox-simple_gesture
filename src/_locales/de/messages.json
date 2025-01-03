@@ -88,6 +88,9 @@
 	"New_tab_opened": {
 		"message": "Neuer Tab geöffnet"
 	},
+	"Switch": {
+		"message": "WECHSELN"
+	},
 	"doubleTapNote": {
 		"message": "Einfaches Antippen verzögern, um auf doppeltes Antippen zu warten."
 	},
