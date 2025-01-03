@@ -105,6 +105,9 @@ h2:first-child {
 	position: relative;
 	transition: .2s;
 }
+.any-items-container {
+	transition: .2s;
+}
 .link-item::before {
 	background-image: linear-gradient(to left, #0000, #ccc5, #0000);
 	content: '';

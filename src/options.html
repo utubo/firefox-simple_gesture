@@ -149,40 +149,42 @@
 					<input id="toast" class="checkbox js-binding" type="checkbox" value="true">
 					<label for="toast" class="checkbox-image"></label>
 				</label>
-				<div class="sub-item js-linked-toast">
-					<label for="toastForeground" class="sub-caption i18n">toastForeground</label>
-					<div class="color-preview-container checker">
-						<div class="color-preview" data-targetId="toastForeground"></div>
+				<div class="any-items-container js-linked-toast">
+					<div class="sub-item">
+						<label for="toastForeground" class="sub-caption i18n">toastForeground</label>
+						<div class="color-preview-container checker">
+							<div class="color-preview" data-targetId="toastForeground"></div>
+						</div>
+						<input id="toastForeground" class="text-input color-text-input js-binding">
 					</div>
-					<input id="toastForeground" class="text-input color-text-input js-binding">
-				</div>
-				<div class="sub-item js-linked-toast">
-					<label class="sub-caption i18n">toastBackground</label>
-					<div class="color-preview-container checker">
-						<div class="color-preview" data-targetId="toastBackground"></div>
+					<div class="sub-item">
+						<label class="sub-caption i18n">toastBackground</label>
+						<div class="color-preview-container checker">
+							<div class="color-preview" data-targetId="toastBackground"></div>
+						</div>
+						<input id="toastBackground" class="text-input color-text-input js-binding">
 					</div>
-					<input id="toastBackground" class="text-input color-text-input js-binding">
-				</div>
-				<div class="sub-item js-linked-toast">
-					<label for="suggestNext" class="checkbox-label">
-						<span class="caption with-checkbox i18n">suggestNext</span>
-						<input id="suggestNext" class="checkbox js-binding" type="checkbox" value="true">
-						<label for="suggestNext" class="checkbox-image"></label>
-					</label>
-				</div>
-				<div class="sub-item js-linked-toast">
-					<label class="sub-caption i18n">toastMinStroke</label><!-- don't add 'for="..."' -->
-					<select id="toastMinStroke" class="number-input js-binding" data-type="number">
-						<option value="1">1</option>
-						<option value="2" selected>2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-					</select>
+					<div class="sub-item">
+						<label for="suggestNext" class="checkbox-label">
+							<span class="caption with-checkbox i18n">suggestNext</span>
+							<input id="suggestNext" class="checkbox js-binding" type="checkbox" value="true">
+							<label for="suggestNext" class="checkbox-image"></label>
+						</label>
+					</div>
+					<div class="sub-item js-linked-suggestNext">
+						<label class="sub-caption i18n">toastMinStroke</label><!-- don't add 'for="..."' -->
+						<select id="toastMinStroke" class="number-input js-binding" data-type="number">
+							<option value="1">1</option>
+							<option value="2" selected>2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+						</select>
+					</div>
 				</div>
 			</div>
 			<div id="blacklistEdit" class="item">
