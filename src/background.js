@@ -263,7 +263,11 @@ if (typeof browser === 'undefined') {
 			const key = 'simple_gesture_' + arg.command;
 			const c = (await browser.storage.local.get(key))[key];
 			if (c.url) {
-				browser.tabs.create({ active: true, url: c.url });
+				if (c.currentTab) {
+					browser.tabs.update(arg.tab.id, { url: c.url });
+				} else {
+					browser.tabs.create({ active: true, url: c.url });
+				}
 				return;
 			}
 			if (c.script) {

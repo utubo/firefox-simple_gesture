@@ -393,7 +393,10 @@ try {
 			dlgs.editDlg.targetId = id;
 			$customGestureTitle.value = findCustomGesture(id).title;
 			const details = await storageValue(`simple_gesture_${id}`);
-			$customGestureType.value = details.type;
+			$customGestureType.value = [
+				details.type,
+				details.currentTab ? 'currentTab' : '',
+			].filter(Boolean).join(',');
 			$customGestureUrl.value = details.type === 'url' ? details.url : '';
 			$customGestureScript.value = details.type === 'script' ? details.script : '';
 			document.forms.customGestureMsg.customGestureMsgId.value = details.extensionId || '';
@@ -416,8 +419,16 @@ try {
 			// save detail
 			const d = { type: $customGestureType.value };
 			switch(d.type) {
-				case 'url': d.url = $customGestureUrl.value; break;
-				case 'script': d.script = $customGestureScript.value; break;
+				case 'url,currentTab':
+					d.type = 'url';
+					d.currentTab = true;
+					// not break;
+				case 'url':
+					d.url = $customGestureUrl.value;
+					break;
+				case 'script':
+					d.script = $customGestureScript.value;
+					break;
 				case 'message':
 					d.extensionId = document.forms.customGestureMsg.customGestureMsgId.value;
 					d.message = document.forms.customGestureMsg.customGestureMsgValue.value;
@@ -433,11 +444,12 @@ try {
 		},
 	};
 	const toggleEditor = () => {
-		toggleClass(customGestureType.value === 'script', 'dlg-fill', $customGestureDlgContainer);
-		toggleClass(customGestureType.value !== 'url', 'hide', $customGestureUrl);
-		toggleClass(customGestureType.value !== 'script', 'hide', byId('customGestureScriptDiv'));
-		toggleClass(customGestureType.value !== 'message', 'hide', byId('customGestureMsgDiv'));
-		if ($customGestureType.value !== 'script') return;
+		const t = $customGestureType.value;
+		toggleClass(!t.includes('url'), 'hide', $customGestureUrl);
+		toggleClass(t !== 'message', 'hide', byId('customGestureMsgDiv'));
+		toggleClass(t !== 'script', 'hide', byId('customGestureScriptDiv'));
+		toggleClass(t === 'script', 'dlg-fill', $customGestureDlgContainer);
+		if (t !== 'script') return;
 		const s = byId('addCommandToScript');
 		const f = document.createDocumentFragment();
 		f.appendChild(s.firstChild.cloneNode(true));

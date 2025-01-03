@@ -206,7 +206,10 @@
 		"message": "添加自定义手势"
 	},
 	"OpenURLInNewTab": {
-		"message": "在新标签页中打开网址"
+		"message": "在新标签页中打开 URL"
+	},
+	"OpenURLInCurrentTab": {
+		"message": "在当前标签页中打开 URL"
 	},
 	"ExecuteJavascript": {
 		"message": "执行Javascript"

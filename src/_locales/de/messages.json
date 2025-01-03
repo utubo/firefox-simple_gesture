@@ -208,6 +208,9 @@
 	"OpenURLInNewTab": {
 		"message": "URL in einem neuen Tab öffnen"
 	},
+	"OpenURLInCurrentTab": {
+		"message": "URL im aktuellen Tab öffnen"
+	},
 	"ExecuteJavascript": {
 		"message": "Führe JavaScript aus"
 	},
