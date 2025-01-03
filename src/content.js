@@ -6,7 +6,7 @@ if (typeof browser === 'undefined') {
 		local: {
 			get: key => new Promise(resolve => { chromeOrg.storage.local.get(key, resolve); }),
 		}
-	}
+	};
 }
 (async () => {
 	'use strict';
@@ -81,7 +81,7 @@ if (typeof browser === 'undefined') {
 		} catch (e) {
 			return s;
 		}
-	}
+	};
 
 	const restartTimer = () => {
 		clearTimeout(timer);
@@ -124,7 +124,7 @@ if (typeof browser === 'undefined') {
 		let a = target;
 		while (a && !a.href) a = a.parentNode;
 		return a;
-	}
+	};
 
 	// dom control --------
 	const scroll = (d, cb) => {
@@ -482,7 +482,7 @@ if (typeof browser === 'undefined') {
 		} else {
 			return getMessage(g);
 		}
-	}
+	};
 
 	const setTextSafe = (e, t) => {
 		e.replaceChildren(document.createTextNode(t));
@@ -495,7 +495,8 @@ if (typeof browser === 'undefined') {
 		} else {
 			hideToast();
 		}
-	}
+	};
+
 	const showGestureImpl = async () => {
 		let list = SimpleGesture.ini.gestures;
 		const g = list[startPoint + gesture] || list[gesture];
@@ -519,7 +520,7 @@ if (typeof browser === 'undefined') {
 	const showGestureDelay = () => {
 		clearTimeout(showToastTimer);
 		showToastTimer = setTimeout(showGesture, SHOW_TOAST_DELAY);
-	}
+	};
 
 	SimpleGesture.showTextToast = text => {
 		setupToast();
@@ -527,7 +528,7 @@ if (typeof browser === 'undefined') {
 		toastSub.replaceChildren();
 		showToast();
 		hideToast(1000);
-	}
+	};
 
 	const isMatch = (k, g, sg) => {
 		if (k.indexOf(':') === -1) {
@@ -535,7 +536,7 @@ if (typeof browser === 'undefined') {
 		} else {
 			return k.startsWith(sg);
 		}
-	}
+	};
 
 	const suggestGestures = async (list, match) => {
 		const sGesture = startPoint + gesture;
@@ -570,12 +571,12 @@ if (typeof browser === 'undefined') {
 		}
 		toastMain.replaceChildren(f);
 		return done;
-	}
+	};
 
 	// uncommon modules ---
 	SimpleGesture.mod = (name, fn) => {
 		import(browser.runtime.getURL(`/modules/${name}.js`)).then(fn);
-	}
+	};
 
 	// utils for setup ----
 	SimpleGesture.addTouchEventListener = (target, events) => {
@@ -632,7 +633,8 @@ if (typeof browser === 'undefined') {
 				return;
 			}
 		}
-	}
+	};
+
 	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
 	VV.addEventListener('scroll', e => {
 		fixToastPosition();
