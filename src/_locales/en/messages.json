@@ -206,7 +206,7 @@
 		"message": "Save"
 	},
 	"addCustomGesture": {
-		"message": "Add Custom-Gesture"
+		"message": "Add Custom gesture"
 	},
 	"OpenURLInNewTab": {
 		"message": "Open URL in a new tab"
@@ -254,10 +254,10 @@
 		"message": "Are you sure you want to Delete ?\n(This action cannot be undone!)"
 	},
 	"message_gesture_is_disabled": {
-		"message": "Simple-Gesuture is disabled."
+		"message": "Simple Gesuture is disabled."
 	},
 	"message_gesture_is_enabled": {
-		"message": "Simple-Gesuture is enabled."
+		"message": "Simple Gesuture is enabled."
 	},
 	"basicGestures": {
 		"message": "Basics"
@@ -269,7 +269,7 @@
 		"message": "Other gestures"
 	},
 	"customGestures": {
-		"message": "Custom-gestures"
+		"message": "Custom gestures"
 	},
 	"configurations": {
 		"message": "Configurations"
@@ -281,7 +281,7 @@
 		"message": "Export settings to downloads folder"
 	},
 	"Import_settings_from_JSON": {
-		"message": "Import_settings_from_JSON"
+		"message": "Import settings from JSON"
 	}
 }
 
