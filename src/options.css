@@ -673,11 +673,13 @@ textarea:selection, input:selection {
 	margin-top: 1rem;
 }
 .button {
+	align-items: center;
 	background: var(--button);
 	border-radius: 4px;
 	box-sizing: border-box;
 	cursor: default;
-	display: inline-block;
+	display: inline-flex;
+	gap: .4rem;
 	padding: .2rem .8rem;
 }
 .js-submit {
@@ -689,11 +691,8 @@ textarea:selection, input:selection {
 }
 .button::before {
 	display: inline-block;
-	height: auto;
-	line-height: 16px;
-	margin: 0 2px;
-	vertical-align: bottom;
-	width: 1em;
+	height: 1rem;
+	width: 1rem;
 }
 .icon-delete::before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 4h12M4 4v9q0 1 1 1h6q1 0 1-1v-9M6.5 6v6M9.5 6v6M6 4q0 -2 2-2 2 0 2 2"/></svg>');
