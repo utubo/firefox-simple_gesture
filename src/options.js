@@ -718,6 +718,12 @@ try {
 		resetTimer('saveBindingValues', saveBindingValues, 3000);
 	};
 
+	// for Orion browser.
+	const getMessageCompatible = key => {
+		const msg = browser.i18n.getMessage(key);
+		return key === msg ? '' : msg;
+	}
+
 	const getMessage = (s, isGesture) => {
 		if (!s) return s;
 		if (s[0] === CUSTOM_GESTURE_PREFIX) {
@@ -727,8 +733,8 @@ try {
 			try {
 				const key = s.replace(/[^0-9a-zA-Z_]/g, '_');
 				return isGesture &&
-					browser.i18n.getMessage(key + '__label') ||
-					browser.i18n.getMessage(key) ||
+					getMessageCompatible(key + '__label') ||
+					getMessageCompatible(key) ||
 					s;
 			} catch {
 				return s;
@@ -975,10 +981,12 @@ try {
 		document.body.classList.add(`mv${browser.runtime.getManifest().manifest_version}`);
 		setupGestureList();
 		setupEditDlg();
-		await setupToggleUserAgent();
-		await setupOtherOptions();
 		setupAdjustmentDlg();
 		setupIndexPage();
+		await setupOtherOptions();
+		// no wait for Orion browser.
+		// await setupToggleUserAgent();
+		setupToggleUserAgent();
 		onPopState(history);
 		removeCover();
 	};
