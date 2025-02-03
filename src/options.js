@@ -656,7 +656,7 @@ try {
 				t.setAttribute('data-c', c);
 				// only white and black have border.
 				if (c === '#f9f9fa' || c === '#23222b') {
-					t.style.borderColor = 'var(--fg-color)';
+					t.style.borderColor = 'var(--secondery)';
 				}
 				f.appendChild(t);
 			}

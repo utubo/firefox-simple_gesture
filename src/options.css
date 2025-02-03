@@ -581,6 +581,7 @@ textarea:selection, input:selection {
 .slider {
 	-webkit-appearance: none;
 	appearance: none;
+	border:none;
 	border-radius: 12px;
 	box-sizing: border-box;
 	cursor: pointer;
