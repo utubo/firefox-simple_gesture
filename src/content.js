@@ -51,6 +51,7 @@ if (typeof browser === 'undefined') {
 	let timer = null;
 	let isGestureEnabled = true;
 	let touchEndTime = 0;
+	let fingers = '';
 	// screen size
 	let lastInnerWidth = 0;
 	let lastInnerHeight = 0;
@@ -117,6 +118,7 @@ if (typeof browser === 'undefined') {
 		if (!f) return;
 		e.gesture = gesture;
 		e.startPoint = startPoint;
+		e.fingers = fingers;
 		return f(e);
 	};
 
@@ -210,10 +212,7 @@ if (typeof browser === 'undefined') {
 		if (gesture === null) return;
 		if (gesture.length > SimpleGesture.MAX_LENGTH) return;
 		if (!gesture && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
-		if (e.touches && e.touches[1]) { // not support two fingers
-			resetGesture();
-			return;
-		}
+		fingers = (e.touches && e.touches[1]) ? `${e.touches.length}:` : '';
 		const [x, y] = SimpleGesture.getXY(e);
 		const dx = x - lx;
 		const dy = y - ly;
@@ -232,6 +231,11 @@ if (typeof browser === 'undefined') {
 		restartTimer();
 	};
 
+	const getCommandByState = () => {
+		return SimpleGesture.ini.gestures[startPoint + fingers + gesture] ||
+			SimpleGesture.ini.gestures[fingers + gesture];
+	}
+
 	const onTouchEnd = e => {
 		try {
 			touchEndTime = Date.now();
@@ -239,7 +243,7 @@ if (typeof browser === 'undefined') {
 			clearTimeout(showToastTimer);
 			hideToast();
 			if (executeEvent(SimpleGesture.onEnd, e) === false) return;
-			const g = SimpleGesture.ini.gestures[startPoint + gesture] || SimpleGesture.ini.gestures[gesture];
+			const g = getCommandByState();
 			if (!g) return;
 			if (!isGestureEnabled && g !== 'disableGesture') return;
 			SimpleGesture.doCommand(g);
@@ -499,7 +503,7 @@ if (typeof browser === 'undefined') {
 
 	const showGestureImpl = async () => {
 		let list = SimpleGesture.ini.gestures;
-		const g = list[startPoint + gesture] || list[gesture];
+		const g = getCommandByState();
 		if (!isGestureEnabled && g !== 'disableGesture') return false;
 		if (!SimpleGesture.ini.suggestNext) {
 			if (!g) return false;
@@ -513,7 +517,7 @@ if (typeof browser === 'undefined') {
 			return false;
 		}
 		setupToast();
-		setTextSafe(toastSub, startPoint ? `${getMessage(`fromEdge-${startPoint[0]}`)}` : '');
+		setTextSafe(toastSub, SimpleGesture.getAddnlText(startPoint, fingers));
 		return await suggestGestures(list, g);
 	};
 
@@ -521,6 +525,17 @@ if (typeof browser === 'undefined') {
 		clearTimeout(showToastTimer);
 		showToastTimer = setTimeout(showGesture, SHOW_TOAST_DELAY);
 	};
+
+	SimpleGesture.getAddnlText = (s, f) => {
+		let addnl = [];
+		if (f) {
+			addnl.push(f.replace(/:?$/, getMessage('fingers')));
+		}
+		if (s) {
+			addnl.push(`${getMessage(`fromEdge-${s[0]}`)}`);
+		}
+		return addnl.join(' ');
+	}
 
 	SimpleGesture.showTextToast = text => {
 		setupToast();
@@ -530,20 +545,21 @@ if (typeof browser === 'undefined') {
 		hideToast(1000);
 	};
 
-	const isMatch = (k, g, sg) => {
-		if (k.indexOf(':') === -1) {
-			return k.startsWith(g);
-		} else {
+	const isMatch = (k, fg, sg) => {
+		if (k.match(/^[LRTB]:/)) {
 			return k.startsWith(sg);
+		} else {
+			return k.startsWith(fg);
 		}
 	};
 
 	const suggestGestures = async (list, match) => {
-		const sGesture = startPoint + gesture;
+		const sGesture = startPoint + fingers + gesture;
+		const fGesture = fingers + gesture;
 		const f = document.createDocumentFragment();
 		let done = false;
 		for (const [k, v] of Object.entries(list)) {
-			if (!isMatch(k, gesture, sGesture)) continue;
+			if (!isMatch(k, fGesture, sGesture)) continue;
 			if (startPoint && list[startPoint + k]) continue;
 			const name = await gestureName(v);
 			if (!name) continue; // for old ini-data.

@@ -181,6 +181,9 @@
 	"fromEdge_B": {
 		"message": "画面下端から"
 	},
+	"fingers": {
+		"message": "本指"
+	},
 	"Settings": {
 		"message": "設定"
 	},

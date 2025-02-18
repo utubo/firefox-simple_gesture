@@ -181,6 +181,9 @@
 	"fromEdge_B": {
 		"message": "Von der unteren Bildschirmkante."
 	},
+	"fingers": {
+		"message": "finger"
+	},
 	"Settings": {
 		"message": "Optionen"
 	},

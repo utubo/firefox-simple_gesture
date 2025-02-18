@@ -181,6 +181,9 @@
 	"fromEdge_B": {
 		"message": "从屏幕的底部边缘"
 	},
+	"fingers": {
+		"message": "指"
+	},
 	"Settings": {
 		"message": "设置"
 	},

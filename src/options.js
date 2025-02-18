@@ -125,11 +125,20 @@ try {
 
 	/**
 	 * e.g.
-	 * 'T:L-R' to ['T', 'L-R']
-	 * 'U-D' to ['', 'U-D']
-	 * '' to ['', '']
+	 * 'T:2:L-R' to ['T', '2', 'L-R']
+	 * 'T:L-R' to ['T', '', 'L-R']
+	 * '2:L-R' to ['', '2', 'L-R']
+	 * 'U-D' to ['', '', 'U-D']
+	 * '' to ['', '', '']
 	 */
-	const toStartPointAndArrows = s => (s ? s[1] === ':' ? s.split(':') : ['', s] : ['', '']);
+	const toStartPointFingersArrows = s => {
+		if (!s) return ['', '', ''];
+		const a = s.split(':');
+		if (a[2]) return a;
+		if (!a[1]) return ['' ,'', s];
+		if (a[0].match(/[LRTB]/)) return [a[0], '', a[1]];
+		return ['', a[0], a[1]];
+	};
 
 	const ifById = id => (typeof id === 'string') ? byId(id): id;
 	const fadeout = elm => { ifById(elm).classList.add('transparent'); };
@@ -157,27 +166,27 @@ try {
 
 	// edit U-D-L-R ------
 	const updateArrowsLabel = (arrowsLabel, startPointLabel, gesture) => {
-		const [startPoint, arrows] = toStartPointAndArrows(gesture);
+		const [startPoint, fingers, arrows] = toStartPointFingersArrows(gesture);
 		if (arrows) {
 			SimpleGesture.drawArrows(arrows, arrowsLabel);
 		} else {
 			arrowsLabel.textContent = INSTEAD_OF_EMPTY.noGesture;
 		}
-		startPointLabel.textContent = startPoint ? `(${getMessage(`fromEdge-${startPoint[0]}`)})` : '';
-		return [startPoint, arrows];
+		startPointLabel.textContent = SimpleGesture.getAddnlText(startPoint, fingers);
+		return [startPoint, fingers, arrows];
 	};
 	const updateGestureItem = (label, gesture) => {
 		const note = byClass(label.parentNode, 'arrows-note');
-		const [startPoint, arrows] = updateArrowsLabel(label, note, gesture);
-		toggleClass(!startPoint, 'hide', note);
+		const [startPoint, fingers, arrows] = updateArrowsLabel(label, note, gesture);
+		toggleClass(!startPoint && !fingers, 'hide', note);
 		toggleClass(!arrows, 'arrows-na', label);
 		label.setAttribute('data-gesture', gesture || '');
 	};
 
 	const CLEAR_GESTURE = 'n/a'; // magic number
-	const updateGesture = (arrows, startPoint) => {
+	const updateGesture = (arrows, startPoint, fingers) => {
 		if (arrows) {
-			let gesture = (startPoint || '') + arrows;
+			let gesture = (startPoint || '') + (fingers || '') + arrows;
 			if (gesture === CLEAR_GESTURE) {
 				gesture = null;
 			} else {
@@ -209,12 +218,12 @@ try {
 			target.arrows = byId(`${target.name}_arrows`);
 			hilightEditStart(target.arrows);
 			byId('editTarget').textContent = target.caption.textContent;
-			const [startPoint, _] = updateArrowsLabel(
+			const [startPoint, fingers, _] = updateArrowsLabel(
 				$inputedGesture,
 				$inputedStartPoint,
 				target.arrows.getAttribute('data-gesture')
 			);
-			toggleClass(!startPoint, 'hide', $inputedStartPoint);
+			toggleClass(!startPoint && !fingers, 'hide', $inputedStartPoint);
 			toggleClass(false, 'dup', $inputedGesture, $inputedStartPoint);
 			toggleClass(false, 'canceled', $inputedGesture);
 			toggleClass(false, 'hover', $cancelInputGesture);
@@ -324,8 +333,8 @@ try {
 			$inputedGesture.classList.add('canceled');
 			$cancelInputGesture.classList.add('hover');
 		}
-		toggleClass(!e.startPoint, 'hide', $inputedStartPoint);
-		const gesture = e.startPoint + e.gesture.substring(0, MAX_LENGTH);
+		toggleClass(!e.startPoint && !e.fingers, 'hide', $inputedStartPoint);
+		const gesture = e.startPoint + e.fingers + e.gesture.substring(0, MAX_LENGTH);
 		updateArrowsLabel($inputedGesture, $inputedStartPoint, gesture);
 		let dup = SimpleGesture.ini.gestures[gesture];
 		dup = (dup && dup !== target.name) ? getMessage(dup) : '';
@@ -343,7 +352,7 @@ try {
 		} else {
 			const g = (e.gesture || '').substring(0, MAX_LENGTH);
 			if (g) {
-				updateGesture(g, e.startPoint);
+				updateGesture(g, e.startPoint, e.fingers);
 				history.back();
 			}
 		}

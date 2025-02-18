@@ -181,6 +181,9 @@
 	"fromEdge_B": {
 		"message": "From the bottm edge of screen."
 	},
+	"fingers": {
+		"message": "fingers"
+	},
 	"Settings": {
 		"message": "Settings"
 	},
