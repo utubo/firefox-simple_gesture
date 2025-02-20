@@ -54,22 +54,22 @@ try {
 		}
 	};
 
-	const hilightEditStart = (...elms) => {
+	const editStart = (...elms) => {
 		for (const elm of elms) {
 			elm.classList.add('editing');
-			elm.removeAttribute('data-unhilightEditEnd');
+			elm.removeAttribute('data-editEnd');
 		}
 	};
 
-	const unhilightEditEnd = (...elms) => {
+	const editEnd = (...elms) => {
 		for (const elm of elms) {
-			elm.setAttribute('data-unhilightEditEnd', 1);
+			elm.setAttribute('data-editEnd', 1);
 		}
 		setTimeout(() => {
 			for (const elm of elms) {
-				if (elm.getAttribute('data-unhilightEditEnd')) {
+				if (elm.getAttribute('data-editEnd')) {
 					elm.classList.remove('editing');
-					elm.removeAttribute('data-unhilightEditEnd');
+					elm.removeAttribute('data-editEnd');
 				}
 			}
 		}, 1000);
@@ -163,22 +163,24 @@ try {
 	const $timeout = byId('timeout');
 	const $strokeSize = byId('strokeSize');
 	const $bidingForms = allByClass('js-binding');
+	const $preventPullToRefresh = byId('preventPullToRefresh');
 
 	// edit U-D-L-R ------
-	const updateArrowsLabel = (arrowsLabel, startPointLabel, gesture) => {
+	const updateArrowsLabel = (arrowsLabel, addnlLabel, gesture) => {
 		const [startPoint, fingers, arrows] = toStartPointFingersArrows(gesture);
 		if (arrows) {
 			SimpleGesture.drawArrows(arrows, arrowsLabel);
 		} else {
 			arrowsLabel.textContent = INSTEAD_OF_EMPTY.noGesture;
 		}
-		startPointLabel.textContent = SimpleGesture.getAddnlText(startPoint, fingers);
-		return [startPoint, fingers, arrows];
+		const addnl = SimpleGesture.getAddnlText(startPoint, fingers);
+		addnlLabel.textContent = addnl;
+		toggleClass(!addnl, 'hide', addnlLabel);
+		return arrows;
 	};
 	const updateGestureItem = (label, gesture) => {
 		const note = byClass(label.parentNode, 'arrows-note');
-		const [startPoint, fingers, arrows] = updateArrowsLabel(label, note, gesture);
-		toggleClass(!startPoint && !fingers, 'hide', note);
+		const arrows = updateArrowsLabel(label, note, gesture);
 		toggleClass(!arrows, 'arrows-na', label);
 		label.setAttribute('data-gesture', gesture || '');
 	};
@@ -216,24 +218,23 @@ try {
 			target = { name: id.replace(/_[^_]+$/, '') };
 			target.caption = byId(`${target.name}_caption`);
 			target.arrows = byId(`${target.name}_arrows`);
-			hilightEditStart(target.arrows);
+			editStart(target.arrows);
 			byId('editTarget').textContent = target.caption.textContent;
-			const [startPoint, fingers, _] = updateArrowsLabel(
+			updateArrowsLabel(
 				$inputedGesture,
 				$inputedStartPoint,
 				target.arrows.getAttribute('data-gesture')
 			);
-			toggleClass(!startPoint && !fingers, 'hide', $inputedStartPoint);
 			toggleClass(false, 'dup', $inputedGesture, $inputedStartPoint);
 			toggleClass(false, 'canceled', $inputedGesture);
 			toggleClass(false, 'hover', $cancelInputGesture);
 			$dupName.textContent = '';
-			byId('preventPullToRefresh').scrollTop = 1000;
-			byId('preventPullToRefresh').scrollLeft = 1000;
+			$preventPullToRefresh.scrollTop = 1000;
+			$preventPullToRefresh.scrollLeft = 1000;
 		},
 		onHide: () => {
 			if (!target) return;
-			unhilightEditEnd(target.arrows);
+			editEnd(target.arrows);
 			target = null;
 		}
 	};
@@ -408,16 +409,17 @@ try {
 			].filter(Boolean).join(',');
 			$customGestureUrl.value = details.type === 'url' ? details.url : '';
 			$customGestureScript.value = details.type === 'script' ? details.script : '';
-			document.forms.customGestureMsg.customGestureMsgId.value = details.extensionId || '';
-			document.forms.customGestureMsg.customGestureMsgValue.value = details.message || '';
-			document.forms.customGestureMsg.messageType.value = details.messageType || 'string';
+			const m = document.forms.customGestureMsg;
+			m.customGestureMsgId.value = details.extensionId || '';
+			m.customGestureMsgValue.value = details.message || '';
+			m.messageType.value = details.messageType || 'string';
 			const c = findCustomGesture(dlgs.editDlg.targetId);
-			hilightEditStart(byId(`${c.id}_caption`));
+			editStart(byId(`${c.id}_caption`));
 			toggleEditor();
 		},
 		onHide: () => {
 			const c = findCustomGesture(dlgs.editDlg.targetId);
-			unhilightEditEnd(byId(`${c.id}_caption`));
+			editEnd(byId(`${c.id}_caption`));
 			dlgs.editDlg.targetId = null;
 		},
 		onSubmit: () => {
@@ -439,9 +441,10 @@ try {
 					d.script = $customGestureScript.value;
 					break;
 				case 'message':
-					d.extensionId = document.forms.customGestureMsg.customGestureMsgId.value;
-					d.message = document.forms.customGestureMsg.customGestureMsgValue.value;
-					d.messageType = document.forms.customGestureMsg.messageType.value;
+					const m = document.forms.customGestureMsg;
+					d.extensionId = m.customGestureMsgId.value;
+					d.message = m.customGestureMsgValue.value;
+					d.messageType = m.messageType.value;
 					break;
 			}
 			const details = {};
@@ -554,11 +557,11 @@ try {
 		onShow: () => {
 			fadein('adjustmentDlg');
 			clearTimeout(TIMERS.strokeSizeChanged);
-			hilightEditStart($timeout, $strokeSize);
+			editStart($timeout, $strokeSize);
 		},
 		onHide: () => {
 			startTime = null;
-			unhilightEditEnd($timeout, $strokeSize);
+			editEnd($timeout, $strokeSize);
 		}
 	};
 
