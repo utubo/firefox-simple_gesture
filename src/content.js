@@ -52,6 +52,7 @@ if (typeof browser === 'undefined') {
 	let timer = null;
 	let isGestureEnabled = true;
 	let touchEndTime = 0;
+	let fingersNum = 0;
 	let fingers = '';
 	// screen size
 	let lastInnerWidth = 0;
@@ -203,6 +204,8 @@ if (typeof browser === 'undefined') {
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
 		setupStartPoint(lx, ly);
+		fingersNum = 1;
+		fingers = '';
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
 		if (executeEvent(!gesture ? SimpleGesture.onStart : SimpleGesture.onInput, e) === false) return;
 		restartTimer();
@@ -218,7 +221,10 @@ if (typeof browser === 'undefined') {
 			resetGesture();
 			return;
 		}
-		fingers = 1 < f ? `${f}:` : '';
+		if (fingersNum < f) {
+			fingersNum = f;
+			fingers = `${f}:`;
+		}
 		const [x, y] = SimpleGesture.getXY(e);
 		const dx = x - lx;
 		const dy = y - ly;

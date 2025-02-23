@@ -218,6 +218,7 @@ try {
 	};
 
 	dlgs.gestureDlg = {
+		FREE_FOR_EDIT: 999,
 		onShow: id => {
 			target = { name: id.replace(/_[^_]+$/, '') };
 			target.caption = byId(`${target.name}_caption`);
@@ -235,8 +236,13 @@ try {
 			$dupName.textContent = '';
 			$preventPullToRefresh.scrollTop = 1000;
 			$preventPullToRefresh.scrollLeft = 1000;
+			dlgs.gestureDlg.backup = SimpleGesture.ini.maxFingers;
+			SimpleGesture.ini.maxFingers = dlgs.gestureDlg.FREE_FOR_EDIT;
 		},
 		onHide: () => {
+			if (SimpleGesture.ini.maxFingers === dlgs.gestureDlg.FREE_FOR_EDIT) {
+				SimpleGesture.ini.maxFingers = dlgs.gestureDlg.backup;
+			}
 			if (!target) return;
 			editEnd(target.arrows);
 			target = null;
