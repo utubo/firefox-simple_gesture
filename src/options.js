@@ -300,9 +300,8 @@ try {
 				return;
 			}
 			if (e.target.classList.contains('custom-gesture-delete')) {
-				if (confirm(getMessage('message_delete_confirm'))) {
-					deleteCustomGesture(e);
-				}
+				setupConfirmDeleteDlg(e);
+				changeState({dlg: 'confirmDeleteDlg'});
 				return;
 			}
 			if (e.target.classList.contains('delete-blacklist')) {
@@ -384,9 +383,7 @@ try {
 		$customGestureList.appendChild(createGestureItem(c.id));
 		byId(`${newId}_caption`).textContent = c.title;
 	};
-	const dataTargetId = e => e.target.getAttribute('data-targetId');
-	const deleteCustomGesture = e => {
-		const id = dataTargetId(e);
+	const deleteCustomGesture = id => {
 		browser.storage.local.remove(`simple_gesture_${id}`);
 		exData.customGestureList = exData.customGestureList.filter(c => c.id !== id);
 		browser.storage.local.set({ simple_gesture_exdata: exData });
@@ -513,6 +510,19 @@ try {
 		$customGestureUrl.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
 		$customGestureScript.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByScript, 1000); });
 		byId('addCommandToScript').addEventListener('change', addCommand);
+	};
+
+	// confirm delete dlg ----
+	const setupConfirmDeleteDlg = e => {
+		dlgs.confirmDeleteDlg.targetId = e.target.getAttribute('data-targetId');
+	};
+	dlgs.confirmDeleteDlg = {
+		targetId: '',
+		onShow: () => {},
+		onHide: () => {},
+		onSubmit: () => {
+			deleteCustomGesture(dlgs.confirmDeleteDlg.targetId);
+		},
 	};
 
 	// adjustment dlg ----
