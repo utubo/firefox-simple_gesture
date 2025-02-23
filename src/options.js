@@ -365,6 +365,7 @@ try {
 	};
 
 	// custom gesture ----
+	const dataTargetId = e => e.target.getAttribute('data-targetId');
 	const addCustomGesture = () => {
 		let newId;
 		do {
@@ -514,7 +515,7 @@ try {
 
 	// confirm delete dlg ----
 	const setupConfirmDeleteDlg = e => {
-		dlgs.confirmDeleteDlg.targetId = e.target.getAttribute('data-targetId');
+		dlgs.confirmDeleteDlg.targetId = dataTargetId(e);
 	};
 	dlgs.confirmDeleteDlg = {
 		targetId: '',
