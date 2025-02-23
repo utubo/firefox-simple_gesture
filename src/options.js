@@ -75,15 +75,6 @@ try {
 		}, 1000);
 	};
 
-	const swapKeyValue = m => {
-		const s = {};
-		for (const key in m) {
-			const value = m[key];
-			if (value) s[value] = key;
-		}
-		return s;
-	};
-
 	const resetTimer = (name, f, msec) => {
 		clearTimeout(TIMERS[name]);
 		TIMERS[name] = setTimeout(f, msec);
@@ -188,15 +179,23 @@ try {
 	const CLEAR_GESTURE = 'n/a'; // magic number
 	const updateGesture = (arrows, startPoint, fingers) => {
 		if (arrows) {
-			let gesture = (startPoint || '') + (fingers || '') + arrows;
-			if (gesture === CLEAR_GESTURE) {
-				gesture = null;
-			} else {
-				SimpleGesture.ini.gestures[gesture] = null;
+			// make key. e.g.) `T-2-U-D`
+			let key = (startPoint || '') + (fingers || '') + arrows;
+			for (const [k, v] of Object.entries(SimpleGesture.ini.gestures)) {
+				// remove old key
+				if (v === target.name) {
+					delete SimpleGesture.ini.gestures k;
+				}
+				// maxFingers
+				const [_s, f, _a] = SimpleGesture.toStartPointFingersArrows(k);
+				if (SimpleGesture.ini.maxFingers < f) {
+					SimpleGesture.ini.maxFingers = f;
+				}
 			}
-			const arrowss = swapKeyValue(SimpleGesture.ini.gestures);
-			arrowss[target.name] = gesture;
-			SimpleGesture.ini.gestures = swapKeyValue(arrowss);
+			// register
+			if (key !== CLEAR_GESTURE) {
+				SimpleGesture.ini.gestures[key] = target.name;
+			}
 			saveIni();
 			for (const name of gestureNames) {
 				 updateGestureItem(byId(`${name}_arrows`), arrowss[name]);

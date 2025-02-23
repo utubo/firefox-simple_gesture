@@ -23,6 +23,7 @@ if (typeof browser === 'undefined') {
 			'L-D-R': 'close',
 			'L-D-R-U-L': 'openAddonSettings',
 		},
+		maxFingers: 1,
 		strokeSize: 50,
 		timeout: 1500,
 		doubleTapMsec: 200,
@@ -212,7 +213,12 @@ if (typeof browser === 'undefined') {
 		if (gesture === null) return;
 		if (gesture.length > SimpleGesture.MAX_LENGTH) return;
 		if (!gesture && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
-		fingers = (e.touches && e.touches[1]) ? `${e.touches.length}:` : '';
+		const f = e.touches && e.touches.length || 1;
+		if (SimpleGesture.ini.maxFingers < f) {
+			resetGesture();
+			return;
+		}
+		fingers = 1 < f ? `${f}:` : '';
 		const [x, y] = SimpleGesture.getXY(e);
 		const dx = x - lx;
 		const dy = y - ly;
