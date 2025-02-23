@@ -180,14 +180,18 @@ try {
 	const updateGesture = (arrows, startPoint, fingers) => {
 		if (arrows) {
 			// make key. e.g.) `T-2-U-D`
-			let key = (startPoint || '') + (fingers || '') + arrows;
+			const key = (startPoint || '') + (fingers || '') + arrows;
+			const swaped = {};
 			for (const [k, v] of Object.entries(SimpleGesture.ini.gestures)) {
-				// remove old key
 				if (v === target.name) {
-					delete SimpleGesture.ini.gestures k;
+					// remove old key
+					delete SimpleGesture.ini.gestures[k];
+				} else if (k !== key) {
+					// for label
+					swaped[v] = k;
 				}
-				// maxFingers
-				const [_s, f, _a] = SimpleGesture.toStartPointFingersArrows(k);
+				// register maxFingers
+				const [_s, f, _a] = toStartPointFingersArrows(k);
 				if (SimpleGesture.ini.maxFingers < f) {
 					SimpleGesture.ini.maxFingers = f;
 				}
@@ -195,10 +199,11 @@ try {
 			// register
 			if (key !== CLEAR_GESTURE) {
 				SimpleGesture.ini.gestures[key] = target.name;
+				swaped[target.name] = key;
 			}
 			saveIni();
 			for (const name of gestureNames) {
-				 updateGestureItem(byId(`${name}_arrows`), arrowss[name]);
+				 updateGestureItem(byId(`${name}_arrows`), swaped[name]);
 			}
 		}
 		toggleDoubleTapNote();
