@@ -523,8 +523,7 @@ if (typeof browser === 'undefined') {
 			list[gesture] = g;
 		} else if (
 			!g &&
-			!gesture.split('-')[SimpleGesture.ini.toastMinStroke - 1] &&
-			!startPoint
+			!gesture.split('-')[SimpleGesture.ini.toastMinStroke - 1]
 		) {
 			return false;
 		}
