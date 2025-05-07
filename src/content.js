@@ -1,8 +1,8 @@
 var SimpleGesture = {};
 if (typeof browser === 'undefined') {
-	strageOrg = chrome.storage; // global scope for options.js
+	storageOrg = chrome.storage; // global scope for options.js
 	browser = chrome;
-	browser.strage = {
+	browser.storage = {
 		local: {
 			get: key => new Promise(resolve => { chromeOrg.storage.local.get(key, resolve); }),
 		}
