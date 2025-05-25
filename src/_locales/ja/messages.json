@@ -103,6 +103,9 @@
 	"prevTab": {
 		"message": "前のタブ"
 	},
+	"lastUsedTab": {
+		"message": "直前に表示したタブ"
+	},
 	"newTab__label": {
 		"message": "新しいタブ"
 	},

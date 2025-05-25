@@ -40,8 +40,17 @@ if (typeof browser === 'undefined') {
 			func: (iniTimestamp) => SimpleGesture.loadIni(iniTimestamp)
 		});
 	};
+	// and For switch to last tab
+	let previousTabId = 0;
+	let currentTabId = 0;
 	browser.tabs.onActivated.addListener(e => {
 		reloadIni(e.tabId);
+		// actriveInfo.previousTabId is not supported in FF on Android!
+		// previousTabId = e.previousTabId;
+		if (currentTabId !== e.tabId) {
+			previousTabId = currentTabId;
+			currentTabId = e.tabId
+		}
 	});
 
 	// For reopen closed tabs without browser.sessions.
@@ -103,6 +112,7 @@ if (typeof browser === 'undefined') {
 			switch (a) {
 				case 'prevTab': await exec.prevTab(arg); break;
 				case 'nextTab': await exec.nextTab(arg); break;
+				case 'lastUsedTab': await exec.lastUsedTab(arg); break;
 			}
 			browser.tabs.remove(arg.tab.id);
 		},
@@ -187,6 +197,9 @@ if (typeof browser === 'undefined') {
 			}
 			// show 1st tab that is not hidden.
 			if (arg.tab.index !== -1) exec.nextTab({ tab: { index: -1 } });
+		},
+		lastUsedTab: async () => {
+			browser.tabs.update(previousTabId, { active: true });
 		},
 		showTab: async arg => {
 			browser.tabs.update(arg.tabId, { active: true });

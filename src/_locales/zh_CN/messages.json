@@ -103,6 +103,9 @@
 	"prevTab": {
 		"message": "上一个标签页"
 	},
+	"lastUsedTab": {
+		"message": "上一個使用的分頁"
+	},
 	"newTab__label": {
 		"message": "新标签页"
 	},

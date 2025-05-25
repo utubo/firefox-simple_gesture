@@ -103,6 +103,9 @@
 	"prevTab": {
 		"message": "Previous Tab"
 	},
+	"lastUsedTab": {
+		"message": "Previously used tab"
+	},
 	"newTab__label": {
 		"message": "Open a new tab"
 	},
