@@ -23,6 +23,15 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
+	const sessionValue = async (key, defaultValue) => {
+		try {
+			const res = await browser.storage.session.get(key);
+			return res && res[key] || defaultValue;
+		} catch (e) {
+			return defaultValue;
+		}
+	};
+
 	const showTextToast = (tabId, msg) => {
 		browser.scripting.executeScript({
 			target: { tabId: tabId },
@@ -32,7 +41,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	// For suspended tabs
-	let iniTimestamp = await browser.storage.session.get('iniTimestamp')?.iniTimestamp || Date.now();
+	let iniTimestamp = await sessionValue('iniTimestamp', Date.now());
 	const reloadIni = tabId => {
 		browser.scripting.executeScript({
 			target: { tabId: tabId },
@@ -41,8 +50,8 @@ if (typeof browser === 'undefined') {
 		});
 	};
 	// and For switch to last tab
-	let previousTabId = 0;
-	let currentTabId = 0;
+	let previousTabId = await sessionValue('previousTabId', 0);
+	let currentTabId = await sessionValue('currentTabId', 0)
 	browser.tabs.onActivated.addListener(e => {
 		reloadIni(e.tabId);
 		// actriveInfo.previousTabId is not supported in FF on Android!
@@ -50,6 +59,8 @@ if (typeof browser === 'undefined') {
 		if (currentTabId !== e.tabId) {
 			previousTabId = currentTabId;
 			currentTabId = e.tabId
+			browser.storage.session.set({ previousTabId });
+			browser.storage.session.set({ currentTabId });
 		}
 	});
 
@@ -59,7 +70,7 @@ if (typeof browser === 'undefined') {
 	if (!browser.sessions) {
 		const MAX_CLOSED_TABS = 100;
 		allTabs = new Map();
-		closedTabs = await browser.storage.session.get('closedTabs')?.closedTabs || [];
+		closedTabs = await sessionValue('closedTabs', []);
 		browser.tabs.onUpdated.addListener((id, _, tab) => { allTabs.set(id, tab.url); });
 		browser.tabs.onRemoved.addListener(async id => {
 			const url = allTabs.get(id);
