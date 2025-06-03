@@ -51,7 +51,10 @@ if (typeof browser === 'undefined') {
 	};
 	// and For switch to last tab
 	let previousTabId = await sessionValue('previousTabId', 0);
-	let currentTabId = await sessionValue('currentTabId', 0)
+	let currentTabId = await sessionValue('currentTabId', -1)
+	if (currentTabId < 0) {
+		currentTabId = (await browser.tabs.query({ active: true }))[0].id;
+	}
 	browser.tabs.onActivated.addListener(e => {
 		reloadIni(e.tabId);
 		// actriveInfo.previousTabId is not supported in FF on Android!
