@@ -53,7 +53,7 @@ if (typeof browser === 'undefined') {
 	let previousTabId = await sessionValue('previousTabId', 0);
 	let currentTabId = await sessionValue('currentTabId', -1)
 	if (currentTabId < 0) {
-		currentTabId = (await browser.tabs.query({ active: true }))[0].id;
+		currentTabId = (await browser.tabs.query({ active: true }))[0]?.id;
 	}
 	browser.tabs.onActivated.addListener(e => {
 		reloadIni(e.tabId);
