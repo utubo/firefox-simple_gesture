@@ -35,6 +35,7 @@ if (typeof browser === 'undefined') {
 		suggestNext: true,
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
+	const SINGLETAP_MSEC = 200; // Prevent the double-tap toast from blinking.
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const SUGGEST_OPACITY = 0.5;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
@@ -51,6 +52,7 @@ if (typeof browser === 'undefined') {
 	let target = null;
 	let timer = null;
 	let isGestureEnabled = true;
+	let touchStartTime = 0;
 	let touchEndTime = 0;
 	let fingersNum = 0;
 	let fingers = '';
@@ -193,8 +195,9 @@ if (typeof browser === 'undefined') {
 	const onTouchStart = e => {
 		fixSize();
 		if (!size) return;
-		if (Date.now() - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
-			gesture = doubleTap.count === 2 ? '': 'W';
+		touchStartTime = Date.now();
+		if (touchStartTime - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
+			gesture = doubleTap.count === 2 ? '' : 'W';
 			doubleTap.count = doubleTap.count === 2 ? ACCEPT_SINGLE_TAP : 2;
 			clearTimeout(doubleTap.timer);
 		} else {
@@ -206,6 +209,7 @@ if (typeof browser === 'undefined') {
 		setupStartPoint(lx, ly);
 		fingersNum = 1;
 		fingers = '';
+		if (!setupFingers(e)) return;
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
 		if (executeEvent(!gesture ? SimpleGesture.onStart : SimpleGesture.onInput, e) === false) return;
 		restartTimer();
@@ -216,15 +220,7 @@ if (typeof browser === 'undefined') {
 		if (gesture === null) return;
 		if (gesture.length > SimpleGesture.MAX_LENGTH) return;
 		if (!gesture && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
-		const f = e.touches && e.touches.length || 1;
-		if (SimpleGesture.ini.maxFingers < f) {
-			resetGesture();
-			return;
-		}
-		if (fingersNum < f) {
-			fingersNum = f;
-			fingers = `${f}:`;
-		}
+		if (!setupFingers(e)) return;
 		const [x, y] = SimpleGesture.getXY(e);
 		const dx = x - lx;
 		const dy = y - ly;
@@ -254,6 +250,7 @@ if (typeof browser === 'undefined') {
 			clearTimeout(timer);
 			clearTimeout(showToastTimer);
 			hideToast();
+			setupSingleTap();
 			if (executeEvent(SimpleGesture.onEnd, e) === false) return;
 			const g = getCommandByState();
 			if (!g) return;
@@ -357,6 +354,26 @@ if (typeof browser === 'undefined') {
 		}, SimpleGesture.ini.doubleTapMsec + 1);
 	};
 
+	const setupSingleTap = () => {
+		if (fingersNum < 2) return;
+		if (gesture !== '') return;
+		if (SINGLETAP_MSEC < touchEndTime - touchStartTime) return;
+		gesture = 'S';
+	};
+
+	const setupFingers = e => {
+		const f = e.touches && e.touches.length || 1;
+		if (SimpleGesture.ini.maxFingers < f) {
+			resetGesture();
+			return false;
+		}
+		if (fingersNum < f) {
+			fingersNum = f;
+			fingers = `${f}:`;
+		}
+		return true;
+	};
+
 	// toast --------------
 	const arrowsSvg = {};
 
@@ -397,6 +414,10 @@ if (typeof browser === 'undefined') {
 		arrowsSvg.W = base.cloneNode(true);
 		arrowsSvg.W.firstChild.appendChild(getSvgNode('path', {
 			d:'M1 6a4 4 0 1 1 10 0 M3 6a3 3 0 1 1 6 0 M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
+		}));
+		arrowsSvg.S = base.cloneNode(true);
+		arrowsSvg.S.firstChild.appendChild(getSvgNode('path', {
+			d:'M6 1v2M2 3l1.4 1.4M10 3l-1.4 1.4M4 11q-3-2 1-1v-3q1-2 2 0v2l3 1v1'
 		}));
 	};
 
