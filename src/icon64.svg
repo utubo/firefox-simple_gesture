@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" stroke-linecap="round" stroke-linejoin="round">
   <path fill="none" stroke="#afc639" stroke-width="2" d="
-    M31.5 46.1l-3-20c-0.2-2 1-3 1.9-3.1s2.4 0 3 2s4 13 4 13
+    M29.6 44.6l-3-20c-0.2-2 1-3 1.9-3.1s2.4 0 3 2s4 13 4 13
     q14 0 17 4q1 4-4 15l-16 2q-5-8-11-10q-3-1-3-3q0-2.3 3-2t8 2.1
   "/>
   <path stroke="none" fill="#afc639" d="
-    M31 22h14q5 0 5 5v9.5q-3-1-6-1v-7.5h-9z
-    M41 9l-2 7h-18v20h6l1 6q-11-2.3-10.3 4q-5 0-4.7-5v-27q0-5 5-5z
-    M50 9l-2 7h-6l2-7z
+    M29.5 20.5h12q5 0 5 5v8.5q-3-1-7-1v-5.5h-6z
+    M38.5 6.5l-2 7h-19v22h6.7l1 4.5q-8-2.6-9.5 2.5h-0.2q-5 0-5-5v-26q0-5 5-5z
+    M47.5 6.5l-2 7h-6l2-7z
   "/>
 </svg>
