@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" stroke-linecap="round" stroke-linejoin="round">
   <path fill="none" stroke="#afc639" stroke-width="2" d="
-    M29 25q2-4 6-1l4 14q14 0 17 4q1 4-4 15l-16 2q-5-8-13-11q-5-5 10-2z
+    M29 25.1q0.4-2.7 3.7-2q0.7 0.4 1.3 2l4 13q14 0 17 4q1 4-4 15l-16 2q-5-8-13-11q-5-5 10-2z
   "/>
-  <path stroke="none" fill="#a4c639" d="
-    M33 22h12q5 0 5 5v9l-6-1v-7h-7z
-    M41 9l-2 7h-18v20h7l1 6q-11-1.3-11 4q-5 0-5-5v-27q0-5 5-5z
+  <path stroke="none" fill="#afc639" d="
+    M32.2 22h12.8q5 0 5 5v9.5q-3-1-6-1v-7.5h-9z
+    M41 9l-2 7h-18v20h6l1 6q-11-1.3-10 4q-5 0-5-5v-27q0-5 5-5z
     M50 9l-2 7h-6l2-7z
   "/>
 </svg>
