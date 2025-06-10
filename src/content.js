@@ -35,7 +35,7 @@ if (typeof browser === 'undefined') {
 		suggestNext: true,
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
-	const SINGLETAP_MSEC = 200; // Prevent the double-tap toast from blinking.
+	const SINGLETAP_MSEC = 200;
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const SUGGEST_OPACITY = 0.5;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
