@@ -26,7 +26,7 @@ if (typeof browser === 'undefined') {
 	const sessionValue = async (key, defaultValue) => {
 		try {
 			const res = await browser.storage.session.get(key);
-			return res && res[key] || defaultValue;
+			return res?.[key] || defaultValue;
 		} catch (e) {
 			return defaultValue;
 		}
@@ -355,7 +355,7 @@ if (typeof browser === 'undefined') {
 			}`;
 			// TODO: Migrate to Manifest V3.
 			browser.tabs.executeScript(arg.tabId, { code: userScript })
-			.then(result => { result && result[0] && result[0].url && exec.open(result[0]); })
+			.then(result => { result?.[0]?.url && exec.open(result?.[0]); })
 			.catch (e => {
 				if (e.message === 'SimpleGestureExit') return;
 				if (e.message.indexOf('result is non-structured-clonable data') !== -1) return;// Ignore the invalid return value.

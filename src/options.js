@@ -43,7 +43,7 @@ try {
 	const allByClass = clazz => document.getElementsByClassName(clazz);
 
 	const parentByClass = (elm, clazz) => {
-		for (let e = elm; e && e.classList; e = e.parentNode) {
+		for (let e = elm; e?.classList; e = e.parentNode) {
 			if (e.classList.contains(clazz)) return e;
 		}
 	};
@@ -92,7 +92,7 @@ try {
 
 	const safePreventDefault = e => {
 		try {
-			if (e && e.cancelable) {
+			if (e?.cancelable) {
 				e.preventDefault();
 			}
 		} catch {
@@ -335,7 +335,7 @@ try {
 	SimpleGesture.onStart = e => {
 		if (!target) return;
 		safePreventDefault(e);
-		return false;
+		return true;
 	};
 	SimpleGesture.onInput = e => {
 		if (!target) return;
@@ -351,7 +351,7 @@ try {
 		$dupName.textContent = dup ? `\u00a0(${dup})` : '';
 		toggleClass(dup, 'dup', $inputedGesture, $inputedStartPoint);
 		safePreventDefault(e);
-		return false;
+		return true;
 	};
 	let touchEndTimer = null;
 	SimpleGesture.onEnd = e => {
@@ -367,8 +367,9 @@ try {
 			}
 		}
 		safePreventDefault(e);
-		return false;
+		return true;
 	};
+	SimpleGesture.isNowaitSingleTap = () => false;
 
 	// custom gesture ----
 	const dataTargetId = e => e.target.getAttribute('data-targetId');
@@ -761,7 +762,7 @@ try {
 		if (!s) return s;
 		if (s[0] === CUSTOM_GESTURE_PREFIX) {
 			const c = findCustomGesture(s);
-			return c && c.title || '';
+			return c?.title || '';
 		} else {
 			try {
 				const key = s.replace(/[^0-9a-zA-Z_]/g, '_');
@@ -953,7 +954,7 @@ try {
 		if (openedDlg) return;
 		const hasOldY = history.state && 'y' in history.state;
 		const newY = window.scrollY;
-		if (newY || e && e.force) {
+		if (newY || e?.force) {
 			if (hasOldY) {
 				history.replaceState({ y: newY }, document.title);
 			} else {
@@ -1045,7 +1046,7 @@ try {
 		div.appendChild(msg);
 		const stack = [];
 		if (cause) stack.push(cause.message || `${cause}`);
-		if (cause && cause.stack) stack.push(cause.stack.split('\n').slice(0, 2).join('\n'));
+		if (cause?.stack) stack.push(cause.stack.split('\n').slice(0, 2).join('\n'));
 		if (err.stack) stack.push(err.stack);
 		if (stack.length) {
 			const s = document.createElement('DIV');

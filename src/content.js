@@ -11,7 +11,7 @@ if (typeof browser === 'undefined') {
 (async () => {
 	'use strict';
 
-	// const -------------
+	// constraints -------
 	// Default settings
 	SimpleGesture.ini = {
 		gestures: {
@@ -50,6 +50,7 @@ if (typeof browser === 'undefined') {
 	let ly = 0; // last Y
 	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
 	let target = null;
+	let touches = [];
 	let timer = null;
 	let isGestureEnabled = true;
 	let touchStartTime = 0;
@@ -73,8 +74,9 @@ if (typeof browser === 'undefined') {
 	let exData;
 	const ACCEPT_SINGLE_TAP = -1;
 	const doubleTap = { timer: null, count: ACCEPT_SINGLE_TAP };
+	const singleTap = { timer: null };
 
-	// utils -------------
+	// utilities ---------
 	SimpleGesture.getXY = e => {
 		const p = e.touches ? e.touches[0] : e;
 		return p.clientX !== undefined ? [p.clientX - VV.offsetLeft, p.clientY - VV.offsetTop] : [lx, ly];
@@ -96,7 +98,7 @@ if (typeof browser === 'undefined') {
 	const resetGesture = e => {
 		gesture = null;
 		timer = null;
-		if (e && e.withTimeout && toast && SimpleGesture.ini.toast) {
+		if (e?.withTimeout && toast && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
 		} else {
 			hideToast();
@@ -126,10 +128,12 @@ if (typeof browser === 'undefined') {
 		return f(e);
 	};
 
-	const getLinkTag = target => {
-		let a = target;
-		while (a && !a.href) a = a.parentNode;
-		return a;
+	const getLinkTag = _touches => {
+		for (const t of _touches) {
+			let a = t.target;
+			while (a && !a.href) a = a.parentNode;
+			if (a?.href) return a;
+		}
 	};
 
 	// dom control --------
@@ -200,6 +204,7 @@ if (typeof browser === 'undefined') {
 			gesture = doubleTap.count === 2 ? '' : 'W';
 			doubleTap.count = doubleTap.count === 2 ? ACCEPT_SINGLE_TAP : 2;
 			clearTimeout(doubleTap.timer);
+			clearTimeout(singleTap.timer);
 		} else {
 			gesture = '';
 			doubleTap.count = 1;
@@ -211,7 +216,8 @@ if (typeof browser === 'undefined') {
 		fingers = '';
 		if (!setupFingers(e)) return;
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
-		if (executeEvent(!gesture ? SimpleGesture.onStart : SimpleGesture.onInput, e) === false) return;
+		touches = e?.touches || [e];
+		if (executeEvent(!gesture ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		restartTimer();
 		if (gesture === 'W' && SimpleGesture.ini.toast) showGestureDelay();
 	};
@@ -234,14 +240,14 @@ if (typeof browser === 'undefined') {
 		lg = g;
 		if (gesture) gesture += '-';
 		gesture += g;
-		if (executeEvent(SimpleGesture.onInput, e) === false) return;
+		if (executeEvent(SimpleGesture.onInput, e)) return;
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
 	};
 
-	const getCommandByState = () => {
-		return SimpleGesture.ini.gestures[startPoint + fingers + gesture] ||
-			SimpleGesture.ini.gestures[fingers + gesture];
+	const getCommandByState = (s, f, g) => {
+		return SimpleGesture.ini.gestures[s + f + g] ||
+			SimpleGesture.ini.gestures[f + g];
 	}
 
 	const onTouchEnd = e => {
@@ -250,9 +256,9 @@ if (typeof browser === 'undefined') {
 			clearTimeout(timer);
 			clearTimeout(showToastTimer);
 			hideToast();
-			setupSingleTap();
-			if (executeEvent(SimpleGesture.onEnd, e) === false) return;
-			const g = getCommandByState();
+			if (setupSingleTap(e)) return;
+			if (executeEvent(SimpleGesture.onEnd, e)) return;
+			const g = getCommandByState(startPoint, fingers, gesture);
 			if (!g) return;
 			if (!isGestureEnabled && g !== 'disableGesture') return;
 			SimpleGesture.doCommand(g);
@@ -291,7 +297,7 @@ if (typeof browser === 'undefined') {
 			case 'openLinkInNewTab':
 			case 'openLinkInBackground':
 				options = options || {}
-				options.url = getLinkTag(target)?.href;
+				options.url = getLinkTag(touches)?.href;
 				if (!options.url) return;
 				// not break
 			default:
@@ -309,7 +315,7 @@ if (typeof browser === 'undefined') {
 	const setCustomGestureTarget = () => {
 		const befores = document.getElementsByClassName('simple-gesture-target');
 		[...befores].forEach(e => { e.classList.remove('simple-gesture-target'); });
-		target && target.classList && target.classList.add('simple-gesture-target');
+		target?.classList?.add('simple-gesture-target');
 	};
 
 	const toggleEnable = (force = null) => {
@@ -324,7 +330,7 @@ if (typeof browser === 'undefined') {
 		let tg = paths[0];
 		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap // not allways
 		if (onlyLinkTag) {
-			tg = getLinkTag(tg);
+			tg = getLinkTag([{ target: tg }]);
 			if (!tg) return;
 		} else if (!paths.some(p => (
 			p.tagName === 'A' ||
@@ -354,15 +360,31 @@ if (typeof browser === 'undefined') {
 		}, SimpleGesture.ini.doubleTapMsec + 1);
 	};
 
-	const setupSingleTap = () => {
+	SimpleGesture.isNowaitSingleTap = () => {
+		return !getCommandByState(startPoint, fingers, 'W');
+	};
+
+	const setupSingleTap = e => {
 		if (fingersNum < 2) return;
 		if (gesture !== '') return;
 		if (SINGLETAP_MSEC < touchEndTime - touchStartTime) return;
-		gesture = 'S';
+		// check double tap
+		if (SimpleGesture.isNowaitSingleTap()) {
+			gesture = 'S';
+		} else {
+			// single tap with delay
+			singleTap.timer = setTimeout(() => {
+				if (!gesture) {
+					gesture = 'S';
+					onTouchEnd(e);
+				}
+			}, SimpleGesture.ini.doubleTapMsec);
+			return true
+		}
 	};
 
 	const setupFingers = e => {
-		const f = e.touches && e.touches.length || 1;
+		const f = e.touches?.length || 1;
 		if (SimpleGesture.ini.maxFingers < f) {
 			resetGesture();
 			return false;
@@ -536,7 +558,7 @@ if (typeof browser === 'undefined') {
 
 	const showGestureImpl = async () => {
 		let list = SimpleGesture.ini.gestures;
-		const g = getCommandByState();
+		const g = getCommandByState(startPoint, fingers, gesture);
 		if (!isGestureEnabled && g !== 'disableGesture') return false;
 		if (!SimpleGesture.ini.suggestNext) {
 			if (!g) return false;
@@ -650,7 +672,7 @@ if (typeof browser === 'undefined') {
 		if (timestamp && timestamp === iniTimestamp) return;
 		iniTimestamp = timestamp;
 		const res = await browser.storage.local.get('simple_gesture');
-		if (res && res.simple_gesture) {
+		if (res?.simple_gesture) {
 			Object.assign(SimpleGesture.ini, res.simple_gesture);
 		}
 		loadExData(exData);
