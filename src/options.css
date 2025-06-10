@@ -426,6 +426,9 @@ textarea:selection, input:selection {
 	height: calc(100vh + 2000px);
 	width: calc(100vw + 2000px);
 }
+#gestureDlg {
+	user-select: none;
+}
 .gesture-area {
 	background: #fff;
 	content: ' ';

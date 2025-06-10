@@ -33,9 +33,10 @@ if (typeof browser === 'undefined') {
 		blacklist: [],
 		disableWhileZoomedIn: false,
 		suggestNext: true,
+		version: 0,
 	};
 	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
-	const SINGLETAP_MSEC = 200; // Prevent the double-tap toast from blinking.
+	const TAP_TIMEOUT = 100;
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const SUGGEST_OPACITY = 0.5;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
@@ -72,9 +73,9 @@ if (typeof browser === 'undefined') {
 	// others
 	let iniTimestamp = 0;
 	let exData;
-	const ACCEPT_SINGLE_TAP = -1;
-	const doubleTap = { timer: null, count: ACCEPT_SINGLE_TAP };
-	const singleTap = { timer: null };
+	let tapTimer = 0;
+	let doubleTapTimer = 0;
+	let isDelaySingleTap = false;
 
 	// utilities ---------
 	SimpleGesture.getXY = e => {
@@ -200,14 +201,11 @@ if (typeof browser === 'undefined') {
 		fixSize();
 		if (!size) return;
 		touchStartTime = Date.now();
-		if (touchStartTime - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
-			gesture = doubleTap.count === 2 ? '' : 'W';
-			doubleTap.count = doubleTap.count === 2 ? ACCEPT_SINGLE_TAP : 2;
-			clearTimeout(doubleTap.timer);
-			clearTimeout(singleTap.timer);
+		if (gesture?.endsWith('T')) {
+			clearTimeout(tapTimer);
+			clearTimeout(doubleTapTimer);
 		} else {
 			gesture = '';
-			doubleTap.count = 1;
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
 		lg = null;
@@ -219,7 +217,7 @@ if (typeof browser === 'undefined') {
 		touches = e?.touches || [e];
 		if (executeEvent(!gesture ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		restartTimer();
-		if (gesture === 'W' && SimpleGesture.ini.toast) showGestureDelay();
+		if (gesture?.endsWith('T') && SimpleGesture.ini.toast) showGestureDelay();
 	};
 
 	const onTouchMove = e => {
@@ -251,12 +249,15 @@ if (typeof browser === 'undefined') {
 	}
 
 	const onTouchEnd = e => {
+		if (gesture === null) return;
+		const now = Date.now();
+		if (now - touchEndTime < TAP_TIMEOUT) return;
+		touchEndTime = now;
+		if (addTap(e)) return;
 		try {
-			touchEndTime = Date.now();
 			clearTimeout(timer);
 			clearTimeout(showToastTimer);
 			hideToast();
-			if (setupSingleTap(e)) return;
 			if (executeEvent(SimpleGesture.onEnd, e)) return;
 			const g = getCommandByState(startPoint, fingers, gesture);
 			if (!g) return;
@@ -325,7 +326,7 @@ if (typeof browser === 'undefined') {
 
 	const waitForDoubleTap = e => {
 		if (!isGestureEnabled) return;
-		if (doubleTap.count === ACCEPT_SINGLE_TAP) return;
+		if (!SimpleGesture.hasNextTap()) return;
 		const paths =  e.composedPath();
 		let tg = paths[0];
 		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap // not allways
@@ -342,16 +343,14 @@ if (typeof browser === 'undefined') {
 		}
 		e.stopPropagation();
 		e.cancelable && e.preventDefault();
-		if (doubleTap.count !== 1) return;
 		const ev = new MouseEvent('click', {
 			bubbles: true,
 			cancelable: true,
 			clientX: e.clientX,
 			clientY: e.clientY,
 		});
-		doubleTap.timer = setTimeout(() => {
-			doubleTap.timer = null;
-			doubleTap.count = ACCEPT_SINGLE_TAP;
+		doubleTapTimer = setTimeout(() => {
+			doubleTapTimer = 0;
 			if (onlyLinkTag) {
 				tg.dispatchEvent(ev);
 			} else {
@@ -360,24 +359,39 @@ if (typeof browser === 'undefined') {
 		}, SimpleGesture.ini.doubleTapMsec + 1);
 	};
 
-	SimpleGesture.isNowaitSingleTap = () => {
-		return !getCommandByState(startPoint, fingers, 'W');
+	SimpleGesture.hasNextTap = () => {
+		const sGesture = startPoint + fingers + gesture;
+		const fGesture = fingers + gesture;
+		for (const k of Object.keys(SimpleGesture.ini.gestures)) {
+			if (k === sGesture) continue;
+			if (k === fGesture) continue;
+			if (!isMatch(k, fGesture, sGesture)) continue;
+			return true;
+		}
+		return false;
 	};
 
-	const setupSingleTap = e => {
-		if (fingersNum < 2) return;
-		if (gesture !== '') return;
-		if (SINGLETAP_MSEC < touchEndTime - touchStartTime) return;
-		// check double tap
-		if (SimpleGesture.isNowaitSingleTap()) {
-			gesture = 'S';
-		} else {
-			// single tap with delay
-			singleTap.timer = setTimeout(() => {
-				if (!gesture) {
-					gesture = 'S';
-					onTouchEnd(e);
-				}
+	const addTap = e => {
+		if (TAP_TIMEOUT < touchEndTime - touchStartTime) {
+			return false;
+		}
+		if (gesture) {
+			if (!gesture.endsWith('T')) return false;
+			gesture += '-';
+		}
+		gesture += 'T';
+		if (fingersNum < 2 && gesture === 'T') {
+			if (isDelaySingleTap) {
+				waitForDoubleTap(e);
+			}
+			tapTimer = setTimeout(() => {
+				gesture = null;
+			}, SimpleGesture.ini.doubleTapMsec);
+			return true;
+		}
+		if (SimpleGesture.hasNextTap()) {
+			tapTimer = setTimeout(() => {
+				onTouchEnd(e);
 			}, SimpleGesture.ini.doubleTapMsec);
 			return true
 		}
@@ -433,12 +447,8 @@ if (typeof browser === 'undefined') {
 			arrowsSvg[key] = arrowBase.cloneNode(true);
 			arrowsSvg[key].firstChild.style.transform = `rotate(${r}deg)`;
 		}
-		arrowsSvg.W = base.cloneNode(true);
-		arrowsSvg.W.firstChild.appendChild(getSvgNode('path', {
-			d:'M1 6a4 4 0 1 1 10 0 M3 6a3 3 0 1 1 6 0 M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
-		}));
-		arrowsSvg.S = base.cloneNode(true);
-		arrowsSvg.S.firstChild.appendChild(getSvgNode('path', {
+		arrowsSvg.T = base.cloneNode(true);
+		arrowsSvg.T.firstChild.appendChild(getSvgNode('path', {
 			d:'M6 1v2M2 3l1.4 1.4M10 3l-1.4 1.4M4 11q-3-2 1-1v-3q1-2 2 0v2l3 1v1'
 		}));
 	};
@@ -447,7 +457,7 @@ if (typeof browser === 'undefined') {
 		makeArrowSvg();
 		const a = [];
 		for (const g of gesture.split('-')) {
-			a.push(arrowsSvg[g].cloneNode(true));
+			a.push(arrowsSvg[g]?.cloneNode(true));
 		}
 		label.replaceChildren(...a);
 	};
@@ -675,18 +685,32 @@ if (typeof browser === 'undefined') {
 		if (res?.simple_gesture) {
 			Object.assign(SimpleGesture.ini, res.simple_gesture);
 		}
+		migrateFromV3_31();
 		loadExData(exData);
 		lastInnerWidth = 0; // for recalucrate stroke size on touchstart.
-		if (SimpleGesture.isDelaySingleTap()) {
+		isDelaySingleTap = SimpleGesture.isDelaySingleTap();
+		if (isDelaySingleTap) {
 			addEventListener('click', waitForDoubleTap, true);
 		} else{
 			removeEventListener('click', waitForDoubleTap);
 		}
 	};
 
+	const migrateFromV3_31 = () => {
+		if (3.31 < SimpleGesture.ini.version) return;
+		// doubleTap -> T-T, singleTap -> T
+		for (const key of Object.keys(SimpleGesture.ini.gestures)) {
+			const newKey = key.replace('W', 'T-T').replace('S', 'T');
+			if (key !== newKey) {
+				SimpleGesture.ini.gestures[newKey] = SimpleGesture.ini.gestures[key];
+				delete SimpleGesture.ini.gestures[key];
+			}
+		}
+	}
+
 	SimpleGesture.isDelaySingleTap = () => {
 		for (const [k, v] of Object.entries(SimpleGesture.ini.gestures)) {
-			if (k.indexOf('W') === -1) continue;
+			if (k.indexOf('T') === -1) continue;
 			if (SimpleGesture.ini.delaySingleTap) return true;
 			if (v === 'openLinkInNewTab') return true;
 			if (v === 'openLinkInBackground') return true;

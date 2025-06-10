@@ -102,6 +102,7 @@ try {
 
 	// utils for Simple gesture
 	const saveIni = () => {
+		SimpleGesture.ini.version = Number(browser.runtime.getManifest().version);
 		browser.storage.local.set({ 'simple_gesture': SimpleGesture.ini });
 		browser.storage.local.set({ simple_gesture_exdata: exData });
 		resetTimer('reloadAllTabsIni', reloadAllTabsIni, 1000);
@@ -369,7 +370,7 @@ try {
 		safePreventDefault(e);
 		return true;
 	};
-	SimpleGesture.isNowaitSingleTap = () => false;
+	SimpleGesture.hasNextTap = () => !!target;
 
 	// custom gesture ----
 	const dataTargetId = e => e.target.getAttribute('data-targetId');
