@@ -57,7 +57,7 @@ if (typeof browser === 'undefined') {
 	}
 	browser.tabs.onActivated.addListener(e => {
 		reloadIni(e.tabId);
-		// actriveInfo.previousTabId is not supported in FF on Android!
+		// actriveInfo.previousTabId is not supported in FF for Android!
 		// previousTabId = e.previousTabId;
 		if (currentTabId !== e.tabId) {
 			previousTabId = currentTabId;
@@ -96,13 +96,30 @@ if (typeof browser === 'undefined') {
 	// For open a new tab with discarded
 	const decorateUrl = arg => (arg.discarded ? 'modules/discarded.html?' : '') + arg.url;
 
+	// FF for Android does not support Tab.index!
+	const prevOrNextTab = async (arg, f) => {
+		const all = await browser.tabs.query({});
+		const max = all.length;
+		let found = false;
+		for (let i = 0; i < max * 2; i ++) {
+			const t = all[(max + f(i)) % max];
+			if (t.hidden) continue;
+			if (t.id === arg.tab.id)  {
+				found = true;
+			} else if (found) {
+				browser.tabs.update(t.id, { active: true });
+				return;
+			}
+		}
+	};
+
 	// Gestures
 	const exec = {
 		openLinkInNewTab: async arg => {
 			browser.tabs.create({ active: true, url: arg.url });
 		},
 		openLinkInBackground: async arg => {
-			// Firefox for Android doesn't support `openerTabId`, `discarded` and `active`.
+			// FF for Android doesn't support `openerTabId`, `discarded` and `active`.
 			arg.discarded = await iniValue('openLinkInBackgroundDiscarded');
 			const url = decorateUrl(arg);
 			const newTab = await browser.tabs.create({ active: false, url: url });
@@ -206,7 +223,7 @@ if (typeof browser === 'undefined') {
 					return;
 				}
 			} else {
-				// for Firefox for Android
+				// for FF for Android
 				const url = closedTabs.pop();
 				if (url) {
 					browser.tabs.create({ active: true, url: url });
@@ -223,33 +240,10 @@ if (typeof browser === 'undefined') {
 			}
 		},
 		prevTab: async arg => {
-			for (let i = arg.tab.index - 1; 0 <= i; i--) {
-				const tab = (await browser.tabs.query({ index: i }))[0];
-				if (!tab || tab.hidden) continue;
-				browser.tabs.update(tab.id, { active: true });
-				return;
-			}
-			exec.lastTab();
+			prevOrNextTab(arg, i => -i);
 		},
-		lastTab: async () => {
-			const all = await browser.tabs.query({});
-			let last = { index: -1 };
-			for (let tab of all) {
-				if (tab.hidden || tab.index < last.index) continue;
-				last = tab;
-			}
-			browser.tabs.update(last.id, { active: true });
-		},
-		nextTab: async arg => {
-			for (let i = arg.tab.index + 1; true; i++) {
-				const tab = (await browser.tabs.query({ index: i }))[0];
-				if (!tab) break;
-				if (tab.hidden) continue;
-				browser.tabs.update(tab.id, { active: true });
-				return;
-			}
-			// show 1st tab that is not hidden.
-			if (arg.tab.index !== -1) exec.nextTab({ tab: { index: -1 } });
+		nextTab: async (arg, f) => {
+			prevOrNextTab(arg, i => i);
 		},
 		lastUsedTab: async () => {
 			browser.tabs.update(previousTabId, { active: true });
@@ -263,7 +257,7 @@ if (typeof browser === 'undefined') {
 		},
 		toggleUserAgent: async arg => {
 			const ID = 1;
-			var onOff = 'OFF';
+			let onOff = 'OFF';
 			if (await exec.isUserAgentSwitched() && !arg.force || arg.userAgent === null) {
 				chrome.declarativeNetRequest.updateSessionRules(
 					{ removeRuleIds: [ID] }
@@ -359,7 +353,7 @@ if (typeof browser === 'undefined') {
 			const code = arg.code || arg.script;
 			// open in new tab
 			if (arg.inNewTab || !('inNewTab' in arg)) {
-				// Firefox for Android doesn't support `openerTabId`, `discarded` and `active`.
+				// FF for Android doesn't support `openerTabId`, `discarded` and `active`.
 				let tab = await browser.tabs.create({ active: active, url: decorateUrl(arg) });
 				if (!active) {
 					browser.tabs.update(arg.tab.id, { active: true });
@@ -378,7 +372,7 @@ if (typeof browser === 'undefined') {
 					removeListener();
 					exec.executeScript({ tabId: tabId, code: code});
 				};
-				browser.tabs.onUpdated.addListener(f);// Firefox for Android doesn't support extraParameter.tabId.
+				browser.tabs.onUpdated.addListener(f);// FF for Android doesn't support extraParameter.tabId.
 			}
 			browser.tabs.update({ url: arg.url });
 		},
