@@ -64,9 +64,6 @@
 	"contextRoot": {
 		"message": "Context root"
 	},
-	"closeSameUrlNote": {
-		"message": "The states of tabs are often broken, eg at startup. So, this may not work well."
-	},
 	"reopen": {
 		"message": "Reopen Closed Tab"
 	},

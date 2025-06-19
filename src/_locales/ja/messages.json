@@ -64,9 +64,6 @@
 	"contextRoot": {
 		"message": "コンテキストルート"
 	},
-	"closeSameUrlNote": {
-		"message": "Firefox起動時などにタブの情報が壊れるので、上手く動かないことがあります"
-	},
 	"reopen": {
 		"message": "閉じたタブを開き直す"
 	},
