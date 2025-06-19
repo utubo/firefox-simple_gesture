@@ -447,7 +447,7 @@ if (typeof browser === 'undefined') {
 		makeArrowSvg();
 		const a = [];
 		for (const g of gesture.split('-')) {
-			a.push(arrowsSvg[g].cloneNode(true));
+			a.push(arrowsSvg[g]?.cloneNode(true));
 		}
 		label.replaceChildren(...a);
 	};

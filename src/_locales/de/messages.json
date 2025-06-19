@@ -37,6 +37,12 @@
 	"default": {
 		"message": "Standard"
 	},
+	"closeLeft": {
+		"message": "Tabs links schließen"
+	},
+	"closeRight": {
+		"message": "Tabs rechts schließen"
+	},
 	"closeAll": {
 		"message": "Alle Tabs schließen"
 	},
@@ -45,6 +51,9 @@
 	},
 	"closeSameUrl": {
 		"message": "Gleiche URL schließen"
+	},
+	"close_n_tabs": {
+		"message": "Sie sind dabei, %count% Tabs zu schließen.\nMöchten Sie fortfahren?"
 	},
 	"fullMatch": {
 		"message": "Komplette URL"

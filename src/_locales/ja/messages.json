@@ -37,14 +37,23 @@
 	"default": {
 		"message": "デフォルト"
 	},
+	"closeLeft": {
+		"message": "左側のすべてのタブを閉じる"
+	},
+	"closeRight": {
+		"message": "右側のすべてのタブを閉じる"
+	},
 	"closeAll": {
-		"message": "全てのタブを閉じる"
+		"message": "すべてのタブを閉じる"
 	},
 	"closeOthers": {
-		"message": "他のタブを全て閉じる"
+		"message": "他のタブをすべて閉じる"
 	},
 	"closeSameUrl": {
 		"message": "同じURLのタブを閉じる"
+	},
+	"close_n_tabs": {
+		"message": "%count% 個のタブを閉じようとしています\n本当に閉じますか？"
 	},
 	"fullMatch": {
 		"message": "完全一致"

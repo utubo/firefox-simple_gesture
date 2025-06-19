@@ -130,33 +130,72 @@ if (typeof browser === 'undefined') {
 			}
 			browser.tabs.remove(arg.tab.id);
 		},
-		closeIf: async filter => {
+		closeIf: async (arg, filter) => {
 			const tabs = await browser.tabs.query({});
 			const ids = [];
 			for (let tab of tabs)
 				if (filter(tab)) ids.push(tab.id);
-			if (ids[0])
-				browser.tabs.remove(ids);
+			const count = ids.length;
+			if (!count) return;
+			if (1 < count) {
+				await browser.tabs.insertCSS(
+					arg.tab.id,
+					{ file: '/modules/dialog.css' }
+				);
+				const text = browser.i18n.getMessage('close_n_tabs').replace('%count%', count);
+				const ret = await browser.scripting.executeScript({
+					target: { tabId: arg.tab.id },
+					args: [text],
+					func: async text => {
+						const dlg = await import(browser.runtime.getURL('/modules/dialog.js'));
+						return await dlg.confirm(text);
+					}
+				});
+				if (!ret?.[0]?.result) return;
+			}
+			browser.tabs.remove(ids);
 		},
 		closeAll: async () => {
-			exec.closeIf(() => true);
+			exec.closeIf(arg, () => true);
 		},
 		closeOthers: async arg => {
-			exec.closeIf(tab => tab.id !== arg.tab.id);
+			exec.closeIf(arg, tab => tab.id !== arg.tab.id);
 		},
 		closeSameUrl: async arg => {
 			const matchType = arg.matchType || await iniValue('closeSameUrlMatchType');
 			if (matchType === 'domain') {
 				const domain = arg.tab.url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1');
-				exec.closeIf(tab => tab.url.startsWith(domain));
+				exec.closeIf(arg, tab => tab.url.startsWith(domain));
 				return;
 			}
 			if (matchType === 'contextRoot') {
 				const contextRoot = arg.tab.url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1');
-				exec.closeIf(tab => tab.url.startsWith(contextRoot));
+				exec.closeIf(arg, tab => tab.url.startsWith(contextRoot));
 				return;
 			}
-			exec.closeIf(tab => tab.url === arg.tab.url);
+			exec.closeIf(arg, tab => tab.url === arg.tab.url);
+		},
+		closeLeft: async arg => {
+			// FF for Android does not support Tab.index!
+			//exec.closeIf(arg, tab => tab.index < arg.tab.index);
+			exec.closeIf(arg, tab => {
+				if (tab.id === arg.tab.id) {
+					arg.foundCurrent = true;
+				} else if (!arg.foundCurrent) {
+					return true;
+				}
+			});
+		},
+		closeRight: async arg => {
+			// FF for Android does not support Tab.index!
+			//exec.closeIf(arg, tab => arg.tab.index < tab.index);
+			exec.closeIf(arg, tab => {
+				if (tab.id === arg.tab.id) {
+					arg.foundCurrent = true;
+				} else if (arg.foundCurrent) {
+					return true;
+				}
+			});
 		},
 		reopen: async arg => {
 			if (browser.sessions) {

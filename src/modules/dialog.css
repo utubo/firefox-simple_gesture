@@ -1,0 +1,53 @@
+.simplegesture-dlg {
+	align-items: center;
+	background: #0008;
+	display: none;
+	inset: 0;
+	justify-content: center;
+	opacity: 0;
+	position: fixed;
+	text-align: center;
+	transition: opacity .5s;
+	z-index: 2;
+	@media (prefers-color-scheme: dark) {
+		background: #000a;
+	}
+}
+.simplegesture-dlg-container {
+	align-items: center;
+	background: #f9f9fa;
+	border-radius: .5rem;
+	color: #15141a;
+	display: flex;
+	flex-direction: column;
+	margin: 1rem;
+	max-height: calc(100% - 4rem);
+	min-width: 40vw;
+	overflow: auto;
+	padding: 1rem;
+	white-space: pre;
+	@media (prefers-color-scheme: dark) {
+		background: #2b2a33;
+		color: #fbfbfe;
+	}
+}
+.simplegesture-dlg-msg {
+	display: inline-block;
+	text-align: left;
+}
+.simplegesture-dlg-buttons {
+	text-align: right;
+	width: 100%;
+}
+.simplegesture-dlg-button {
+	color: #592acb;
+	cursor: pointer;
+	display: inline-block;
+	margin-left: 2rem;
+	margin-top: 1rem;
+	text-align: center;
+	min-width: 5rem;
+	@media (prefers-color-scheme: dark) {
+		color: #cb9eff;
+	}
+}
