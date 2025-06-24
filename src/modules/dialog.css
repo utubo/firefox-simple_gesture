@@ -2,16 +2,17 @@
 	align-items: center;
 	background: #f9f9fa;
 	border: none;
-	border-radius: .5rem;
+	border-radius: .5em;
 	color: #15141a;
 	flex-direction: column;
-	/* font-size: clamp(1em, 4vmin, 10em); */
-	font-size: 1rem;
+	font-size: 19px;
 	outline: none;
 	overflow: auto;
-	padding: 1rem;
-	transform-origin: left top;
+	padding: 1em;
 	white-space: pre;
+}
+.simplegesture-dlg:not([open]) {
+	display: none;
 }
 .simplegesture-dlg::backdrop {
 	background: #0008;
@@ -21,7 +22,7 @@
 	text-align: left;
 }
 .simplegesture-dlg-buttons {
-	margin-top: 1rem;
+	margin-top: 1em;
 	text-align: right;
 	width: 100%;
 }
@@ -29,9 +30,9 @@
 	color: #592acb;
 	cursor: pointer;
 	display: inline-block;
-	margin-left: 2rem;
+	margin-left: 2em;
 	text-align: center;
-	min-width: 5rem;
+	min-width: 5em;
 }
 @keyframes fadeIn {
 	from { opacity: 0; }

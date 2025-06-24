@@ -1,3 +1,5 @@
+'use strict';
+
 if (!browser.storage.local.set) {
 	browser.storage.local = {
 		...browser.storage.local,
@@ -5,8 +7,7 @@ if (!browser.storage.local.set) {
 		remove: key => new Promise(resolve => { storageOrg.local.remove(key, resolve); }),
 	};
 }
-(async () => {
-	'use strict';
+
 try {
 
 	// const -------------
@@ -21,7 +22,7 @@ try {
 	};
 	const TIMERS = {};
 	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
-	SimpleGesture.MAX_LENGTH += 9; // margin of cancel to input. 5 moves + 4 hyphens = 9 chars.
+	SimpleGesture.MAX_LENGTH += 3; // margin of cancel to input.
 
 	// fields ------------
 	let gestureNames = [];
@@ -122,14 +123,32 @@ try {
 	 * 'U-D' to ['', '', 'U-D']
 	 * '' to ['', '', '']
 	 */
-	const toStartPointFingersArrows = s => {
-		if (!s) return ['', '', ''];
+	const toGestureObj = s => {
+		let g = {
+			starPoint: '',
+			fingers: '',
+			arrows: [],
+		}
+		if (!s) return g;
 		const a = s.split(':');
-		if (a[2]) return a;
-		if (!a[1]) return ['' ,'', s];
-		if (a[0].match(/[LRTB]/)) return [a[0], '', a[1]];
-		return ['', a[0], a[1]];
+		if (a[2]) {
+			g.startPoint = a[0];
+			g.fingers = a[1];
+			g.arrows = a[2];
+		} else if (!a[1]) {
+			g.arrows = s;
+		} else if (a[0].match(/[LRTB]/)) {
+			g.startPoint = a[0];
+			g.arrows = a[1];
+		} else {
+			g.fingers = a[0];
+			g.arrows = a[1];
+		}
+		g.arrows = g.arrows.split('-');
+		return g;
 	};
+
+	const fromGestureObj = g => `${g.startPoint || ''}${g.fingers || ''}${(g.arrows || []).slice(0, MAX_LENGTH).join('-')}`;
 
 	const ifById = id => (typeof id === 'string') ? byId(id): id;
 	const fadeout = elm => { ifById(elm).classList.add('transparent'); };
@@ -157,30 +176,30 @@ try {
 	const $preventPullToRefresh = byId('preventPullToRefresh');
 
 	// edit U-D-L-R ------
-	const updateArrowsLabel = (arrowsLabel, addnlLabel, gesture) => {
-		const [startPoint, fingers, arrows] = toStartPointFingersArrows(gesture);
-		if (arrows) {
-			SimpleGesture.drawArrows(arrows, arrowsLabel);
+	const updateGestureLabel = (arrowsLabel, addnlLabel, gesture) => {
+		const g = toGestureObj(gesture);
+		if (g.arrows.length) {
+			SimpleGesture.drawArrows(g.arrows, arrowsLabel);
 		} else {
 			arrowsLabel.textContent = INSTEAD_OF_EMPTY.noGesture;
 		}
-		const addnl = SimpleGesture.getAddnlText(startPoint, fingers);
+		const addnl = SimpleGesture.getAddnlText(g.startPoint, g.fingers);
 		addnlLabel.textContent = addnl;
 		toggleClass(!addnl, 'hide', addnlLabel);
-		return arrows;
+		return g.arrows;
 	};
 	const updateGestureItem = (label, gesture) => {
 		const note = byClass(label.parentNode, 'arrows-note');
-		const arrows = updateArrowsLabel(label, note, gesture);
-		toggleClass(!arrows, 'arrows-na', label);
+		const arrows = updateGestureLabel(label, note, gesture);
+		toggleClass(!arrows.length, 'arrows-na', label);
 		label.setAttribute('data-gesture', gesture || '');
 	};
 
 	const CLEAR_GESTURE = 'n/a'; // magic number
-	const updateGesture = (arrows, startPoint, fingers) => {
-		if (arrows) {
+	const updateGesture = (gestureObj) => {
+		if (gestureObj.arrows.length) {
 			// make key. e.g.) `T-2-U-D`
-			const key = (startPoint || '') + (fingers || '') + arrows;
+			const key = fromGestureObj(gestureObj);
 			const swaped = {};
 			for (const [k, v] of Object.entries(SimpleGesture.ini.gestures)) {
 				if (v === target.name) {
@@ -191,9 +210,9 @@ try {
 					swaped[v] = k;
 				}
 				// register maxFingers
-				const [_s, f, _a] = toStartPointFingersArrows(k);
-				if (SimpleGesture.ini.maxFingers < f) {
-					SimpleGesture.ini.maxFingers = f;
+				const g = toGestureObj(k);
+				if (SimpleGesture.ini.maxFingers < g.fingers) {
+					SimpleGesture.ini.maxFingers = g.fingers;
 				}
 			}
 			// register
@@ -225,7 +244,7 @@ try {
 			target.arrows = byId(`${target.name}_arrows`);
 			editStart(target.arrows);
 			byId('editTarget').textContent = target.caption.textContent;
-			updateArrowsLabel(
+			updateGestureLabel(
 				$inputedGesture,
 				$inputedStartPoint,
 				target.arrows.getAttribute('data-gesture')
@@ -325,7 +344,7 @@ try {
 			}
 		});
 		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
-			updateGesture(CLEAR_GESTURE);
+			updateGesture({ arrows: [CLEAR_GESTURE] });
 			history.back();
 			safePreventDefault(e);
 		}, move: () => {}, end: () => {} });
@@ -339,13 +358,13 @@ try {
 	};
 	SimpleGesture.onInput = e => {
 		if (!target) return;
-		if (e.gesture.length > SimpleGesture.MAX_LENGTH) {
+		if (e.arrows.length > SimpleGesture.MAX_LENGTH) {
 			$inputedGesture.classList.add('canceled');
 			$cancelInputGesture.classList.add('hover');
 		}
 		toggleClass(!e.startPoint && !e.fingers, 'hide', $inputedStartPoint);
-		const gesture = e.startPoint + e.fingers + e.gesture.substring(0, MAX_LENGTH);
-		updateArrowsLabel($inputedGesture, $inputedStartPoint, gesture);
+		const gesture = fromGestureObj(e);
+		updateGestureLabel($inputedGesture, $inputedStartPoint, gesture);
 		let dup = SimpleGesture.ini.gestures[gesture];
 		dup = (dup && dup !== target.name) ? getMessage(dup) : '';
 		$dupName.textContent = dup ? `\u00a0(${dup})` : '';
@@ -360,9 +379,8 @@ try {
 		if ($inputedGesture.classList.contains('canceled')) {
 			history.back();
 		} else {
-			const g = (e.gesture || '').substring(0, MAX_LENGTH);
-			if (g) {
-				updateGesture(g, e.startPoint, e.fingers);
+			if (e.arrows?.length) {
+				updateGesture(e);
 				history.back();
 			}
 		}
@@ -1059,15 +1077,17 @@ try {
 	addEventListener('error',  addErrorLog);
 
 	// START HERE ! ------
-	try {
-		SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
-		exData = (await storageValue('simple_gesture_exdata')) || exData;
-		await setupSettingItems();
-	} catch (e) {
-		addErrorLog(e);
-	}
+	(async() => {
+		try {
+			SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
+			exData = (await storageValue('simple_gesture_exdata')) || exData;
+			await setupSettingItems();
+		} catch (e) {
+			addErrorLog(e);
+		}
+	})();
+
 } catch (globalException) {
 	alert(globalException);
 }
-})();
 

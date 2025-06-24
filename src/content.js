@@ -34,7 +34,7 @@ if (typeof browser === 'undefined') {
 		disableWhileZoomedIn: false,
 		suggestNext: true,
 	};
-	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
+	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const SUGGEST_OPACITY = 0.5;
@@ -44,11 +44,11 @@ if (typeof browser === 'undefined') {
 
 	// fields ------------
 	// gesture
-	let gesture = ''; // e.g. 'L-R-U-D'
+	let arrows = null;
 	let startPoint = ''; // e.g. 'L:', 'R:', 'T:' or 'B:'
 	let lx = 0; // last X
 	let ly = 0; // last Y
-	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
+	let la = null; // last arrow (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let touches = [];
 	let timer = null;
@@ -96,7 +96,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	const resetGesture = e => {
-		gesture = null;
+		arrows = null;
 		timer = null;
 		if (e?.withTimeout && toast && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
@@ -122,7 +122,7 @@ if (typeof browser === 'undefined') {
 
 	const executeEvent = (f, e) => {
 		if (!f) return;
-		e.gesture = gesture;
+		e.arrows = arrows;
 		e.startPoint = startPoint;
 		e.fingers = fingers;
 		return f(e);
@@ -201,31 +201,31 @@ if (typeof browser === 'undefined') {
 		if (!size) return;
 		touchStartTime = Date.now();
 		if (touchStartTime - touchEndTime <= SimpleGesture.ini.doubleTapMsec) {
-			gesture = doubleTap.count === 2 ? '' : 'W';
+			arrows = doubleTap.count === 2 ? [] : ['W'];
 			doubleTap.count = doubleTap.count === 2 ? ACCEPT_SINGLE_TAP : 2;
 			clearTimeout(doubleTap.timer);
 			clearTimeout(singleTap.timer);
 		} else {
-			gesture = '';
+			arrows = [];
 			doubleTap.count = 1;
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
-		lg = null;
+		la = null;
 		setupStartPoint(lx, ly);
 		fingersNum = 1;
 		fingers = '';
 		if (!setupFingers(e)) return;
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
 		touches = e?.touches || [e];
-		if (executeEvent(!gesture ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
+		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		restartTimer();
-		if (gesture === 'W' && SimpleGesture.ini.toast) showGestureDelay();
+		if (arrows[0] === 'W' && SimpleGesture.ini.toast) showGestureDelay();
 	};
 
 	const onTouchMove = e => {
-		if (gesture === null) return;
-		if (gesture.length > SimpleGesture.MAX_LENGTH) return;
-		if (!gesture && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
+		if (arrows === null) return;
+		if (arrows.length > SimpleGesture.MAX_LENGTH) return;
+		if (!arrows && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
 		if (!setupFingers(e)) return;
 		const [x, y] = SimpleGesture.getXY(e);
 		const dx = x - lx;
@@ -235,19 +235,20 @@ if (typeof browser === 'undefined') {
 		if (absX < size && absY < size) return;
 		lx = x;
 		ly = y;
-		const g = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
-		if (g === lg) return;
-		lg = g;
-		if (gesture) gesture += '-';
-		gesture += g;
+		const a = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
+		if (a === la) return;
+		la = a;
+		arrows.push(a);
 		if (executeEvent(SimpleGesture.onInput, e)) return;
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
 	};
 
-	const getCommandByState = (s, f, g) => {
-		return SimpleGesture.ini.gestures[s + f + g] ||
-			SimpleGesture.ini.gestures[f + g];
+	const getCommandByState = (s, f, a) => {
+		if (!a) return;
+		const fa = f + a.join('-');
+		return SimpleGesture.ini.gestures[s + fa] ||
+			SimpleGesture.ini.gestures[fa];
 	}
 
 	const onTouchEnd = e => {
@@ -258,14 +259,14 @@ if (typeof browser === 'undefined') {
 			hideToast();
 			if (setupSingleTap(e)) return;
 			if (executeEvent(SimpleGesture.onEnd, e)) return;
-			const g = getCommandByState(startPoint, fingers, gesture);
+			const g = getCommandByState(startPoint, fingers, arrows);
 			if (!g) return;
 			if (!isGestureEnabled && g !== 'disableGesture') return;
 			SimpleGesture.doCommand(g);
 			e.stopPropagation();
 			e.cancelable && e.preventDefault();
 		} finally {
-			gesture = null;
+			arrows = null;
 			//target = null; Keep target for Custom gesture
 		}
 	};
@@ -361,21 +362,21 @@ if (typeof browser === 'undefined') {
 	};
 
 	SimpleGesture.isNowaitSingleTap = () => {
-		return !getCommandByState(startPoint, fingers, 'W');
+		return !getCommandByState(startPoint, fingers, ['W']);
 	};
 
 	const setupSingleTap = e => {
 		if (fingersNum < 2) return;
-		if (gesture !== '') return;
+		if (arrows?.length !== 0) return;
 		if (SINGLETAP_MSEC < touchEndTime - touchStartTime) return;
 		// check double tap
 		if (SimpleGesture.isNowaitSingleTap()) {
-			gesture = 'S';
+			arrows = ['S'];
 		} else {
 			// single tap with delay
 			singleTap.timer = setTimeout(() => {
-				if (!gesture) {
-					gesture = 'S';
+				if (!arrows?.length) {
+					arrows = ['S'];
 					onTouchEnd(e);
 				}
 			}, SimpleGesture.ini.doubleTapMsec);
@@ -443,13 +444,13 @@ if (typeof browser === 'undefined') {
 		}));
 	};
 
-	SimpleGesture.drawArrows = (gesture, label) => {
+	SimpleGesture.drawArrows = (arrows_, label) => {
 		makeArrowSvg();
-		const a = [];
-		for (const g of gesture.split('-')) {
-			a.push(arrowsSvg[g]?.cloneNode(true));
+		const svgs = [];
+		for (const a of arrows_) {
+			svgs.push(arrowsSvg[a]?.cloneNode(true));
 		}
-		label.replaceChildren(...a);
+		label.replaceChildren(...svgs);
 	};
 
 	const showToast = () => {
@@ -556,17 +557,20 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
+	let joinedArrows = '';
+
 	const showGestureImpl = async () => {
 		let list = SimpleGesture.ini.gestures;
-		const g = getCommandByState(startPoint, fingers, gesture);
+		const g = getCommandByState(startPoint, fingers, arrows);
 		if (!isGestureEnabled && g !== 'disableGesture') return false;
+		joinedArrows = arrows.join('-');
 		if (!SimpleGesture.ini.suggestNext) {
 			if (!g) return false;
 			list = {};
-			list[gesture] = g;
+			list[joinedArrows] = g;
 		} else if (
 			!g &&
-			!gesture.split('-')[SimpleGesture.ini.toastMinStroke - 1]
+			!arrows[SimpleGesture.ini.toastMinStroke - 1]
 		) {
 			return false;
 		}
@@ -608,8 +612,8 @@ if (typeof browser === 'undefined') {
 	};
 
 	const suggestGestures = async (list, match) => {
-		const sGesture = startPoint + fingers + gesture;
-		const fGesture = fingers + gesture;
+		const fGesture = fingers + joinedArrows;
+		const sGesture = startPoint + fGesture;
 		const f = document.createDocumentFragment();
 		let done = false;
 		for (const [k, v] of Object.entries(list)) {
@@ -618,15 +622,15 @@ if (typeof browser === 'undefined') {
 			const name = await gestureName(v);
 			if (!name) continue; // for old ini-data.
 			// create element
-			const arrows = document.createElement('DIV');
-			arrows.style.cssText = `
+			const label = document.createElement('DIV');
+			label.style.cssText = `
 				border-top: 1px;
 				line-height: 1;
 				${done ?'margin-top: .5rem;' : ''}
 			`;
-			SimpleGesture.drawArrows(k.replace(/^.:/, ''), arrows);
-			let i = gesture.split('-').length + 1;
-			for (const a of arrows.childNodes) {
+			SimpleGesture.drawArrows(k.replace(/^.:/, '').split('-'), label);
+			let i = arrows.length + 1;
+			for (const a of label.childNodes) {
 				if (0 < --i) {
 					continue;
 				}
@@ -635,8 +639,8 @@ if (typeof browser === 'undefined') {
 			const text = document.createElement('SPAN');
 			text.style.opacity = v === match ? 1 : SUGGEST_OPACITY;
 			text.textContent = name
-			arrows.appendChild(text);
-			f.appendChild(arrows);
+			label.appendChild(text);
+			f.appendChild(label);
 			done = true;
 		}
 		toastMain.replaceChildren(f);

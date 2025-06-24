@@ -27,8 +27,8 @@ const createConfirmDlg = () => {
 const fixSize = () => {
 	if (!visualViewport) return;
 	const vv = visualViewport;
-	dlg.style.transform = `translate(${vv.offsetLeft}px, ${vv.offsetTop}px) scale(1 / ${vv.scale}`;
-	dlg.style.maxWidth = `${vv.width / vv.scale}px`;
+	dlg.style.transform = `translate(${vv.offsetLeft / 2}px, ${vv.offsetTop / 2}px) scale(${1 / vv.scale})`;
+	dlg.style.maxWidth = `${vv.width}px`;
 }
 
 export const confirm = (text, yes = 'OK', no = 'Cancel') => {
