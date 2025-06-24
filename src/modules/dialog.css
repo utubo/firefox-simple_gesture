@@ -30,9 +30,9 @@
 	color: #592acb;
 	cursor: pointer;
 	display: inline-block;
-	margin-left: 2em;
-	text-align: center;
-	min-width: 5em;
+	font-size: .8em;
+	font-weight: 500;
+	margin: 0 1em;
 }
 @keyframes fadeIn {
 	from { opacity: 0; }
