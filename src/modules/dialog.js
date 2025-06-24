@@ -1,13 +1,14 @@
+'use strict';
+
 let dlg = null;
 let msg = null;
 let yesBtn = null;
 let noBtn = null;
+let overflow = '';
 
 const createConfirmDlg = () => {
-	dlg = document.createElement('DIV');
+	dlg = document.createElement('DIALOG');
 	dlg.className = 'simplegesture-dlg';
-	const container = document.createElement('DIV');
-	container.className = 'simplegesture-dlg-container';
 	msg = document.createElement('DIV');
 	msg.className = 'simplegesture-dlg-msg';
 	const buttons = document.createElement('DIV');
@@ -18,10 +19,16 @@ const createConfirmDlg = () => {
 	noBtn.className = 'simplegesture-dlg-button';
 	buttons.appendChild(noBtn);
 	buttons.appendChild(yesBtn);
-	container.appendChild(msg);
-	container.appendChild(buttons);
-	dlg.appendChild(container);
+	dlg.appendChild(msg);
+	dlg.appendChild(buttons);
 	document.body.appendChild(dlg);
+}
+
+const fixSize = () => {
+	if (!visualViewport) return;
+	const vv = visualViewport;
+	dlg.style.transform = `translate(${vv.offsetLeft}px, ${vv.offsetTop}px) scale(1 / ${vv.scale}`;
+	dlg.style.maxWidth = `${vv.width / vv.scale}px`;
 }
 
 export const confirm = (text, yes = 'OK', no = 'Cancel') => {
@@ -29,8 +36,9 @@ export const confirm = (text, yes = 'OK', no = 'Cancel') => {
 	msg.textContent = text;
 	yesBtn.textContent = yes;
 	noBtn.textContent = no;
-	dlg.style.opacity = 0;
-	dlg.style.display = 'flex';
+	fixSize();
+	overflow = document.documentElement.style.overflow;
+	document.documentElement.style.overflow = 'hidden';
 	setTimeout(() => { dlg.style.opacity = 1; }, 0);
 	return new Promise(resolve => {
 		yesBtn.onclick = () => {
@@ -45,11 +53,12 @@ export const confirm = (text, yes = 'OK', no = 'Cancel') => {
 			close();
 			resolve(false);
 		}
+		dlg.showModal();
 	});
 }
 
 const close = () => {
-	dlg.style.opacity = 0;
-	setTimeout(() => { dlg.style.display = 'none'; }, 500);
+	document.documentElement.style.overflow = overflow;
+	dlg.close();
 }
 

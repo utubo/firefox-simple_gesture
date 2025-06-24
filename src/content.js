@@ -695,7 +695,6 @@ if (typeof browser === 'undefined') {
 	};
 
 	// START HERE ! ------
-	//VV.addEventListener('resize', fixSize); this is called too many times, so use 'touchdown' instead of 'resize'.
 	await SimpleGesture.loadIni();
 	if (SimpleGesture.ini.blacklist) {
 		for (const urlPattern of SimpleGesture.ini.blacklist) {
@@ -710,5 +709,7 @@ if (typeof browser === 'undefined') {
 		fixToastPosition();
 		onTouchMove(e);
 	});
+	// 'resize' is called too many times, so use 'touchstart' instead of 'resize'.
+	// VV.addEventListener('resize', fixSize);
 })();
 

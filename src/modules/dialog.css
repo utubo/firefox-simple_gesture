@@ -1,41 +1,27 @@
 .simplegesture-dlg {
 	align-items: center;
-	background: #0008;
-	display: none;
-	inset: 0;
-	justify-content: center;
-	opacity: 0;
-	position: fixed;
-	text-align: center;
-	transition: opacity .5s;
-	z-index: 2;
-	@media (prefers-color-scheme: dark) {
-		background: #000a;
-	}
-}
-.simplegesture-dlg-container {
-	align-items: center;
 	background: #f9f9fa;
+	border: none;
 	border-radius: .5rem;
 	color: #15141a;
-	display: flex;
 	flex-direction: column;
-	margin: 1rem;
-	max-height: calc(100% - 4rem);
-	min-width: 40vw;
+	/* font-size: clamp(1em, 4vmin, 10em); */
+	font-size: 1rem;
+	outline: none;
 	overflow: auto;
 	padding: 1rem;
+	transform-origin: left top;
 	white-space: pre;
-	@media (prefers-color-scheme: dark) {
-		background: #2b2a33;
-		color: #fbfbfe;
-	}
+}
+.simplegesture-dlg::backdrop {
+	background: #0008;
 }
 .simplegesture-dlg-msg {
 	display: inline-block;
 	text-align: left;
 }
 .simplegesture-dlg-buttons {
+	margin-top: 1rem;
 	text-align: right;
 	width: 100%;
 }
@@ -44,10 +30,34 @@
 	cursor: pointer;
 	display: inline-block;
 	margin-left: 2rem;
-	margin-top: 1rem;
 	text-align: center;
 	min-width: 5rem;
-	@media (prefers-color-scheme: dark) {
+}
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+.simplegesture-dlg[open] {
+	animation-name: fadeIn;
+	animation-fill-mode: forwards;
+	animation-duration: 200ms;
+	animation-timing-function: ease-out;
+}
+@media (prefers-color-scheme: dark) {
+	.simplegesture-dlg {
+		background: #42414d;
+		color: #fbfbfe;
+	}
+	.simplegesture-dlg::backdrop {
+		background: #000a;
+	}
+	.simplegesture-dlg-button {
 		color: #cb9eff;
 	}
 }
+@media (hover: hover) and (pointer: fine) {
+	.simplegesture-dlg {
+		font-size: 1rem;
+	}
+}
+
