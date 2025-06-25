@@ -372,16 +372,16 @@ if (typeof browser === 'undefined') {
 		// check double tap
 		if (SimpleGesture.isNowaitSingleTap()) {
 			arrows = ['S'];
-		} else {
-			// single tap with delay
-			singleTap.timer = setTimeout(() => {
-				if (!arrows?.length) {
-					arrows = ['S'];
-					onTouchEnd(e);
-				}
-			}, SimpleGesture.ini.doubleTapMsec);
-			return true
+			return;
 		}
+		// single tap with delay
+		singleTap.timer = setTimeout(() => {
+			if (!arrows?.length) {
+				arrows = ['S'];
+				onTouchEnd(e);
+			}
+		}, SimpleGesture.ini.doubleTapMsec);
+		return true
 	};
 
 	const setupFingers = e => {
