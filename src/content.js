@@ -271,6 +271,14 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
+	const onCancel = e => {
+		clearTimeout(timer);
+		clearTimeout(showToastTimer);
+		hideToast();
+		arrows = null;
+		touchEndTime = 0;
+	};
+
 	const setupStartPoint = async (x, y) => {
 		if (x < edgeWidth) {
 			startPoint = 'L:';
@@ -658,7 +666,7 @@ if (typeof browser === 'undefined') {
 			target.addEventListener('touchstart', events.start, true);
 			target.addEventListener('touchmove', events.move, true);
 			target.addEventListener('touchend', events.end, true);
-			target.addEventListener('touchcancel', events.end, true);
+			target.addEventListener('touchcancel', events.cancel, true);
 		} else {
 			// for test on Desktop
 			target.addEventListener('mousedown', events.start, true);
@@ -708,7 +716,7 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
+	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd, cancel: onCancel });
 	VV.addEventListener('scroll', e => {
 		fixToastPosition();
 		onTouchMove(e);

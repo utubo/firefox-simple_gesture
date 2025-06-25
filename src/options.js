@@ -347,7 +347,7 @@ try {
 			updateGesture({ arrows: [CLEAR_GESTURE] });
 			history.back();
 			safePreventDefault(e);
-		}, move: () => {}, end: () => {} });
+		}, move: () => {}, end: () => {}, cancel: () => {}, });
 	};
 
 	// inject settings-page behavior
@@ -585,7 +585,8 @@ try {
 					$strokeSize.value = SimpleGesture.ini.strokeSize;
 				}
 				history.back();
-			}
+			},
+			cancel: () => {},
 		});
 		byId('timeoutAndStrokeSize').addEventListener('click', e => {
 			if (e.target.tagName === 'INPUT') return;
@@ -923,7 +924,8 @@ try {
 		end: e => {
 			history.back();
 			safePreventDefault(e);
-		}
+		},
+		cancel: () => {},
 	});
 
 	// control Back button
