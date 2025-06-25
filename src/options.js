@@ -116,14 +116,6 @@ try {
 
 	const findCustomGesture = id => exData.customGestureList.find(c => c.id === id);
 
-	/**
-	 * e.g.
-	 * 'T:2:L-R' to ['T', '2', 'L-R']
-	 * 'T:L-R' to ['T', '', 'L-R']
-	 * '2:L-R' to ['', '2', 'L-R']
-	 * 'U-D' to ['', '', 'U-D']
-	 * '' to ['', '', '']
-	 */
 	const toGestureObj = s => {
 		let g = {
 			starPoint: '',
@@ -155,7 +147,7 @@ try {
 	const fadeout = elm => { ifById(elm).classList.add('transparent'); };
 	const fadein = elm => { ifById(elm).classList.remove('transparent'); };
 
-	// node --------------
+	// DOM objects --------------
 	const $templates = byId('templates');
 	const $gestureTemplate = byClass($templates, 'gesture-item');
 	const $buttonsTamplate = byClass($templates, 'custom-gesture-buttons');
