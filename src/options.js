@@ -23,6 +23,7 @@ try {
 	const TIMERS = {};
 	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
 	SimpleGesture.MAX_LENGTH += 3; // margin of cancel to input.
+	const NOP = () => {};
 
 	// fields ------------
 	let gestureNames = [];
@@ -347,7 +348,7 @@ try {
 			updateGesture({ arrows: [CLEAR_GESTURE] });
 			history.back();
 			safePreventDefault(e);
-		}, move: () => {}, end: () => {}, cancel: () => {}, });
+		}, move: NOP, end: NOP, cancel: NOP, });
 	};
 
 	// inject settings-page behavior
@@ -544,8 +545,8 @@ try {
 	};
 	dlgs.confirmDeleteDlg = {
 		targetId: '',
-		onShow: () => {},
-		onHide: () => {},
+		onShow: NOP,
+		onHide: NOP,
 		onSubmit: () => {
 			deleteCustomGesture(dlgs.confirmDeleteDlg.targetId);
 		},
@@ -586,7 +587,7 @@ try {
 				}
 				history.back();
 			},
-			cancel: () => {},
+			cancel: NOP,
 		});
 		byId('timeoutAndStrokeSize').addEventListener('click', e => {
 			if (e.target.tagName === 'INPUT') return;
@@ -634,7 +635,7 @@ try {
 			newList.appendChild(newItem);
 			blacklist.parentNode.replaceChild(newList, blacklist);
 		},
-		onHide: () => {},
+		onHide: NOP,
 		onSubmit: () => {
 			const list = [];
 			for (const input of allByClass('blacklist-input')) {
@@ -681,7 +682,7 @@ try {
 				dlgs.colorDlg.setRGB(hexRGB);
 			});
 		},
-		onHide: () => {},
+		onHide: NOP,
 		onSubmit: () => {
 			const a = Number(byId('sliderA').value) || 0;
 			const t = byId(dlgs.colorDlg.targetId);
@@ -919,13 +920,13 @@ try {
 	});
 	// Touchstart event prevents click event in Input gesture Dialog.
 	SimpleGesture.addTouchEventListener($cancelInputGesture, {
-		start: () => {},
-		move: () => {},
+		start: NOP,
+		move: NOP,
 		end: e => {
 			history.back();
 			safePreventDefault(e);
 		},
-		cancel: () => {},
+		cancel: NOP,
 	});
 
 	// control Back button
