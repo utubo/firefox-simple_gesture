@@ -70,7 +70,7 @@ if (typeof browser === 'undefined') {
 	let toastSub;
 	let isToastVisible;
 	// fast scroll
-	let fastScroll = {};
+	let fastScroll = null;
 	// others
 	let iniTimestamp = 0;
 	let exData;
