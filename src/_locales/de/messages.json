@@ -139,6 +139,21 @@
 	"openAddonSettings": {
 		"message": "Optionen"
 	},
+	"fastScroll": {
+		"message": ""
+	},
+	"disable": {
+		"message": "Deaktivieren"
+	},
+	"rightEdge": {
+		"message": "Rechter Rand"
+	},
+	"leftEdge": {
+		"message": "Linker Rand"
+	},
+	"reverse": {
+		"message": "Umkehren"
+	},
 	"timeoutAndStrokeSize": {
 		"message": "Timeout und Gestenlänge"
 	},

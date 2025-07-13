@@ -124,12 +124,6 @@
 	"toggleUserAgent": {
 		"message": "PC版サイト"
 	},
-	"openAddonSettings__label": {
-		"message": "ジェスチャの設定を開く"
-	},
-	"openAddonSettings": {
-		"message": "設定"
-	},
 	"userAgent": {
 		"message": "User-Agent"
 	},
@@ -138,6 +132,27 @@
 	},
 	"disableGesture": {
 		"message": "ジェスチャ無効/有効"
+	},
+	"openAddonSettings__label": {
+		"message": "ジェスチャの設定を開く"
+	},
+	"openAddonSettings": {
+		"message": "設定"
+	},
+	"fastScroll": {
+		"message": "高速スクロール"
+	},
+	"disable": {
+		"message": "無効"
+	},
+	"rightEdge": {
+		"message": "画面右端"
+	},
+	"leftEdge": {
+		"message": "画面左端"
+	},
+	"reverse": {
+		"message": "反転"
 	},
 	"timeoutAndStrokeSize": {
 		"message": "タイムアウトと辺のサイズ"

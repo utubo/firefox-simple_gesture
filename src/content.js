@@ -69,6 +69,8 @@ if (typeof browser === 'undefined') {
 	let toastMain;
 	let toastSub;
 	let isToastVisible;
+	// fast scroll
+	let fastScroll = {};
 	// others
 	let iniTimestamp = 0;
 	let exData;
@@ -208,10 +210,12 @@ if (typeof browser === 'undefined') {
 		} else {
 			arrows = [];
 			doubleTap.count = 1;
+			startPoint = '';
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
 		la = null;
 		setupStartPoint(lx, ly);
+		if (setupFastScroll()) return;
 		fingersNum = 1;
 		fingers = '';
 		if (!setupFingers(e)) return;
@@ -223,6 +227,10 @@ if (typeof browser === 'undefined') {
 	};
 
 	const onTouchMove = e => {
+		if (fastScroll) {
+			doFastScroll(e);
+			return;
+		}
 		if (arrows === null) return;
 		if (arrows.length > SimpleGesture.MAX_LENGTH) return;
 		if (!arrows && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
@@ -253,6 +261,7 @@ if (typeof browser === 'undefined') {
 
 	const onTouchEnd = e => {
 		try {
+			fastScroll = null;
 			touchEndTime = Date.now();
 			clearTimeout(timer);
 			clearTimeout(showToastTimer);
@@ -280,7 +289,9 @@ if (typeof browser === 'undefined') {
 	};
 
 	const setupStartPoint = async (x, y) => {
-		if (x < edgeWidth) {
+		if (startPoint) {
+			// nop
+		} else if (x < edgeWidth) {
 			startPoint = 'L:';
 		} else if (x > lastInnerWidth - edgeWidth) {
 			startPoint = 'R:';
@@ -403,6 +414,29 @@ if (typeof browser === 'undefined') {
 			fingers = `${f}:`;
 		}
 		return true;
+	};
+
+	// fast scroll --------------
+	const setupFastScroll = () => {
+		if (SimpleGesture.ini.fastScroll !== startPoint[0]) return;
+		const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+		let z = h / lastInnerHeight;
+		if (z <= 1) return;
+		if (SimpleGesture.ini.fastScrollRv) {
+			z = -z;
+		}
+		fastScroll = {
+			y: ly, top: window.scrollY, left: window.scrollX, z: z,
+		};
+		return true;
+	};
+
+	const doFastScroll = e => {
+		const [_, y] = SimpleGesture.getXY(e);
+		window.scrollTo(
+			fastScroll.left,
+			fastScroll.top + (y - fastScroll.y) * fastScroll.z
+		);
 	};
 
 	// toast --------------

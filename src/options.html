@@ -90,6 +90,7 @@
 
 		<div class="page" id="otherGestures">
 			<div class="page-header i18n">otherGestures</div>
+
 			<div class="gesture-list" data-gestures="toggleUserAgent"></div>
 			<div class="sub-item user-agent-status" data-parent="toggleUserAgent_caption">
 				<label for="userAgentStatus" class="checkbox-label">
@@ -102,7 +103,25 @@
 				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
 				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
 			</div>
+
 			<div class="gesture-list" data-gestures="disableGesture openAddonSettings"></div>
+			<div class="item experimental">
+				<label class="caption icon-flask i18n">fastScroll</label>
+				<div class="sub-item">
+					<select id="fastScroll" class="js-binding">
+						<option value="" class="caption i18n" selected>disable</option>
+						<option value="R" class="caption i18n">rightEdge</option>
+						<option value="L" class="caption i18n">leftEdge</option>
+					</select>
+				</div>
+				<div class="sub-item">
+					<label for="fastScrollRv" class="checkbox-label">
+						<span class="with-checkbox sub-caption i18n">reverse</span>
+						<input id="fastScrollRv" class="checkbox js-binding" type="checkbox" value="true">
+						<label for="fastScrollRv" class="checkbox-image"></label>
+					</label>
+				</div>
+			</div>
 		</div>
 
 		<div class="page" id="customGestures">

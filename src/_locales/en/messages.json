@@ -139,6 +139,21 @@
 	"openAddonSettings": {
 		"message": "Settings"
 	},
+	"fastScroll": {
+		"message": "Fast scroll"
+	},
+	"disable": {
+		"message": "Disable"
+	},
+	"rightEdge": {
+		"message": "Right edge"
+	},
+	"leftEdge": {
+		"message": "left edge"
+	},
+	"reverse": {
+		"message": "Reverse"
+	},
 	"timeoutAndStrokeSize": {
 		"message": "Timeout and Stroke size"
 	},

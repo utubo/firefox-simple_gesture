@@ -139,6 +139,21 @@
 	"openAddonSettings": {
 		"message": "设置"
 	},
+	"fastScroll": {
+		"message": "快速滚动"
+	},
+	"disable": {
+		"message": "禁用"
+	},
+	"rightEdge": {
+		"message": "右侧边缘"
+	},
+	"leftEdge": {
+		"message": "左侧边缘"
+	},
+	"reverse": {
+		"message": "反向"
+	},
 	"timeoutAndStrokeSize": {
 		"message": "超时和描边尺寸"
 	},
