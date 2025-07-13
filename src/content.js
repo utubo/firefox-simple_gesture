@@ -418,6 +418,7 @@ if (typeof browser === 'undefined') {
 
 	// fast scroll --------------
 	const setupFastScroll = () => {
+		if (!startPoint[0]) return;
 		if (SimpleGesture.ini.fastScroll !== startPoint[0]) return;
 		const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 		let z = h / lastInnerHeight;
