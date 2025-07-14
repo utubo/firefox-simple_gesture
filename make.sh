@@ -7,7 +7,7 @@ cd $SCRIPT_DIR/src
 for_beta () {
 	v=$(grep -e '"version": ".*beta"' manifest.json)
 	echo $v
-	if [ -n "$v" ]; then
+	if [ -n "$v" ] || [ -n "$MAKE_XPI_BETA" ]; then
 		sed -e 's/beta//' -e 's/@/_beta@/' manifest.json > manifest.json.beta
 		mv -f manifest.json.beta manifest.json
 		sed -e 's/#afc639/#9059ff/' icon64.svg > icon64.svg.beta
