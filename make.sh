@@ -2,21 +2,32 @@
 
 CURRENT_DIR=$(pwd)
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-# manifest_firefox
 cd $SCRIPT_DIR/src
-zip -r ../simple-gesture.zip * -x "manifest_*.json"
-cd ..
-mv -f simple-gesture.zip simple-gesture.xpi
 
-# for Kiwi browser
-# manifest_chrome
-cd $SCRIPT_DIR/src
+for_beta () {
+	v=$(grep -e '"version": ".*beta"' manifest.json)
+	if [ -n "$v" ]; then
+		sed -e 's/beta//' -e 's/@/_beta@' manifest.json > manifest.json
+	fi
+}
+
+# Backup manifest.json
 mv manifest.json manifest_firefox.json
-mv manifest_chrome.json manifest.json
-rm -f ../simple-gesture-chrome.zip
-zip -r ../simple-gesture-chrome.zip * -x "manifest_*.json"
-mv manifest.json manifest_chrome.json
-mv manifest_firefox.json manifest.json
+
+# Firefox
+cp -p manifest_firefox.json manifest.json
+for_beta
+zip -r ../simple-gesture.zip * -x "manifest_*.json"
+mv -f ../simple-gesture.zip ../simple-gesture.xpi
+
+# Chrome
+cp -p manifest_chrome.json manifest.json
+for_beta
+zip -r ../simple-gesture.zip * -x "manifest_*.json"
+mv -f ../simple-gesture.zip ../simple-gesture-chrome.zip
+
+# Restore manifest.json
+mv -f manifest_firefox.json manifest.json
 
 cd $CURRENT_DIR
 
