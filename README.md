@@ -5,6 +5,9 @@ This is an add-on that adds simple touch gestures for Firfox for Android.
 ## More info and Installation on Firefox for Android
 https://addons.mozilla.org/firefox/addon/simple-gesture/
 
+## Beta version
+If you are willing to help test the [Beta version](https://addons.mozilla.org/addon/simple-gesture-beta/)
+
 ## For other browsers
 > [!CAUTION]
 > This is an add-on for Firefox for Android.
