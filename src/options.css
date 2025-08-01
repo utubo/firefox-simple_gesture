@@ -803,3 +803,11 @@ textarea:selection, input:selection {
 		background: #75747a;
 	}
 }
+
+/* for Beta version */
+.beta {
+	.splash-icon {
+		filter: hue-rotate(200deg);
+	}
+}
+

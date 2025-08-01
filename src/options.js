@@ -11,6 +11,7 @@ if (!browser.storage.local.set) {
 try {
 
 	// const -------------
+	const manifest = browser.runtime.getManifest()
 	const CUSTOM_GESTURE_PREFIX = '$';
 	const INSTEAD_OF_EMPTY = {
 		userAgent: navigator.userAgent.replace(/Android[^;\)]*/, 'X11').replace(/Mobile|Tablet/, 'Linux'),
@@ -118,7 +119,7 @@ try {
 
 	const toGestureObj = s => {
 		let g = {
-			starPoint: '',
+			startPoint: '',
 			fingers: '',
 			arrows: [],
 		}
@@ -841,7 +842,6 @@ try {
 		link.click();
 	};
 	const setupOtherOptions = async () => {
-		byId('splashVersion').textContent = 'version ' + browser.runtime.getManifest().version;
 		for (const caption of allByClass('i18n')) {
 			caption.textContent = getMessage(caption.textContent);
 		}
@@ -994,12 +994,17 @@ try {
 		const item = parentByClass(e.target, 'link-item');
 		item?.classList?.add('active');
 	};
-	const unhighligtItem = e => {
+	const unhighligtItem = () => {
 		for (const item of allByClass('active')) {
 			item.classList.remove('active');
 		}
 	};
 	const setupIndexPage = () => {
+		const v = manifest.version_name ?? manifest.version;
+		byId('splashVersion').textContent = `version ${v}`
+		if (v.includes('beta')) {
+			document.body.classList.add('beta');
+		}
 		const indexPage = byId('index');
 		indexPage.addEventListener('click', e => {
 			const item = parentByClass(e.target, 'link-item');
@@ -1025,7 +1030,7 @@ try {
 		setTimeout(() => { cover.remove(); }, 500);
 	};
 	const setupSettingItems = async () => {
-		document.body.classList.add(`mv${browser.runtime.getManifest().manifest_version}`);
+		document.body.classList.add(`mv${manifest.manifest_version}`);
 		setupGestureList();
 		setupEditDlg();
 		setupAdjustmentDlg();
