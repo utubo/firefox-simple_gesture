@@ -172,7 +172,7 @@ if (typeof browser === 'undefined') {
 			}
 			browser.tabs.remove(ids);
 		},
-		closeAll: async () => {
+		closeAll: async arg => {
 			exec.closeIf(arg, () => true);
 		},
 		closeOthers: async arg => {
@@ -242,7 +242,7 @@ if (typeof browser === 'undefined') {
 		prevTab: async arg => {
 			prevOrNextTab(arg, i => -i);
 		},
-		nextTab: async (arg, f) => {
+		nextTab: async arg => {
 			prevOrNextTab(arg, i => i);
 		},
 		lastUsedTab: async () => {
