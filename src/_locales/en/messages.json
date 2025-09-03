@@ -94,6 +94,9 @@
 	"New_tab_opened": {
 		"message": "New tab opened"
 	},
+	"confirmCloseTabs": {
+		"message": "Confirm before closing multiple tabs"
+	},
 	"Switch": {
 		"message": "SWITCH"
 	},

@@ -94,6 +94,9 @@
 	"New_tab_opened": {
 		"message": "已打开新标签页"
 	},
+	"confirmCloseTabs": {
+		"message": "关闭多个标签页时进行确认"
+	},
 	"Switch": {
 		"message": "切换"
 	},

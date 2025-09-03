@@ -94,6 +94,9 @@
 	"New_tab_opened": {
 		"message": "新しいタブを開きました"
 	},
+	"confirmCloseTabs": {
+		"message": "複数のタブを閉じるときに確認する"
+	},
 	"Switch": {
 		"message": "切り替え"
 	},
