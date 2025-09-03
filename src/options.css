@@ -10,6 +10,7 @@
 	--submit: #302962;
 	--submit-fg: #f9f9fa;
 	--red: #c50042;
+	--gray: #bbb;
 }
 body {
 	background: var(--bg-color);
@@ -261,7 +262,7 @@ textarea:selection, input:selection {
 	display: none;
 }
 .checkbox-image {
-	background: #bbb;
+	background: var(--gray);
 	border-radius: .4rem;
 	content: '';
 	display: inline-block;
@@ -630,6 +631,25 @@ textarea:selection, input:selection {
 	opacity: .3;
 }
 
+/* tutorial */
+.guide {
+	background: var(--gray);
+	border-radius: 4pt;
+	margin: 1rem;
+	padding: 1rem;
+}
+.hasIni .guide {
+	display: none;
+}
+.guide::before {
+	content: '💡';
+	display: inline;
+}
+.good {
+	font-size: 50vmin;
+	pointer-events: none;
+}
+
 /* others */
 #cover {
 	background: #fff;
@@ -752,6 +772,7 @@ textarea:selection, input:selection {
 		--button: #52525e;
 		--submit: #7542e5;
 		--red: #ff9aa2;
+		--gray: #666;
 	}
 	.page-header, h2 {
 		border-color: #42414d;
@@ -761,9 +782,6 @@ textarea:selection, input:selection {
 	}
 	.color-preview {
 		border-color: #999;
-	}
-	.checkbox-image {
-		background: #666;
 	}
 	.checkbox:checked + .checkbox-image {
 		background: #86a;

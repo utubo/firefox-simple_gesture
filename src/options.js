@@ -27,6 +27,7 @@ try {
 	const NOP = () => {};
 
 	// fields ------------
+	let hasIni = false;
 	let gestureNames = [];
 	let target = null;
 	let minX;
@@ -220,6 +221,14 @@ try {
 			}
 		}
 		toggleDoubleTapNote();
+		// tutorial
+		if (!hasIni) {
+			hasIni = true;
+			document.body.classList.add('hasIni');
+			const good = byId('good');
+			fadein(good);
+			setTimeout(() => fadeout(good), 800);
+		}
 	};
 
 	const toggleDoubleTapNote = () => {
@@ -1005,6 +1014,9 @@ try {
 		if (v.includes('beta')) {
 			document.body.classList.add('beta');
 		}
+		if (hasIni) {
+			document.body.classList.add('hasIni');
+		}
 		const indexPage = byId('index');
 		indexPage.addEventListener('click', e => {
 			const item = parentByClass(e.target, 'link-item');
@@ -1079,8 +1091,15 @@ try {
 	// START HERE ! ------
 	(async() => {
 		try {
-			SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
-			exData = (await storageValue('simple_gesture_exdata')) || exData;
+			const ini = (await storageValue('simple_gesture'));
+			hasIni = !!ini;
+			if (hasIni) {
+				SimpleGesture.ini = ini;
+				exData = (await storageValue('simple_gesture_exdata'));
+			} else {
+				// Save the ini to prevent to duplicate the tutorial.
+				saveIni();
+			}
 			await setupSettingItems();
 		} catch (e) {
 			addErrorLog(e);

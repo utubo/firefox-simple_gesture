@@ -464,5 +464,10 @@ if (typeof browser === 'undefined') {
 			);
 		}
 	}
+
+	// at First install
+	if (await iniValue('gestures', null) === null) {
+		exec.openAddonSettings();
+	}
 })();
 
