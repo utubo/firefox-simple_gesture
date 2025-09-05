@@ -154,7 +154,8 @@ if (typeof browser === 'undefined') {
 				if (filter(tab)) ids.push(tab.id);
 			const count = ids.length;
 			if (!count) return;
-			if (1 < count) {
+			const confirmCloseTabs = await iniValue('confirmCloseTabs', true);
+			if (1 < count && confirmCloseTabs) {
 				await browser.tabs.insertCSS(
 					arg.tab.id,
 					{ file: '/modules/dialog.css' }

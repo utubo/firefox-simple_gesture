@@ -33,6 +33,7 @@ if (typeof browser === 'undefined') {
 		blacklist: [],
 		disableWhileZoomedIn: false,
 		suggestNext: true,
+		confirmCloseTabs: true,
 	};
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
