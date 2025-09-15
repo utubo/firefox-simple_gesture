@@ -166,6 +166,9 @@
 	"strokeSize": {
 		"message": "Stroke size"
 	},
+	"getstureInterval": {
+		"message": "Minimum interval between two gestures"
+	},
 	"doubleTap": {
 		"message": "Double tap"
 	},

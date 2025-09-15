@@ -34,6 +34,7 @@ if (typeof browser === 'undefined') {
 		disableWhileZoomedIn: false,
 		suggestNext: true,
 		confirmCloseTabs: true,
+		interval: 0,
 	};
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
@@ -75,6 +76,7 @@ if (typeof browser === 'undefined') {
 	// others
 	let iniTimestamp = 0;
 	let exData;
+	let intervalSleep = false;
 	const ACCEPT_SINGLE_TAP = -1;
 	const doubleTap = { timer: null, count: ACCEPT_SINGLE_TAP };
 	const singleTap = { timer: null };
@@ -200,6 +202,7 @@ if (typeof browser === 'undefined') {
 
 	// touch-events ------
 	const onTouchStart = e => {
+		if (intervalSleep) return;
 		fixSize();
 		if (!size) return;
 		touchStartTime = Date.now();
@@ -275,6 +278,12 @@ if (typeof browser === 'undefined') {
 			SimpleGesture.doCommand(g);
 			e.stopPropagation();
 			e.cancelable && e.preventDefault();
+			if (SimpleGesture.ini.interval) {
+				intervalSleep = true;
+				setTimeout(() => {
+					intervalSleep = false;
+				}, SimpleGesture.ini.interval);
+			}
 		} finally {
 			arrows = null;
 			//target = null; Keep target for Custom gesture

@@ -166,6 +166,9 @@
 	"strokeSize": {
 		"message": "描边尺寸"
 	},
+	"getstureInterval": {
+		"message": "两个手势之间的最小间隔"
+	},
 	"doubleTap": {
 		"message": "双击"
 	},

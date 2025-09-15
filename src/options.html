@@ -108,7 +108,7 @@
 			<div class="sub-item" data-parent="toggleUserAgent_item">
 				<label for="userAgent" class="sub-caption i18n">UserAgent</label>
 				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
-				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
+				<datalist id="userAgentList"><option id="defaultUserAgent"/></datalist>
 			</div>
 
 			<div class="gesture-list" data-gestures="disableGesture openAddonSettings"></div>
@@ -154,7 +154,13 @@
 					<input id="strokeSize" class="number-input js-binding" type="number" min="1" max="999" size="5">px
 				</div>
 			</div>
-			<div id="timeoutAndStrokeSize" class="item">
+			<div class="item">
+				<label class="caption i18n">getstureInterval</label>
+				<div class="sub-item">
+					<input id="interval" class="number-input js-binding" type="number" min="0" max="9999" size="5">ms
+				</div>
+			</div>
+			<div class="item">
 				<label class="caption i18n">doubleTap</label>
 				<div class="sub-item">
 					<label class="sub-caption i18n">doubleTapMsec</label>

@@ -163,6 +163,9 @@
 	"strokeSize": {
 		"message": "辺のサイズ"
 	},
+	"getstureInterval": {
+		"message": "ジェスチャー入力の最小間隔"
+	},
 	"timeout": {
 		"message": "タイムアウト"
 	},
