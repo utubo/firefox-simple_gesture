@@ -149,7 +149,7 @@
 		"message": "Pull to Refresh"
 	},
 	"pullToRefreshNote": {
-		"message": "Please disable the default pull-down to refresh"
+		"message": "Please disable the default Pull to Refresh"
 	},
 	"disable": {
 		"message": "Disable"
