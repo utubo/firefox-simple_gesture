@@ -145,6 +145,12 @@
 	"fastScroll": {
 		"message": "快速滚动"
 	},
+	"pullToRefresh": {
+		"message": "下拉刷新"
+	},
+	"pullToRefreshNote": {
+		"message": "请禁用默认的下拉刷新"
+	},
 	"disable": {
 		"message": "禁用"
 	},

@@ -145,6 +145,12 @@
 	"fastScroll": {
 		"message": "高速スクロール"
 	},
+	"pullToRefresh": {
+		"message": "プルダウンで更新"
+	},
+	"pullToRefreshNote": {
+		"message": "デフォルトのプルダウンで更新は無効にしてください"
+	},
 	"disable": {
 		"message": "無効"
 	},

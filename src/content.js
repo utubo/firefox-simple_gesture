@@ -35,6 +35,7 @@ if (typeof browser === 'undefined') {
 		suggestNext: true,
 		confirmCloseTabs: true,
 		interval: 0,
+		pullToRefresh: false,
 	};
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
@@ -73,6 +74,8 @@ if (typeof browser === 'undefined') {
 	let isToastVisible;
 	// fast scroll
 	let fastScroll = null;
+	// pull to refresh
+	let enablePullToRefresh = false;
 	// others
 	let iniTimestamp = 0;
 	let exData;
@@ -228,6 +231,9 @@ if (typeof browser === 'undefined') {
 		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		restartTimer();
 		if (arrows[0] === 'W' && SimpleGesture.ini.toast) showGestureDelay();
+		if (SimpleGesture.ini.pullToRefresh) {
+			enablePullToRefresh = pullToRefreshStart()
+		}
 	};
 
 	const onTouchMove = e => {
@@ -252,6 +258,9 @@ if (typeof browser === 'undefined') {
 		la = a;
 		arrows.push(a);
 		if (executeEvent(SimpleGesture.onInput, e)) return;
+		if (enablePullToRefresh) {
+			enablePullToRefresh = pullToRefreshMove()
+		}
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
 	};
@@ -265,11 +274,14 @@ if (typeof browser === 'undefined') {
 
 	const onTouchEnd = e => {
 		try {
-			fastScroll = null;
 			touchEndTime = Date.now();
 			clearTimeout(timer);
 			clearTimeout(showToastTimer);
 			hideToast();
+			if (enablePullToRefresh && pullToRefreshEnd()) {
+				location.reload();
+				return;
+			}
 			if (setupSingleTap(e)) return;
 			if (executeEvent(SimpleGesture.onEnd, e)) return;
 			const g = getCommandByState(startPoint, fingers, arrows);
@@ -286,11 +298,13 @@ if (typeof browser === 'undefined') {
 			}
 		} finally {
 			arrows = null;
+			fastScroll = null;
+			enablePullToRefresh = false;
 			//target = null; Keep target for Custom gesture
 		}
 	};
 
-	const onCancel = e => {
+	const onCancel = () => {
 		clearTimeout(timer);
 		clearTimeout(showToastTimer);
 		hideToast();
@@ -448,6 +462,34 @@ if (typeof browser === 'undefined') {
 			fastScroll.left,
 			fastScroll.top + (y - fastScroll.y) * fastScroll.z
 		);
+	};
+
+	// pull to refresh --------------
+	const pullToRefreshStart = () => {
+		return fingersNum === 1 &&
+			!VV.offsetTop &&
+			!scrollY &&
+			!document.documentElement.scrollTop &&
+			!document.body.scrollTop;
+	};
+
+	const pullToRefreshMove = () => {
+		return arrows.lenght === 0 ||
+			arrows.length === 1 && arrows[0] === 'D'
+	};
+
+	const pullToRefreshEnd = () => {
+		return arrows.length === 1 && arrows[0] === 'D'
+	};
+
+	const pullToRefrshToast = () => {
+		const label = document.createElement('DIV');
+		label.style.cssText = `
+			border-top: 1px;
+			line-height: 1;
+		`;
+		label.textContent = getMessage('pullToRefresh');
+		return label;
 	};
 
 	// toast --------------
@@ -621,10 +663,13 @@ if (typeof browser === 'undefined') {
 			if (!g) return false;
 			list = {};
 			list[joinedArrows] = g;
-		} else if (
-			!g &&
-			!arrows[SimpleGesture.ini.toastMinStroke - 1]
-		) {
+		} else if (g) {
+			// nop
+		} else if (enablePullToRefresh) {
+			// nop
+		} else if (arrows[SimpleGesture.ini.toastMinStroke - 1]) {
+			// nop
+		} else {
 			return false;
 		}
 		setupToast();
@@ -669,6 +714,10 @@ if (typeof browser === 'undefined') {
 		const sGesture = startPoint + fGesture;
 		const f = document.createDocumentFragment();
 		let done = false;
+		if (enablePullToRefresh) {
+			f.appendChild(pullToRefrshToast());
+			done = true
+		}
 		for (const [k, v] of Object.entries(list)) {
 			if (!isMatch(k, fGesture, sGesture)) continue;
 			if (startPoint && list[startPoint + k]) continue;
@@ -679,7 +728,7 @@ if (typeof browser === 'undefined') {
 			label.style.cssText = `
 				border-top: 1px;
 				line-height: 1;
-				${done ?'margin-top: .5rem;' : ''}
+				${done ? 'margin-top: .5rem;' : ''}
 			`;
 			SimpleGesture.drawArrows(k.replace(/^.:/, '').split('-'), label);
 			let i = arrows.length + 1;

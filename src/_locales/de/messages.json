@@ -145,6 +145,12 @@
 	"fastScroll": {
 		"message": ""
 	},
+	"pullToRefresh": {
+		"message": "Pull to Refresh"
+	},
+	"pullToRefreshNote": {
+		"message": "Bitte die standardmäßige Pull-to-Refresh deaktivieren"
+	},
 	"disable": {
 		"message": "Deaktivieren"
 	},
