@@ -474,12 +474,13 @@ if (typeof browser === 'undefined') {
 	};
 
 	const pullToRefreshMove = () => {
-		return arrows.lenght === 0 ||
+		return !arrows ||
+			arrows.lenght === 0 ||
 			arrows.length === 1 && arrows[0] === 'D'
 	};
 
 	const pullToRefreshEnd = () => {
-		return arrows.length === 1 && arrows[0] === 'D'
+		return arrows && arrows[0] === 'D' && !arrows[1]
 	};
 
 	const pullToRefrshToast = () => {
