@@ -674,14 +674,15 @@ if (typeof browser === 'undefined') {
 		if (!isGestureEnabled && g !== 'disableGesture') return false;
 		joinedArrows = arrows.join('-');
 		let elms = [];
-		if (!SimpleGesture.ini.suggestNext) {
-			if (g) {
-				const list = {};
-				list[joinedArrows] = g;
-				elms = await suggestGestures(list, g);
-			}
-		} else if (arrows[SimpleGesture.ini.toastMinStroke - 1]) {
+		if (
+			SimpleGesture.ini.suggestNext &&
+			arrows[SimpleGesture.ini.toastMinStroke - 1]
+		) {
 			elms = await suggestGestures(SimpleGesture.ini.gestures, g);
+		} else if (g) {
+			const list = {};
+			list[joinedArrows] = g;
+			elms = await suggestGestures(list, g);
 		}
 		if (
 			enablePullToRefresh &&
@@ -738,28 +739,26 @@ if (typeof browser === 'undefined') {
 		const elms = [];
 		const fGesture = fingers + joinedArrows;
 		const sGesture = startPoint + fGesture;
-		if (arrows[SimpleGesture.ini.toastMinStroke - 1]) {
-			for (const [k, v] of Object.entries(list)) {
-				if (!isMatch(k, fGesture, sGesture)) continue;
-				if (startPoint && list[startPoint + k]) continue;
-				const name = await gestureName(v);
-				if (!name) continue; // for old ini-data.
-				// create element
-				const label = document.createElement('DIV');
-				SimpleGesture.drawArrows(k.replace(/^.:/, '').split('-'), label);
-				let i = arrows.length + 1;
-				for (const a of label.childNodes) {
-					if (0 < --i) {
-						continue;
-					}
-					a.style.opacity = SUGGEST_OPACITY;
+		for (const [k, v] of Object.entries(list)) {
+			if (!isMatch(k, fGesture, sGesture)) continue;
+			if (startPoint && list[startPoint + k]) continue;
+			const name = await gestureName(v);
+			if (!name) continue; // for old ini-data.
+			// create element
+			const label = document.createElement('DIV');
+			SimpleGesture.drawArrows(k.replace(/^.:/, '').split('-'), label);
+			let i = arrows.length + 1;
+			for (const a of label.childNodes) {
+				if (0 < --i) {
+					continue;
 				}
-				const text = document.createElement('SPAN');
-				text.style.opacity = v === match ? 1 : SUGGEST_OPACITY;
-				text.textContent = name
-				label.appendChild(text);
-				elms.push(label);
+				a.style.opacity = SUGGEST_OPACITY;
 			}
+			const text = document.createElement('SPAN');
+			text.style.opacity = v === match ? 1 : SUGGEST_OPACITY;
+			text.textContent = name
+			label.appendChild(text);
+			elms.push(label);
 		}
 		return elms;
 	};
