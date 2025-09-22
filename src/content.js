@@ -35,7 +35,7 @@ if (typeof browser === 'undefined') {
 		suggestNext: true,
 		confirmCloseTabs: true,
 		interval: 0,
-		pullToRefresh: false,
+		pullToRefresh: '',
 	};
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
@@ -76,6 +76,7 @@ if (typeof browser === 'undefined') {
 	let fastScroll = null;
 	// pull to refresh
 	let enablePullToRefresh = false;
+	let hidePullToRefresh = () => {};
 	// others
 	let iniTimestamp = 0;
 	let exData;
@@ -300,6 +301,7 @@ if (typeof browser === 'undefined') {
 			arrows = null;
 			fastScroll = null;
 			enablePullToRefresh = false;
+			hidePullToRefresh();
 			//target = null; Keep target for Custom gesture
 		}
 	};
@@ -474,21 +476,26 @@ if (typeof browser === 'undefined') {
 	};
 
 	const pullToRefreshMove = () => {
-		return !arrows ||
-			arrows.lenght === 0 ||
-			arrows.length === 1 && arrows[0] === 'D'
+		if (!arrows) {
+			return true;
+		} else if (!pullToRefreshEnd()) {
+			hidePullToRefresh();
+			return false;
+		} else if (SimpleGesture.ini.pullToRefresh === 'icon') {
+			SimpleGesture.mod('pullToRefresh', m => m.show());
+			SimpleGesture.mod('pullToRefresh', m => hidePullToRefresh = m.hide);
+		}
+		return true;
 	};
 
 	const pullToRefreshEnd = () => {
-		return arrows && arrows[0] === 'D' && !arrows[1]
+		return arrows?.[0] === 'D' &&
+			!arrows[1] &&
+			!getCommandByState(startPoint, fingers, arrows);
 	};
 
 	const pullToRefrshToast = () => {
 		const label = document.createElement('DIV');
-		label.style.cssText = `
-			border-top: 1px;
-			line-height: 1;
-		`;
 		label.textContent = getMessage('pullToRefresh');
 		return label;
 	};
@@ -559,7 +566,7 @@ if (typeof browser === 'undefined') {
 		toast.style.transition = 'opacity .3s';
 		fixToastSize();
 		fixToastPosition();
-		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
+		requestAnimationFrame(() => { toast.style.opacity = '1'; });
 		setTimeout(() => {
 			toast.style.transition += ',left .2s .1s, top .2s .1s';
 		}, 300);
@@ -582,6 +589,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	const hideToast = delay => {
+		hidePullToRefresh();
 		if (!toast) return;
 		if (!isToastVisible) return;
 		if (delay) {
@@ -590,7 +598,7 @@ if (typeof browser === 'undefined') {
 		}
 		clearTimeout(hideToastTimer);
 		isToastVisible = false;
-		window.requestAnimationFrame(() => { toast.style.opacity = '0'; });
+		requestAnimationFrame(() => { toast.style.opacity = '0'; });
 	};
 
 	const setupToast = () => {
@@ -615,7 +623,13 @@ if (typeof browser === 'undefined') {
 			z-index: 2147483647;
 		`; // TODO: I don't like this z-index. :(
 		toastMain = document.createElement('DIV');
-		toastMain.style.cssText = 'padding: .2em 0; line-height: 1;';
+		toastMain.style.cssText = `
+			display: flex;
+			flex-direction: column;
+			gap: .5em;
+			line-height: 1;
+			padding: .2em 0;
+		`;
 		toastSub = document.createElement('DIV');
 		toastSub.style.cssText = `
 			font-size: 60%;
@@ -656,26 +670,36 @@ if (typeof browser === 'undefined') {
 	let joinedArrows = '';
 
 	const showGestureImpl = async () => {
-		let list = SimpleGesture.ini.gestures;
 		const g = getCommandByState(startPoint, fingers, arrows);
 		if (!isGestureEnabled && g !== 'disableGesture') return false;
 		joinedArrows = arrows.join('-');
+		let elms = [];
 		if (!SimpleGesture.ini.suggestNext) {
-			if (!g) return false;
-			list = {};
-			list[joinedArrows] = g;
-		} else if (g) {
-			// nop
-		} else if (enablePullToRefresh) {
-			// nop
+			if (g) {
+				const list = {};
+				list[joinedArrows] = g;
+				elms = await suggestGestures(list, g);
+			}
 		} else if (arrows[SimpleGesture.ini.toastMinStroke - 1]) {
-			// nop
-		} else {
+			elms = await suggestGestures(SimpleGesture.ini.gestures, g);
+		}
+		if (
+			enablePullToRefresh &&
+			SimpleGesture.ini.pullToRefresh === 'text'
+		) {
+			elms.unshift(pullToRefrshToast());
+		}
+		if (!elms[0]) {
 			return false;
 		}
 		setupToast();
 		setTextSafe(toastSub, SimpleGesture.getAddnlText(startPoint, fingers));
-		return await suggestGestures(list, g);
+		const f = document.createDocumentFragment();
+		for (const e of elms) {
+			f.appendChild(e);
+		}
+		toastMain.replaceChildren(f);
+		return true;
 	};
 
 	const showGestureDelay = () => {
@@ -711,43 +735,33 @@ if (typeof browser === 'undefined') {
 	};
 
 	const suggestGestures = async (list, match) => {
+		const elms = [];
 		const fGesture = fingers + joinedArrows;
 		const sGesture = startPoint + fGesture;
-		const f = document.createDocumentFragment();
-		let done = false;
-		if (enablePullToRefresh) {
-			f.appendChild(pullToRefrshToast());
-			done = true
-		}
-		for (const [k, v] of Object.entries(list)) {
-			if (!isMatch(k, fGesture, sGesture)) continue;
-			if (startPoint && list[startPoint + k]) continue;
-			const name = await gestureName(v);
-			if (!name) continue; // for old ini-data.
-			// create element
-			const label = document.createElement('DIV');
-			label.style.cssText = `
-				border-top: 1px;
-				line-height: 1;
-				${done ? 'margin-top: .5rem;' : ''}
-			`;
-			SimpleGesture.drawArrows(k.replace(/^.:/, '').split('-'), label);
-			let i = arrows.length + 1;
-			for (const a of label.childNodes) {
-				if (0 < --i) {
-					continue;
+		if (arrows[SimpleGesture.ini.toastMinStroke - 1]) {
+			for (const [k, v] of Object.entries(list)) {
+				if (!isMatch(k, fGesture, sGesture)) continue;
+				if (startPoint && list[startPoint + k]) continue;
+				const name = await gestureName(v);
+				if (!name) continue; // for old ini-data.
+				// create element
+				const label = document.createElement('DIV');
+				SimpleGesture.drawArrows(k.replace(/^.:/, '').split('-'), label);
+				let i = arrows.length + 1;
+				for (const a of label.childNodes) {
+					if (0 < --i) {
+						continue;
+					}
+					a.style.opacity = SUGGEST_OPACITY;
 				}
-				a.style.opacity = SUGGEST_OPACITY;
+				const text = document.createElement('SPAN');
+				text.style.opacity = v === match ? 1 : SUGGEST_OPACITY;
+				text.textContent = name
+				label.appendChild(text);
+				elms.push(label);
 			}
-			const text = document.createElement('SPAN');
-			text.style.opacity = v === match ? 1 : SUGGEST_OPACITY;
-			text.textContent = name
-			label.appendChild(text);
-			f.appendChild(label);
-			done = true;
 		}
-		toastMain.replaceChildren(f);
-		return done;
+		return elms;
 	};
 
 	// uncommon modules ---

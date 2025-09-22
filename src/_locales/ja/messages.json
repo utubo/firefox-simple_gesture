@@ -151,6 +151,12 @@
 	"pullToRefreshNote": {
 		"message": "デフォルトのプルダウンで更新は無効にしてください"
 	},
+	"showIcon": {
+		"message": "アイコンを表示"
+	},
+	"showText": {
+		"message": "テキストを表示"
+	},
 	"disable": {
 		"message": "無効"
 	},

@@ -113,12 +113,15 @@
 
 			<div class="gesture-list" data-gestures="disableGesture openAddonSettings"></div>
 			<div class="item">
-				<label for="pullToRefresh" class="checkbox-label">
-					<span class="caption with-checkbox i18n">pullToRefresh</span>
-					<input id="pullToRefresh" class="checkbox js-binding" type="checkbox" value="true">
-					<label for="pullToRefresh" class="checkbox-image"></label>
-				</label>
-				<div class="note note-info i18n">pullToRefreshNote</div>
+				<label for="pullToRefresh" class="caption i18n">pullToRefresh</label>
+				<div class="sub-item">
+					<select id="pullToRefresh" class="js-binding">
+						<option value="" class="caption i18n" selected>disable</option>
+						<option value="icon" class="caption i18n">showIcon</option>
+						<option value="text" class="caption i18n">showToast</option>
+					</select>
+					<div class="note note-info i18n">pullToRefreshNote</div>
+				</div>
 			</div>
 			<div class="item experimental">
 				<label class="caption icon-flask i18n">fastScroll</label>
@@ -212,7 +215,7 @@
 					</div>
 					<div class="sub-item js-linked-suggestNext">
 						<label class="sub-caption i18n">toastMinStroke</label><!-- don't add 'for="..."' -->
-						<select id="toastMinStroke" class="number-input js-binding" data-type="number">
+						<select id="toastMinStroke" class="number-input sub-item js-binding" data-type="number">
 							<option value="1">1</option>
 							<option value="2" selected>2</option>
 							<option value="3">3</option>

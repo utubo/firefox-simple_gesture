@@ -202,6 +202,10 @@ input, textarea, select {
 	outline: none;
 	padding: .15rem;
 }
+select {
+	margin-bottom: .5rem;
+
+}
 input:focus, textarea:focus, select:focus {
 	border-color: var(--accent);
 }

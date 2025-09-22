@@ -151,6 +151,12 @@
 	"pullToRefreshNote": {
 		"message": "Bitte die standardmäßige Pull-to-Refresh deaktivieren"
 	},
+	"showIcon": {
+		"message": "Symbol anzeigen"
+	},
+	"showText": {
+		"message": "Text anzeigen"
+	},
 	"disable": {
 		"message": "Deaktivieren"
 	},

@@ -151,6 +151,12 @@
 	"pullToRefreshNote": {
 		"message": "请禁用默认的下拉刷新"
 	},
+	"showIcon": {
+		"message": "显示图标"
+	},
+	"showText": {
+		"message": "显示文本"
+	},
 	"disable": {
 		"message": "禁用"
 	},

@@ -151,6 +151,12 @@
 	"pullToRefreshNote": {
 		"message": "Please disable the default Pull to Refresh"
 	},
+	"showIcon": {
+		"message": "Show Icon"
+	},
+	"showText": {
+		"message": "Show Text"
+	},
 	"disable": {
 		"message": "Disable"
 	},
