@@ -25,13 +25,10 @@ export const show = () => {
 			z-index: 2147483647;
 		`;
 		document.body.appendChild(ptrIcon);
-		setTimeout(show, 1);
-	} else {
-		requestAnimationFrame(() => {
-			ptrIcon.style.top = '2rem';
-			ptrIcon.style.transform = 'rotateZ(0)';
-		}, 1);
+		ptrIcon.offsetHeight; // reflow for transition.
 	}
+	ptrIcon.style.top = '2rem';
+	ptrIcon.style.transform = 'rotateZ(0)';
 }
 
 export const hide = () => {
