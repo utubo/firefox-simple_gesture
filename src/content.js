@@ -482,8 +482,10 @@ if (typeof browser === 'undefined') {
 			hidePullToRefresh();
 			return false;
 		} else if (SimpleGesture.ini.pullToRefresh === 'icon') {
-			SimpleGesture.mod('pullToRefresh', m => m.show());
-			SimpleGesture.mod('pullToRefresh', m => hidePullToRefresh = m.hide);
+			SimpleGesture.mod('pullToRefresh', m => {
+				m.show();
+				hidePullToRefresh = m.hide;
+			});
 		}
 		return true;
 	};
