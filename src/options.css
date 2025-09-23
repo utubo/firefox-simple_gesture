@@ -204,7 +204,6 @@ input, textarea, select {
 }
 select {
 	margin-bottom: .5rem;
-
 }
 input:focus, textarea:focus, select:focus {
 	border-color: var(--accent);
