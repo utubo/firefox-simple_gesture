@@ -149,7 +149,7 @@
 		"message": "Pull to Refresh"
 	},
 	"pullToRefreshNote": {
-		"message": "Please disable the default Pull to Refresh"
+		"message": "To use this feature, please disable Firefox’s built-in Pull to Refresh."
 	},
 	"showIcon": {
 		"message": "Show Icon"

@@ -149,7 +149,7 @@
 		"message": "Pull to Refresh"
 	},
 	"pullToRefreshNote": {
-		"message": "Bitte die standardmäßige Pull-to-Refresh deaktivieren"
+		"message": "Um diese Funktion zu verwenden, deaktivieren Sie bitte die integrierte „Pull to Refresh“-Funktion von Firefox."
 	},
 	"showIcon": {
 		"message": "Symbol anzeigen"
