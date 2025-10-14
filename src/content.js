@@ -41,6 +41,7 @@ if (typeof browser === 'undefined') {
 	const SINGLETAP_MSEC = 200;
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const SUGGEST_OPACITY = 0.5;
+	const PULL_TO_REFRESH_DELAY = 300;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 	const vvWidth = () => VV.isDummy ? window.innerWidth : VV.width;
 	const vvHeight = () => VV.isDummy ? window.innerHeight : VV.height;
@@ -251,6 +252,9 @@ if (typeof browser === 'undefined') {
 		const dy = y - ly;
 		const absX = dx < 0 ? -dx : dx;
 		const absY = dy < 0 ? -dy : dy;
+		if (dy < 0 && enablePullToRefresh) {
+			pullToRefreshCancel();
+		}
 		if (absX < size && absY < size) return;
 		lx = x;
 		ly = y;
@@ -260,7 +264,7 @@ if (typeof browser === 'undefined') {
 		arrows.push(a);
 		if (executeEvent(SimpleGesture.onInput, e)) return;
 		if (enablePullToRefresh) {
-			enablePullToRefresh = pullToRefreshMove()
+			pullToRefreshMove()
 		}
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
@@ -280,7 +284,11 @@ if (typeof browser === 'undefined') {
 			clearTimeout(showToastTimer);
 			hideToast();
 			if (enablePullToRefresh && pullToRefreshEnd()) {
-				location.reload();
+				if (PULL_TO_REFRESH_DELAY < touchEndTime - touchStartTime) {
+					location.reload();
+				} else {
+					pullToRefreshCancel();
+				}
 				return;
 			}
 			if (setupSingleTap(e)) return;
@@ -300,8 +308,7 @@ if (typeof browser === 'undefined') {
 		} finally {
 			arrows = null;
 			fastScroll = null;
-			enablePullToRefresh = false;
-			hidePullToRefresh();
+			pullToRefreshCancel();
 			//target = null; Keep target for Custom gesture
 		}
 	};
@@ -472,22 +479,30 @@ if (typeof browser === 'undefined') {
 			!VV.offsetTop &&
 			!scrollY &&
 			!document.documentElement.scrollTop &&
-			!document.body.scrollTop;
+			!document.body.scrollTop &&
+			!isScrolled(target)
 	};
+
+	const isScrolled = e => {
+		return !e ? false : e.scrollTop || isScrolled(e.parentNode);
+	}
+
+	const pullToRefreshCancel = () => {
+		enablePullToRefresh = false
+		hidePullToRefresh();
+	}
 
 	const pullToRefreshMove = () => {
 		if (!arrows) {
-			return true;
+			// NOP
 		} else if (!pullToRefreshEnd()) {
-			hidePullToRefresh();
-			return false;
+			pullToRefreshCancel();
 		} else if (SimpleGesture.ini.pullToRefresh === 'icon') {
 			SimpleGesture.mod('pullToRefresh', m => {
 				m.show();
 				hidePullToRefresh = m.hide;
 			});
 		}
-		return true;
 	};
 
 	const pullToRefreshEnd = () => {
@@ -496,7 +511,7 @@ if (typeof browser === 'undefined') {
 			!getCommandByState(startPoint, fingers, arrows);
 	};
 
-	const pullToRefrshToast = () => {
+	const pullToRefreshToast = () => {
 		const label = document.createElement('DIV');
 		label.textContent = getMessage('pullToRefresh');
 		return label;
@@ -690,7 +705,7 @@ if (typeof browser === 'undefined') {
 			enablePullToRefresh &&
 			SimpleGesture.ini.pullToRefresh === 'text'
 		) {
-			elms.unshift(pullToRefrshToast());
+			elms.unshift(pullToRefreshToast());
 		}
 		if (!elms[0]) {
 			return false;
