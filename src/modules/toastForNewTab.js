@@ -4,6 +4,7 @@ let mainText = null;
 let link = null;
 let tabId = null;
 let hideTimer = null;
+let showTimer = null;
 const VV = window.visualViewport || {
 	isDummy: true, offsetLeft: 0, offsetTop: 0, scale: 1
 };
@@ -14,48 +15,6 @@ const create = () => {
 	if (toast) {
 		return;
 	}
-	toast = document.createElement('DIV');
-	toast.style.cssText = `
-		all: initial;
-		bottom: 0;
-		display: inline-block;
-		left: 0;
-		opacity: 0;
-		position: absolute;
-		transition-duration: .2s;
-		transform-origin: center;
-		transition-property: opacity, transform;
-	`;
-	const content = document.createElement('DIV');
-	const isDark = !!matchMedia('(prefers-color-scheme: dark)').matches;
-	content.style.cssText = `
-		background: ${isDark ? '#cfcfd8' : '#52525e'};
-		border-radius: 7px;
-		box-shadow: 0 8px 8px #0002;
-		color: ${isDark ? '#15141a' : '#fbfbfe'};
-		display: flex;
-		font-size: 14px;
-		font-weight: 450;
-		justify-content: space-between;
-		line-height: 19px;
-		overflow: hidden;
-		padding: 15px 24px;
-		text-align: left;
-	`;
-	content.addEventListener('click', () => {
-		toast.style.display = 'none';
-		browser.runtime.sendMessage(JSON.stringify({ command: 'showTab', tabId: tabId}));
-	});
-	mainText = document.createElement('SPAN');
-	content.appendChild(mainText);
-	link = document.createElement('SPAN');
-	link.style.cssText = `
-		color: ${isDark ? '#592acb' : '#cb9eff'};
-		font-weight: 500;
-		text-align: right;
-	`;
-	content.appendChild(link);
-	toast.attachShadow({ mode: 'open' }).appendChild(content);
 	container = document.createElement('DIV');
 	container.style.cssText = `
 		all: initial;
@@ -68,7 +27,47 @@ const create = () => {
 		width: 100%;
 		z-index: 2147483647;
 	`;
-	container.appendChild(toast)
+	const isDark = !!matchMedia('(prefers-color-scheme: dark)').matches;
+	toast = document.createElement('DIV');
+	toast.style.cssText = `
+		background: ${isDark ? '#cfcfd8' : '#52525e'};
+		border-radius: 7px;
+		bottom: 0;
+		box-shadow: 0 8px 8px #0002;
+		box-sizing: border-box;
+		color: ${isDark ? '#15141a' : '#fbfbfe'};
+		display: inline-flex;
+		font-size: 14px;
+		font-weight: 450;
+		justify-content: space-between;
+		left: 0;
+		line-height: 19px;
+		opacity: 0;
+		overflow: hidden;
+		padding: 15px 24px;
+		position: absolute;
+		text-align: left;
+		transform-origin: center;
+		transition-duration: .2s;
+		transition-property: opacity, transform;
+	`;
+	toast.addEventListener('click', () => {
+		container.style.display = 'none';
+		browser.runtime.sendMessage(JSON.stringify({ command: 'showTab', tabId: tabId}));
+	});
+	mainText = document.createElement('SPAN');
+	mainText.style.cssText = `
+		flex-glow: 1;
+	`;
+	link = document.createElement('SPAN');
+	link.style.cssText = `
+		color: ${isDark ? '#592acb' : '#cb9eff'};
+		font-weight: 500;
+		text-align: right;
+	`;
+	toast.appendChild(mainText);
+	toast.appendChild(link);
+	container.attachShadow({ mode: 'open' }).appendChild(toast)
 	document.body.appendChild(container);
 }
 
@@ -87,17 +86,22 @@ export const show = (
 	create();
 	mainText.textContent = text;
 	link.textContent = browser.i18n.getMessage(linkMsgId);
-	hide();
-	toast.style.display = 'block'; // re flow layout
-	setTimeout(() => {
-		fixPosition();
-		toast.style.opacity = '1';
-		toast.style.pointerEvents = 'auto';
-		toast.style.transform = calcScale(1);
-		container.style.pointerEvents = 'auto';
-	}, 200);
 	clearTimeout(hideTimer);
-	hideTimer = setTimeout(hide, 2500);
+	clearTimeout(showTimer);
+	hide();
+	container.style.display = 'block';
+	showTimer = setTimeout(() => {
+		fixPosition();
+		container.style.pointerEvents = 'auto';
+		toast.style.opacity = '1';
+		toast.style.transform = calcScale(1);
+	}, 200);
+	hideTimer = setTimeout(() => {
+		hide();
+		hideTimer = setTimeout(() => {
+			container.style.display = 'none';
+		}, 200)
+	}, 2500);
 }
 
 const fixPosition = () => {
@@ -112,7 +116,6 @@ const fixPosition = () => {
 const hide = () => {
 	container.style.pointerEvents = 'none';
 	toast.style.opacity = '0';
-	toast.style.pointerEvents = 'none';
 	toast.style.transform = calcScale(0.8);
 }
 
