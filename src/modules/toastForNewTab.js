@@ -108,7 +108,7 @@ const fixPosition = () => {
 	container.style.top = `${VV.offsetTop}px`;
 	container.style.left = `${VV.offsetLeft}px`
 	container.style.height = `${vvHeight() - 50 / VV.scale}px`;
-	const w = vvWidth() * VV.scale - 48;
+	const w = vvWidth() * VV.scale * 0.9;
 	toast.style.left = `${(vvWidth() - w) / 2}px`;
 	toast.style.width = `${w}px`;
 }
