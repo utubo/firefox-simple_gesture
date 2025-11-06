@@ -1,13 +1,5 @@
 'use strict';
 
-if (!browser.storage.local.set) {
-	browser.storage.local = {
-		...browser.storage.local,
-		set: obj => new Promise(resolve => { storageOrg.local.set(obj, resolve); }),
-		remove: key => new Promise(resolve => { storageOrg.local.remove(key, resolve); }),
-	};
-}
-
 try {
 
 	// const -------------
