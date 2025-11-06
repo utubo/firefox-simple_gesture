@@ -4,7 +4,7 @@ if (typeof browser === 'undefined') {
 	browser = chrome;
 	browser.storage = {
 		local: {
-			get: key => new Promise(resolve => { chromeOrg.storage.local.get(key, resolve); }),
+			get: key => new Promise(resolve => { strageOrg.storage.local.get(key, resolve); }),
 		}
 	};
 }
