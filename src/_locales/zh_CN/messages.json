@@ -145,6 +145,18 @@
 	"fastScroll": {
 		"message": "快速滚动"
 	},
+	"pullToRefresh": {
+		"message": "下拉刷新"
+	},
+	"pullToRefreshNote": {
+		"message": "要使用此功能，请禁用 Firefox 自带的下拉刷新。"
+	},
+	"showIcon": {
+		"message": "显示图标"
+	},
+	"showText": {
+		"message": "显示文本"
+	},
 	"disable": {
 		"message": "禁用"
 	},
@@ -165,6 +177,9 @@
 	},
 	"strokeSize": {
 		"message": "描边尺寸"
+	},
+	"getstureInterval": {
+		"message": "两个手势之间的最小间隔"
 	},
 	"doubleTap": {
 		"message": "双击"

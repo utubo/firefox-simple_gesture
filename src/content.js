@@ -1,12 +1,6 @@
 var SimpleGesture = {};
 if (typeof browser === 'undefined') {
-	storageOrg = chrome.storage; // global scope for options.js
 	browser = chrome;
-	browser.storage = {
-		local: {
-			get: key => new Promise(resolve => { chromeOrg.storage.local.get(key, resolve); }),
-		}
-	};
 }
 (async () => {
 	'use strict';
@@ -34,11 +28,14 @@ if (typeof browser === 'undefined') {
 		disableWhileZoomedIn: false,
 		suggestNext: true,
 		confirmCloseTabs: true,
+		interval: 0,
+		pullToRefresh: '',
 	};
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const SUGGEST_OPACITY = 0.5;
+	const PULL_TO_REFRESH_DELAY = 300;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 	const vvWidth = () => VV.isDummy ? window.innerWidth : VV.width;
 	const vvHeight = () => VV.isDummy ? window.innerHeight : VV.height;
@@ -72,9 +69,13 @@ if (typeof browser === 'undefined') {
 	let isToastVisible;
 	// fast scroll
 	let fastScroll = null;
+	// pull to refresh
+	let enablePullToRefresh = false;
+	let hidePullToRefresh = () => {};
 	// others
 	let iniTimestamp = 0;
 	let exData;
+	let intervalSleep = false;
 	const ACCEPT_SINGLE_TAP = -1;
 	const doubleTap = { timer: null, count: ACCEPT_SINGLE_TAP };
 	const singleTap = { timer: null };
@@ -200,6 +201,7 @@ if (typeof browser === 'undefined') {
 
 	// touch-events ------
 	const onTouchStart = e => {
+		if (intervalSleep) return;
 		fixSize();
 		if (!size) return;
 		touchStartTime = Date.now();
@@ -225,6 +227,9 @@ if (typeof browser === 'undefined') {
 		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		restartTimer();
 		if (arrows[0] === 'W' && SimpleGesture.ini.toast) showGestureDelay();
+		if (SimpleGesture.ini.pullToRefresh) {
+			enablePullToRefresh = pullToRefreshStart()
+		}
 	};
 
 	const onTouchMove = e => {
@@ -241,6 +246,9 @@ if (typeof browser === 'undefined') {
 		const dy = y - ly;
 		const absX = dx < 0 ? -dx : dx;
 		const absY = dy < 0 ? -dy : dy;
+		if (dy < 0 && enablePullToRefresh) {
+			pullToRefreshCancel();
+		}
 		if (absX < size && absY < size) return;
 		lx = x;
 		ly = y;
@@ -249,6 +257,9 @@ if (typeof browser === 'undefined') {
 		la = a;
 		arrows.push(a);
 		if (executeEvent(SimpleGesture.onInput, e)) return;
+		if (enablePullToRefresh) {
+			pullToRefreshMove()
+		}
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
 	};
@@ -262,11 +273,18 @@ if (typeof browser === 'undefined') {
 
 	const onTouchEnd = e => {
 		try {
-			fastScroll = null;
 			touchEndTime = Date.now();
 			clearTimeout(timer);
 			clearTimeout(showToastTimer);
 			hideToast();
+			if (enablePullToRefresh && pullToRefreshEnd()) {
+				if (PULL_TO_REFRESH_DELAY < touchEndTime - touchStartTime) {
+					location.reload();
+				} else {
+					pullToRefreshCancel();
+				}
+				return;
+			}
 			if (setupSingleTap(e)) return;
 			if (executeEvent(SimpleGesture.onEnd, e)) return;
 			const g = getCommandByState(startPoint, fingers, arrows);
@@ -275,13 +293,21 @@ if (typeof browser === 'undefined') {
 			SimpleGesture.doCommand(g);
 			e.stopPropagation();
 			e.cancelable && e.preventDefault();
+			if (SimpleGesture.ini.interval) {
+				intervalSleep = true;
+				setTimeout(() => {
+					intervalSleep = false;
+				}, SimpleGesture.ini.interval);
+			}
 		} finally {
 			arrows = null;
+			fastScroll = null;
+			pullToRefreshCancel();
 			//target = null; Keep target for Custom gesture
 		}
 	};
 
-	const onCancel = e => {
+	const onCancel = () => {
 		clearTimeout(timer);
 		clearTimeout(showToastTimer);
 		hideToast();
@@ -441,6 +467,50 @@ if (typeof browser === 'undefined') {
 		);
 	};
 
+	// pull to refresh --------------
+	const pullToRefreshStart = () => {
+		return fingersNum === 1 &&
+			!VV.offsetTop &&
+			!scrollY &&
+			!document.documentElement.scrollTop &&
+			!document.body.scrollTop &&
+			!isScrolled(target)
+	};
+
+	const isScrolled = e => {
+		return !e ? false : e.scrollTop || isScrolled(e.parentNode);
+	}
+
+	const pullToRefreshCancel = () => {
+		enablePullToRefresh = false
+		hidePullToRefresh();
+	}
+
+	const pullToRefreshMove = () => {
+		if (!arrows) {
+			// NOP
+		} else if (!pullToRefreshEnd()) {
+			pullToRefreshCancel();
+		} else if (SimpleGesture.ini.pullToRefresh === 'icon') {
+			SimpleGesture.mod('pullToRefresh', m => {
+				m.show();
+				hidePullToRefresh = m.hide;
+			});
+		}
+	};
+
+	const pullToRefreshEnd = () => {
+		return arrows?.[0] === 'D' &&
+			!arrows[1] &&
+			!getCommandByState(startPoint, fingers, arrows);
+	};
+
+	const pullToRefreshToast = () => {
+		const label = document.createElement('DIV');
+		label.textContent = getMessage('pullToRefresh');
+		return label;
+	};
+
 	// toast --------------
 	const arrowsSvg = {};
 
@@ -507,7 +577,7 @@ if (typeof browser === 'undefined') {
 		toast.style.transition = 'opacity .3s';
 		fixToastSize();
 		fixToastPosition();
-		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
+		requestAnimationFrame(() => { toast.style.opacity = '1'; });
 		setTimeout(() => {
 			toast.style.transition += ',left .2s .1s, top .2s .1s';
 		}, 300);
@@ -530,6 +600,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	const hideToast = delay => {
+		hidePullToRefresh();
 		if (!toast) return;
 		if (!isToastVisible) return;
 		if (delay) {
@@ -538,7 +609,7 @@ if (typeof browser === 'undefined') {
 		}
 		clearTimeout(hideToastTimer);
 		isToastVisible = false;
-		window.requestAnimationFrame(() => { toast.style.opacity = '0'; });
+		requestAnimationFrame(() => { toast.style.opacity = '0'; });
 	};
 
 	const setupToast = () => {
@@ -563,7 +634,13 @@ if (typeof browser === 'undefined') {
 			z-index: 2147483647;
 		`; // TODO: I don't like this z-index. :(
 		toastMain = document.createElement('DIV');
-		toastMain.style.cssText = 'padding: .2em 0; line-height: 1;';
+		toastMain.style.cssText = `
+			display: flex;
+			flex-direction: column;
+			gap: .5em;
+			line-height: 1;
+			padding: .2em 0;
+		`;
 		toastSub = document.createElement('DIV');
 		toastSub.style.cssText = `
 			font-size: 60%;
@@ -604,23 +681,37 @@ if (typeof browser === 'undefined') {
 	let joinedArrows = '';
 
 	const showGestureImpl = async () => {
-		let list = SimpleGesture.ini.gestures;
 		const g = getCommandByState(startPoint, fingers, arrows);
 		if (!isGestureEnabled && g !== 'disableGesture') return false;
 		joinedArrows = arrows.join('-');
-		if (!SimpleGesture.ini.suggestNext) {
-			if (!g) return false;
-			list = {};
-			list[joinedArrows] = g;
-		} else if (
-			!g &&
-			!arrows[SimpleGesture.ini.toastMinStroke - 1]
+		let elms = [];
+		if (
+			SimpleGesture.ini.suggestNext &&
+			arrows[SimpleGesture.ini.toastMinStroke - 1]
 		) {
+			elms = await suggestGestures(SimpleGesture.ini.gestures, g);
+		} else if (g) {
+			const list = {};
+			list[joinedArrows] = g;
+			elms = await suggestGestures(list, g);
+		}
+		if (
+			enablePullToRefresh &&
+			SimpleGesture.ini.pullToRefresh === 'text'
+		) {
+			elms.unshift(pullToRefreshToast());
+		}
+		if (!elms[0]) {
 			return false;
 		}
 		setupToast();
 		setTextSafe(toastSub, SimpleGesture.getAddnlText(startPoint, fingers));
-		return await suggestGestures(list, g);
+		const f = document.createDocumentFragment();
+		for (const e of elms) {
+			f.appendChild(e);
+		}
+		toastMain.replaceChildren(f);
+		return true;
 	};
 
 	const showGestureDelay = () => {
@@ -656,10 +747,9 @@ if (typeof browser === 'undefined') {
 	};
 
 	const suggestGestures = async (list, match) => {
+		const elms = [];
 		const fGesture = fingers + joinedArrows;
 		const sGesture = startPoint + fGesture;
-		const f = document.createDocumentFragment();
-		let done = false;
 		for (const [k, v] of Object.entries(list)) {
 			if (!isMatch(k, fGesture, sGesture)) continue;
 			if (startPoint && list[startPoint + k]) continue;
@@ -667,11 +757,6 @@ if (typeof browser === 'undefined') {
 			if (!name) continue; // for old ini-data.
 			// create element
 			const label = document.createElement('DIV');
-			label.style.cssText = `
-				border-top: 1px;
-				line-height: 1;
-				${done ?'margin-top: .5rem;' : ''}
-			`;
 			SimpleGesture.drawArrows(k.replace(/^.:/, '').split('-'), label);
 			let i = arrows.length + 1;
 			for (const a of label.childNodes) {
@@ -684,11 +769,9 @@ if (typeof browser === 'undefined') {
 			text.style.opacity = v === match ? 1 : SUGGEST_OPACITY;
 			text.textContent = name
 			label.appendChild(text);
-			f.appendChild(label);
-			done = true;
+			elms.push(label);
 		}
-		toastMain.replaceChildren(f);
-		return done;
+		return elms;
 	};
 
 	// uncommon modules ---

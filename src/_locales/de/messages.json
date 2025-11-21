@@ -145,6 +145,18 @@
 	"fastScroll": {
 		"message": ""
 	},
+	"pullToRefresh": {
+		"message": "Pull to Refresh"
+	},
+	"pullToRefreshNote": {
+		"message": "Um diese Funktion zu verwenden, deaktivieren Sie bitte die integrierte „Pull to Refresh“-Funktion von Firefox."
+	},
+	"showIcon": {
+		"message": "Symbol anzeigen"
+	},
+	"showText": {
+		"message": "Text anzeigen"
+	},
 	"disable": {
 		"message": "Deaktivieren"
 	},
@@ -165,6 +177,9 @@
 	},
 	"strokeSize": {
 		"message": "Gestenlänge"
+	},
+	"getstureInterval": {
+		"message": "Mindestabstand zwischen zwei Gesten"
 	},
 	"doubleTap": {
 		"message": "Doppeltipp"

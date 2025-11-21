@@ -1,13 +1,5 @@
 'use strict';
 
-if (!browser.storage.local.set) {
-	browser.storage.local = {
-		...browser.storage.local,
-		set: obj => new Promise(resolve => { storageOrg.local.set(obj, resolve); }),
-		remove: key => new Promise(resolve => { storageOrg.local.remove(key, resolve); }),
-	};
-}
-
 try {
 
 	// const -------------
@@ -20,6 +12,7 @@ try {
 		toastForeground: '#ffffff',
 		toastBackground: '#21a1de99',
 		toastMinStroke: 2,
+		interval: 0,
 	};
 	const TIMERS = {};
 	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
@@ -870,7 +863,9 @@ try {
 				elm.checked = !!ini[elm.id];
 				elm.addEventListener('change', onChecked);
 			} else {
-				elm.value = ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || '';
+				elm.value = ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || (
+					elm.type === 'number' ? 0 : ''
+				);
 			}
 			elm.addEventListener('change', saveBindingValues);
 			elm.addEventListener('input', saveBindingValuesDelay);

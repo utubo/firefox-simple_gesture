@@ -203,6 +203,9 @@ input, textarea, select {
 	outline: none;
 	padding: .15rem;
 }
+select {
+	margin-bottom: .5rem;
+}
 input:focus, textarea:focus, select:focus {
 	border-color: var(--accent);
 }
@@ -720,6 +723,9 @@ textarea:selection, input:selection {
 	height: 1rem;
 	width: 1rem;
 }
+.js-submit::before {
+	background: var(--submit-fg);
+}
 .icon-delete {
 	color:var(--red);
 	background: var(--button);
@@ -738,7 +744,7 @@ textarea:selection, input:selection {
 	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1"><path d="M2 2l12 12M2 14l12-12"/></svg>');
 }
 .icon-save::before {
-	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 6l5 5 7-7"/></svg>');
+	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 8l5 5 7-7"/></svg>');
 }
 .icon-export::before {
 	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none" stroke-linejoin="round"><path d="M11.5 10v4h-9v-12h9v4M8 8h7"/><path fill="black" d="M13 8v-2l2 2-2 2z"/></svg>');

@@ -145,6 +145,18 @@
 	"fastScroll": {
 		"message": "高速スクロール"
 	},
+	"pullToRefresh": {
+		"message": "プルダウンで更新"
+	},
+	"pullToRefreshNote": {
+		"message": "この機能を使用する場合は、Firefox標準の「プルダウンで更新」機能を無効にしてください。"
+	},
+	"showIcon": {
+		"message": "アイコンを表示"
+	},
+	"showText": {
+		"message": "テキストを表示"
+	},
 	"disable": {
 		"message": "無効"
 	},
@@ -162,6 +174,9 @@
 	},
 	"strokeSize": {
 		"message": "辺のサイズ"
+	},
+	"getstureInterval": {
+		"message": "ジェスチャー入力の最小間隔"
 	},
 	"timeout": {
 		"message": "タイムアウト"

@@ -14,6 +14,8 @@ if (typeof browser === 'undefined') {
 (async () => {
 	'use strict';
 
+	const MAX_TABS_HISTORY = 100;
+
 	const iniValue = async key => {
 		try {
 			const res = await browser.storage.local.get('simple_gesture');
@@ -40,6 +42,10 @@ if (typeof browser === 'undefined') {
 		});
 	};
 
+	const trimFirst = (ary, size) => {
+		ary.splice(0, ary.length - size);
+	}
+
 	// For suspended tabs
 	let iniTimestamp = await sessionValue('iniTimestamp', Date.now());
 	const reloadIni = tabId => {
@@ -50,7 +56,7 @@ if (typeof browser === 'undefined') {
 		});
 	};
 	// and For switch to last tab
-	let previousTabId = await sessionValue('previousTabId', 0);
+	const previousTabIds = await sessionValue('previousTabIds', []);
 	let currentTabId = await sessionValue('currentTabId', -1)
 	if (currentTabId < 0) {
 		currentTabId = (await browser.tabs.query({ active: true }))[0]?.id;
@@ -60,9 +66,10 @@ if (typeof browser === 'undefined') {
 		// actriveInfo.previousTabId is not supported in FF for Android!
 		// previousTabId = e.previousTabId;
 		if (currentTabId !== e.tabId) {
-			previousTabId = currentTabId;
+			previousTabIds.push(currentTabId);
+			trimFirst(previousTabIds, MAX_TABS_HISTORY);
 			currentTabId = e.tabId
-			browser.storage.session.set({ previousTabId });
+			browser.storage.session.set({ previousTabIds });
 			browser.storage.session.set({ currentTabId });
 		}
 	});
@@ -71,7 +78,6 @@ if (typeof browser === 'undefined') {
 	let allTabs = null;
 	let closedTabs = null;
 	if (!browser.sessions) {
-		const MAX_CLOSED_TABS = 100;
 		allTabs = new Map();
 		closedTabs = await sessionValue('closedTabs', []);
 		browser.tabs.onUpdated.addListener((id, _, tab) => { allTabs.set(id, tab.url); });
@@ -84,9 +90,7 @@ if (typeof browser === 'undefined') {
 			if (index !== -1) {
 				closedTabs.splice(index, 1);
 			}
-			if (MAX_CLOSED_TABS <= closedTabs.length) {
-				closedTabs.splice(closedTabs.length - MAX_CLOSED_TABS);
-			}
+			trimFirst(closedTabs, MAX_TABS_HISTORY);
 			closedTabs.push(url);
 			browser.storage.session.set({ 'closedTabs': closedTabs });
 		});
@@ -247,7 +251,15 @@ if (typeof browser === 'undefined') {
 			prevOrNextTab(arg, i => i);
 		},
 		lastUsedTab: async () => {
-			browser.tabs.update(previousTabId, { active: true });
+			// NOTE: browser.tabs.get(id) returns closed tab.
+			const all = await browser.tabs.query({});
+			while (previousTabIds.length) {
+				const id = previousTabIds.pop();
+				if (all.some(t => t.id === id)) {
+					await browser.tabs.update(id, { active: true });
+					return;
+				}
+			}
 		},
 		showTab: async arg => {
 			browser.tabs.update(arg.tabId, { active: true });
