@@ -340,6 +340,7 @@ if (typeof browser === 'undefined') {
 			case 'pageUp': scroll(-1, s => [s.scrollBy, -s.clientHeight]); break;
 			case 'pageDown': scroll(1, s => [s.scrollBy, s.clientHeight]); break;
 			case 'reload': location.reload(); break;
+			case 'share': navigator.share({ title: document.title, url: location.href }); break;
 			case 'disableGesture': toggleEnable(options); break;
 			case 'openLinkInNewTab':
 			case 'openLinkInBackground':

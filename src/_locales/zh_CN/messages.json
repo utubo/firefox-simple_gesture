@@ -28,6 +28,9 @@
 	"reload": {
 		"message": "重新载入"
 	},
+	"share": {
+		"message": "分享"
+	},
 	"close": {
 		"message": "关闭当前选项卡"
 	},

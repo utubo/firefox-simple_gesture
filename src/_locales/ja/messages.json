@@ -28,6 +28,9 @@
 	"reload": {
 		"message": "更新"
 	},
+	"share": {
+		"message": "共有"
+	},
 	"close": {
 		"message": "タブを閉じる"
 	},

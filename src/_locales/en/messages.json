@@ -28,6 +28,9 @@
 	"reload": {
 		"message": "Reload"
 	},
+	"share": {
+		"message": "Share"
+	},
 	"close": {
 		"message": "Close Tab"
 	},
