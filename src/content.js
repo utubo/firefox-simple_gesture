@@ -206,11 +206,12 @@ if (typeof browser === 'undefined') {
 		fixSize();
 		if (!size) return;
 		touchStartTime = Date.now();
-		if (gesture?.endsWith('T')) {
+		if (la === 'T') {
 			clearTimeout(tapTimer);
 			clearTimeout(doubleTapTimer);
 		} else {
-			gesture = '';
+			arrows = [];
+			startPoint = '';
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
 		la = null;
@@ -223,7 +224,7 @@ if (typeof browser === 'undefined') {
 		touches = e?.touches || [e];
 		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		restartTimer();
-		if (gesture?.endsWith('T') && SimpleGesture.ini.toast) showGestureDelay();
+		if (la === 'T' && SimpleGesture.ini.toast) showGestureDelay();
 		if (SimpleGesture.ini.pullToRefresh) {
 			enablePullToRefresh = pullToRefreshStart()
 		}
@@ -269,7 +270,7 @@ if (typeof browser === 'undefined') {
 	}
 
 	const onTouchEnd = e => {
-		if (gesture === null) return;
+		if (arrows === null) return;
 		const now = Date.now();
 		if (now - touchEndTime < TAP_TIMEOUT) return;
 		touchEndTime = now;
@@ -372,7 +373,7 @@ if (typeof browser === 'undefined') {
 
 	const waitForDoubleTap = e => {
 		if (!isGestureEnabled) return;
-		if (!SimpleGesture.hasNextTap()) return;
+		if (!SimpleGesture.hasNext()) return;
 		const paths =  e.composedPath();
 		let tg = paths[0];
 		const onlyLinkTag = !SimpleGesture.ini.delaySingleTap // not allways
@@ -396,7 +397,7 @@ if (typeof browser === 'undefined') {
 			clientY: e.clientY,
 		});
 		doubleTapTimer = setTimeout(() => {
-			doubleTapTimer = 0;
+			doubleTapTimer = null;
 			if (onlyLinkTag) {
 				tg.dispatchEvent(ev);
 			} else {
@@ -405,37 +406,22 @@ if (typeof browser === 'undefined') {
 		}, SimpleGesture.ini.doubleTapMsec + 1);
 	};
 
-	SimpleGesture.hasNextTap = () => {
-		const sGesture = startPoint + fingers + gesture;
-		const fGesture = fingers + gesture;
-		for (const k of Object.keys(SimpleGesture.ini.gestures)) {
-			if (k === sGesture) continue;
-			if (k === fGesture) continue;
-			if (!isMatch(k, fGesture, sGesture)) continue;
-			return true;
-		}
-		return false;
-	};
-
 	const addTap = e => {
 		if (TAP_TIMEOUT < touchEndTime - touchStartTime) {
 			return false;
 		}
-		if (gesture) {
-			if (!gesture.endsWith('T')) return false;
-			gesture += '-';
-		}
-		gesture += 'T';
-		if (fingersNum < 2 && gesture === 'T') {
+		la = 'T'
+		arrows.push(la)
+		if (fingersNum < 2 && arrows === ['T']) {
 			if (isDelaySingleTap) {
 				waitForDoubleTap(e);
 			}
 			tapTimer = setTimeout(() => {
-				gesture = null;
+				arrows = null;
 			}, SimpleGesture.ini.doubleTapMsec);
 			return true;
 		}
-		if (SimpleGesture.hasNextTap()) {
+		if (SimpleGesture.hasNext()) {
 			tapTimer = setTimeout(() => {
 				onTouchEnd(e);
 			}, SimpleGesture.ini.doubleTapMsec);
@@ -759,6 +745,19 @@ if (typeof browser === 'undefined') {
 			return k.startsWith(fg);
 		}
 	};
+
+	const hasNext = async() => {
+		const fGesture = fingers + joinedArrows;
+		const sGesture = startPoint + fGesture;
+		for (const [k, v] of Object.entries(SimpleGesture.ini.gestures)) {
+			if (!isMatch(k, fGesture, sGesture)) continue;
+			if (startPoint && list[startPoint + k]) continue;
+			const name = await gestureName(v);
+			if (!name) continue; // for old ini-data.
+			return true;
+		}
+		return false;
+	}
 
 	const suggestGestures = async (list, match) => {
 		const elms = [];
