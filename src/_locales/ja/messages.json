@@ -37,14 +37,23 @@
 	"default": {
 		"message": "デフォルト"
 	},
+	"closeLeft": {
+		"message": "左側のすべてのタブを閉じる"
+	},
+	"closeRight": {
+		"message": "右側のすべてのタブを閉じる"
+	},
 	"closeAll": {
-		"message": "全てのタブを閉じる"
+		"message": "すべてのタブを閉じる"
 	},
 	"closeOthers": {
-		"message": "他のタブを全て閉じる"
+		"message": "他のタブをすべて閉じる"
 	},
 	"closeSameUrl": {
 		"message": "同じURLのタブを閉じる"
+	},
+	"close_n_tabs": {
+		"message": "%count% 個のタブを閉じようとしています\n本当に閉じますか？"
 	},
 	"fullMatch": {
 		"message": "完全一致"
@@ -54,9 +63,6 @@
 	},
 	"contextRoot": {
 		"message": "コンテキストルート"
-	},
-	"closeSameUrlNote": {
-		"message": "Firefox起動時などにタブの情報が壊れるので、上手く動かないことがあります"
 	},
 	"reopen": {
 		"message": "閉じたタブを開き直す"
@@ -88,6 +94,9 @@
 	"New_tab_opened": {
 		"message": "新しいタブを開きました"
 	},
+	"confirmCloseTabs": {
+		"message": "複数のタブを閉じるときに確認する"
+	},
 	"Switch": {
 		"message": "切り替え"
 	},
@@ -118,12 +127,6 @@
 	"toggleUserAgent": {
 		"message": "PC版サイト"
 	},
-	"openAddonSettings__label": {
-		"message": "ジェスチャの設定を開く"
-	},
-	"openAddonSettings": {
-		"message": "設定"
-	},
 	"userAgent": {
 		"message": "User-Agent"
 	},
@@ -133,11 +136,47 @@
 	"disableGesture": {
 		"message": "ジェスチャ無効/有効"
 	},
+	"openAddonSettings__label": {
+		"message": "ジェスチャの設定を開く"
+	},
+	"openAddonSettings": {
+		"message": "設定"
+	},
+	"fastScroll": {
+		"message": "高速スクロール"
+	},
+	"pullToRefresh": {
+		"message": "プルダウンで更新"
+	},
+	"pullToRefreshNote": {
+		"message": "この機能を使用する場合は、Firefox標準の「プルダウンで更新」機能を無効にしてください。"
+	},
+	"showIcon": {
+		"message": "アイコンを表示"
+	},
+	"showText": {
+		"message": "テキストを表示"
+	},
+	"disable": {
+		"message": "無効"
+	},
+	"rightEdge": {
+		"message": "画面右端"
+	},
+	"leftEdge": {
+		"message": "画面左端"
+	},
+	"reverse": {
+		"message": "反転"
+	},
 	"timeoutAndStrokeSize": {
 		"message": "タイムアウトと辺のサイズ"
 	},
 	"strokeSize": {
 		"message": "辺のサイズ"
+	},
+	"getstureInterval": {
+		"message": "ジェスチャー入力の最小間隔"
 	},
 	"timeout": {
 		"message": "タイムアウト"

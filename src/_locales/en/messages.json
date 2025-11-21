@@ -37,6 +37,12 @@
 	"default": {
 		"message": "Default"
 	},
+	"closeLeft": {
+		"message": "Close left tabs"
+	},
+	"closeRight": {
+		"message": "Close right tabs"
+	},
 	"closeAll": {
 		"message": "Close all tabs"
 	},
@@ -46,6 +52,9 @@
 	"closeSameUrl": {
 		"message": "Close same URL"
 	},
+	"close_n_tabs": {
+		"message": "You are about to close %count% tabs.\nAre you sure you want to continue?"
+	},
 	"fullMatch": {
 		"message": "Full"
 	},
@@ -54,9 +63,6 @@
 	},
 	"contextRoot": {
 		"message": "Context root"
-	},
-	"closeSameUrlNote": {
-		"message": "The states of tabs are often broken, eg at startup. So, this may not work well."
 	},
 	"reopen": {
 		"message": "Reopen Closed Tab"
@@ -87,6 +93,9 @@
 	},
 	"New_tab_opened": {
 		"message": "New tab opened"
+	},
+	"confirmCloseTabs": {
+		"message": "Confirm before closing multiple tabs"
 	},
 	"Switch": {
 		"message": "SWITCH"
@@ -133,6 +142,33 @@
 	"openAddonSettings": {
 		"message": "Settings"
 	},
+	"fastScroll": {
+		"message": "Fast scroll"
+	},
+	"pullToRefresh": {
+		"message": "Pull to Refresh"
+	},
+	"pullToRefreshNote": {
+		"message": "To use this feature, please disable Firefox’s built-in Pull to Refresh."
+	},
+	"showIcon": {
+		"message": "Show Icon"
+	},
+	"showText": {
+		"message": "Show Text"
+	},
+	"disable": {
+		"message": "Disable"
+	},
+	"rightEdge": {
+		"message": "Right edge"
+	},
+	"leftEdge": {
+		"message": "left edge"
+	},
+	"reverse": {
+		"message": "Reverse"
+	},
 	"timeoutAndStrokeSize": {
 		"message": "Timeout and Stroke size"
 	},
@@ -141,6 +177,9 @@
 	},
 	"strokeSize": {
 		"message": "Stroke size"
+	},
+	"getstureInterval": {
+		"message": "Minimum interval between two gestures"
 	},
 	"doubleTap": {
 		"message": "Double tap"

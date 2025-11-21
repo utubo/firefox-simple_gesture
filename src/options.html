@@ -63,7 +63,7 @@
 			<div class="page-header i18n">tabGestures</div>
 			<div class="gesture-list" data-gestures="
 				nextTab! prevTab! lastUsedTab
-				close closeAll! closeOthers! closeSameUrl!
+				close closeLeft! closeRight! closeAll! closeOthers! closeSameUrl!
 				newTab reopen duplicateTab
 			"></div>
 			<div class="sub-item experimental" data-parent="close_item">
@@ -81,16 +81,23 @@
 					<option value="domain" class="caption i18n">domain</option>
 					<option value="contextRoot" class="caption i18n">contextRoot</option>
 				</select>
-				<div class="note note-alert i18n">closeSameUrlNote</div>
 			</div>
 			<div class="sub-item" data-parent="newTab_item">
 				<label for="newTabUrl" class="sub-caption i18n">newTabUrl</label>
 				<input id="newTabUrl" type="url" class="text-input js-binding" placeholder="https://www.example.com/">
 			</div>
+			<div class="item">
+				<label for="confirmCloseTabs" class="checkbox-label">
+					<span class="with-checkbox caption i18n">confirmCloseTabs</span>
+					<input id="confirmCloseTabs" class="checkbox js-binding" type="checkbox" value="true">
+					<label for="confirmCloseTabs" class="checkbox-image"></label>
+				</label>
+			</div>
 		</div>
 
 		<div class="page" id="otherGestures">
 			<div class="page-header i18n">otherGestures</div>
+
 			<div class="gesture-list" data-gestures="toggleUserAgent"></div>
 			<div class="sub-item user-agent-status" data-parent="toggleUserAgent_caption">
 				<label for="userAgentStatus" class="checkbox-label">
@@ -101,9 +108,38 @@
 			<div class="sub-item" data-parent="toggleUserAgent_item">
 				<label for="userAgent" class="sub-caption i18n">UserAgent</label>
 				<input id="userAgent" type="text" class="text-input js-binding" list="userAgentList">
-				<datalist id="userAgentList"><option id="defaultUserAgent"></datalist>
+				<datalist id="userAgentList"><option id="defaultUserAgent"/></datalist>
 			</div>
+
 			<div class="gesture-list" data-gestures="disableGesture openAddonSettings"></div>
+			<div class="item">
+				<label for="pullToRefresh" class="caption i18n">pullToRefresh</label>
+				<div class="sub-item">
+					<select id="pullToRefresh" class="js-binding">
+						<option value="icon" class="caption i18n">showIcon</option>
+						<option value="text" class="caption i18n">showText</option>
+						<option value="" class="caption i18n" selected>disable</option>
+					</select>
+					<div class="note note-info i18n">pullToRefreshNote</div>
+				</div>
+			</div>
+			<div class="item experimental">
+				<label class="caption icon-flask i18n">fastScroll</label>
+				<div class="sub-item">
+					<select id="fastScroll" class="js-binding">
+						<option value="" class="caption i18n" selected>disable</option>
+						<option value="R" class="caption i18n">rightEdge</option>
+						<option value="L" class="caption i18n">leftEdge</option>
+					</select>
+				</div>
+				<div class="sub-item">
+					<label for="fastScrollRv" class="checkbox-label">
+						<span class="with-checkbox sub-caption i18n">reverse</span>
+						<input id="fastScrollRv" class="checkbox js-binding" type="checkbox" value="true">
+						<label for="fastScrollRv" class="checkbox-image"></label>
+					</label>
+				</div>
+			</div>
 		</div>
 
 		<div class="page" id="customGestures">
@@ -129,10 +165,9 @@
 					<input id="strokeSize" class="number-input js-binding" type="number" min="1" max="999" size="5">px
 				</div>
 			</div>
-			<div id="timeoutAndStrokeSize" class="item">
-				<label class="caption i18n">doubleTap</label>
+			<div class="item">
+				<label class="caption i18n">doubleTapMsec</label>
 				<div class="sub-item">
-					<label class="sub-caption i18n">doubleTapMsec</label>
 					<input id="doubleTapMsec" class="number-input js-binding" type="number" min="0" max="9999" size="5">ms
 				</div>
 				<div class="sub-item experimental">
@@ -142,6 +177,12 @@
 						<label for="delaySingleTap" class="checkbox-image"></label>
 					</label>
 					<span class="with-checkbox note note-info i18n">delaySingleTapNote</span>
+				</div>
+			</div>
+			<div class="item">
+				<label class="caption i18n">getstureInterval</label>
+				<div class="sub-item">
+					<input id="interval" class="number-input js-binding" type="number" min="0" max="9999" size="5">ms
 				</div>
 			</div>
 			<div class="item">
@@ -174,7 +215,7 @@
 					</div>
 					<div class="sub-item js-linked-suggestNext">
 						<label class="sub-caption i18n">toastMinStroke</label><!-- don't add 'for="..."' -->
-						<select id="toastMinStroke" class="number-input js-binding" data-type="number">
+						<select id="toastMinStroke" class="number-input sub-item js-binding" data-type="number">
 							<option value="1">1</option>
 							<option value="2" selected>2</option>
 							<option value="3">3</option>
@@ -202,7 +243,7 @@
 			<div class="item">
 				<label class="caption i18n">Export / Import</label>
 				<label id="exportSetting" class="icon-export button buttons-vertical i18n">Export settings to downloads folder</label><a id="exportSettingLink" download="simple-gesture.json" class="hide"></a><br>
-				<label for="importSetting" class="icon-import button buttons-vertical i18n">Import settings from JSON</label><input type="file" id="importSetting" class="hide">
+				<label for="importSetting" class="icon-import button buttons-vertical i18n">Import settings from JSON</label><input type="file" id="importSetting" accept="application/json" class="hide">
 			</div>
 			<div class="item">
 				<label for="experimental" class="checkbox-label">

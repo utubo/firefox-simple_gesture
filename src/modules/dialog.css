@@ -1,0 +1,64 @@
+.simplegesture-dlg {
+	align-items: center;
+	background: #f9f9fa;
+	border: none;
+	border-radius: .5em;
+	color: #15141a;
+	flex-direction: column;
+	font-size: 19px;
+	outline: none;
+	overflow: auto;
+	padding: 1em;
+	white-space: pre;
+}
+.simplegesture-dlg:not([open]) {
+	display: none;
+}
+.simplegesture-dlg::backdrop {
+	background: #0008;
+}
+.simplegesture-dlg-msg {
+	display: inline-block;
+	text-align: left;
+}
+.simplegesture-dlg-buttons {
+	margin-top: 1em;
+	text-align: right;
+	width: 100%;
+}
+.simplegesture-dlg-button {
+	color: #592acb;
+	cursor: pointer;
+	display: inline-block;
+	font-size: .8em;
+	font-weight: 500;
+	margin: 0 1em;
+}
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+.simplegesture-dlg[open] {
+	animation-name: fadeIn;
+	animation-fill-mode: forwards;
+	animation-duration: 200ms;
+	animation-timing-function: ease-out;
+}
+@media (prefers-color-scheme: dark) {
+	.simplegesture-dlg {
+		background: #42414d;
+		color: #fbfbfe;
+	}
+	.simplegesture-dlg::backdrop {
+		background: #000a;
+	}
+	.simplegesture-dlg-button {
+		color: #cb9eff;
+	}
+}
+@media (hover: hover) and (pointer: fine) {
+	.simplegesture-dlg {
+		font-size: 1rem;
+	}
+}
+

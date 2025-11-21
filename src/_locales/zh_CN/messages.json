@@ -37,6 +37,12 @@
 	"default": {
 		"message": "默认"
 	},
+	"closeLeft": {
+		"message": "关闭左侧标签页"
+	},
+	"closeRight": {
+		"message": "关闭右侧标签页"
+	},
 	"closeAll": {
 		"message": "关闭所有标签页"
 	},
@@ -46,6 +52,9 @@
 	"closeSameUrl": {
 		"message": "关闭相同的URL"
 	},
+	"close_n_tabs": {
+		"message": "您即将关闭 %count% 个标签页。\n确定要继续吗？"
+	},
 	"fullMatch": {
 		"message": "全文匹配"
 	},
@@ -54,9 +63,6 @@
 	},
 	"contextRoot": {
 		"message": "Context root"
-	},
-	"closeSameUrlNote": {
-		"message": "标签的状态通常在启动时被损坏。所以这不能很好地运作。"
 	},
 	"reopen": {
 		"message": "恢复标签页"
@@ -87,6 +93,9 @@
 	},
 	"New_tab_opened": {
 		"message": "已打开新标签页"
+	},
+	"confirmCloseTabs": {
+		"message": "关闭多个标签页时进行确认"
 	},
 	"Switch": {
 		"message": "切换"
@@ -133,6 +142,33 @@
 	"openAddonSettings": {
 		"message": "设置"
 	},
+	"fastScroll": {
+		"message": "快速滚动"
+	},
+	"pullToRefresh": {
+		"message": "下拉刷新"
+	},
+	"pullToRefreshNote": {
+		"message": "要使用此功能，请禁用 Firefox 自带的下拉刷新。"
+	},
+	"showIcon": {
+		"message": "显示图标"
+	},
+	"showText": {
+		"message": "显示文本"
+	},
+	"disable": {
+		"message": "禁用"
+	},
+	"rightEdge": {
+		"message": "右侧边缘"
+	},
+	"leftEdge": {
+		"message": "左侧边缘"
+	},
+	"reverse": {
+		"message": "反向"
+	},
 	"timeoutAndStrokeSize": {
 		"message": "超时和描边尺寸"
 	},
@@ -141,6 +177,9 @@
 	},
 	"strokeSize": {
 		"message": "描边尺寸"
+	},
+	"getstureInterval": {
+		"message": "两个手势之间的最小间隔"
 	},
 	"doubleTap": {
 		"message": "双击"

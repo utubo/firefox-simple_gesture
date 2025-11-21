@@ -37,6 +37,12 @@
 	"default": {
 		"message": "Standard"
 	},
+	"closeLeft": {
+		"message": "Tabs links schließen"
+	},
+	"closeRight": {
+		"message": "Tabs rechts schließen"
+	},
 	"closeAll": {
 		"message": "Alle Tabs schließen"
 	},
@@ -46,6 +52,9 @@
 	"closeSameUrl": {
 		"message": "Gleiche URL schließen"
 	},
+	"close_n_tabs": {
+		"message": "Sie sind dabei, %count% Tabs zu schließen.\nMöchten Sie fortfahren?"
+	},
 	"fullMatch": {
 		"message": "Komplette URL"
 	},
@@ -54,9 +63,6 @@
 	},
 	"contextRoot": {
 		"message": "Stammverzeichnis"
-	},
-	"closeSameUrlNote": {
-		"message": "Der Zustand von Tabs ist häufig beschädigt, z.B. beim Start. Deshalb kann es sein, dass dies nicht gut funktioniert."
 	},
 	"reopen": {
 		"message": "Tab wiederherstellen"
@@ -87,6 +93,9 @@
 	},
 	"New_tab_opened": {
 		"message": "Neuer Tab geöffnet"
+	},
+	"confirmCloseTabs": {
+		"message": "Beim Schließen mehrerer Tabs bestätigen"
 	},
 	"Switch": {
 		"message": "WECHSELN"
@@ -133,6 +142,33 @@
 	"openAddonSettings": {
 		"message": "Optionen"
 	},
+	"fastScroll": {
+		"message": ""
+	},
+	"pullToRefresh": {
+		"message": "Pull to Refresh"
+	},
+	"pullToRefreshNote": {
+		"message": "Um diese Funktion zu verwenden, deaktivieren Sie bitte die integrierte „Pull to Refresh“-Funktion von Firefox."
+	},
+	"showIcon": {
+		"message": "Symbol anzeigen"
+	},
+	"showText": {
+		"message": "Text anzeigen"
+	},
+	"disable": {
+		"message": "Deaktivieren"
+	},
+	"rightEdge": {
+		"message": "Rechter Rand"
+	},
+	"leftEdge": {
+		"message": "Linker Rand"
+	},
+	"reverse": {
+		"message": "Umkehren"
+	},
 	"timeoutAndStrokeSize": {
 		"message": "Timeout und Gestenlänge"
 	},
@@ -141,6 +177,9 @@
 	},
 	"strokeSize": {
 		"message": "Gestenlänge"
+	},
+	"getstureInterval": {
+		"message": "Mindestabstand zwischen zwei Gesten"
 	},
 	"doubleTap": {
 		"message": "Doppeltipp"

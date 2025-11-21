@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
-	"version": "3.32",
+	"version": "4.5",
 	"default_locale": "en",
 	"icons": {
 		"64": "icon64.png"
@@ -11,7 +11,10 @@
 	"browser_specific_settings": {
 		"gecko": {
 			"id": "simple_gesture@utb.dip.jp",
-			"strict_min_version": "119.0"
+			"strict_min_version": "119.0",
+			"data_collection_permissions": {
+				"required": ["none"]
+			}
 		},
 		"gecko_android": {
 			"strict_min_version": "119.0"

@@ -14,6 +14,8 @@ if (typeof browser === 'undefined') {
 (async () => {
 	'use strict';
 
+	const MAX_TABS_HISTORY = 100;
+
 	const iniValue = async key => {
 		try {
 			const res = await browser.storage.local.get('simple_gesture');
@@ -40,6 +42,10 @@ if (typeof browser === 'undefined') {
 		});
 	};
 
+	const trimFirst = (ary, size) => {
+		ary.splice(0, ary.length - size);
+	}
+
 	// For suspended tabs
 	let iniTimestamp = await sessionValue('iniTimestamp', Date.now());
 	const reloadIni = tabId => {
@@ -50,19 +56,20 @@ if (typeof browser === 'undefined') {
 		});
 	};
 	// and For switch to last tab
-	let previousTabId = await sessionValue('previousTabId', 0);
+	const previousTabIds = await sessionValue('previousTabIds', []);
 	let currentTabId = await sessionValue('currentTabId', -1)
 	if (currentTabId < 0) {
 		currentTabId = (await browser.tabs.query({ active: true }))[0]?.id;
 	}
 	browser.tabs.onActivated.addListener(e => {
 		reloadIni(e.tabId);
-		// actriveInfo.previousTabId is not supported in FF on Android!
+		// actriveInfo.previousTabId is not supported in FF for Android!
 		// previousTabId = e.previousTabId;
 		if (currentTabId !== e.tabId) {
-			previousTabId = currentTabId;
+			previousTabIds.push(currentTabId);
+			trimFirst(previousTabIds, MAX_TABS_HISTORY);
 			currentTabId = e.tabId
-			browser.storage.session.set({ previousTabId });
+			browser.storage.session.set({ previousTabIds });
 			browser.storage.session.set({ currentTabId });
 		}
 	});
@@ -71,7 +78,6 @@ if (typeof browser === 'undefined') {
 	let allTabs = null;
 	let closedTabs = null;
 	if (!browser.sessions) {
-		const MAX_CLOSED_TABS = 100;
 		allTabs = new Map();
 		closedTabs = await sessionValue('closedTabs', []);
 		browser.tabs.onUpdated.addListener((id, _, tab) => { allTabs.set(id, tab.url); });
@@ -84,9 +90,7 @@ if (typeof browser === 'undefined') {
 			if (index !== -1) {
 				closedTabs.splice(index, 1);
 			}
-			if (MAX_CLOSED_TABS <= closedTabs.length) {
-				closedTabs.splice(closedTabs.length - MAX_CLOSED_TABS);
-			}
+			trimFirst(closedTabs, MAX_TABS_HISTORY);
 			closedTabs.push(url);
 			browser.storage.session.set({ 'closedTabs': closedTabs });
 		});
@@ -96,13 +100,30 @@ if (typeof browser === 'undefined') {
 	// For open a new tab with discarded
 	const decorateUrl = arg => (arg.discarded ? 'modules/discarded.html?' : '') + arg.url;
 
+	// FF for Android does not support Tab.index!
+	const prevOrNextTab = async (arg, f) => {
+		const all = await browser.tabs.query({});
+		const max = all.length;
+		let found = false;
+		for (let i = 0; i < max * 2; i ++) {
+			const t = all[(max + f(i)) % max];
+			if (t.hidden) continue;
+			if (t.id === arg.tab.id)  {
+				found = true;
+			} else if (found) {
+				browser.tabs.update(t.id, { active: true });
+				return;
+			}
+		}
+	};
+
 	// Gestures
 	const exec = {
 		openLinkInNewTab: async arg => {
 			browser.tabs.create({ active: true, url: arg.url });
 		},
 		openLinkInBackground: async arg => {
-			// Firefox for Android doesn't support `openerTabId`, `discarded` and `active`.
+			// FF for Android doesn't support `openerTabId`, `discarded` and `active`.
 			arg.discarded = await iniValue('openLinkInBackgroundDiscarded');
 			const url = decorateUrl(arg);
 			const newTab = await browser.tabs.create({ active: false, url: url });
@@ -130,33 +151,73 @@ if (typeof browser === 'undefined') {
 			}
 			browser.tabs.remove(arg.tab.id);
 		},
-		closeIf: async filter => {
+		closeIf: async (arg, filter) => {
 			const tabs = await browser.tabs.query({});
 			const ids = [];
 			for (let tab of tabs)
 				if (filter(tab)) ids.push(tab.id);
-			if (ids[0])
-				browser.tabs.remove(ids);
+			const count = ids.length;
+			if (!count) return;
+			const confirmCloseTabs = await iniValue('confirmCloseTabs', true);
+			if (1 < count && confirmCloseTabs) {
+				await browser.tabs.insertCSS(
+					arg.tab.id,
+					{ file: '/modules/dialog.css' }
+				);
+				const text = browser.i18n.getMessage('close_n_tabs').replace('%count%', count);
+				const ret = await browser.scripting.executeScript({
+					target: { tabId: arg.tab.id },
+					args: [text],
+					func: async text => {
+						const dlg = await import(browser.runtime.getURL('/modules/dialog.js'));
+						return await dlg.confirm(text);
+					}
+				});
+				if (!ret?.[0]?.result) return;
+			}
+			browser.tabs.remove(ids);
 		},
-		closeAll: async () => {
-			exec.closeIf(() => true);
+		closeAll: async arg => {
+			exec.closeIf(arg, () => true);
 		},
 		closeOthers: async arg => {
-			exec.closeIf(tab => tab.id !== arg.tab.id);
+			exec.closeIf(arg, tab => tab.id !== arg.tab.id);
 		},
 		closeSameUrl: async arg => {
 			const matchType = arg.matchType || await iniValue('closeSameUrlMatchType');
 			if (matchType === 'domain') {
 				const domain = arg.tab.url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1');
-				exec.closeIf(tab => tab.url.startsWith(domain));
+				exec.closeIf(arg, tab => tab.url.startsWith(domain));
 				return;
 			}
 			if (matchType === 'contextRoot') {
 				const contextRoot = arg.tab.url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1');
-				exec.closeIf(tab => tab.url.startsWith(contextRoot));
+				exec.closeIf(arg, tab => tab.url.startsWith(contextRoot));
 				return;
 			}
-			exec.closeIf(tab => tab.url === arg.tab.url);
+			exec.closeIf(arg, tab => tab.url === arg.tab.url);
+		},
+		closeLeft: async arg => {
+			// FF for Android does not support Tab.index!
+			//exec.closeIf(arg, tab => tab.index < arg.tab.index);
+			exec.closeIf(arg, tab => {
+				if (tab.id === arg.tab.id) {
+					arg.foundCurrent = true;
+				} else if (!arg.foundCurrent) {
+					return true;
+				}
+			});
+		},
+		closeRight: async arg => {
+			// FF for Android does not support Tab.index!
+			//exec.closeIf(arg, tab => arg.tab.index < tab.index);
+			exec.closeIf(arg, tab => {
+				if (tab.id === arg.tab.id) {
+					arg.foundCurrent = true;
+				} else if (arg.foundCurrent) {
+					return true;
+				}
+			});
 		},
 		reopen: async arg => {
 			if (browser.sessions) {
@@ -167,7 +228,7 @@ if (typeof browser === 'undefined') {
 					return;
 				}
 			} else {
-				// for Firefox for Android
+				// for FF for Android
 				const url = closedTabs.pop();
 				if (url) {
 					browser.tabs.create({ active: true, url: url });
@@ -184,36 +245,21 @@ if (typeof browser === 'undefined') {
 			}
 		},
 		prevTab: async arg => {
-			for (let i = arg.tab.index - 1; 0 <= i; i--) {
-				const tab = (await browser.tabs.query({ index: i }))[0];
-				if (!tab || tab.hidden) continue;
-				browser.tabs.update(tab.id, { active: true });
-				return;
-			}
-			exec.lastTab();
-		},
-		lastTab: async () => {
-			const all = await browser.tabs.query({});
-			let last = { index: -1 };
-			for (let tab of all) {
-				if (tab.hidden || tab.index < last.index) continue;
-				last = tab;
-			}
-			browser.tabs.update(last.id, { active: true });
+			prevOrNextTab(arg, i => -i);
 		},
 		nextTab: async arg => {
-			for (let i = arg.tab.index + 1; true; i++) {
-				const tab = (await browser.tabs.query({ index: i }))[0];
-				if (!tab) break;
-				if (tab.hidden) continue;
-				browser.tabs.update(tab.id, { active: true });
-				return;
-			}
-			// show 1st tab that is not hidden.
-			if (arg.tab.index !== -1) exec.nextTab({ tab: { index: -1 } });
+			prevOrNextTab(arg, i => i);
 		},
 		lastUsedTab: async () => {
-			browser.tabs.update(previousTabId, { active: true });
+			// NOTE: browser.tabs.get(id) returns closed tab.
+			const all = await browser.tabs.query({});
+			while (previousTabIds.length) {
+				const id = previousTabIds.pop();
+				if (all.some(t => t.id === id)) {
+					await browser.tabs.update(id, { active: true });
+					return;
+				}
+			}
 		},
 		showTab: async arg => {
 			browser.tabs.update(arg.tabId, { active: true });
@@ -224,7 +270,7 @@ if (typeof browser === 'undefined') {
 		},
 		toggleUserAgent: async arg => {
 			const ID = 1;
-			var onOff = 'OFF';
+			let onOff = 'OFF';
 			if (await exec.isUserAgentSwitched() && !arg.force || arg.userAgent === null) {
 				chrome.declarativeNetRequest.updateSessionRules(
 					{ removeRuleIds: [ID] }
@@ -320,7 +366,7 @@ if (typeof browser === 'undefined') {
 			const code = arg.code || arg.script;
 			// open in new tab
 			if (arg.inNewTab || !('inNewTab' in arg)) {
-				// Firefox for Android doesn't support `openerTabId`, `discarded` and `active`.
+				// FF for Android doesn't support `openerTabId`, `discarded` and `active`.
 				let tab = await browser.tabs.create({ active: active, url: decorateUrl(arg) });
 				if (!active) {
 					browser.tabs.update(arg.tab.id, { active: true });
@@ -339,7 +385,7 @@ if (typeof browser === 'undefined') {
 					removeListener();
 					exec.executeScript({ tabId: tabId, code: code});
 				};
-				browser.tabs.onUpdated.addListener(f);// Firefox for Android doesn't support extraParameter.tabId.
+				browser.tabs.onUpdated.addListener(f);// FF for Android doesn't support extraParameter.tabId.
 			}
 			browser.tabs.update({ url: arg.url });
 		},

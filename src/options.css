@@ -99,7 +99,7 @@ h2:first-child {
 .link-item,
 .sub-item {
 	clear: both;
-	cursor: default;
+	cursor: pointer;
 	display: block;
 	padding: .8rem 0;
 	margin: 0 1.2rem;
@@ -202,6 +202,9 @@ input, textarea, select {
 	outline: none;
 	padding: .15rem;
 }
+select {
+	margin-bottom: .5rem;
+}
 input:focus, textarea:focus, select:focus {
 	border-color: var(--accent);
 }
@@ -249,6 +252,7 @@ textarea:selection, input:selection {
 	width: 8rem;
 }
 .checkbox-label {
+	cursor: pointer;
 	display: block;
 	position: relative;
 	transition: .2s;
@@ -686,7 +690,7 @@ textarea:selection, input:selection {
 	background: var(--button);
 	border-radius: 4px;
 	box-sizing: border-box;
-	cursor: default;
+	cursor: pointer;
 	display: inline-flex;
 	gap: .4rem;
 	padding: .2rem .8rem;
@@ -701,6 +705,9 @@ textarea:selection, input:selection {
 	display: inline-block;
 	height: 1rem;
 	width: 1rem;
+}
+.js-submit::before {
+	background: var(--submit-fg);
 }
 .icon-delete {
 	color:var(--red);
@@ -720,7 +727,7 @@ textarea:selection, input:selection {
 	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1"><path d="M2 2l12 12M2 14l12-12"/></svg>');
 }
 .icon-save::before {
-	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 6l5 5 7-7"/></svg>');
+	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 8l5 5 7-7"/></svg>');
 }
 .icon-export::before {
 	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none" stroke-linejoin="round"><path d="M11.5 10v4h-9v-12h9v4M8 8h7"/><path fill="black" d="M13 8v-2l2 2-2 2z"/></svg>');
@@ -736,6 +743,11 @@ textarea:selection, input:selection {
 	margin: 0.2rem;
 	width: 1.2rem;
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle fill="%23cb9eff" cx="8" cy="8" r="8"/><path fill="%233338" d="M5 7l6 0l2 4h-10z"/><path fill="none" stroke="%23333" stroke-width="1.5" stroke-linejoin="round" d="M9.5 2v3l3.5 6h-10l3.5-6v-3"/></svg>');
+}
+
+/* Experimental page */
+.title + .item {
+	padding-top: 4rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -800,3 +812,11 @@ textarea:selection, input:selection {
 		background: #75747a;
 	}
 }
+
+/* for Beta version */
+.beta {
+	.splash-icon {
+		filter: hue-rotate(200deg);
+	}
+}
+

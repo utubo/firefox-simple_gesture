@@ -1,22 +1,37 @@
 #!/usr/bin/sh
 
+XPI_NAME=simple-gesture
 CURRENT_DIR=$(pwd)
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-# manifest_firefox
 cd $SCRIPT_DIR/src
-zip -r ../simple-gesture.zip * -x "manifest_*.json"
-cd ..
-mv -f simple-gesture.zip simple-gesture.xpi
 
-# for Kiwi browser
-# manifest_chrome
-cd $SCRIPT_DIR/src
+for_beta () {
+	if [ -n "$MAKE_XPI_BETA" ]; then
+		sed \
+			-e 's/"version": "\(.*\)"/"version": "\1"\, "version_name": "\1 beta"/' \
+			-e 's/\("id": ".*\)@/\1_beta@/' \
+			manifest.json > manifest.json.beta
+		mv -f manifest.json.beta manifest.json
+	fi
+}
+
+# Backup manifest.json
 mv manifest.json manifest_firefox.json
-mv manifest_chrome.json manifest.json
-rm -f ../simple-gesture-chrome.zip
-zip -r ../simple-gesture-chrome.zip * -x "manifest_*.json"
-mv manifest.json manifest_chrome.json
-mv manifest_firefox.json manifest.json
+
+# Firefox
+cp -p manifest_firefox.json manifest.json
+for_beta
+zip -r ../$XPI_NAME.zip * -x "manifest_*.json"
+mv -f ../$XPI_NAME.zip ../$XPI_NAME.xpi
+
+# Chrome
+cp -p manifest_chrome.json manifest.json
+for_beta
+zip -r ../$XPI_NAME.zip * -x "manifest_*.json"
+mv -f ../$XPI_NAME.zip ../$XPI_NAME-chrome.zip
+
+# Restore manifest.json
+mv -f manifest_firefox.json manifest.json
 
 cd $CURRENT_DIR
 

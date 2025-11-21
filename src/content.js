@@ -1,12 +1,6 @@
 var SimpleGesture = {};
 if (typeof browser === 'undefined') {
-	storageOrg = chrome.storage; // global scope for options.js
 	browser = chrome;
-	browser.storage = {
-		local: {
-			get: key => new Promise(resolve => { chromeOrg.storage.local.get(key, resolve); }),
-		}
-	};
 }
 (async () => {
 	'use strict';
@@ -33,23 +27,27 @@ if (typeof browser === 'undefined') {
 		blacklist: [],
 		disableWhileZoomedIn: false,
 		suggestNext: true,
+		confirmCloseTabs: true,
+		interval: 0,
+		pullToRefresh: '',
 		version: 0,
 	};
-	SimpleGesture.MAX_LENGTH = 17; // 9 moves + 8 hyphens = 17 chars.
-	const TAP_TIMEOUT = 100;
+	SimpleGesture.MAX_LENGTH = 9;
+	const TAP_TIMEOUT = 200;
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
 	const SUGGEST_OPACITY = 0.5;
+	const PULL_TO_REFRESH_DELAY = 300;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
 	const vvWidth = () => VV.isDummy ? window.innerWidth : VV.width;
 	const vvHeight = () => VV.isDummy ? window.innerHeight : VV.height;
 
 	// fields ------------
 	// gesture
-	let gesture = ''; // e.g. 'L-R-U-D'
+	let arrows = null;
 	let startPoint = ''; // e.g. 'L:', 'R:', 'T:' or 'B:'
 	let lx = 0; // last X
 	let ly = 0; // last Y
-	let lg = null; // last gesture (e.g. 'L','R','U' or 'D')
+	let la = null; // last arrow (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let touches = [];
 	let timer = null;
@@ -70,12 +68,18 @@ if (typeof browser === 'undefined') {
 	let toastMain;
 	let toastSub;
 	let isToastVisible;
+	// fast scroll
+	let fastScroll = null;
+	// pull to refresh
+	let enablePullToRefresh = false;
+	let hidePullToRefresh = () => {};
 	// others
 	let iniTimestamp = 0;
 	let exData;
 	let tapTimer = 0;
 	let doubleTapTimer = 0;
 	let isDelaySingleTap = false;
+	let intervalSleep = false;
 
 	// utilities ---------
 	SimpleGesture.getXY = e => {
@@ -97,7 +101,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	const resetGesture = e => {
-		gesture = null;
+		arrows = null;
 		timer = null;
 		if (e?.withTimeout && toast && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
@@ -123,7 +127,7 @@ if (typeof browser === 'undefined') {
 
 	const executeEvent = (f, e) => {
 		if (!f) return;
-		e.gesture = gesture;
+		e.arrows = arrows;
 		e.startPoint = startPoint;
 		e.fingers = fingers;
 		return f(e);
@@ -198,6 +202,7 @@ if (typeof browser === 'undefined') {
 
 	// touch-events ------
 	const onTouchStart = e => {
+		if (intervalSleep) return;
 		fixSize();
 		if (!size) return;
 		touchStartTime = Date.now();
@@ -208,44 +213,59 @@ if (typeof browser === 'undefined') {
 			gesture = '';
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
-		lg = null;
+		la = null;
 		setupStartPoint(lx, ly);
+		if (setupFastScroll()) return;
 		fingersNum = 1;
 		fingers = '';
 		if (!setupFingers(e)) return;
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
 		touches = e?.touches || [e];
-		if (executeEvent(!gesture ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
+		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		restartTimer();
 		if (gesture?.endsWith('T') && SimpleGesture.ini.toast) showGestureDelay();
+		if (SimpleGesture.ini.pullToRefresh) {
+			enablePullToRefresh = pullToRefreshStart()
+		}
 	};
 
 	const onTouchMove = e => {
-		if (gesture === null) return;
-		if (gesture.length > SimpleGesture.MAX_LENGTH) return;
-		if (!gesture && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
+		if (fastScroll) {
+			doFastScroll(e);
+			return;
+		}
+		if (arrows === null) return;
+		if (arrows.length > SimpleGesture.MAX_LENGTH) return;
+		if (!arrows && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
 		if (!setupFingers(e)) return;
 		const [x, y] = SimpleGesture.getXY(e);
 		const dx = x - lx;
 		const dy = y - ly;
 		const absX = dx < 0 ? -dx : dx;
 		const absY = dy < 0 ? -dy : dy;
+		if (dy < 0 && enablePullToRefresh) {
+			pullToRefreshCancel();
+		}
 		if (absX < size && absY < size) return;
 		lx = x;
 		ly = y;
-		const g = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
-		if (g === lg) return;
-		lg = g;
-		if (gesture) gesture += '-';
-		gesture += g;
+		const a = absX < absY ? (dy < 0 ? 'U' : 'D') : (dx < 0 ? 'L' : 'R');
+		if (a === la) return;
+		la = a;
+		arrows.push(a);
 		if (executeEvent(SimpleGesture.onInput, e)) return;
+		if (enablePullToRefresh) {
+			pullToRefreshMove()
+		}
 		if (SimpleGesture.ini.toast) showGesture();
 		restartTimer();
 	};
 
-	const getCommandByState = (s, f, g) => {
-		return SimpleGesture.ini.gestures[s + f + g] ||
-			SimpleGesture.ini.gestures[f + g];
+	const getCommandByState = (s, f, a) => {
+		if (!a) return;
+		const fa = f + a.join('-');
+		return SimpleGesture.ini.gestures[s + fa] ||
+			SimpleGesture.ini.gestures[fa];
 	}
 
 	const onTouchEnd = e => {
@@ -258,21 +278,47 @@ if (typeof browser === 'undefined') {
 			clearTimeout(timer);
 			clearTimeout(showToastTimer);
 			hideToast();
+			if (enablePullToRefresh && pullToRefreshEnd()) {
+				if (PULL_TO_REFRESH_DELAY < touchEndTime - touchStartTime) {
+					location.reload();
+				} else {
+					pullToRefreshCancel();
+				}
+				return;
+			}
 			if (executeEvent(SimpleGesture.onEnd, e)) return;
-			const g = getCommandByState(startPoint, fingers, gesture);
+			const g = getCommandByState(startPoint, fingers, arrows);
 			if (!g) return;
 			if (!isGestureEnabled && g !== 'disableGesture') return;
 			SimpleGesture.doCommand(g);
 			e.stopPropagation();
 			e.cancelable && e.preventDefault();
+			if (SimpleGesture.ini.interval) {
+				intervalSleep = true;
+				setTimeout(() => {
+					intervalSleep = false;
+				}, SimpleGesture.ini.interval);
+			}
 		} finally {
-			gesture = null;
+			arrows = null;
+			fastScroll = null;
+			pullToRefreshCancel();
 			//target = null; Keep target for Custom gesture
 		}
 	};
 
+	const onCancel = () => {
+		clearTimeout(timer);
+		clearTimeout(showToastTimer);
+		hideToast();
+		arrows = null;
+		touchEndTime = 0;
+	};
+
 	const setupStartPoint = async (x, y) => {
-		if (x < edgeWidth) {
+		if (startPoint) {
+			// nop
+		} else if (x < edgeWidth) {
 			startPoint = 'L:';
 		} else if (x > lastInnerWidth - edgeWidth) {
 			startPoint = 'R:';
@@ -395,6 +441,11 @@ if (typeof browser === 'undefined') {
 			}, SimpleGesture.ini.doubleTapMsec);
 			return true
 		}
+		return true
+	};
+
+	SimpleGesture.isNowaitSingleTap = () => {
+		return !getCommandByState(startPoint, fingers, ['T-T']);
 	};
 
 	const setupFingers = e => {
@@ -408,6 +459,74 @@ if (typeof browser === 'undefined') {
 			fingers = `${f}:`;
 		}
 		return true;
+	};
+
+	// fast scroll --------------
+	const setupFastScroll = () => {
+		if (!startPoint[0]) return;
+		if (SimpleGesture.ini.fastScroll !== startPoint[0]) return;
+		const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+		let z = h / lastInnerHeight;
+		if (z <= 1) return;
+		if (SimpleGesture.ini.fastScrollRv) {
+			z = -z;
+		}
+		fastScroll = {
+			y: ly, top: window.scrollY, left: window.scrollX, z: z,
+		};
+		return true;
+	};
+
+	const doFastScroll = e => {
+		const [_, y] = SimpleGesture.getXY(e);
+		window.scrollTo(
+			fastScroll.left,
+			fastScroll.top + (y - fastScroll.y) * fastScroll.z
+		);
+	};
+
+	// pull to refresh --------------
+	const pullToRefreshStart = () => {
+		return fingersNum === 1 &&
+			!VV.offsetTop &&
+			!scrollY &&
+			!document.documentElement.scrollTop &&
+			!document.body.scrollTop &&
+			!isScrolled(target)
+	};
+
+	const isScrolled = e => {
+		return !e ? false : e.scrollTop || isScrolled(e.parentNode);
+	}
+
+	const pullToRefreshCancel = () => {
+		enablePullToRefresh = false
+		hidePullToRefresh();
+	}
+
+	const pullToRefreshMove = () => {
+		if (!arrows) {
+			// NOP
+		} else if (!pullToRefreshEnd()) {
+			pullToRefreshCancel();
+		} else if (SimpleGesture.ini.pullToRefresh === 'icon') {
+			SimpleGesture.mod('pullToRefresh', m => {
+				m.show();
+				hidePullToRefresh = m.hide;
+			});
+		}
+	};
+
+	const pullToRefreshEnd = () => {
+		return arrows?.[0] === 'D' &&
+			!arrows[1] &&
+			!getCommandByState(startPoint, fingers, arrows);
+	};
+
+	const pullToRefreshToast = () => {
+		const label = document.createElement('DIV');
+		label.textContent = getMessage('pullToRefresh');
+		return label;
 	};
 
 	// toast --------------
@@ -453,13 +572,13 @@ if (typeof browser === 'undefined') {
 		}));
 	};
 
-	SimpleGesture.drawArrows = (gesture, label) => {
+	SimpleGesture.drawArrows = (arrows_, label) => {
 		makeArrowSvg();
-		const a = [];
-		for (const g of gesture.split('-')) {
-			a.push(arrowsSvg[g]?.cloneNode(true));
+		const svgs = [];
+		for (const a of arrows_) {
+			svgs.push(arrowsSvg[a]?.cloneNode(true));
 		}
-		label.replaceChildren(...a);
+		label.replaceChildren(...svgs);
 	};
 
 	const showToast = () => {
@@ -472,7 +591,7 @@ if (typeof browser === 'undefined') {
 		toast.style.transition = 'opacity .3s';
 		fixToastSize();
 		fixToastPosition();
-		window.requestAnimationFrame(() => { toast.style.opacity = '1'; });
+		requestAnimationFrame(() => { toast.style.opacity = '1'; });
 		setTimeout(() => {
 			toast.style.transition += ',left .2s .1s, top .2s .1s';
 		}, 300);
@@ -495,6 +614,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	const hideToast = delay => {
+		hidePullToRefresh();
 		if (!toast) return;
 		if (!isToastVisible) return;
 		if (delay) {
@@ -503,7 +623,7 @@ if (typeof browser === 'undefined') {
 		}
 		clearTimeout(hideToastTimer);
 		isToastVisible = false;
-		window.requestAnimationFrame(() => { toast.style.opacity = '0'; });
+		requestAnimationFrame(() => { toast.style.opacity = '0'; });
 	};
 
 	const setupToast = () => {
@@ -528,7 +648,13 @@ if (typeof browser === 'undefined') {
 			z-index: 2147483647;
 		`; // TODO: I don't like this z-index. :(
 		toastMain = document.createElement('DIV');
-		toastMain.style.cssText = 'padding: .2em 0; line-height: 1;';
+		toastMain.style.cssText = `
+			display: flex;
+			flex-direction: column;
+			gap: .5em;
+			line-height: 1;
+			padding: .2em 0;
+		`;
 		toastSub = document.createElement('DIV');
 		toastSub.style.cssText = `
 			font-size: 60%;
@@ -566,23 +692,40 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
+	let joinedArrows = '';
+
 	const showGestureImpl = async () => {
-		let list = SimpleGesture.ini.gestures;
-		const g = getCommandByState(startPoint, fingers, gesture);
+		const g = getCommandByState(startPoint, fingers, arrows);
 		if (!isGestureEnabled && g !== 'disableGesture') return false;
-		if (!SimpleGesture.ini.suggestNext) {
-			if (!g) return false;
-			list = {};
-			list[gesture] = g;
-		} else if (
-			!g &&
-			!gesture.split('-')[SimpleGesture.ini.toastMinStroke - 1]
+		joinedArrows = arrows.join('-');
+		let elms = [];
+		if (
+			SimpleGesture.ini.suggestNext &&
+			arrows[SimpleGesture.ini.toastMinStroke - 1]
 		) {
+			elms = await suggestGestures(SimpleGesture.ini.gestures, g);
+		} else if (g) {
+			const list = {};
+			list[joinedArrows] = g;
+			elms = await suggestGestures(list, g);
+		}
+		if (
+			enablePullToRefresh &&
+			SimpleGesture.ini.pullToRefresh === 'text'
+		) {
+			elms.unshift(pullToRefreshToast());
+		}
+		if (!elms[0]) {
 			return false;
 		}
 		setupToast();
 		setTextSafe(toastSub, SimpleGesture.getAddnlText(startPoint, fingers));
-		return await suggestGestures(list, g);
+		const f = document.createDocumentFragment();
+		for (const e of elms) {
+			f.appendChild(e);
+		}
+		toastMain.replaceChildren(f);
+		return true;
 	};
 
 	const showGestureDelay = () => {
@@ -618,25 +761,19 @@ if (typeof browser === 'undefined') {
 	};
 
 	const suggestGestures = async (list, match) => {
-		const sGesture = startPoint + fingers + gesture;
-		const fGesture = fingers + gesture;
-		const f = document.createDocumentFragment();
-		let done = false;
+		const elms = [];
+		const fGesture = fingers + joinedArrows;
+		const sGesture = startPoint + fGesture;
 		for (const [k, v] of Object.entries(list)) {
 			if (!isMatch(k, fGesture, sGesture)) continue;
 			if (startPoint && list[startPoint + k]) continue;
 			const name = await gestureName(v);
 			if (!name) continue; // for old ini-data.
 			// create element
-			const arrows = document.createElement('DIV');
-			arrows.style.cssText = `
-				border-top: 1px;
-				line-height: 1;
-				${done ?'margin-top: .5rem;' : ''}
-			`;
-			SimpleGesture.drawArrows(k.replace(/^.:/, ''), arrows);
-			let i = gesture.split('-').length + 1;
-			for (const a of arrows.childNodes) {
+			const label = document.createElement('DIV');
+			SimpleGesture.drawArrows(k.replace(/^.:/, '').split('-'), label);
+			let i = arrows.length + 1;
+			for (const a of label.childNodes) {
 				if (0 < --i) {
 					continue;
 				}
@@ -645,12 +782,10 @@ if (typeof browser === 'undefined') {
 			const text = document.createElement('SPAN');
 			text.style.opacity = v === match ? 1 : SUGGEST_OPACITY;
 			text.textContent = name
-			arrows.appendChild(text);
-			f.appendChild(arrows);
-			done = true;
+			label.appendChild(text);
+			elms.push(label);
 		}
-		toastMain.replaceChildren(f);
-		return done;
+		return elms;
 	};
 
 	// uncommon modules ---
@@ -664,7 +799,7 @@ if (typeof browser === 'undefined') {
 			target.addEventListener('touchstart', events.start, true);
 			target.addEventListener('touchmove', events.move, true);
 			target.addEventListener('touchend', events.end, true);
-			target.addEventListener('touchcancel', events.end, true);
+			target.addEventListener('touchcancel', events.cancel, true);
 		} else {
 			// for test on Desktop
 			target.addEventListener('mousedown', events.start, true);
@@ -719,7 +854,6 @@ if (typeof browser === 'undefined') {
 	};
 
 	// START HERE ! ------
-	//VV.addEventListener('resize', fixSize); this is called too many times, so use 'touchdown' instead of 'resize'.
 	await SimpleGesture.loadIni();
 	if (SimpleGesture.ini.blacklist) {
 		for (const urlPattern of SimpleGesture.ini.blacklist) {
@@ -729,10 +863,12 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd });
+	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd, cancel: onCancel });
 	VV.addEventListener('scroll', e => {
 		fixToastPosition();
 		onTouchMove(e);
 	});
+	// 'resize' is called too many times, so use 'touchstart' instead of 'resize'.
+	// VV.addEventListener('resize', fixSize);
 })();
 
