@@ -6,7 +6,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 cd $SCRIPT_DIR/src
 
 # Fix manifest.json for beta
-# NOTE: strict_min_version of Water fox is 140.0
+# NOTE: keep strict_min_version for ESR.
 for_beta () {
 	if [ -n "$MAKE_XPI_BETA" ]; then
 		sed \
