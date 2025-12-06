@@ -5,11 +5,14 @@ CURRENT_DIR=$(pwd)
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 cd $SCRIPT_DIR/src
 
+# Fix manifest.json for beta
+# NOTE: strict_min_version of Water fox is 140.0
 for_beta () {
 	if [ -n "$MAKE_XPI_BETA" ]; then
 		sed \
 			-e 's/"version": "\(.*\)"/"version": "\1"\, "version_name": "\1 beta"/' \
 			-e 's/\("id": ".*\)@/\1_beta@/' \
+			-e 's/\("strict_min_version"\): ".*"/\1: "140.0"/' \
 			manifest.json > manifest.json.beta
 		mv -f manifest.json.beta manifest.json
 	fi
