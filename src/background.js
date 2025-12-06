@@ -101,20 +101,17 @@ if (typeof browser === 'undefined') {
 	const decorateUrl = arg => (arg.discarded ? 'modules/discarded.html?' : '') + arg.url;
 
 	// FF for Android does not support Tab.index!
-	const prevOrNextTab = async (arg, f) => {
-		const all = await browser.tabs.query({});
-		const max = all.length;
-		let found = false;
-		for (let i = 0; i < max * 2; i ++) {
-			const t = all[(max + f(i)) % max];
-			if (t.hidden) continue;
-			if (t.id === arg.tab.id)  {
-				found = true;
-			} else if (found) {
-				browser.tabs.update(t.id, { active: true });
-				return;
-			}
-		}
+	const prevOrNextTab = async (currentTab, step) => {
+		// NOTE: In FF for Android, each tab is assigned to its own window.
+		// const all = await browser.tabs.query({ currentWindow: true, discarded: false });
+		const all = await browser.tabs.query({ discarded: false });
+		const visible = all.filter(t => !t.hidden && t.incognito === currentTab.incognito);
+		const len = visible.length;
+		if (len < 2) return;
+		const curIdx = visible.findIndex(t => t.id === currentTab.id);
+		let idx = (curIdx + step + len) % len;
+		const target = visible[idx];
+		await browser.tabs.update(target.id, { active: true });
 	};
 
 	// Gestures
@@ -245,10 +242,10 @@ if (typeof browser === 'undefined') {
 			}
 		},
 		prevTab: async arg => {
-			prevOrNextTab(arg, i => -i);
+			prevOrNextTab(arg.tab, -1);
 		},
 		nextTab: async arg => {
-			prevOrNextTab(arg, i => i);
+			prevOrNextTab(arg.tab, 1);
 		},
 		lastUsedTab: async () => {
 			// NOTE: browser.tabs.get(id) returns closed tab.
