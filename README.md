@@ -13,7 +13,7 @@ https://github.com/utubo/firefox-simple_gesture/discussions/categories/customges
 ### Stable
 https://addons.mozilla.org/addon/simple-gesture/
 
-### Beta version
+### Beta
 If you are willing to help test the Beta version.  
 https://addons.mozilla.org/addon/simple-gesture-beta/
 
@@ -31,12 +31,12 @@ https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhobl
 2. In Chromium, open Extensions (e.g. `kiwi://extensions`).
 3. Click slider to activate Developer mode.
 4. Click `+(from .zip/.crx/.user.js)`.
-5. Select simple-gesture-chrome.zip.
+5. Select `simple-gesture-chrome.zip`.
 
 #### Known issues
 - Custom Gestures are not supported.
 - The "Open link in background" toast notification does not appear.
-- If the settings page does not work, please use [v3.21](https://github.com/utubo/firefox-simple_gesture/releases/tag/v3.21). See #97
+- If the settings page does not work, please use [v3.21](https://github.com/utubo/firefox-simple_gesture/releases/tag/v3.21). See [#97](https://github.com/utubo/firefox-simple_gesture/issues/97)
 
 ## Licenses
 Simple Gesture is released under the [MPL 2.0 license](http://www.mozilla.org/MPL/2.0/).
