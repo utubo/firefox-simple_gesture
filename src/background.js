@@ -102,10 +102,14 @@ if (typeof browser === 'undefined') {
 
 	// FF for Android does not support Tab.index!
 	const prevOrNextTab = async (currentTab, step) => {
-		// NOTE: In FF for Android, each tab is assigned to its own window.
-		// const all = await browser.tabs.query({ currentWindow: true, discarded: false });
+		// NOTE: In FF for Android, each tab is assigned to its own window, so does not work `currentWindow: true`
 		const all = await browser.tabs.query({ discarded: false });
-		const visible = all.filter(t => !t.hidden && t.incognito === currentTab.incognito);
+		// NOTE: In FF for Android, tabs.query() ignores `discarded: false`.
+		const visible = all.filter(t =>
+			!t.hidden &&
+			!t.discarded &&
+			t.incognito === currentTab.incognito
+		);
 		const len = visible.length;
 		if (len < 2) return;
 		const curIdx = visible.findIndex(t => t.id === currentTab.id);
