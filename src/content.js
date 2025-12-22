@@ -46,6 +46,8 @@ if (typeof browser === 'undefined') {
 	let startPoint = ''; // e.g. 'L:', 'R:', 'T:' or 'B:'
 	let lx = 0; // last X
 	let ly = 0; // last Y
+	let cx = 0; // last client X
+	let cy = 0; // last client Y
 	let la = null; // last arrow (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let touches = [];
@@ -83,7 +85,10 @@ if (typeof browser === 'undefined') {
 	// utilities ---------
 	SimpleGesture.getXY = e => {
 		const p = e.touches ? e.touches[0] : e;
-		return p.clientX !== undefined ? [p.clientX - VV.offsetLeft, p.clientY - VV.offsetTop] : [lx, ly];
+		const ret = p.clientX !== undefined ? [p.clientX - VV.offsetLeft, p.clientY - VV.offsetTop] : [lx, ly];
+		cx = p.clientX
+		cy = p.clientY
+		return ret
 	};
 
 	const getMessage = s => {
@@ -792,6 +797,10 @@ if (typeof browser === 'undefined') {
 			target.addEventListener('mousemove', events.move, true);
 			target.addEventListener('mouseup', events.end, true);
 		}
+		addEventListener('scroll', () => {
+			if (arrows === null) return;
+			events.move({ clientX: cx, clientY: cy })
+		})
 	};
 
 	const loadExData = async b => {
