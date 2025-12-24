@@ -46,8 +46,6 @@ if (typeof browser === 'undefined') {
 	let startPoint = ''; // e.g. 'L:', 'R:', 'T:' or 'B:'
 	let lx = 0; // last X
 	let ly = 0; // last Y
-	let cx = 0; // last client X
-	let cy = 0; // last client Y
 	let la = null; // last arrow (e.g. 'L','R','U' or 'D')
 	let target = null;
 	let touches = [];
@@ -83,12 +81,15 @@ if (typeof browser === 'undefined') {
 	const singleTap = { timer: null };
 
 	// utilities ---------
+	let lcx = 0;
+	let lcy = 0;
 	SimpleGesture.getXY = e => {
-		const p = e.touches ? e.touches[0] : e;
-		const ret = p.clientX !== undefined ? [p.clientX - VV.offsetLeft, p.clientY - VV.offsetTop] : [lx, ly];
-		cx = p.clientX
-		cy = p.clientY
-		return ret
+		const a = e.touches ? e.touches[0] : e;
+		if (a.clientX !== undefined) {
+			lcx = a.clientX;
+			lcy = a.clientY;
+		}
+		return [lcx - VV.offsetLeft, lcy - VV.offsetTop];
 	};
 
 	const getMessage = s => {
@@ -124,9 +125,9 @@ if (typeof browser === 'undefined') {
 		if (w === lastInnerWidth && h === lastInnerHeight) return;
 		lastInnerWidth = w;
 		lastInnerHeight = h;
-		edgeWidth = (Math.min(w, h) / 10)^0;
-		const z = Math.min(w, h) / 320;
-		size = (SimpleGesture.ini.strokeSize * z)^0;
+		const m = Math.min(w, h)
+		size = (SimpleGesture.ini.strokeSize * m / 320)^0;
+		edgeWidth = (m / 10)^0;
 	};
 
 	const executeEvent = (f, e) => {
@@ -797,10 +798,6 @@ if (typeof browser === 'undefined') {
 			target.addEventListener('mousemove', events.move, true);
 			target.addEventListener('mouseup', events.end, true);
 		}
-		addEventListener('scroll', () => {
-			if (arrows === null) return;
-			events.move({ clientX: cx, clientY: cy })
-		})
 	};
 
 	const loadExData = async b => {
