@@ -5,6 +5,8 @@
 	--caption: #0c0c0d;
 	--accent: #592acb;
 	--checked: #302962;
+	--selected: #654ea1;
+	--selected-bg: #c6c4d4;
 	--secondery: #666;
 	--button: #cfcfd8;
 	--submit: #302962;
@@ -289,10 +291,10 @@ textarea:selection, input:selection {
 	width: 1.2rem;
 }
 .checkbox:checked + .checkbox-image {
-	background: #bdbbcd;
+	background: var(--selected-bg);
 }
 .checkbox:checked + .checkbox-image::after {
-	background: var(--checked);
+	background: var(--selected);
 	transform: translateX(1rem);
 }
 .radio {
@@ -754,6 +756,8 @@ textarea:selection, input:selection {
 		--caption: #fbfbfecc;
 		--accent: #cb9eff;
 		--checked: #cb9eff;
+		--selected: #a86ffa;
+		--selected-bg: #523f71;
 		--secondery: #fbfbfeaa;
 		--button: #52525e;
 		--submit: #7542e5;
@@ -770,9 +774,6 @@ textarea:selection, input:selection {
 	}
 	.checkbox-image {
 		background: #666;
-	}
-	.checkbox:checked + .checkbox-image {
-		background: #86a;
 	}
 	/* dialog */
 	.dlg {
