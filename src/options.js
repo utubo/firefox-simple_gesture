@@ -739,6 +739,7 @@ try {
 			const t = elm.getAttribute('data-type') || elm.type;
 			if (t === 'checkbox') {
 				ini[elm.id] = elm.checked;
+				onChecked({ target: elm });
 			} else if (elm.value === INSTEAD_OF_EMPTY[elm.id]) {
 				ini[elm.id] = null;
 			} else if (t === 'number') {

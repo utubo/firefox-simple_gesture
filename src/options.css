@@ -277,7 +277,7 @@ textarea:selection, input:selection {
 		background: transparent;
 		transition: .3s;
 	}
-	&:has(.radio:checked) {
+	&:has(>.radio:checked) {
 		&::before {
 			border-color: var(--checked);
 		}
@@ -325,7 +325,7 @@ textarea:selection, input:selection {
 		transition: .3s;
 		width: 1.2rem;
 	}
-	&:has(.checkbox:checked) {
+	&:has(>.checkbox:checked) {
 		&::before {
 			background: var(--checked-bg);
 		}
