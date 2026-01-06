@@ -41,11 +41,14 @@ body {
   box-sizing: border-box;
   /* min-height: 100vh; this setting has probrem of scroll position. */
   padding-bottom: 2rem;
-  padding-top: 3.3rem;
+  padding-top: 1.3rem;
 }
 .page-break {
   border: none;
   margin: 1rem 0;
+}
+h2 {
+  border-top: 1pt solid var(--third) !important;
 }
 
 /* items */
