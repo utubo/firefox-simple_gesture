@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="./options_common.css">
 		<link rel="stylesheet" href="./options.css">
 		<link rel="icon" type="image/png" href="./icon64.png">
 		<title>Settings - Simple Gesture</title>
@@ -18,7 +19,7 @@
 				<div class="splash-title i18n">extensionName</div>
 				<div id="splashVersion"></div>
 			</div>
-			<div class="page-header i18n">Settings</div>
+			<h2 class="i18n">Settings</h2>
 			<div class="link-item caption i18n" data-targetPage="basicGestures">basicGestures</div>
 			<div class="link-item caption i18n" data-targetPage="tabGestures">tabGestures</div>
 			<div class="link-item caption i18n" data-targetPage="otherGestures">otherGestures</div>
@@ -32,7 +33,7 @@
 		<hr class="page-break">
 
 		<div class="page" id="basicGestures">
-			<div class="page-header i18n">basicGestures</div>
+			<h2 class="i18n">basicGestures</h2>
 			<div class="gesture-list" data-gestures="
 				forward back reload
 				top bottom
@@ -57,7 +58,7 @@
 		</div>
 
 		<div class="page" id="tabGestures">
-			<div class="page-header i18n">tabGestures</div>
+			<h2 class="i18n">tabGestures</h2>
 			<div class="gesture-list" data-gestures="
 				nextTab! prevTab! lastUsedTab
 				close closeLeft! closeRight! closeAll! closeOthers! closeSameUrl!
@@ -90,7 +91,7 @@
 		</div>
 
 		<div class="page" id="otherGestures">
-			<div class="page-header i18n">otherGestures</div>
+			<h2 class="i18n">otherGestures</h2>
 
 			<div class="gesture-list" data-gestures="toggleUserAgent"></div>
 			<div class="sub-item user-agent-status" data-parent="toggleUserAgent_caption">
@@ -135,7 +136,7 @@
 		</div>
 
 		<div class="page" id="customGestures">
-			<div class="page-header i18n">customGestures</div>
+			<h2 class="i18n">customGestures</h2>
 			<div id="customGestureList" class="gesture-list"></div>
 			<div id="addCustomGesture" class="button icon-add i18n">addCustomGesture</div>
 			</div>
@@ -144,7 +145,7 @@
 		<hr class="page-break">
 
 		<div class="page" id="configurations">
-			<div class="page-header i18n">configurations</div>
+			<h2 class="i18n">configurations</h2>
 			<div id="timeoutAndStrokeSize" class="item">
 				<label class="caption i18n">timeoutAndStrokeSize</label>
 				<div class="sub-item">

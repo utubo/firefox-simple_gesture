@@ -20,6 +20,7 @@ try {
 	const NOP = () => {};
 
 	// fields ------------
+	let initialized = false;
 	let gestureNames = [];
 	let target = null;
 	let minX;
@@ -36,7 +37,7 @@ try {
 
 	const byClass = (elm, clazz) => elm.getElementsByClassName(clazz)[0];
 
-	const allByClass = clazz => document.getElementsByClassName(clazz);
+	const allByClass = (elm, clazz) => !clazz ? document.getElementsByClassName(elm) : elm.getElementsByClassName(clazz);
 
 	const parentByClass = (elm, clazz) => {
 		for (let e = elm; e?.classList; e = e.parentNode) {
@@ -209,7 +210,7 @@ try {
 			}
 			saveIni();
 			for (const name of gestureNames) {
-				 updateGestureItem(byId(`${name}_arrows`), swaped[name]);
+				updateGestureItem(byId(`${name}_arrows`), swaped[name]);
 			}
 		}
 		toggleDoubleTapNote();
@@ -655,6 +656,13 @@ try {
 			byId('sliderA').style.background =
 				`linear-gradient(to right, transparent, ${rgb})`;
 			dlgs.colorDlg.rgb = rgb;
+			for (const c of allByClass(byId('colorDlg'), 'color-tile')) {
+				toggleClass(
+					c.getAttribute('data-c') === rgb,
+					'color-tile-selected',
+					c
+				);
+			}
 		},
 		onShow: id => {
 			dlgs.colorDlg.targetId = id;
@@ -695,18 +703,27 @@ try {
 				t.style.background = c;
 				t.setAttribute('data-c', c);
 				// only white and black have border.
-				if (c === '#f9f9fa' || c === '#23222b') {
-					t.style.borderColor = 'var(--secondery)';
+				if (c === '#f9f9fa' || c === '#52525e' || c === '#23222b') {
+					t.className += ' color-tile-with-border'
 				}
 				f.appendChild(t);
 			}
 			const p = byId('pallet');
 			p.appendChild(f);
 			p.addEventListener('click', e => {
-				if (e.target.className !== 'color-tile') return;
+				if (!e.target.classList.contains('color-tile')) return;
 				dlgs.colorDlg.setRGB(e.target.getAttribute('data-c'));
 			});
 		},
+	};
+	const colorPreview = i => byClass(i.parentNode, 'color-preview');
+	const onChangeColorText = e => {
+		const id = e.target.id;
+		resetTimer(`onchangecolortext_${id}`, () => {
+			const value = e.target.value || INSTEAD_OF_EMPTY[id];
+			colorPreview(e.target).style.backgroundColor = value;
+			saveBindingValues();
+		}, initialized ? 250 : 0);
 	};
 
 	// User-Agent switcher ----
@@ -781,15 +798,6 @@ try {
 				return s;
 			}
 		}
-	};
-	const colorPreview = i => byClass(i.parentNode, 'color-preview');
-	const onChangeColorText = e => {
-		const id = e.target.id;
-		resetTimer(`onchangecolortext_${id}`, () => {
-			const value = e.target.value || INSTEAD_OF_EMPTY[id];
-			colorPreview(e.target).style.backgroundColor = value;
-			saveBindingValues();
-		}, 500);
 	};
 	const onChecked = e => {
 		for (const elm of allByClass(`js-linked-${e.target.id}`)) {
@@ -1024,6 +1032,10 @@ try {
 		if (!cover) return;
 		setTimeout(() => { fadeout(cover); });
 		setTimeout(() => { cover.remove(); }, 500);
+		setTimeout(() => {
+			document.body.classList.add('initialized');
+			initialized = true;
+		}, 500);
 	};
 	const setupSettingItems = async () => {
 		document.body.classList.add(`mv${manifest.manifest_version}`);
