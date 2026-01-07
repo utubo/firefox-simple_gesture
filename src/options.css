@@ -1,9 +1,6 @@
-/* override common css */
+/* colors */
 :root {
   --caption: #0c0c0d;
-}
-body {
-  margin: 0;
 }
 
 /* manifest v3 */
@@ -23,6 +20,12 @@ body {
 .first-page {
   flex-direction: column;
   display: flex;
+  /* cancel margin of body */
+  margin-top: -2em;
+  & > h2 {
+    margin-top: 0;
+  }
+  padding-bottom: 0;
 }
 .splash {
   align-items: center;
@@ -42,13 +45,13 @@ body {
   /* min-height: 100vh; this setting has probrem of scroll position. */
   padding-bottom: 2rem;
   padding-top: 1.3rem;
+  & > h2 {
+    border-top: 1pt solid var(--third) !important;
+  }
 }
 .page-break {
   border: none;
   margin: 1rem 0;
-}
-h2 {
-  border-top: 1pt solid var(--third) !important;
 }
 
 /* items */
