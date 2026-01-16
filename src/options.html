@@ -48,9 +48,9 @@
 					<option value="none" class="caption i18n">toastForNewTabPositionNone</option>
 				</select>
 			</div>
-			<label class="sub-item" data-parent="openLinkInBackground_item">
-				<span class="sub-caption i18n">openLinkInBackgroundDiscarded</span>
-				<input id="openLinkInBackgroundDiscarded" class="checkbox js-binding" type="checkbox" value="true">
+			<label class="sub-item checkbox-label" data-parent="openLinkInBackground_item">
+				<span class="sub-caption i18n js-no-events">openLinkInBackgroundDiscarded</span>
+				<input id="openLinkInBackgroundDiscarded" class="js-binding" type="checkbox" value="true">
 			</label>
 			<div class="sub-item">
 				<div id="doubleTapNote" class="hide note note-alert i18n">doubleTapNote</div>
@@ -86,7 +86,7 @@
 			</div>
 			<label class="item checkbox-label">
 				<span class="caption i18n">confirmCloseTabs</span>
-				<input id="confirmCloseTabs" class="checkbox js-binding" type="checkbox" value="true">
+				<input id="confirmCloseTabs" class="js-binding" type="checkbox" value="true">
 			</div>
 		</div>
 
@@ -96,7 +96,7 @@
 			<div class="gesture-list" data-gestures="toggleUserAgent"></div>
 			<div class="sub-item user-agent-status" data-parent="toggleUserAgent_caption">
 				<label for="userAgentStatus" class="checkbox-label">
-					<input id="userAgentStatus" class="checkbox" type="checkbox" value="true">
+					<input id="userAgentStatus" type="checkbox" value="true">
 				</label>
 			</div>
 			<div class="sub-item" data-parent="toggleUserAgent_item">
@@ -129,7 +129,7 @@
 				<div class="sub-item">
 					<label class="checkbox-label">
 						<span class="sub-caption i18n">reverse</span>
-						<input id="fastScrollRv" class="checkbox js-binding" type="checkbox" value="true">
+						<input id="fastScrollRv" class="js-binding" type="checkbox" value="true">
 					</label>
 				</div>
 			</div>
@@ -166,7 +166,7 @@
 				<div class="sub-item experimental">
 					<label class="checkbox-label">
 						<span class="sub-caption icon-flask i18n">delaySingleTap</span>
-						<input id="delaySingleTap" class="checkbox js-binding" type="checkbox" value="true">
+						<input id="delaySingleTap" class="js-binding" type="checkbox" value="true">
 					</label>
 					<span class="with-checkbox note note-info i18n">delaySingleTapNote</span>
 				</div>
@@ -180,7 +180,7 @@
 			<div class="item">
 				<label class="checkbox-label">
 					<span class="caption i18n">displayCommand</span>
-					<input id="toast" class="checkbox js-binding" type="checkbox" value="true">
+					<input id="toast" class="js-binding" type="checkbox" value="true">
 				</label>
 				<div class="any-items-container js-linked-toast">
 					<div class="sub-item">
@@ -200,7 +200,7 @@
 					<div class="sub-item">
 						<label class="checkbox-label">
 							<span class="caption i18n">suggestNext</span>
-							<input id="suggestNext" class="checkbox js-binding" type="checkbox" value="true">
+							<input id="suggestNext" class="js-binding" type="checkbox" value="true">
 						</label>
 					</div>
 					<div class="sub-item js-linked-suggestNext">
@@ -226,7 +226,7 @@
 			<div class="item experimental">
 				<label class="checkbox-label">
 					<span class="caption icon-flask i18n">disableWhileZoomedIn</span>
-					<input id="disableWhileZoomedIn" class="checkbox js-binding" type="checkbox" value="false">
+					<input id="disableWhileZoomedIn" class="js-binding" type="checkbox" value="false">
 				</label>
 			</div>
 			<div class="item">
@@ -237,7 +237,7 @@
 			<div class="item">
 				<label class="checkbox-label">
 					<span class="caption icon-flask i18n">EnableExperimentalFeatures</span>
-					<input id="experimental" class="checkbox js-binding js-binding-exData" type="checkbox" value="true">
+					<input id="experimental" class="js-binding js-binding-exData" type="checkbox" value="true">
 				</label>
 				<div class="explanation">
 					<a id="exp_readme" href="./experimental.html" target="_blank">readme(en)</a>
@@ -316,11 +316,11 @@
 						<input id="customGestureMsgId" class="text-input">
 						<label class="dlg-label sub-caption i18n">message</label>
 						<label class="radio-label">
-							<input id="messageTypeString" type="radio" name="messageType" value="string" class="radio">
+							<input id="messageTypeString" type="radio" name="messageType" value="string">
 							<span class="i18n">String</span>
 						</label>
 						<label class="radio-label">
-							<input id="messageTypeJson" type="radio" name="messageType" value="json" class="radio">
+							<input id="messageTypeJson" type="radio" name="messageType" value="json">
 							<span class="i18n">JSON</span>
 						</label>
 						<input id="customGestureMsgValue" class="text-input">

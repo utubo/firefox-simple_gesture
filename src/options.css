@@ -344,6 +344,9 @@
 }
 
 /* others */
+.js-no-events {
+  pointer-events: none;
+}
 .code, .inline-code {
   background: #999;
   border-radius: 4pt;

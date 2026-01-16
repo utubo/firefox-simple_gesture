@@ -132,7 +132,7 @@ textarea:selection, input:selection {
   display: inline-block;
   width: 8rem;
 }
-.radio {
+input[type="radio"] {
   display: none;
 }
 .radio-label {
@@ -159,7 +159,7 @@ textarea:selection, input:selection {
     background: transparent;
     transition: .3s;
   }
-  &:has(>.radio:checked) {
+  &:has(>input[type="radio"]:checked) {
     &::before {
       border-color: var(--checked);
     }
@@ -172,7 +172,7 @@ textarea:selection, input:selection {
     }
   }
 }
-.checkbox {
+input[type="checkbox"] {
   display: none;
 }
 .checkbox-label {
@@ -207,7 +207,7 @@ textarea:selection, input:selection {
     transition: .3s;
     width: 1.2rem;
   }
-  &:has(>.checkbox:checked) {
+  &:has(>input[type="checkbox"]:checked) {
     &::before {
       background: var(--checked-bg);
     }
