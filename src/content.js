@@ -81,7 +81,7 @@ if (typeof browser === 'undefined') {
 	const ACCEPT_SINGLE_TAP = -1;
 	const doubleTap = { timer: null, count: ACCEPT_SINGLE_TAP };
 	const singleTap = { timer: null };
-	const tapHold = { timer: null, done: false };
+	const tapHold = { timer: null };
 
 	// utilities ---------
 	let lcx = 0;
@@ -113,11 +113,8 @@ if (typeof browser === 'undefined') {
 	const resetGesture = e => {
 		arrows = null;
 		timer = null;
-		if (e?.withTimeout && toast && SimpleGesture.ini.toast) {
+		if (e?.withTimeout && isToastVisible && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
-		} else if (tapHold.done) {
-			tapHold.done = false;
-			setTimeout(hideToast, HIDE_TOAST_DELAY);
 		} else {
 			hideToast();
 		}
@@ -130,11 +127,9 @@ if (typeof browser === 'undefined') {
 	const inputTapHold = (e = {}) => {
 		if (!arrows) return;
 		arrows.push('H');
-		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e));
-		if (getAndDoCommand(e)) {
-			resetGesture();
-			tapHold.done = true;
-		}
+		executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e);
+		if (!getAndDoCommand(e)) return;
+		resetGesture();
 	};
 
 	const fixSize = () => {
@@ -280,12 +275,12 @@ if (typeof browser === 'undefined') {
 		if (a === la) return;
 		la = a;
 		arrows.push(a);
+		restartTimer();
 		if (executeEvent(SimpleGesture.onInput, e)) return;
 		if (enablePullToRefresh) {
 			pullToRefreshMove()
 		}
 		if (SimpleGesture.ini.toast) showGesture();
-		restartTimer();
 	};
 
 	const getCommandByState = (s, f, a) => {
@@ -297,6 +292,7 @@ if (typeof browser === 'undefined') {
 
 	const onTouchEnd = e => {
 		try {
+			hideToast();
 			if (getAndDoCommand(e)) {
 				e.stopPropagation();
 				e.cancelable && e.preventDefault();
@@ -313,7 +309,6 @@ if (typeof browser === 'undefined') {
 		touchEndTime = Date.now();
 		clearTimeout(timer);
 		clearTimeout(showToastTimer);
-		hideToast();
 		if (enablePullToRefresh && pullToRefreshEnd()) return;
 		if (setupSingleTap(e)) return;
 		if (executeEvent(SimpleGesture.onEnd, e)) return true;
