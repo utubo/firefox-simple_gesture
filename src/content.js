@@ -123,11 +123,12 @@ if (typeof browser === 'undefined') {
 		resetGesture({ withTimeout: true });
 	};
 
-	const inputTapHold = (e = {}) => {
+	const inputTapHold = async (e = {}) => {
 		if (!arrows) return;
 		arrows.push('H');
 		executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e);
 		if (!getAndDoCommand(e)) return;
+		if (SimpleGesture.ini.toast) await showGestureImpl();
 		resetGesture();
 	};
 
@@ -578,15 +579,15 @@ if (typeof browser === 'undefined') {
 		}
 		arrowsSvg.W = base.cloneNode(true);
 		arrowsSvg.W.firstChild.appendChild(getSvgNode('path', {
-			d:'M1 6a4 4 0 1 1 10 0 M3 6a3 3 0 1 1 6 0 M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
+			d: 'M1 6a4 4 0 1 1 10 0 M3 6a3 3 0 1 1 6 0 M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
 		}));
 		arrowsSvg.S = base.cloneNode(true);
 		arrowsSvg.S.firstChild.appendChild(getSvgNode('path', {
-			d:'M6 1v2M2 3l1.4 1.4M10 3l-1.4 1.4M4 11q-3-2 1-1v-3q1-2 2 0v2l3 1v1'
+			d: 'M6 1v2M2 3l1.4 1.4M10 3l-1.4 1.4M4 11q-3-2 1-1v-3q1-2 2 0v2l3 1v1'
 		}));
 		arrowsSvg.H = base.cloneNode(true);
 		arrowsSvg.H.firstChild.appendChild(getSvgNode('path', {
-			d:'M8.5 3v1h1m-1 1.7a2 2 0 1 1 0.5 0M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
+			d: 'M8.2 4.1v-1.5zh1.5M8.2 6.5a2.7 2.7 0 1 1 0.5 0M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
 		}));
 	};
 
@@ -723,7 +724,7 @@ if (typeof browser === 'undefined') {
 			arrows[SimpleGesture.ini.toastMinStroke - 1]
 		) {
 			elms = await suggestGestures(SimpleGesture.ini.gestures, g);
-		} else if (g) {
+		} else if (g || gh) {
 			const list = {};
 			list[joinedArrows] = g;
 			if (gh) {
