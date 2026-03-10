@@ -13,13 +13,14 @@ try {
 		toastBackground: '#21a1de99',
 		toastMinStroke: 2,
 		interval: 0,
-		tapHoldMsec: 1200,
+		tapHoldMsec: 0,
 	};
 	const TIMERS = {};
 	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
 	SimpleGesture.MAX_LENGTH += 3; // margin of cancel to input.
 	const NOP = () => {};
 	const SHOW_TAP_HOLD_DELAY = 1000;
+	const TAP_HOLD_MSEC_DEFALT = 1200;
 
 	// fields ------------
 	let initialized = false;
@@ -32,6 +33,7 @@ try {
 	let startTime = null;
 	let exData = { customGestureList: [] };
 	let openedDlg;
+	let timeoutBackup = 0;
 	const dlgs = {};
 
 	// utils -------------
@@ -164,6 +166,7 @@ try {
 	const $strokeSize = byId('strokeSize');
 	const $bidingForms = allByClass('js-binding');
 	const $preventPullToRefresh = byId('preventPullToRefresh');
+	const $tapHoldMsec = byId('tapHoldMsec');
 
 	// edit U-D-L-R ------
 	const updateGestureLabel = (arrowsLabel, addnlLabel, gesture) => {
@@ -247,10 +250,15 @@ try {
 			$preventPullToRefresh.scrollLeft = 1000;
 			dlgs.gestureDlg.backup = SimpleGesture.ini.maxFingers;
 			SimpleGesture.ini.maxFingers = dlgs.gestureDlg.FREE_FOR_EDIT;
+			timeoutBackup = SimpleGesture.ini.timeout;
+			SimpleGesture.ini.timeout = 0;
 		},
 		onHide: () => {
 			if (SimpleGesture.ini.maxFingers === dlgs.gestureDlg.FREE_FOR_EDIT) {
 				SimpleGesture.ini.maxFingers = dlgs.gestureDlg.backup;
+			}
+			if (timeoutBackup) {
+				SimpleGesture.ini.timeout = timeoutBackup;
 			}
 			if (!target) return;
 			editEnd(target.arrows);
@@ -550,7 +558,6 @@ try {
 	};
 
 	// adjustment dlg ----
-	var timeoutBackup = 0;
 	const setupAdjustmentDlg = () => {
 		const dlg = byId('adjustmentDlg');
 		SimpleGesture.addTouchEventListener(dlg, {
@@ -859,13 +866,18 @@ try {
 		link.click();
 	};
 	const setupOtherOptions = async () => {
+		document.documentElement.lang = await browser.i18n.getUILanguage();
 		for (const caption of allByClass('i18n')) {
 			caption.textContent = getMessage(caption.textContent);
 		}
 		for (const caption of allByClass('i18n-gesture')) {
 			caption.textContent = getMessage(caption.textContent, true);
 		}
-		document.documentElement.lang = await browser.i18n.getUILanguage();
+		for (const elm of document.getElementsByTagName('INPUT')) {
+			if (elm.type === 'checkbox') {
+				elm.addEventListener('change', onChecked);
+			}
+		}
 		for (const sub of allByClass('sub-item')) {
 			const parentId = sub.getAttribute('data-parent');
 			const p = parentId && byId(parentId);
@@ -876,7 +888,6 @@ try {
 			const ini = elm.classList.contains('js-binding-exData') ? exData : SimpleGesture.ini;
 			if (elm.type === 'checkbox') {
 				elm.checked = !!ini[elm.id];
-				elm.addEventListener('change', onChecked);
 			} else {
 				elm.value = ini[elm.id] || INSTEAD_OF_EMPTY[elm.id] || (
 					elm.type === 'number' ? 0 : ''
@@ -893,6 +904,13 @@ try {
 				changeState({dlg: 'colorDlg', targetId: dataTargetId(e)});
 			});
 		}
+		const $tapHold = byId('tapHold');
+		$tapHold.checked = !!SimpleGesture.ini.tapHoldMsec;
+		toggleClass(!$tapHold.checked, 'disabled', $tapHoldMsec.parentNode);
+		$tapHold.addEventListener('click', () => {
+			$tapHoldMsec.value = $tapHold.checked ? TAP_HOLD_MSEC_DEFALT : 0;
+			saveBindingValues();
+		});
 		toggleExperimental();
 		byId('importSetting').addEventListener('change', e => {
 			try {

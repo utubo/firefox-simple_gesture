@@ -22,7 +22,7 @@ if (typeof browser === 'undefined') {
 		timeout: 1500,
 		doubleTapMsec: 200,
 		delaySingleTap: false,
-		tapHoldMsec: 1200,
+		tapHoldMsec: 0,
 		toast: true,
 		toastMinStroke: 2,
 		blacklist: [],
