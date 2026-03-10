@@ -113,10 +113,9 @@ if (typeof browser === 'undefined') {
 	const resetGesture = e => {
 		arrows = null;
 		timer = null;
-		if (e?.withTimeout && isToastVisible && SimpleGesture.ini.toast) {
+		if (!e?.withTimeout) return;
+		if (isToastVisible && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
-		} else {
-			hideToast();
 		}
 	};
 
@@ -452,6 +451,7 @@ if (typeof browser === 'undefined') {
 		const f = e.touches?.length || 1;
 		if (SimpleGesture.ini.maxFingers < f) {
 			resetGesture();
+			hideToast();
 			return false;
 		}
 		if (fingersNum < f) {
