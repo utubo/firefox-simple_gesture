@@ -906,7 +906,7 @@ try {
 		}
 		const $tapHold = byId('tapHold');
 		$tapHold.checked = !!SimpleGesture.ini.tapHoldMsec;
-		toggleClass(!$tapHold.checked, 'disabled', $tapHoldMsec.parentNode);
+		onChecked({ target: $tapHold });
 		$tapHold.addEventListener('click', () => {
 			$tapHoldMsec.value = $tapHold.checked ? TAP_HOLD_MSEC_DEFALT : 0;
 			saveBindingValues();
