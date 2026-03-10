@@ -193,6 +193,9 @@
 	"delaySingleTapNote": {
 		"message": "通常のタップが効かないときは、トリプルタップを試してください"
 	},
+	"tapHoldMsec": {
+		"message": "ロングタップの時間"
+	},
 	"displayCommand": {
 		"message": "コマンドを表示する"
 	},

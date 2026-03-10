@@ -13,11 +13,13 @@ try {
 		toastBackground: '#21a1de99',
 		toastMinStroke: 2,
 		interval: 0,
+		tapHoldMsec: 1200,
 	};
 	const TIMERS = {};
 	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
 	SimpleGesture.MAX_LENGTH += 3; // margin of cancel to input.
 	const NOP = () => {};
+	const SHOW_TAP_HOLD_DELAY = 1000;
 
 	// fields ------------
 	let initialized = false;
@@ -331,8 +333,13 @@ try {
 				return;
 			}
 		});
+		// Touchstart event prevents click event in Input gesture Dialog.
 		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
 			updateGesture({ arrows: [CLEAR_GESTURE] });
+			history.back();
+			safePreventDefault(e);
+		}, move: NOP, end: NOP, cancel: NOP, });
+		SimpleGesture.addTouchEventListener($cancelInputGesture, { start: e => {
 			history.back();
 			safePreventDefault(e);
 		}, move: NOP, end: NOP, cancel: NOP, });
@@ -369,7 +376,10 @@ try {
 		} else {
 			if (e.arrows?.length) {
 				updateGesture(e);
-				history.back();
+				setTimeout(
+					() => { history.back(); },
+					e.arrows.at(-1) === 'H' ? SHOW_TAP_HOLD_DELAY : 0
+				);
 			}
 		}
 		safePreventDefault(e);
@@ -540,6 +550,7 @@ try {
 	};
 
 	// adjustment dlg ----
+	var timeoutBackup = 0;
 	const setupAdjustmentDlg = () => {
 		const dlg = byId('adjustmentDlg');
 		SimpleGesture.addTouchEventListener(dlg, {
@@ -549,6 +560,8 @@ try {
 				startTime = Date.now();
 				safePreventDefault(e);
 				e.stopPropagation();
+				timeoutBackup = SimpleGesture.ini.timeout;
+				SimpleGesture.ini.timeout = 0;
 			},
 			move: e => {
 				if (!startTime) return;
@@ -571,6 +584,8 @@ try {
 					saveIni();
 					$timeout.value = SimpleGesture.ini.timeout;
 					$strokeSize.value = SimpleGesture.ini.strokeSize;
+				} else {
+					SimpleGesture.ini.timout = timeoutBackup;
 				}
 				history.back();
 			},
@@ -913,16 +928,6 @@ try {
 			f && f();
 			history.back();
 		}
-	});
-	// Touchstart event prevents click event in Input gesture Dialog.
-	SimpleGesture.addTouchEventListener($cancelInputGesture, {
-		start: NOP,
-		move: NOP,
-		end: e => {
-			history.back();
-			safePreventDefault(e);
-		},
-		cancel: NOP,
 	});
 
 	// control Back button

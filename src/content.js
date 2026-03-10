@@ -22,6 +22,7 @@ if (typeof browser === 'undefined') {
 		timeout: 1500,
 		doubleTapMsec: 200,
 		delaySingleTap: false,
+		tapHoldMsec: 1200,
 		toast: true,
 		toastMinStroke: 2,
 		blacklist: [],
@@ -34,6 +35,7 @@ if (typeof browser === 'undefined') {
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
+	const HIDE_TOAST_DELAY = 300; // For tap hold.
 	const SUGGEST_OPACITY = 0.5;
 	const PULL_TO_REFRESH_DELAY = 300;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
@@ -79,6 +81,7 @@ if (typeof browser === 'undefined') {
 	const ACCEPT_SINGLE_TAP = -1;
 	const doubleTap = { timer: null, count: ACCEPT_SINGLE_TAP };
 	const singleTap = { timer: null };
+	const tapHold = { timer: null, done: false };
 
 	// utilities ---------
 	let lcx = 0;
@@ -103,6 +106,8 @@ if (typeof browser === 'undefined') {
 	const restartTimer = () => {
 		clearTimeout(timer);
 		timer = SimpleGesture.ini.timeout ? setTimeout(timeoutGesture, SimpleGesture.ini.timeout) : null;
+		clearTimeout(tapHold.timer);
+		tapHold.timer = SimpleGesture.ini.tapHoldMsec ? setTimeout(inputTapHold, SimpleGesture.ini.tapHoldMsec) : null;
 	};
 
 	const resetGesture = e => {
@@ -110,6 +115,9 @@ if (typeof browser === 'undefined') {
 		timer = null;
 		if (e?.withTimeout && toast && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
+		} else if (tapHold.done) {
+			tapHold.done = false;
+			setTimeout(hideToast, HIDE_TOAST_DELAY);
 		} else {
 			hideToast();
 		}
@@ -117,6 +125,16 @@ if (typeof browser === 'undefined') {
 
 	const timeoutGesture = () => {
 		resetGesture({ withTimeout: true });
+	};
+
+	const inputTapHold = (e = {}) => {
+		if (!arrows) return;
+		arrows.push('H');
+		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e));
+		if (getAndDoCommand(e)) {
+			resetGesture();
+			tapHold.done = true;
+		}
 	};
 
 	const fixSize = () => {
@@ -230,8 +248,8 @@ if (typeof browser === 'undefined') {
 		if (!setupFingers(e)) return;
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
 		touches = e?.touches || [e];
-		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		restartTimer();
+		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		if (arrows[0] === 'W' && SimpleGesture.ini.toast) showGestureDelay();
 		if (SimpleGesture.ini.pullToRefresh) {
 			enablePullToRefresh = pullToRefreshStart()
@@ -279,31 +297,9 @@ if (typeof browser === 'undefined') {
 
 	const onTouchEnd = e => {
 		try {
-			touchEndTime = Date.now();
-			clearTimeout(timer);
-			clearTimeout(showToastTimer);
-			hideToast();
-			if (enablePullToRefresh && pullToRefreshEnd()) {
-				if (PULL_TO_REFRESH_DELAY < touchEndTime - touchStartTime) {
-					location.reload();
-				} else {
-					pullToRefreshCancel();
-				}
-				return;
-			}
-			if (setupSingleTap(e)) return;
-			if (executeEvent(SimpleGesture.onEnd, e)) return;
-			const g = getCommandByState(startPoint, fingers, arrows);
-			if (!g) return;
-			if (!isGestureEnabled && g !== 'disableGesture') return;
-			SimpleGesture.doCommand(g);
-			e.stopPropagation();
-			e.cancelable && e.preventDefault();
-			if (SimpleGesture.ini.interval) {
-				intervalSleep = true;
-				setTimeout(() => {
-					intervalSleep = false;
-				}, SimpleGesture.ini.interval);
+			if (getAndDoCommand(e)) {
+				e.stopPropagation();
+				e.cancelable && e.preventDefault();
 			}
 		} finally {
 			arrows = null;
@@ -311,6 +307,27 @@ if (typeof browser === 'undefined') {
 			pullToRefreshCancel();
 			//target = null; Keep target for Custom gesture
 		}
+	};
+
+	const getAndDoCommand = e => {
+		touchEndTime = Date.now();
+		clearTimeout(timer);
+		clearTimeout(showToastTimer);
+		hideToast();
+		if (enablePullToRefresh && pullToRefreshEnd()) return;
+		if (setupSingleTap(e)) return;
+		if (executeEvent(SimpleGesture.onEnd, e)) return true;
+		const g = getCommandByState(startPoint, fingers, arrows);
+		if (!g) return;
+		if (!isGestureEnabled && g !== 'disableGesture') return;
+		SimpleGesture.doCommand(g);
+		if (SimpleGesture.ini.interval) {
+			intervalSleep = true;
+			setTimeout(() => {
+				intervalSleep = false;
+			}, SimpleGesture.ini.interval);
+		}
+		return true;
 	};
 
 	const onCancel = () => {
@@ -495,7 +512,7 @@ if (typeof browser === 'undefined') {
 	const pullToRefreshMove = () => {
 		if (!arrows) {
 			// NOP
-		} else if (!pullToRefreshEnd()) {
+		} else if (!pullToRefreshContinue()) {
 			pullToRefreshCancel();
 		} else if (SimpleGesture.ini.pullToRefresh === 'icon') {
 			SimpleGesture.mod('pullToRefresh', m => {
@@ -505,10 +522,20 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	const pullToRefreshEnd = () => {
+	const pullToRefreshContinue = () => {
 		return arrows?.[0] === 'D' &&
 			!arrows[1] &&
 			!getCommandByState(startPoint, fingers, arrows);
+	};
+
+	const pullToRefreshEnd = () => {
+		if (!pullToRefreshContinue()) return;
+		if (PULL_TO_REFRESH_DELAY < touchEndTime - touchStartTime) {
+			location.reload();
+		} else {
+			pullToRefreshCancel();
+		}
+		return true;
 	};
 
 	const pullToRefreshToast = () => {
@@ -561,6 +588,10 @@ if (typeof browser === 'undefined') {
 		arrowsSvg.S = base.cloneNode(true);
 		arrowsSvg.S.firstChild.appendChild(getSvgNode('path', {
 			d:'M6 1v2M2 3l1.4 1.4M10 3l-1.4 1.4M4 11q-3-2 1-1v-3q1-2 2 0v2l3 1v1'
+		}));
+		arrowsSvg.H = base.cloneNode(true);
+		arrowsSvg.H.firstChild.appendChild(getSvgNode('path', {
+			d:'M8.5 3v1h1m-1 1.7a2 2 0 1 1 0.5 0M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1'
 		}));
 	};
 
@@ -688,7 +719,8 @@ if (typeof browser === 'undefined') {
 
 	const showGestureImpl = async () => {
 		const g = getCommandByState(startPoint, fingers, arrows);
-		if (!isGestureEnabled && g !== 'disableGesture') return false;
+		const gh = getCommandByState(startPoint, fingers, [...arrows, 'H']);
+		if (!isGestureEnabled && g !== 'disableGesture' && gh !== 'disableGesture') return false;
 		joinedArrows = arrows.join('-');
 		let elms = [];
 		if (
@@ -699,6 +731,9 @@ if (typeof browser === 'undefined') {
 		} else if (g) {
 			const list = {};
 			list[joinedArrows] = g;
+			if (gh) {
+				list[joinedArrows + '-H'] = gh;
+			}
 			elms = await suggestGestures(list, g);
 		}
 		if (
@@ -786,17 +821,17 @@ if (typeof browser === 'undefined') {
 	};
 
 	// utils for setup ----
-	SimpleGesture.addTouchEventListener = (target, events) => {
+	SimpleGesture.addTouchEventListener = (target, events, opt = true) => {
 		if ('ontouchstart' in window /* || navigator.maxTouchPoints -> FF desktop returns 256. */) {
-			target.addEventListener('touchstart', events.start, true);
-			target.addEventListener('touchmove', events.move, true);
-			target.addEventListener('touchend', events.end, true);
-			target.addEventListener('touchcancel', events.cancel, true);
+			target.addEventListener('touchstart', events.start, opt);
+			target.addEventListener('touchmove', events.move, opt);
+			target.addEventListener('touchend', events.end, opt);
+			target.addEventListener('touchcancel', events.cancel, opt);
 		} else {
 			// for test on Desktop
-			target.addEventListener('mousedown', events.start, true);
-			target.addEventListener('mousemove', events.move, true);
-			target.addEventListener('mouseup', events.end, true);
+			target.addEventListener('mousedown', events.start, opt);
+			target.addEventListener('mousemove', events.move, opt);
+			target.addEventListener('mouseup', events.end, opt);
 		}
 	};
 
