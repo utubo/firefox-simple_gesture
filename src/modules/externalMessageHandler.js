@@ -57,7 +57,12 @@ const exec = {
 		exData.customGestureList.push({ id: id, title: arg.title || arg.id, });
 		saveExData(exDta);
 		const details = {};
-		details[`simple_gesture_${id}`] = { type: 'message', message: arg.message };
+		details[`simple_gesture_${id}`] = {
+			type: 'message',
+			extensionId: arg.senderId,
+			message: arg.message
+			messageType: 'string'
+		};
 		browser.storage.local.set(details);
 	},
 	delete: async arg => {
