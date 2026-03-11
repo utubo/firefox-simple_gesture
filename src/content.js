@@ -90,7 +90,7 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	const resetGesture = e => {
+	const resetCurrentGesture = e => {
 		arrows = null;
 		timeout.cancel();
 		if (e?.withTimeout && toast.isVisible && SimpleGesture.ini.toast) {
@@ -223,7 +223,7 @@ if (typeof browser === 'undefined') {
 			}
 		},
 		exec: () => {
-			resetGesture({ withTimeout: true });
+			resetCurrentGesture({ withTimeout: true });
 		},
 	};
 
@@ -238,8 +238,8 @@ if (typeof browser === 'undefined') {
 			arrows.push('H');
 			executeEvent(SimpleGesture.onInput, e);
 			if (!getAndDoCommand(e)) return;
-			if (SimpleGesture.ini.toast) await toast.showGestureImpl();
-			resetGesture();
+			if (SimpleGesture.ini.toast) await toast.showGesture();
+			resetCurrentGesture();
 		},
 	};
 
@@ -476,7 +476,7 @@ if (typeof browser === 'undefined') {
 	const setupFingers = e => {
 		const f = e.touches?.length || 1;
 		if (SimpleGesture.ini.maxFingers < f) {
-			resetGesture();
+			resetCurrentGesture();
 			toast.hide();
 			return false;
 		}
@@ -529,7 +529,7 @@ if (typeof browser === 'undefined') {
 		move: () => {
 			if (!arrows) {
 				// NOP
-			} else if (!pulltoRefresh.continue()) {
+			} else if (!pullToRefresh.continue()) {
 				pullToRefresh.cancel();
 			} else if (SimpleGesture.ini.pullToRefresh === 'icon') {
 				SimpleGesture.mod('pullToRefresh', m => {
@@ -544,7 +544,7 @@ if (typeof browser === 'undefined') {
 				!getCommandByState(startPoint, fingers, arrows);
 		},
 		end: () => {
-			if (!pulltoRefresh.continue()) return;
+			if (!pullToRefresh.continue()) return;
 			if (PULL_TO_REFRESH_DELAY < touchEndTime - touchStartTime) {
 				location.reload();
 			} else {
@@ -717,7 +717,7 @@ if (typeof browser === 'undefined') {
 		},
 		showGesture: async () => {
 			clearTimeout(toast.showTimer);
-			if (await toast.setGesture()) {
+			if (await toast.setCurrentGesture()) {
 				toast.show();
 			} else {
 				toast.hide();
@@ -726,7 +726,7 @@ if (typeof browser === 'undefined') {
 		showGestureDelay: () => {
 			toast.showTimer = restartTimer(toast.showTimer, toast.showGesture, SHOW_TOAST_DELAY);
 		},
-		setGesture: async () => {
+		setCurrentGesture: async () => {
 			const g = getCommandByState(startPoint, fingers, arrows);
 			const gh = getCommandByState(startPoint, fingers, [...arrows, 'H']);
 			if (!isGestureEnabled && g !== 'disableGesture' && gh !== 'disableGesture') return false;
