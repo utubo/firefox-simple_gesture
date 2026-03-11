@@ -593,6 +593,7 @@ if (typeof browser === 'undefined') {
 		showTimer: null, hideTimer: null,
 		isVisible: false,
 		makeSvgs: () => {
+			if (toast.svg.U) return;
 			const getSvgNode = (name, attrs) => {
 				const n = document.createElementNS('http://www.w3.org/2000/svg', name);
 				for (const [k, v] of Object.entries(attrs)) {
@@ -600,7 +601,6 @@ if (typeof browser === 'undefined') {
 				}
 				return n;
 			};
-			if (toast.svg.U) return;
 			const base = document.createElement('SPAN');
 			base.style.cssText = `
 				display: inline-block;
