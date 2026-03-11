@@ -513,7 +513,7 @@ if (typeof browser === 'undefined') {
 
 	// pull to refresh --------------
 	const pullToRefresh = {
-		isScrolled: false,
+		isEnabled: false,
 		start: () => {
 			return fingersNum === 1 &&
 				!VV.offsetTop &&
