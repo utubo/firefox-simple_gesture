@@ -90,7 +90,7 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	const resetCurrentGesture = e => {
+	const resetGesture = e => {
 		arrows = null;
 		timeout.cancel();
 		if (e?.withTimeout && toast.isVisible && SimpleGesture.ini.toast) {
@@ -223,7 +223,7 @@ if (typeof browser === 'undefined') {
 			}
 		},
 		exec: () => {
-			resetCurrentGesture({ withTimeout: true });
+			resetGesture({ withTimeout: true });
 		},
 	};
 
@@ -239,7 +239,7 @@ if (typeof browser === 'undefined') {
 			executeEvent(SimpleGesture.onInput, e);
 			if (!getAndDoCommand(e)) return;
 			if (SimpleGesture.ini.toast) await toast.showGesture();
-			resetCurrentGesture();
+			resetGesture();
 		},
 	};
 
@@ -476,7 +476,7 @@ if (typeof browser === 'undefined') {
 	const setupFingers = e => {
 		const f = e.touches?.length || 1;
 		if (SimpleGesture.ini.maxFingers < f) {
-			resetCurrentGesture();
+			resetGesture();
 			toast.hide();
 			return false;
 		}
