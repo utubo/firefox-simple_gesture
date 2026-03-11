@@ -16,6 +16,7 @@ const msgToArg = (msg, sender) => {
 	} else {
 		arg = { command: msg };
 	}
+	arg.tab = sender.tab || (await browser.tabs.query({ active: true, currentWindow: true }))[0];
 	arg.senderId = sender.id;
 	return arg;
 }
