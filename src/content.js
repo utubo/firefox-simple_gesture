@@ -102,35 +102,12 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	const restartTimers = () => {
-		timer = restartTimer(timer, timeoutGesture, SimpleGesture.ini.timeout);
-		tapHold.timer = restartTimer(tapHold.timer, inputTapHold, SimpleGesture.ini.tapHoldMsec);
-	};
-
-	const restartTimer = (id, f, msec) => {
-		clearTimeout(id);
-		return msec ? setTimeout(f, msec) : null;
-	};
-
 	const resetGesture = e => {
 		arrows = null;
 		timer = null;
 		if (e?.withTimeout && isToastVisible && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
 		}
-	};
-
-	const timeoutGesture = () => {
-		resetGesture({ withTimeout: true });
-	};
-
-	const inputTapHold = async (e = {}) => {
-		if (!arrows) return;
-		arrows.push('H');
-		executeEvent(SimpleGesture.onInput, e);
-		if (!getAndDoCommand(e)) return;
-		if (SimpleGesture.ini.toast) await showGestureImpl();
-		resetGesture();
 	};
 
 	const fixSize = () => {
@@ -218,6 +195,31 @@ if (typeof browser === 'undefined') {
 			ctg.dispatchEvent(ev);
 		}
 	};
+
+	// timers ------------
+	const restartTimers = () => {
+		timer = restartTimer(timer, timeoutGesture, SimpleGesture.ini.timeout);
+		tapHold.timer = restartTimer(tapHold.timer, inputTapHold, SimpleGesture.ini.tapHoldMsec);
+	};
+
+	const restartTimer = (id, f, msec) => {
+		clearTimeout(id);
+		return msec ? setTimeout(f, msec) : null;
+	};
+
+	const timeoutGesture = () => {
+		resetGesture({ withTimeout: true });
+	};
+
+	const inputTapHold = async (e = {}) => {
+		if (!arrows) return;
+		arrows.push('H');
+		executeEvent(SimpleGesture.onInput, e);
+		if (!getAndDoCommand(e)) return;
+		if (SimpleGesture.ini.toast) await showGestureImpl();
+		resetGesture();
+	};
+
 
 	// touch-events ------
 	const onTouchStart = e => {
