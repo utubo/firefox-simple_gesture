@@ -20,7 +20,7 @@ try {
 	SimpleGesture.MAX_LENGTH += 3; // margin of cancel to input.
 	const NOP = () => {};
 	const SHOW_TAP_HOLD_DELAY = 1000;
-	const TAP_HOLD_MSEC_DEFALT = 1200;
+	const TAP_HOLD_MSEC_DEFAULT = 1200;
 
 	// fields ------------
 	let initialized = false;
@@ -921,7 +921,11 @@ try {
 		$tapHold.checked = !!SimpleGesture.ini.tapHoldMsec;
 		onChecked({ target: $tapHold });
 		$tapHold.addEventListener('click', () => {
-			$tapHoldMsec.value = $tapHold.checked ? TAP_HOLD_MSEC_DEFALT : 0;
+			$tapHoldMsec.value = $tapHold.checked
+				? SimpleGesture.ini.timeout <= 100
+				? TAP_HOLD_MSEC_DEFAULT
+				: Math.min(TAP_HOLD_MSEC_DEFAULT, SimpleGesture.ini.timeout - 100)
+				: 0;
 			saveBindingValues();
 		});
 		toggleExperimental();
