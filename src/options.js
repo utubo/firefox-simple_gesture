@@ -33,7 +33,6 @@ try {
 	let startTime = null;
 	let exData = { customGestureList: [] };
 	let openedDlg;
-	let timeoutBackup = 0;
 	const dlgs = {};
 
 	// utils -------------
@@ -79,6 +78,21 @@ try {
 	const resetTimer = (name, f, msec) => {
 		clearTimeout(TIMERS[name]);
 		TIMERS[name] = setTimeout(f, msec);
+	};
+
+	const timeout = {
+		backup: 0,
+		disable: () => {
+			if (SimpleGesture.ini.timeout) {
+				timeout.backup = SimpleGesture.ini.timeout;
+				SimpleGesture.ini.timeout = 0;
+			}
+		},
+		restore: () => {
+			if (timeout.backup) {
+				SimpleGesture.ini.timeout = timeout.backup;
+			}
+		},
 	};
 
 	const storageValue = async name => {
@@ -250,15 +264,11 @@ try {
 			$preventPullToRefresh.scrollLeft = 1000;
 			dlgs.gestureDlg.backup = SimpleGesture.ini.maxFingers;
 			SimpleGesture.ini.maxFingers = dlgs.gestureDlg.FREE_FOR_EDIT;
-			timeoutBackup = SimpleGesture.ini.timeout;
-			SimpleGesture.ini.timeout = 0;
 		},
 		onHide: () => {
+			timeout.restore();
 			if (SimpleGesture.ini.maxFingers === dlgs.gestureDlg.FREE_FOR_EDIT) {
 				SimpleGesture.ini.maxFingers = dlgs.gestureDlg.backup;
-			}
-			if (timeoutBackup) {
-				SimpleGesture.ini.timeout = timeoutBackup;
 			}
 			if (!target) return;
 			editEnd(target.arrows);
@@ -344,10 +354,12 @@ try {
 		// Touchstart event prevents click event in Input gesture Dialog.
 		SimpleGesture.addTouchEventListener(byId('clearGesture'), { start: e => {
 			updateGesture({ arrows: [CLEAR_GESTURE] });
+			timeout.restore();
 			history.back();
 			safePreventDefault(e);
 		}, move: NOP, end: NOP, cancel: NOP, });
 		SimpleGesture.addTouchEventListener($cancelInputGesture, { start: e => {
+			timeout.restore();
 			history.back();
 			safePreventDefault(e);
 		}, move: NOP, end: NOP, cancel: NOP, });
@@ -356,6 +368,7 @@ try {
 	// inject settings-page behavior
 	SimpleGesture.onStart = e => {
 		if (!target) return;
+		timeout.disable();
 		safePreventDefault(e);
 		return true;
 	};
@@ -378,6 +391,7 @@ try {
 	let touchEndTimer = null;
 	SimpleGesture.onEnd = e => {
 		clearTimeout(touchEndTimer);
+		timeout.restore();
 		if (!target) return;
 		if ($inputedGesture.classList.contains('canceled')) {
 			history.back();
@@ -567,8 +581,7 @@ try {
 				startTime = Date.now();
 				safePreventDefault(e);
 				e.stopPropagation();
-				timeoutBackup = SimpleGesture.ini.timeout;
-				SimpleGesture.ini.timeout = 0;
+				timeout.disable();
 			},
 			move: e => {
 				if (!startTime) return;
@@ -592,7 +605,7 @@ try {
 					$timeout.value = SimpleGesture.ini.timeout;
 					$strokeSize.value = SimpleGesture.ini.strokeSize;
 				} else {
-					SimpleGesture.ini.timout = timeoutBackup;
+					timeout.restore();
 				}
 				history.back();
 			},
