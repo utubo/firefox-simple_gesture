@@ -127,7 +127,7 @@ if (typeof browser === 'undefined') {
 	const inputTapHold = async (e = {}) => {
 		if (!arrows) return;
 		arrows.push('H');
-		executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e);
+		executeEvent(SimpleGesture.onInput, e);
 		if (!getAndDoCommand(e)) return;
 		if (SimpleGesture.ini.toast) await showGestureImpl();
 		resetGesture();
