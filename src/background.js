@@ -410,20 +410,8 @@ if (typeof browser === 'undefined') {
 				});
 			});
 		},
-		// For other extensions
-		enable: arg => {
-			browser.scripting.executeScript({
-				target: { tabId: arg.tab.id },
-				func: opt => { SimpleGesture.doCommand('disableGesture', true); }
-			});
-		},
-		disable: arg => {
-			browser.scripting.executeScript({
-				target: { tabId: arg.tab.id },
-				func: opt => { SimpleGesture.doCommand('disableGesture', false); }
-			});
-		},
 	};
+
 	const msgToArg = async (msg, sender) => {
 		let arg;
 		if (msg.command) {
@@ -433,17 +421,13 @@ if (typeof browser === 'undefined') {
 		} else {
 			arg = { command: msg };
 		}
- 		// Somtimes sender.tab is undefined.
+ 		// Sometimes sender.tab is undefined.
 		arg.tab = sender.tab || (await browser.tabs.query({ active: true, currentWindow: true }))[0];
 		return arg;
 	}
+
 	const messageHandler = async (msg, sender, callback) => {
 		const arg = await msgToArg(msg, sender);
-		if (sender.id !== browser.runtime.id) {
-			if (['enable', 'disable'].incdlues(arg.command)) {
-				callback(null);
-			}
-		}
 		const f = arg.command[0] === '$' // '$' is custom-gesture prefix.
 			? exec.customGesture
 			: exec[arg.command];
@@ -456,23 +440,18 @@ if (typeof browser === 'undefined') {
 			callback(undefined);
 		}
 	};
+
 	browser.runtime.onMessage.addListener((msg, sender, callback) => {
 		messageHandler(msg, sender, callback);
 		return true;
 	});
+
+	// For other extensions
 	browser.runtime.onMessageExternal.addListener((msg, sender, callback) => {
-		messageHandler(msg, sender, callback);
+		if (!sender.id) return;
+		import(browser.runtime.getURL('/modules/externalMessageHandler.js'))
+			.then(mod => mod.handler(msg, sender, callback));
 		return true;
 	});
-
-	// Patch for the old settings (for v3.20-v3.22.4)
-	if (browser.declarativeNetRequest?.getDynamicRules) {
-		const oldRule = await browser.declarativeNetRequest.getDynamicRules()[0];
-		if (oldRule) {
-			chrome.declarativeNetRequest.updateDynamicRules(
-				{ removeRuleIds: [oldRule.id] }
-			);
-		}
-	}
 })();
 
