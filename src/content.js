@@ -35,7 +35,6 @@ if (typeof browser === 'undefined') {
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
 	const SHOW_TOAST_DELAY = 200; // Prevent the double-tap toast from blinking.
-	const HIDE_TOAST_DELAY = 300; // For tap hold.
 	const SUGGEST_OPACITY = 0.5;
 	const PULL_TO_REFRESH_DELAY = 300;
 	const VV = window.visualViewport || { isDummy: 1, offsetLeft: 0, offsetTop: 0, scale: 1, addEventListener: () => {} };
@@ -103,18 +102,20 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	const restartTimer = () => {
-		clearTimeout(timer);
-		timer = SimpleGesture.ini.timeout ? setTimeout(timeoutGesture, SimpleGesture.ini.timeout) : null;
-		clearTimeout(tapHold.timer);
-		tapHold.timer = SimpleGesture.ini.tapHoldMsec ? setTimeout(inputTapHold, SimpleGesture.ini.tapHoldMsec) : null;
+	const restartTimers = () => {
+		timer = restartTimer(timer, timeoutGesture, SimpleGesture.ini.timeout);
+		tapHold.timer = restartTimer(tapHold.timer, inputTapHold, SimpleGesture.ini.tapHoldMsec);
+	};
+
+	const restartTimer = (id, f, msec) => {
+		clearTimeout(id);
+		return msec ? setTimeout(f, msec) : null;
 	};
 
 	const resetGesture = e => {
 		arrows = null;
 		timer = null;
-		if (!e?.withTimeout) return;
-		if (isToastVisible && SimpleGesture.ini.toast) {
+		if (e?.withTimeout && isToastVisible && SimpleGesture.ini.toast) {
 			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
 		}
 	};
@@ -243,7 +244,7 @@ if (typeof browser === 'undefined') {
 		if (!setupFingers(e)) return;
 		target = 'composed' in e ? e.composedPath()[0] : e.target;
 		touches = e?.touches || [e];
-		restartTimer();
+		restartTimers();
 		if (executeEvent(!arrows[0] ? SimpleGesture.onStart : SimpleGesture.onInput, e)) return;
 		if (arrows[0] === 'W' && SimpleGesture.ini.toast) showGestureDelay();
 		if (SimpleGesture.ini.pullToRefresh) {
@@ -275,7 +276,7 @@ if (typeof browser === 'undefined') {
 		if (a === la) return;
 		la = a;
 		arrows.push(a);
-		restartTimer();
+		restartTimers();
 		if (executeEvent(SimpleGesture.onInput, e)) return;
 		if (enablePullToRefresh) {
 			pullToRefreshMove()
@@ -637,7 +638,7 @@ if (typeof browser === 'undefined') {
 		if (!toast) return;
 		if (!isToastVisible) return;
 		if (delay) {
-			hideToastTimer = setTimeout(hideToast, delay);
+			hideToastTimer = restartTimer(hideToastTimer, hideToast, delay);
 			return;
 		}
 		clearTimeout(hideToastTimer);
@@ -752,8 +753,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	const showGestureDelay = () => {
-		clearTimeout(showToastTimer);
-		showToastTimer = setTimeout(showGesture, SHOW_TOAST_DELAY);
+		showToastTimer = restartTimer(showToastTimer, showGesture, SHOW_TOAST_DELAY);
 	};
 
 	SimpleGesture.getAddnlText = (s, f) => {
