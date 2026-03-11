@@ -317,6 +317,8 @@ if (typeof browser === 'undefined') {
 
 	const onTouchEnd = e => {
 		try {
+			touchEndTime = Date.now();
+			timeout.cancel();
 			toast.hide();
 			if (getAndDoCommand(e)) {
 				e.stopPropagation();
@@ -331,9 +333,6 @@ if (typeof browser === 'undefined') {
 	};
 
 	const getAndDoCommand = e => {
-		touchEndTime = Date.now();
-		timeout.cancel();
-		clearTimeout(toast.showTimer);
 		if (pullToRefresh.isEnabled && pullToRefresh.end()) return;
 		if (setupSingleTap(e)) return;
 		if (executeEvent(SimpleGesture.onEnd, e)) return true;
@@ -707,11 +706,12 @@ if (typeof browser === 'undefined') {
 			pullToRefresh.hide();
 			if (!toast.div) return;
 			if (!toast.isVisible) return;
+			clearTimeout(toast.showTimer);
+			clearTimeout(toast.hideTimer);
 			if (delay) {
-				toast.hideTimer = restartTimer(toast.hideTimer, toast.hide, delay);
+				toast.hideTimer = setTimeout(toast.hide, delay);
 				return;
 			}
-			clearTimeout(toast.hideTimer);
 			toast.isVisible = false;
 			requestAnimationFrame(() => { toast.div.style.opacity = '0'; });
 		},
