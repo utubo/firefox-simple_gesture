@@ -38,6 +38,13 @@ https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhobl
 - The "Open link in background" toast notification does not appear.
 - If the settings page does not work, please use [v3.21](https://github.com/utubo/firefox-simple_gesture/releases/tag/v3.21). See [#97](https://github.com/utubo/firefox-simple_gesture/issues/97)
 
+## For Developers
+
+Your add-ons can link with Simple Gesture.
+
+Demo
+https://github.com/utubo/firefox-demo-link-with-simplegesture
+
 ## Licenses
 Simple Gesture is released under the [MPL 2.0 license](http://www.mozilla.org/MPL/2.0/).
 Copyright 2017 utubo
