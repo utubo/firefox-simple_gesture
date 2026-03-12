@@ -1,13 +1,13 @@
 'use strict';
 
-export handler = async (msg, sender, callback) => {
-	const arg = msgToArg(msg, sender);
+export const handler = async (msg, sender, callback) => {
+	const arg = await msgToArg(msg, sender);
 	const f = exec[arg.command];
 	const r = f && await f(arg);
 	callback(r);
 };
 
-const msgToArg = (msg, sender) => {
+const msgToArg = async (msg, sender) => {
 	let arg;
 	if (msg.command) {
 		arg = msg;
@@ -21,13 +21,14 @@ const msgToArg = (msg, sender) => {
 	return arg;
 }
 
-const createCustomGestureId = arg => `${arg.exclude.senderId}#${arg.exclude.id}`;
+const createCustomGestureId = arg => `$${arg.senderId}#${arg.excludeId}`;
 
 const getExData = async arg => {
 	const v = await browser.storage.local.get('simple_gesture_exdata');
-	const exData = v['simple_gesture_exdata'] || { customGestureList: [] };
-	if (arg.exclude) {
-		exData.customGestureList = exData.customGestureList.filter(f => f.id !== arg.exclude)
+	const exData = v['simple_gesture_exdata'] || {};
+	exData.customGestureList = exData.customGestureList ?? [];
+	if (arg.excludeId) {
+		exData.customGestureList = exData.customGestureList.filter(f => f.id !== arg.excludeId)
 	}
 	return exData;
 };
@@ -51,26 +52,25 @@ const exec = {
 	},
 	register: async arg => {
 		if (!arg.id) return;
-		if (!arg.message) return;
 		const id = createCustomGestureId(arg);
-		const exData = getExData({ exclude: id });
+		const exData = await getExData({ excludeId: id });
 		exData.customGestureList.push({ id: id, title: arg.title || arg.id, });
-		saveExData(exDta);
+		await saveExData(exData);
 		const details = {};
 		details[`simple_gesture_${id}`] = {
 			type: 'message',
 			extensionId: arg.senderId,
-			message: arg.message
+			message: arg.message || arg.id,
 			messageType: 'string'
 		};
-		browser.storage.local.set(details);
+		await browser.storage.local.set(details);
 	},
 	delete: async arg => {
 		if (!arg.id) return;
 		const id = createCustomGestureId(arg);
-		const exData = getExData({ exclude: id });
-		saveExData(exData);
-		browser.storage.local.remove(`simple_gesture_${id}`);
+		const exData = await getExData({ excludeId: id });
+		await saveExData(exData);
+		await browser.storage.local.remove(`simple_gesture_${id}`);
 	},
 };
 
