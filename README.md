@@ -42,7 +42,7 @@ https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhobl
 
 Your add-ons can link with Simple Gesture.
 
-Demo
+Demo  
 https://github.com/utubo/firefox-demo-link-with-simplegesture
 
 ## Licenses
