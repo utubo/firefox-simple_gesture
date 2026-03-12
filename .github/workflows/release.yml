@@ -46,7 +46,7 @@ jobs:
 
       - name: Create assets
         run: |
-          sh ./make.sh
+          sh ./build.sh
 
       - name: Create release
         uses: softprops/action-gh-release@v1
