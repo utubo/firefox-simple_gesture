@@ -345,10 +345,8 @@ if (typeof browser === 'undefined') {
 	};
 
 	const onCancel = () => {
-		timeout.cancel();
-		clearTimeout(toast.timer);
+		resetGesture();
 		toast.hide();
-		arrows = null;
 		touchEndTime = 0;
 	};
 
