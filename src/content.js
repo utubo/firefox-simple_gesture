@@ -60,8 +60,6 @@ if (typeof browser === 'undefined') {
 	let lastInnerHeight = 0;
 	let size = SimpleGesture.ini.strokeSize;
 	let edgeWidth = 0;
-	// fast scroll
-	let fastScroll = null;
 	// others
 	let iniTimestamp = 0;
 	let exData;
@@ -262,7 +260,7 @@ if (typeof browser === 'undefined') {
 		[lx, ly] = SimpleGesture.getXY(e);
 		la = null;
 		setupStartPoint(lx, ly);
-		if (setupFastScroll()) return;
+		if (fastScroll.setup()) return;
 		fingersNum = 1;
 		fingers = '';
 		if (!setupFingers(e)) return;
@@ -277,10 +275,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	const onTouchMove = e => {
-		if (fastScroll) {
-			doFastScroll(e);
-			return;
-		}
+		if (fastScroll.state) return fastScroll.do(e);
 		if (arrows === null) return;
 		if (arrows.length > SimpleGesture.MAX_LENGTH) return;
 		if (!arrows && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
@@ -326,7 +321,7 @@ if (typeof browser === 'undefined') {
 			}
 		} finally {
 			arrows = null;
-			fastScroll = null;
+			fastScroll.state = null;
 			pullToRefresh.cancel();
 			//target = null; Keep target for Custom gesture
 		}
@@ -487,28 +482,31 @@ if (typeof browser === 'undefined') {
 	};
 
 	// fast scroll --------------
-	const setupFastScroll = () => {
-		if (!startPoint[0]) return;
-		if (SimpleGesture.ini.fastScroll !== startPoint[0]) return;
-		const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-		let z = h / lastInnerHeight;
-		if (z <= 1) return;
-		if (SimpleGesture.ini.fastScrollRv) {
-			z = -z;
-		}
-		fastScroll = {
-			y: ly, top: window.scrollY, left: window.scrollX, z: z,
-		};
-		return true;
+	const fastScroll = {
+		state: null,
+		setup: () => {
+			if (!startPoint[0]) return;
+			if (SimpleGesture.ini.fastScroll !== startPoint[0]) return;
+			const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+			let z = h / lastInnerHeight;
+			if (z <= 1) return;
+			if (SimpleGesture.ini.fastScrollRv) {
+				z = -z;
+			}
+			fastScroll.state = {
+				y: ly, top: window.scrollY, left: window.scrollX, z: z,
+			};
+			return true;
+		},
+		do: e => {
+			const [_, y] = SimpleGesture.getXY(e);
+			window.scrollTo(
+				fastScroll.state.left,
+				fastScroll.state.top + (y - fastScroll.state.y) * fastScroll.state.z
+			);
+		},
 	};
 
-	const doFastScroll = e => {
-		const [_, y] = SimpleGesture.getXY(e);
-		window.scrollTo(
-			fastScroll.left,
-			fastScroll.top + (y - fastScroll.y) * fastScroll.z
-		);
-	};
 
 	// pull to refresh --------------
 	const pullToRefresh = {
