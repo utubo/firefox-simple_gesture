@@ -116,10 +116,10 @@ if (typeof browser === 'undefined') {
 
 	// Gestures
 	const exec = {
-		openLinkInNewTab: async arg => {
+		async openLinkInNewTab(arg) {
 			browser.tabs.create({ active: true, url: arg.url });
 		},
-		openLinkInBackground: async arg => {
+		async openLinkInBackground(arg) {
 			// FF for Android doesn't support `openerTabId`, `discarded` and `active`.
 			arg.discarded = await iniValue('openLinkInBackgroundDiscarded');
 			const url = decorateUrl(arg);
@@ -135,11 +135,11 @@ if (typeof browser === 'undefined') {
 					SimpleGesture.mod('toastForNewTab', m => m.show(newTabId, pos))
 			});
 		},
-		newTab: async () => {
+		async newTab() {
 			const url = await iniValue('newTabUrl');
 			browser.tabs.create({ active: true, url: url });
 		},
-		close: async arg => {
+		async close(arg) {
 			let a = await iniValue('afterClose');
 			switch (a) {
 				case 'prevTab': await exec.prevTab(arg); break;
@@ -148,7 +148,7 @@ if (typeof browser === 'undefined') {
 			}
 			browser.tabs.remove(arg.tab.id);
 		},
-		closeIf: async (arg, filter) => {
+		async closeIf(arg, filter) {
 			const tabs = await browser.tabs.query({});
 			const ids = [];
 			for (let tab of tabs)
@@ -174,13 +174,13 @@ if (typeof browser === 'undefined') {
 			}
 			browser.tabs.remove(ids);
 		},
-		closeAll: async arg => {
+		async closeAll(arg) {
 			exec.closeIf(arg, () => true);
 		},
-		closeOthers: async arg => {
+		async closeOthers(arg) {
 			exec.closeIf(arg, tab => tab.id !== arg.tab.id);
 		},
-		closeSameUrl: async arg => {
+		async closeSameUrl(arg) {
 			const matchType = arg.matchType || await iniValue('closeSameUrlMatchType');
 			if (matchType === 'domain') {
 				const domain = arg.tab.url.replace(/^([^/]+:\/\/[^/?#]+).*/, '$1');
@@ -194,7 +194,7 @@ if (typeof browser === 'undefined') {
 			}
 			exec.closeIf(arg, tab => tab.url === arg.tab.url);
 		},
-		closeLeft: async arg => {
+		async closeLeft(arg) {
 			// FF for Android does not support Tab.index!
 			//exec.closeIf(arg, tab => tab.index < arg.tab.index);
 			exec.closeIf(arg, tab => {
@@ -205,7 +205,7 @@ if (typeof browser === 'undefined') {
 				}
 			});
 		},
-		closeRight: async arg => {
+		async closeRight(arg) {
 			// FF for Android does not support Tab.index!
 			//exec.closeIf(arg, tab => arg.tab.index < tab.index);
 			exec.closeIf(arg, tab => {
@@ -216,7 +216,7 @@ if (typeof browser === 'undefined') {
 				}
 			});
 		},
-		reopen: async arg => {
+		async reopen(arg) {
 			if (browser.sessions) {
 				// for Firefox for Desktop
 				const session = (await browser.sessions.getRecentlyClosed({ maxResults: 1 }))[0];
@@ -234,20 +234,20 @@ if (typeof browser === 'undefined') {
 			}
 			showTextToast(arg.tab.id, browser.i18n.getMessage('No_recently_closed_tabs'));
 		},
-		duplicateTab: async arg => {
+		async duplicateTab(arg) {
 			if (browser.tabs.duplicate) {
 				browser.tabs.duplicate(arg.tab.id);
 			} else {
 				browser.tabs.create({ active: true, url: arg.tab.url });
 			}
 		},
-		prevTab: async arg => {
+		async prevTab(arg) {
 			prevOrNextTab(arg.tab, -1);
 		},
-		nextTab: async arg => {
+		async nextTab(arg) {
 			prevOrNextTab(arg.tab, 1);
 		},
-		lastUsedTab: async () => {
+		async lastUsedTab() {
 			// NOTE: browser.tabs.get(id) returns closed tab.
 			const all = await browser.tabs.query({});
 			while (previousTabIds.length) {
@@ -258,14 +258,14 @@ if (typeof browser === 'undefined') {
 				}
 			}
 		},
-		showTab: async arg => {
+		async showTab(arg) {
 			browser.tabs.update(arg.tabId, { active: true });
 		},
-		isUserAgentSwitched: async () => {
+		async isUserAgentSwitched() {
 			const rulesets = await browser.declarativeNetRequest.getSessionRules();
 			return !!rulesets[0];
 		},
-		toggleUserAgent: async arg => {
+		async toggleUserAgent(arg) {
 			const ID = 1;
 			let onOff = 'OFF';
 			if (await exec.isUserAgentSwitched() && !arg.force || arg.userAgent === null) {
@@ -310,10 +310,10 @@ if (typeof browser === 'undefined') {
 			}
 			showTextToast(arg.tab.id, `${browser.i18n.getMessage('toggleUserAgent')}: ${onOff}`);
 		},
-		openAddonSettings: () => {
+		openAddonSettings() {
 			browser.tabs.create({ active: true, url: 'options.html' });
 		},
-		reloadAllTabsIni: async () => {
+		async reloadAllTabsIni() {
 			iniTimestamp = Date.now();
 			browser.storage.session.set({ iniTimestamp });
 			const tabs = await browser.tabs.query({ active: true });
@@ -329,7 +329,7 @@ if (typeof browser === 'undefined') {
 			// 	});
 			// }
 		},
-		customGesture: async arg => {
+		async customGesture(arg) {
 			const key = 'simple_gesture_' + arg.command;
 			const c = (await browser.storage.local.get(key))[key];
 			if (c.url) {
@@ -358,7 +358,7 @@ if (typeof browser === 'undefined') {
 				}).catch(e => { console.log(e.message); });
 			}
 		},
-		open: async arg => {
+		async open(arg) {
 			const active = !('active' in arg) || !!arg.active;
 			const code = arg.code || arg.script;
 			// open in new tab
@@ -386,7 +386,7 @@ if (typeof browser === 'undefined') {
 			}
 			browser.tabs.update({ url: arg.url });
 		},
-		executeScript: async arg => {
+		async executeScript(arg) {
 			const userScript = `{
 				SimpleGesture.target = document.getElementsByClassName('simple-gesture-target')[0];
 				SimpleGesture.exit = v => { throw new Error('SimpleGestureExit'); };

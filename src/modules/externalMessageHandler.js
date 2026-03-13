@@ -38,19 +38,19 @@ const saveExData = async (simple_gesture_exdata) => {
 };
 
 const exec = {
-	enable: arg => {
+	enable(arg) {
 		browser.scripting.executeScript({
 			target: { tabId: arg.tab.id },
 			func: () => { SimpleGesture.doCommand('disableGesture', true); }
 		});
 	},
-	disable: arg => {
+	disable(arg) {
 		browser.scripting.executeScript({
 			target: { tabId: arg.tab.id },
 			func: () => { SimpleGesture.doCommand('disableGesture', false); }
 		});
 	},
-	register: async arg => {
+	async register(arg) {
 		if (!arg.id) return;
 		const id = createCustomGestureId(arg);
 		const exData = await getExData({ excludeId: id });
@@ -65,7 +65,7 @@ const exec = {
 		};
 		await browser.storage.local.set(details);
 	},
-	delete: async arg => {
+	async delete(arg) {
 		if (!arg.id) return;
 		const id = createCustomGestureId(arg);
 		const exData = await getExData({ excludeId: id });

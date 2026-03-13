@@ -82,13 +82,13 @@ try {
 
 	const timeout = {
 		backup: 0,
-		disable: () => {
+		disable() {
 			if (SimpleGesture.ini.timeout) {
 				timeout.backup = SimpleGesture.ini.timeout;
 				SimpleGesture.ini.timeout = 0;
 			}
 		},
-		restore: () => {
+		restore() {
 			if (timeout.backup) {
 				SimpleGesture.ini.timeout = timeout.backup;
 			}
@@ -245,7 +245,7 @@ try {
 
 	dlgs.gestureDlg = {
 		FREE_FOR_EDIT: 999,
-		onShow: id => {
+		onShow(id) {
 			target = { name: id.replace(/_[^_]+$/, '') };
 			target.caption = byId(`${target.name}_caption`);
 			target.arrows = byId(`${target.name}_arrows`);
@@ -265,7 +265,7 @@ try {
 			dlgs.gestureDlg.backup = SimpleGesture.ini.maxFingers;
 			SimpleGesture.ini.maxFingers = dlgs.gestureDlg.FREE_FOR_EDIT;
 		},
-		onHide: () => {
+		onHide() {
 			timeout.restore();
 			if (SimpleGesture.ini.maxFingers === dlgs.gestureDlg.FREE_FOR_EDIT) {
 				SimpleGesture.ini.maxFingers = dlgs.gestureDlg.backup;
@@ -446,7 +446,7 @@ try {
 	};
 	dlgs.editDlg = {
 		targetId: null,
-		onShow: async id => {
+		async onShow(id) {
 			dlgs.editDlg.targetId = id;
 			$customGestureTitle.value = findCustomGesture(id).title;
 			const details = await storageValue(`simple_gesture_${id}`);
@@ -464,12 +464,12 @@ try {
 			editStart(byId(`${c.id}_caption`));
 			toggleEditor();
 		},
-		onHide: () => {
+		onHide() {
 			const c = findCustomGesture(dlgs.editDlg.targetId);
 			editEnd(byId(`${c.id}_caption`));
 			dlgs.editDlg.targetId = null;
 		},
-		onSubmit: () => {
+		onSubmit() {
 			// save list
 			const c = findCustomGesture(dlgs.editDlg.targetId);
 			c.title = $customGestureTitle.value;
@@ -566,7 +566,7 @@ try {
 		targetId: '',
 		onShow: NOP,
 		onHide: NOP,
-		onSubmit: () => {
+		onSubmit() {
 			deleteCustomGesture(dlgs.confirmDeleteDlg.targetId);
 		},
 	};
@@ -575,7 +575,7 @@ try {
 	const setupAdjustmentDlg = () => {
 		const dlg = byId('adjustmentDlg');
 		SimpleGesture.addTouchEventListener(dlg, {
-			start: e => {
+			start(e) {
 				[minX, minY] = SimpleGesture.getXY(e);
 				[maxX, maxY] = [minX, minY];
 				startTime = Date.now();
@@ -583,7 +583,7 @@ try {
 				e.stopPropagation();
 				timeout.disable();
 			},
-			move: e => {
+			move(e) {
 				if (!startTime) return;
 				const [x, y] = SimpleGesture.getXY(e);
 				minX = Math.min(x, minX);
@@ -593,7 +593,7 @@ try {
 				safePreventDefault(e);
 				e.stopPropagation();
 			},
-			end: () => {
+			end() {
 				let size = Math.max(maxX - minX, maxY - minY);
 				size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
 				size *= 0.8; // margin
@@ -618,12 +618,12 @@ try {
 	};
 
 	dlgs.adjustmentDlg = {
-		onShow: () => {
+		onShow() {
 			fadein('adjustmentDlg');
 			clearTimeout(TIMERS.strokeSizeChanged);
 			editStart($timeout, $strokeSize);
 		},
-		onHide: () => {
+		onHide() {
 			startTime = null;
 			editEnd($timeout, $strokeSize);
 		}
@@ -643,7 +643,7 @@ try {
 		byId('blacklistSummary').textContent = count ? urls.join(', ') : getMessage('None');
 	};
 	dlgs.blacklistDlg = {
-		onShow: () => {
+		onShow() {
 			const blacklist = byId('blacklist');
 			const newList = blacklist.cloneNode(false);
 			if (SimpleGesture.ini.blacklist) {
@@ -658,7 +658,7 @@ try {
 			blacklist.parentNode.replaceChild(newList, blacklist);
 		},
 		onHide: NOP,
-		onSubmit: () => {
+		onSubmit() {
 			const list = [];
 			for (const input of allByClass('blacklist-input')) {
 				if (input.value) {
@@ -669,7 +669,7 @@ try {
 			saveIni();
 			setupBlacklistSummary();
 		},
-		init: () => {
+		init() {
 			window.addEventListener('input', e => {
 				if (e.target.classList.contains('blacklist-input')) {
 					if (!e.target.parentNode.nextSibling) {
@@ -687,7 +687,7 @@ try {
 	dlgs.colorDlg = {
 		targetId: null,
 		rgb: null,
-		setRGB: rgb => {
+		setRGB(rgb) {
 			byId('sliderA').style.background =
 				`linear-gradient(to right, transparent, ${rgb})`;
 			dlgs.colorDlg.rgb = rgb;
@@ -699,7 +699,7 @@ try {
 				);
 			}
 		},
-		onShow: id => {
+		onShow(id) {
 			dlgs.colorDlg.targetId = id;
 			const elm = byId(id);
 			const a = byId('sliderA');
@@ -712,13 +712,13 @@ try {
 			});
 		},
 		onHide: NOP,
-		onSubmit: () => {
+		onSubmit() {
 			const a = Number(byId('sliderA').value) || 0;
 			const t = byId(dlgs.colorDlg.targetId);
 			t.value = dlgs.colorDlg.rgb + (a !== 255 ? hex(a) : '');
 			onChangeColorText({ target: t });
 		},
-		init: () => {
+		init() {
 			const f = document.createDocumentFragment();
 			for (const c of [
 				'#a4c639', // android green
