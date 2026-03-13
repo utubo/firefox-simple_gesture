@@ -219,7 +219,7 @@ if (typeof browser === 'undefined') {
 		},
 		onTimer() {
 			resetGesture();
-			if (toast.isVisible && SimpleGesture.ini.toast) {
+			if (toast.isVisible) {
 				SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
 			}
 		},
