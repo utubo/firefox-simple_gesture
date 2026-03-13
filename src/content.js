@@ -237,8 +237,8 @@ if (typeof browser === 'undefined') {
 			if (!arrows) return;
 			arrows.push('H');
 			executeEvent(SimpleGesture.onInput, e);
-			if (!getAndDoCommand(e)) return;
 			if (SimpleGesture.ini.toast) await toast.showGesture();
+			if (!getAndDoCommand(e)) return;
 			resetGesture();
 		},
 	};
