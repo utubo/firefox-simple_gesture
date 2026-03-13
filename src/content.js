@@ -90,12 +90,9 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	const resetGesture = e => {
+	const resetGesture = () => {
 		arrows = null;
 		timeout.cancel();
-		if (e?.withTimeout && toast.isVisible && SimpleGesture.ini.toast) {
-			SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
-		}
 	};
 
 	const fixSize = () => {
@@ -206,15 +203,15 @@ if (typeof browser === 'undefined') {
 		tapHold.reset();
 	};
 
-	const restartTimer = (id, f, msec) => {
-		clearTimeout(id);
-		return msec ? setTimeout(f, msec) : null;
+	const restartTimer = (obj, msec) => {
+		clearTimeout(obj.timer);
+		obj.timer = msec ? setTimeout(obj.onTimer, msec) : null;
 	};
 
 	const timeout = {
 		timer: null,
 		reset: () => {
-			timeout.timer = restartTimer(timeout.timer, timeout.exec, SimpleGesture.ini.timeout);
+			restartTimer(timeout, SimpleGesture.ini.timeout);
 		},
 		cancel: () => {
 			if (timeout.timer) {
@@ -222,8 +219,11 @@ if (typeof browser === 'undefined') {
 				timeout.timer = null;
 			}
 		},
-		exec: () => {
-			resetGesture({ withTimeout: true });
+		onTimer: () => {
+			resetGesture();
+			if (toast.isVisible && SimpleGesture.ini.toast) {
+				SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
+			}
 		},
 	};
 
@@ -231,13 +231,13 @@ if (typeof browser === 'undefined') {
 	const tapHold = {
 		timer: null,
 		reset: () => {
-			tapHold.timer = restartTimer(tapHold.timer, tapHold.input, SimpleGesture.ini.tapHoldMsec);
+			restartTimer(tapHold, SimpleGesture.ini.tapHoldMsec);
 		},
-		input: async (e = {}) => {
+		onTimer: async (e = {}) => {
 			if (!arrows) return;
 			arrows.push('H');
 			executeEvent(SimpleGesture.onInput, e);
-			if (SimpleGesture.ini.toast) await toast.showGesture();
+			if (SimpleGesture.ini.toast) await toast.showGesture(false);
 			if (!getAndDoCommand(e)) return;
 			resetGesture();
 		},
@@ -351,7 +351,7 @@ if (typeof browser === 'undefined') {
 
 	const onCancel = () => {
 		timeout.cancel();
-		clearTimeout(toast.showTimer);
+		clearTimeout(toast.timer);
 		toast.hide();
 		arrows = null;
 		touchEndTime = 0;
@@ -590,7 +590,7 @@ if (typeof browser === 'undefined') {
 
 	const toast = {
 		div: null, main: null, sub: null, svg: {},
-		showTimer: null, hideTimer: null,
+		timer: null, hideTimer: null,
 		isVisible: false,
 		makeSvgs: () => {
 			if (toast.svg.U) return;
@@ -706,7 +706,7 @@ if (typeof browser === 'undefined') {
 			pullToRefresh.hide();
 			if (!toast.div) return;
 			if (!toast.isVisible) return;
-			clearTimeout(toast.showTimer);
+			clearTimeout(toast.timer);
 			clearTimeout(toast.hideTimer);
 			if (delay) {
 				toast.hideTimer = setTimeout(toast.hide, delay);
@@ -715,17 +715,18 @@ if (typeof browser === 'undefined') {
 			toast.isVisible = false;
 			requestAnimationFrame(() => { toast.div.style.opacity = '0'; });
 		},
-		showGesture: async () => {
-			clearTimeout(toast.showTimer);
+		showGesture: async (isHide = true) => {
+			clearTimeout(toast.timer);
 			if (await toast.setCurrentGesture()) {
 				toast.show();
-			} else {
+			} else if (isHide){
 				toast.hide();
 			}
 		},
 		showGestureDelay: () => {
-			toast.showTimer = restartTimer(toast.showTimer, toast.showGesture, SHOW_TOAST_DELAY);
+			restartTimer(toast, SHOW_TOAST_DELAY);
 		},
+		onTimer: () => { toast.showGesture(); },
 		setCurrentGesture: async () => {
 			const g = getCommandByState(startPoint, fingers, arrows);
 			const gh = getCommandByState(startPoint, fingers, [...arrows, 'H']);
