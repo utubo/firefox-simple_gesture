@@ -208,16 +208,16 @@ if (typeof browser === 'undefined') {
 
 	const timeout = {
 		timer: null,
-		reset: () => {
+		reset() {
 			restartTimer(timeout, SimpleGesture.ini.timeout);
 		},
-		cancel: () => {
+		cancel() {
 			if (timeout.timer) {
 				clearTimeout(timeout.timer);
 				timeout.timer = null;
 			}
 		},
-		onTimer: () => {
+		onTimer() {
 			resetGesture();
 			if (toast.isVisible && SimpleGesture.ini.toast) {
 				SimpleGesture.showTextToast(`( ${getMessage('timeout')} )`);
@@ -228,10 +228,10 @@ if (typeof browser === 'undefined') {
 	// tap hold ----------
 	const tapHold = {
 		timer: null,
-		reset: () => {
+		reset() {
 			restartTimer(tapHold, SimpleGesture.ini.tapHoldMsec);
 		},
-		onTimer: async (e = {}) => {
+		async onTimer(e = {}) {
 			if (!arrows) return;
 			arrows.push('H');
 			executeEvent(SimpleGesture.onInput, e);
@@ -484,7 +484,7 @@ if (typeof browser === 'undefined') {
 	// fast scroll --------------
 	const fastScroll = {
 		state: null,
-		setup: () => {
+		setup() {
 			if (!startPoint[0]) return;
 			if (SimpleGesture.ini.fastScroll !== startPoint[0]) return;
 			const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -498,7 +498,7 @@ if (typeof browser === 'undefined') {
 			};
 			return true;
 		},
-		do: e => {
+		do(e) {
 			const [_, y] = SimpleGesture.getXY(e);
 			window.scrollTo(
 				fastScroll.state.left,
@@ -507,11 +507,10 @@ if (typeof browser === 'undefined') {
 		},
 	};
 
-
 	// pull to refresh --------------
 	const pullToRefresh = {
 		isEnabled: false,
-		start: () => {
+		start() {
 			return fingersNum === 1 &&
 				!VV.offsetTop &&
 				!scrollY &&
@@ -519,11 +518,11 @@ if (typeof browser === 'undefined') {
 				!document.body.scrollTop &&
 				!isScrolled(target)
 		},
-		cancel: () => {
+		cancel() {
 			pullToRefresh.isEnabled = false
 			pullToRefresh.hide();
 		},
-		move: () => {
+		move() {
 			if (!arrows) {
 				// NOP
 			} else if (!pullToRefresh.continue()) {
@@ -535,12 +534,12 @@ if (typeof browser === 'undefined') {
 				});
 			}
 		},
-		continue: () => {
+		continue() {
 			return arrows?.[0] === 'D' &&
 				!arrows[1] &&
 				!getCommandByState(startPoint, fingers, arrows);
 		},
-		end: () => {
+		end() {
 			if (!pullToRefresh.continue()) return;
 			if (PULL_TO_REFRESH_DELAY < touchEndTime - touchStartTime) {
 				location.reload();
@@ -549,12 +548,12 @@ if (typeof browser === 'undefined') {
 			}
 			return true;
 		},
-		toast: () => {
+		toast() {
 			const label = document.createElement('DIV');
 			label.textContent = getMessage('pullToRefresh');
 			return label;
 		},
-		hide: () => {},
+		hide() {},
 	};
 
 	// toast --------------
@@ -590,7 +589,7 @@ if (typeof browser === 'undefined') {
 		div: null, main: null, sub: null, svg: {},
 		timer: null, hideTimer: null,
 		isVisible: false,
-		makeSvgs: () => {
+		makeSvgs() {
 			if (toast.svg.U) return;
 			const getSvgNode = (name, attrs) => {
 				const n = document.createElementNS('http://www.w3.org/2000/svg', name);
@@ -631,7 +630,7 @@ if (typeof browser === 'undefined') {
 			toast.svg.S = withPath('M6 1v2M2 3l1.4 1.4M10 3l-1.4 1.4M4 11q-3-2 1-1v-3q1-2 2 0v2l3 1v1');
 			toast.svg.H = withPath('M8.2 4.1v-1.5zh1.5M8.2 6.5a2.7 2.7 0 1 1 0.5 0M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1');
 		},
-		setup: () => {
+		setup() {
 			if (toast.div) return;
 			toast.div = document.createElement('DIV');
 			toast.div.style.cssText = `
@@ -671,21 +670,21 @@ if (typeof browser === 'undefined') {
 			shadow.appendChild(toast.main);
 			document.body.appendChild(toast.div);
 		},
-		fixSize: () => {
+		fixSize() {
 			const w = vvWidth();
 			const h = vvHeight();
 			const z = Math.min(w, h) / 100;
 			toast.div.style.fontSize = ((5 * z)^0) + 'px'; // "vmin" of CSS has a problem when the page is zoomed.
 			toast.div.style.width = w + 'px';
 		},
-		fixPos: () => {
+		fixPos() {
 			if (VV.isDummy) return;
 			if (!toast.div) return;
 			if (!toast.isVisible) return;
 			toast.div.style.top = VV.offsetTop + 'px';
 			toast.div.style.left = VV.offsetLeft + 'px';
 		},
-		show: () => {
+		show() {
 			if (!toast.div) return;
 			if (toast.isVisible) return;
 			toast.isVisible = true;
@@ -700,7 +699,7 @@ if (typeof browser === 'undefined') {
 				toast.div.style.transition += ',left .2s .1s, top .2s .1s';
 			}, 300);
 		},
-		hide: delay => {
+		hide(delay) {
 			pullToRefresh.hide();
 			if (!toast.div) return;
 			if (!toast.isVisible) return;
@@ -713,7 +712,7 @@ if (typeof browser === 'undefined') {
 			toast.isVisible = false;
 			requestAnimationFrame(() => { toast.div.style.opacity = '0'; });
 		},
-		showGesture: async (isHide = true) => {
+		async showGesture(isHide = true) {
 			clearTimeout(toast.timer);
 			if (await toast.setCurrentGesture()) {
 				toast.show();
@@ -721,11 +720,11 @@ if (typeof browser === 'undefined') {
 				toast.hide();
 			}
 		},
-		showGestureDelay: () => {
+		showGestureDelay() {
 			restartTimer(toast, SHOW_TOAST_DELAY);
 		},
-		onTimer: () => { toast.showGesture(); },
-		setCurrentGesture: async () => {
+		onTimer() { toast.showGesture(); },
+		async setCurrentGesture() {
 			const g = getCommandByState(startPoint, fingers, arrows);
 			const gh = getCommandByState(startPoint, fingers, [...arrows, 'H']);
 			if (!isGestureEnabled && g !== 'disableGesture' && gh !== 'disableGesture') return false;
@@ -762,7 +761,7 @@ if (typeof browser === 'undefined') {
 			toast.main.replaceChildren(f);
 			return true;
 		},
-		setText: (e, t) => {
+		setText(e, t) {
 			e.replaceChildren(document.createTextNode(t));
 		},
 	};
