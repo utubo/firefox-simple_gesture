@@ -193,7 +193,7 @@
 	"delaySingleTapNote": {
 		"message": "If single tap does not work, try triple tap."
 	},
-	"tapHold": {
+	"touchHold": {
 		"message": "Touch & hold"
 	},
 	"displayCommand": {

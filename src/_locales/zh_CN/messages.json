@@ -193,7 +193,7 @@
 	"delaySingleTapNote": {
 		"message": "如果单击不起作用，请尝试三击"
 	},
-	"tapHold": {
+	"touchHold": {
 		"message": "点按"
 	},
 	"displayCommand": {

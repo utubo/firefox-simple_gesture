@@ -13,7 +13,7 @@ try {
 		toastBackground: '#21a1de99',
 		toastMinStroke: 2,
 		interval: 0,
-		tapHoldMsec: 0,
+		touchHoldMsec: 0,
 	};
 	const TIMERS = {};
 	const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
@@ -180,7 +180,7 @@ try {
 	const $strokeSize = byId('strokeSize');
 	const $bidingForms = allByClass('js-binding');
 	const $preventPullToRefresh = byId('preventPullToRefresh');
-	const $tapHoldMsec = byId('tapHoldMsec');
+	const $touchHoldMsec = byId('touchHoldMsec');
 
 	// edit U-D-L-R ------
 	const updateGestureLabel = (arrowsLabel, addnlLabel, gesture) => {
@@ -917,11 +917,11 @@ try {
 				changeState({dlg: 'colorDlg', targetId: dataTargetId(e)});
 			});
 		}
-		const $tapHold = byId('tapHold');
-		$tapHold.checked = !!SimpleGesture.ini.tapHoldMsec;
-		onChecked({ target: $tapHold });
-		$tapHold.addEventListener('click', () => {
-			$tapHoldMsec.value = $tapHold.checked
+		const $touchHold = byId('touchHold');
+		$touchHold.checked = !!SimpleGesture.ini.touchHoldMsec;
+		onChecked({ target: $touchHold });
+		$touchHold.addEventListener('click', () => {
+			$touchHoldMsec.value = $touchHold.checked
 				? SimpleGesture.ini.timeout <= 100
 				? TAP_HOLD_MSEC_DEFAULT
 				: Math.min(TAP_HOLD_MSEC_DEFAULT, SimpleGesture.ini.timeout - 100)

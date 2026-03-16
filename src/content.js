@@ -22,7 +22,7 @@ if (typeof browser === 'undefined') {
 		timeout: 1500,
 		doubleTapMsec: 200,
 		delaySingleTap: false,
-		tapHoldMsec: 0,
+		touchHoldMsec: 0,
 		toast: true,
 		toastMinStroke: 2,
 		blacklist: [],
@@ -198,7 +198,7 @@ if (typeof browser === 'undefined') {
 	// timers ------------
 	const restartTimers = () => {
 		timeout.reset();
-		tapHold.reset();
+		touchHold.reset();
 	};
 
 	const restartTimer = (obj, msec) => {
@@ -225,11 +225,11 @@ if (typeof browser === 'undefined') {
 		},
 	};
 
-	// tap hold ----------
-	const tapHold = {
+	// touch hold ----------
+	const touchHold = {
 		timer: null,
 		reset() {
-			restartTimer(tapHold, SimpleGesture.ini.tapHoldMsec);
+			restartTimer(touchHold, SimpleGesture.ini.touchHoldMsec);
 		},
 		async onTimer(e = {}) {
 			if (!arrows) return;

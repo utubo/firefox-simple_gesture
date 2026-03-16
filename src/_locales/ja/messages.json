@@ -193,7 +193,7 @@
 	"delaySingleTapNote": {
 		"message": "通常のタップが効かないときは、トリプルタップを試してください"
 	},
-	"tapHold": {
+	"touchHold": {
 		"message": "ロングタップ"
 	},
 	"displayCommand": {

@@ -193,7 +193,7 @@
 	"delaySingleTapNote": {
 		"message": "Wenn das einfache Antippen nicht funktioniert, versuchen Sie es mit dem dreifachen Antippen."
 	},
-	"tapHold": {
+	"touchHold": {
 		"message": "langes Drücken"
 	},
 	"displayCommand": {
