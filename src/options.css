@@ -221,6 +221,7 @@
 }
 #startPosition {
   color: var(--dlg-label);
+  text-align: center;
 }
 .gesture-area {
   background: #14141422;
