@@ -278,16 +278,27 @@
 			<div id="preventPullToRefresh">
 				<div class="prevent-pull-to-refresh"></div>
 			</div>
+			<div class="gesture-area"></div>
 			<div class="dlg-labels inputed-gesture-container">
 				<div id="editTarget"></div>
 				<div id="inputedGesture"></div>
-				<div id="inputedStartPoint"></div>
+				<div id="inputedFingers"></div>
 				<div id="dupName" class="dup"></div>
 			</div>
-			<div class="gesture-area"></div>
 			<div class="dlg-buttons">
 				<span id="cancelInputGesture" class="button icon-cancel i18n">cancel</span>
 				<div id="clearGesture" class="button icon-delete i18n">clear</div>
+				<br><br>
+				<select id="startPosition">
+					<option class="i18n" value="" disabled selected hidden>startPosition</option>
+					<option class="i18n" value="">from_anyWhere</option>
+					<option class="i18n" value="W:">from_W</option>
+					<option class="i18n" value="E:">from_E</option>
+					<option class="i18n" value="L:">from_L</option>
+					<option class="i18n" value="R:">from_R</option>
+					<option class="i18n" value="T:">from_T</option>
+					<option class="i18n" value="B:">from_B</option>
+				</select>
 			</div>
 		</div>
 

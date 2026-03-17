@@ -54,6 +54,10 @@ try {
 		}
 	};
 
+	const wantsClick = e => {
+		return ['INPUT', 'SELECT', 'BUTTON', 'LABEL'].includes(e?.target?.tagName);
+	};
+
 	const editStart = (...elms) => {
 		for (const elm of elms) {
 			elm.classList.add('editing');
@@ -131,30 +135,32 @@ try {
 
 	const toGestureObj = s => {
 		let g = {
-			startPoint: '',
+			startPosition: '',
 			fingers: '',
 			arrows: [],
 		}
 		if (!s) return g;
 		const a = s.split(':');
 		if (a[2]) {
-			g.startPoint = a[0];
+			g.startPosition = a[0];
 			g.fingers = a[1];
 			g.arrows = a[2];
 		} else if (!a[1]) {
 			g.arrows = s;
-		} else if (a[0].match(/[LRTB]/)) {
-			g.startPoint = a[0];
+		} else if (a[0].match(/[WELRTB]/)) {
+			g.startPosition = a[0];
 			g.arrows = a[1];
 		} else {
 			g.fingers = a[0];
 			g.arrows = a[1];
 		}
+		g.startPosition += g.startPosition ? ':' : '';
+		g.fingers += g.fingers ? ':' : '';
 		g.arrows = g.arrows.split('-');
 		return g;
 	};
 
-	const fromGestureObj = g => `${g.startPoint || ''}${g.fingers || ''}${(g.arrows || []).slice(0, MAX_LENGTH).join('-')}`;
+	const fromGestureObj = g => `${g.startPosition || ''}${g.fingers || ''}${(g.arrows || []).slice(0, MAX_LENGTH).join('-')}`;
 
 	const ifById = id => (typeof id === 'string') ? byId(id): id;
 	const fadeout = elm => { ifById(elm).classList.add('transparent'); };
@@ -166,7 +172,7 @@ try {
 	const $buttonsTamplate = byClass($templates, 'custom-gesture-buttons');
 	const $blacklistTemplate = byClass($templates, 'blacklist-item');
 	const $inputedGesture = byId('inputedGesture');
-	const $inputedStartPoint = byId('inputedStartPoint');
+	const $inputedFingers = byId('inputedFingers');
 	const $dupName = byId('dupName');
 	const $cancelInputGesture = byId('cancelInputGesture');
 	const $customGestureList = byId('customGestureList');
@@ -181,31 +187,32 @@ try {
 	const $bidingForms = allByClass('js-binding');
 	const $preventPullToRefresh = byId('preventPullToRefresh');
 	const $touchHoldMsec = byId('touchHoldMsec');
+	const $startPosition = byId('startPosition');
+	const $gestureArea= byClass(document, 'gesture-area');
 
 	// edit U-D-L-R ------
-	const updateGestureLabel = (arrowsLabel, addnlLabel, gesture) => {
-		const g = toGestureObj(gesture);
+	const updateGestureLabel = (arrowsLabel, addnlLabel, g) => {
 		if (g.arrows.length) {
 			SimpleGesture.drawArrows(g.arrows, arrowsLabel);
 		} else {
 			arrowsLabel.textContent = INSTEAD_OF_EMPTY.noGesture;
 		}
-		const addnl = SimpleGesture.getAddnlText(g.startPoint, g.fingers);
+		const addnl = SimpleGesture.getAddnlText(g.startPosition, g.fingers);
 		addnlLabel.textContent = addnl;
 		toggleClass(!addnl, 'hide', addnlLabel);
-		return g.arrows;
 	};
 	const updateGestureItem = (label, gesture) => {
 		const note = byClass(label.parentNode, 'arrows-note');
-		const arrows = updateGestureLabel(label, note, gesture);
-		toggleClass(!arrows.length, 'arrows-na', label);
+		const g = toGestureObj(gesture);
+		updateGestureLabel(label, note, g);
+		toggleClass(!g.arrows.length, 'arrows-na', label);
 		label.setAttribute('data-gesture', gesture || '');
 	};
 
 	const CLEAR_GESTURE = 'n/a'; // magic number
 	const updateGesture = (gestureObj) => {
 		if (gestureObj.arrows.length) {
-			// make key. e.g.) `T-2-U-D`
+			// make key. e.g.) `T:2:U-D`
 			const key = fromGestureObj(gestureObj);
 			const swaped = {};
 			for (const [k, v] of Object.entries(SimpleGesture.ini.gestures)) {
@@ -251,12 +258,11 @@ try {
 			target.arrows = byId(`${target.name}_arrows`);
 			editStart(target.arrows);
 			byId('editTarget').textContent = target.caption.textContent;
-			updateGestureLabel(
-				$inputedGesture,
-				$inputedStartPoint,
-				target.arrows.getAttribute('data-gesture')
-			);
-			toggleClass(false, 'dup', $inputedGesture, $inputedStartPoint);
+			$startPosition.selectedIndex = 0;
+			const g = toGestureObj(target.arrows.getAttribute('data-gesture'));
+			g.onShow = true;
+			dlgs.gestureDlg.updateLabel(g);
+			toggleClass(false, 'dup', $inputedGesture, $inputedFingers);
 			toggleClass(false, 'canceled', $inputedGesture);
 			toggleClass(false, 'hover', $cancelInputGesture);
 			$dupName.textContent = '';
@@ -273,7 +279,29 @@ try {
 			if (!target) return;
 			editEnd(target.arrows);
 			target = null;
-		}
+		},
+		updateLabel(g) {
+			if (g) {
+				updateGestureLabel(
+					$inputedGesture,
+					$inputedFingers,
+					{ arrows: g.arrows, fingers: g.fingers, startPosition: '' }
+				);
+			}
+			if ($startPosition.value.match(/[WE]/)) {
+				// nop
+			} else if (g?.onShow || g?.startPosition?.match(/[LRTB]/)) {
+				$startPosition.value = g.startPosition;
+			}
+			$gestureArea.setAttribute('data-startPosition', $startPosition.value);
+		},
+		getGesture(g) {
+			return fromGestureObj({
+				arrows: g.arrows,
+				startPosition: $startPosition.value || g.startPosition,
+				fingers: g.fingers,
+			});
+		},
 	};
 
 	const getGesture = name => {
@@ -324,9 +352,7 @@ try {
 		toggleDoubleTapNote();
 		window.addEventListener('click', e => {
 			if (!e.target.classList) return;
-			if (e.target.tagName === 'INPUT') return;
-			if (e.target.tagName === 'LABEL') return;
-			if (e.target.tagName === 'SELECT') return;
+			if (wantsClick(e)) return;
 			if (e.target.classList.contains('with-checkbox')) return;
 			if (e.target.classList.contains('custom-gesture-edit')) {
 				changeState({dlg: 'editDlg', targetId: dataTargetId(e)});
@@ -363,28 +389,33 @@ try {
 			history.back();
 			safePreventDefault(e);
 		}, move: NOP, end: NOP, cancel: NOP, });
+		$startPosition.addEventListener('change', () => {
+			dlgs.gestureDlg.updateLabel();
+		});
 	};
 
 	// inject settings-page behavior
 	SimpleGesture.onStart = e => {
 		if (!target) return;
+		if (wantsClick(e)) return;
 		timeout.disable();
 		safePreventDefault(e);
 		return true;
 	};
 	SimpleGesture.onInput = e => {
 		if (!target) return;
+		if (wantsClick(e)) return;
 		if (e.arrows.length > SimpleGesture.MAX_LENGTH) {
 			$inputedGesture.classList.add('canceled');
 			$cancelInputGesture.classList.add('hover');
 		}
-		toggleClass(!e.startPoint && !e.fingers, 'hide', $inputedStartPoint);
-		const gesture = fromGestureObj(e);
-		updateGestureLabel($inputedGesture, $inputedStartPoint, gesture);
+		toggleClass(!e.startPosition && !e.fingers, 'hide', $inputedFingers);
+		dlgs.gestureDlg.updateLabel(e);
+		const gesture = dlgs.gestureDlg.getGesture(e);
 		let dup = SimpleGesture.ini.gestures[gesture];
 		dup = (dup && dup !== target.name) ? getMessage(dup) : '';
 		$dupName.textContent = dup ? `\u00a0(${dup})` : '';
-		toggleClass(dup, 'dup', $inputedGesture, $inputedStartPoint);
+		toggleClass(dup, 'dup', $inputedGesture, $inputedFingers);
 		safePreventDefault(e);
 		return true;
 	};
@@ -393,10 +424,16 @@ try {
 		clearTimeout(touchEndTimer);
 		timeout.restore();
 		if (!target) return;
+		if (wantsClick(e)) return;
 		if ($inputedGesture.classList.contains('canceled')) {
 			history.back();
 		} else {
 			if (e.arrows?.length) {
+				if ($startPosition) {
+					e.startPosition = $startPosition.value;
+				} else if (e.startPosition.match(/^[WE]:$/)) {
+					e.startPosition = '';
+				}
 				updateGesture(e);
 				setTimeout(
 					() => { history.back(); },

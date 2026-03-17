@@ -44,7 +44,7 @@ if (typeof browser === 'undefined') {
 	// fields ------------
 	// gesture
 	let arrows = null;
-	let startPoint = ''; // e.g. 'L:', 'R:', 'T:' or 'B:'
+	let startPosition = ''; // e.g. 'W:', 'E:', 'L:', 'R:', 'T:' or 'B:'
 	let lx = 0; // last X
 	let ly = 0; // last Y
 	let la = null; // last arrow (e.g. 'L','R','U' or 'D')
@@ -60,6 +60,9 @@ if (typeof browser === 'undefined') {
 	let lastInnerHeight = 0;
 	let size = SimpleGesture.ini.strokeSize;
 	let edgeWidth = 0;
+	let rightEdge = 0;
+	let bottomEdge = 0;
+	let halfWidth = 0;
 	// others
 	let iniTimestamp = 0;
 	let exData;
@@ -102,12 +105,15 @@ if (typeof browser === 'undefined') {
 		const m = Math.min(w, h)
 		size = (SimpleGesture.ini.strokeSize * m / 320)^0;
 		edgeWidth = (m / 10)^0;
+		rightEdge = lastInnerWidth - edgeWidth;
+		bottomEdge = lastInnerHeight - edgeWidth;
+		halfWidth = w / 2;
 	};
 
 	const executeEvent = (f, e) => {
 		if (!f) return;
 		e.arrows = arrows;
-		e.startPoint = startPoint;
+		e.startPosition = startPosition;
 		e.fingers = fingers;
 		return f(e);
 	};
@@ -255,7 +261,7 @@ if (typeof browser === 'undefined') {
 		} else {
 			arrows = [];
 			doubleTap.count = 1;
-			startPoint = '';
+			startPosition = '';
 		}
 		[lx, ly] = SimpleGesture.getXY(e);
 		la = null;
@@ -331,7 +337,7 @@ if (typeof browser === 'undefined') {
 		if (pullToRefresh.isEnabled && pullToRefresh.end()) return;
 		if (setupSingleTap(e)) return;
 		if (executeEvent(SimpleGesture.onEnd, e)) return true;
-		const g = getCommandByState(startPoint, fingers, arrows);
+		const g = getCommandByState(startPosition, fingers, arrows);
 		if (!g) return;
 		if (!isGestureEnabled && g !== 'disableGesture') return;
 		SimpleGesture.doCommand(g);
@@ -351,18 +357,20 @@ if (typeof browser === 'undefined') {
 	};
 
 	const setupStartPoint = async (x, y) => {
-		if (startPoint) {
+		if (startPosition) {
 			// nop
 		} else if (x < edgeWidth) {
-			startPoint = 'L:';
-		} else if (x > lastInnerWidth - edgeWidth) {
-			startPoint = 'R:';
+			startPosition = 'L:';
+		} else if (x > rightEdge) {
+			startPosition = 'R:';
 		} else if (y < edgeWidth) {
-			startPoint = 'T:';
-		} else if (y > lastInnerHeight - edgeWidth) {
-			startPoint = 'B:';
+			startPosition = 'T:';
+		} else if (y > bottomEdge) {
+			startPosition = 'B:';
+		} else if (x < halfWidth){
+			startPosition = 'W:'; // West
 		} else {
-			startPoint = '';
+			startPosition = 'E:'; // East
 		}
 	};
 
@@ -443,7 +451,7 @@ if (typeof browser === 'undefined') {
 	};
 
 	SimpleGesture.isNowaitSingleTap = () => {
-		return !getCommandByState(startPoint, fingers, ['W']);
+		return !getCommandByState(startPosition, fingers, ['W']);
 	};
 
 	const setupSingleTap = e => {
@@ -483,8 +491,8 @@ if (typeof browser === 'undefined') {
 	const fastScroll = {
 		state: null,
 		setup() {
-			if (!startPoint[0]) return;
-			if (SimpleGesture.ini.fastScroll !== startPoint[0]) return;
+			if (!startPosition[0]) return;
+			if (SimpleGesture.ini.fastScroll !== startPosition[0]) return;
 			const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 			let z = h / lastInnerHeight;
 			if (z <= 1) return;
@@ -535,7 +543,7 @@ if (typeof browser === 'undefined') {
 		continue() {
 			return arrows?.[0] === 'D' &&
 				!arrows[1] &&
-				!getCommandByState(startPoint, fingers, arrows);
+				!getCommandByState(startPosition, fingers, arrows);
 		},
 		end() {
 			if (!pullToRefresh.continue()) return;
@@ -570,7 +578,7 @@ if (typeof browser === 'undefined') {
 			addnl.push(f.replace(/:?$/, getMessage('fingers')));
 		}
 		if (s) {
-			addnl.push(`${getMessage(`fromEdge-${s[0]}`)}`);
+			addnl.push(`${getMessage(`from_${s[0]}`)}`);
 		}
 		return addnl.join(' ');
 	}
@@ -723,37 +731,34 @@ if (typeof browser === 'undefined') {
 		},
 		onTimer() { toast.showGesture(); },
 		async setCurrentGesture() {
-			const g = getCommandByState(startPoint, fingers, arrows);
-			const gh = getCommandByState(startPoint, fingers, [...arrows, 'H']);
+			const g = getCommandByState(startPosition, fingers, arrows);
+			const gh = getCommandByState(startPosition, fingers, [...arrows, 'H']);
 			if (!isGestureEnabled && g !== 'disableGesture' && gh !== 'disableGesture') return false;
 			const joinedArrows = arrows.join('-');
-			let elms = [];
+			let list = {};
 			if (
 				SimpleGesture.ini.suggestNext &&
 				arrows[SimpleGesture.ini.toastMinStroke - 1]
 			) {
-				elms = await suggestGestures(SimpleGesture.ini.gestures, g, joinedArrows);
+				list = SimpleGesture.ini.gestures;
 			} else if (g || gh) {
-				const list = {};
 				list[joinedArrows] = g;
-				if (gh) {
-					list[joinedArrows + '-H'] = gh;
-				}
-				elms = await suggestGestures(list, g, joinedArrows);
+				list[joinedArrows + '-H'] = gh;
 			}
+			const s = await suggestGestures(list, g, joinedArrows);
 			if (
 				pullToRefresh.isEnabled &&
 				SimpleGesture.ini.pullToRefresh === 'text'
 			) {
-				elms.unshift(pullToRefresh.toast());
+				s.elms.unshift(pullToRefresh.toast());
 			}
-			if (!elms[0]) {
+			if (!s.elms[0]) {
 				return false;
 			}
 			toast.setup();
-			toast.setText(toast.sub, SimpleGesture.getAddnlText(startPoint, fingers));
+			toast.setText(toast.sub, SimpleGesture.getAddnlText(s.s, fingers));
 			const f = document.createDocumentFragment();
-			for (const e of elms) {
+			for (const e of s.elms) {
 				f.appendChild(e);
 			}
 			toast.main.replaceChildren(f);
@@ -764,21 +769,20 @@ if (typeof browser === 'undefined') {
 		},
 	};
 
-	const isMatch = (k, fg, sg) => {
-		if (k.match(/^[LRTB]:/)) {
-			return k.startsWith(sg);
-		} else {
-			return k.startsWith(fg);
-		}
-	};
-
 	const suggestGestures = async (list, match, joinedArrows) => {
 		const elms = [];
+		let s = '';
+		if (!list) return { elms, s };
 		const fGesture = fingers + joinedArrows;
-		const sGesture = startPoint + fGesture;
+		const sGesture = startPosition + fGesture;
 		for (const [k, v] of Object.entries(list)) {
-			if (!isMatch(k, fGesture, sGesture)) continue;
-			if (startPoint && list[startPoint + k]) continue;
+			if (!v) continue;
+			if (startPosition && k.startsWith(sGesture)) {
+				s = startPosition;
+			} else if (!k.startsWith(fGesture)) {
+				continue;
+			}
+			if (startPosition && list[startPosition + k]) continue;
 			const name = await gestureName(v);
 			if (!name) continue; // for old ini-data.
 			// create element
@@ -797,7 +801,7 @@ if (typeof browser === 'undefined') {
 			label.appendChild(text);
 			elms.push(label);
 		}
-		return elms;
+		return { elms, s };
 	};
 
 	// uncommon modules ---

@@ -214,16 +214,28 @@
 	"EnableExperimentalFeatures": {
 		"message": "Experimentelle Funktionen"
 	},
-	"fromEdge_L": {
+	"startPosition": {
+		"message": "Start position"
+	},
+	"from_anyWhere": {
+		"message": "Von überall"
+	},
+	"from_W": {
+		"message": "Vom linken Bildschirmrand"
+	},
+	"from_E": {
+		"message": "Vom rechten Bildschirmrand"
+	},
+	"from_L": {
 		"message": "Von der linken Bildschirmkante."
 	},
-	"fromEdge_R": {
+	"from_R": {
 		"message": "Von der rechten Bildschirmkante."
 	},
-	"fromEdge_T": {
+	"from_T": {
 		"message": "Von der oberen Bildschirmkante."
 	},
-	"fromEdge_B": {
+	"from_B": {
 		"message": "Von der unteren Bildschirmkante."
 	},
 	"fingers": {

@@ -214,16 +214,28 @@
 	"EnableExperimentalFeatures": {
 		"message": "实验功能"
 	},
-	"fromEdge_L": {
+	"startPosition": {
+		"message": "起始位置"
+	},
+	"from_anyWhere": {
+		"message": "任意起始位置"
+	},
+	"from_W": {
+		"message": "从屏幕左侧"
+	},
+	"from_E": {
+		"message": "从屏幕右侧"
+	},
+	"from_L": {
 		"message": "从屏幕的左边缘"
 	},
-	"fromEdge_R": {
+	"from_R": {
 		"message": "从屏幕的右边缘"
 	},
-	"fromEdge_T": {
+	"from_T": {
 		"message": "从屏幕的顶部边缘"
 	},
-	"fromEdge_B": {
+	"from_B": {
 		"message": "从屏幕的底部边缘"
 	},
 	"fingers": {

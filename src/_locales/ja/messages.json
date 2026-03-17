@@ -214,16 +214,28 @@
 	"EnableExperimentalFeatures": {
 		"message": "実験的な機能を表示する"
 	},
-	"fromEdge_L": {
+	"startPosition": {
+		"message": "開始位置"
+	},
+	"from_anyWhere": {
+		"message": "開始位置指定無し"
+	},
+	"from_W": {
+		"message": "画面左側から"
+	},
+	"from_E": {
+		"message": "画面右側から"
+	},
+	"from_L": {
 		"message": "画面左端から"
 	},
-	"fromEdge_R": {
+	"from_R": {
 		"message": "画面右端から"
 	},
-	"fromEdge_T": {
+	"from_T": {
 		"message": "画面上端から"
 	},
-	"fromEdge_B": {
+	"from_B": {
 		"message": "画面下端から"
 	},
 	"fingers": {

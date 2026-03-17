@@ -1,6 +1,7 @@
 /* colors */
 :root {
   --caption: #0c0c0d;
+  --dlg-label: #fbfbfe;
 }
 
 /* manifest v3 */
@@ -176,7 +177,7 @@
 /* dialog */
 .dlg-labels {
   bottom: calc(50% + 30vmin + .5rem);
-  color: #fff;
+  color: var(--dlg-label);
   font-size: 1.7rem;
   font-weight: bold;
   line-height: 2rem;
@@ -187,7 +188,8 @@
   width: 100%;
 }
 .adjustment-dlg-caption {
-  color: #fff;
+  color: var(--dlg-label);
+  font-size: 1.7rem;
   font-size: 1.2rem;
 }
 @media (max-height: 23rem) {
@@ -217,22 +219,66 @@
   height: calc(100vh + 2000px);
   width: calc(100vw + 2000px);
 }
+#startPosition {
+  color: var(--dlg-label);
+}
 .gesture-area {
-  background: #fff;
+  background: #14141422;
+  border: 1px solid var(--dlg-label);
   content: ' ';
   display: block;
   height: 54vmin;
-  left: calc( 50% - 27vmin );
+  left: calc(50% - 27vmin);
   position: fixed;
-  top: calc( 50% - 27vmin );
+  top: calc(50% - 27vmin);
   transition: .3s;
   width: 54vmin;
+  &[data-startPosition="W:"] {
+    height: calc(100vh - 20vmin);
+    left: 10vmin;
+    top: 10vmin;
+    width: calc(50% - 10vmin);
+  }
+  &[data-startPosition="E:"] {
+    height: calc(100vh - 20vmin);
+    left: 50%;
+    top: 10vmin;
+    width: calc(50% - 10vmin);
+  }
+  &[data-startPosition="L:"] {
+    border-left: none;
+    height: calc(100vh - 20vmin);
+    left: 0;
+    top: 10vmin;
+    width: 10vmin;
+  }
+  &[data-startPosition="R:"] {
+    border-right: none;
+    height: calc(100vh - 20vmin);
+    left: calc(100vw - 10vmin);
+    top: 10vmin;
+    width: 10vmin;
+  }
+  &[data-startPosition="T:"] {
+    border-top: none;
+    height: 10vmin;
+    left: 10vmin;
+    top: 0;
+    width: calc(100vw - 20vmin);
+  }
+  &[data-startPosition="B:"] {
+    border-bottom: none;
+    height: 10vmin;
+    left: 10vmin;
+    top: calc(100vh - 10vmin);
+    width: calc(100vw - 20vmin);
+  }
 }
 .inputed-gesture-container {
   overflow: visible;
   overflow-x: hide;
 }
-#inputedStartPoint {
+#inputedFingers {
   bottom: -1rem;
   font-size: 1rem;
   font-weight: normal;
@@ -393,6 +439,9 @@
 }
 .icon-add::before {
   mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1"><path d="M2 8h12M8 2v12"/></svg>');
+}
+.icon-tool::before {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M13.5 12l-4.5-4.5a4 4 0 0 0-5.5-5.5l2.25 2.25l-1.5 1.5-2.25-2.25a4 4 0 0 0 5.5 5.5l4.5 4.5a1 1 0 0 0 1.5-1.5z"/></svg>');
 }
 
 /* icon */
