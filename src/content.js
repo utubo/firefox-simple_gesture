@@ -312,8 +312,10 @@ if (typeof browser === 'undefined') {
 	const getCommandByState = (s, f, a) => {
 		if (!a) return;
 		const fa = f + a.join('-');
-		return SimpleGesture.ini.gestures[s + fa] ||
-			SimpleGesture.ini.gestures[fa];
+		const sc = SimpleGesture.ini.gestures[s + fa];
+		if (sc) return { com: sc, s };
+		const c = SimpleGesture.ini.gestures[fa];
+		if (c) return { com: c, s: '' };
 	}
 
 	const onTouchEnd = e => {
@@ -339,8 +341,8 @@ if (typeof browser === 'undefined') {
 		if (executeEvent(SimpleGesture.onEnd, e)) return true;
 		const g = getCommandByState(startPosition, fingers, arrows);
 		if (!g) return;
-		if (!isGestureEnabled && g !== 'disableGesture') return;
-		SimpleGesture.doCommand(g);
+		if (!isGestureEnabled && g.com !== 'disableGesture') return;
+		SimpleGesture.doCommand(g.com);
 		if (SimpleGesture.ini.interval) {
 			intervalSleep = true;
 			setTimeout(() => {
@@ -733,7 +735,7 @@ if (typeof browser === 'undefined') {
 		async setCurrentGesture() {
 			const g = getCommandByState(startPosition, fingers, arrows);
 			const gh = getCommandByState(startPosition, fingers, [...arrows, 'H']);
-			if (!isGestureEnabled && g !== 'disableGesture' && gh !== 'disableGesture') return false;
+			if (!isGestureEnabled && g.com !== 'disableGesture' && gh.com !== 'disableGesture') return false;
 			const joinedArrows = arrows.join('-');
 			let list = {};
 			if (
@@ -742,8 +744,8 @@ if (typeof browser === 'undefined') {
 			) {
 				list = SimpleGesture.ini.gestures;
 			} else if (g || gh) {
-				list[joinedArrows] = g;
-				list[joinedArrows + '-H'] = gh;
+				list[g.s + joinedArrows] = g;
+				list[gh.s + joinedArrows + '-H'] = gh;
 			}
 			const s = await suggestGestures(list, g, joinedArrows);
 			if (
