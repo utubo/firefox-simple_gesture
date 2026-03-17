@@ -260,7 +260,7 @@ try {
 			byId('editTarget').textContent = target.caption.textContent;
 			$startPosition.selectedIndex = 0;
 			const g = toGestureObj(target.arrows.getAttribute('data-gesture'));
-			g.onShow = true;
+			$startPosition.value = g.startPosition;
 			dlgs.gestureDlg.updateLabel(g);
 			toggleClass(false, 'dup', $inputedGesture, $inputedFingers);
 			toggleClass(false, 'canceled', $inputedGesture);
@@ -281,19 +281,13 @@ try {
 			target = null;
 		},
 		updateLabel(g) {
-			if (g) {
-				updateGestureLabel(
-					$inputedGesture,
-					$inputedFingers,
-					{ arrows: g.arrows, fingers: g.fingers, startPosition: '' }
-				);
-			}
-			if ($startPosition.value.match(/[WE]/)) {
-				// nop
-			} else if (g?.onShow || g?.startPosition?.match(/[LRTB]/)) {
-				$startPosition.value = g.startPosition;
-			}
 			$gestureArea.setAttribute('data-startPosition', $startPosition.value);
+			if (!g) return;
+			updateGestureLabel(
+				$inputedGesture,
+				$inputedFingers,
+				{ arrows: g.arrows, fingers: g.fingers, startPosition: '' }
+			);
 		},
 		getGesture(g) {
 			return fromGestureObj({
@@ -429,11 +423,7 @@ try {
 			history.back();
 		} else {
 			if (e.arrows?.length) {
-				if ($startPosition) {
-					e.startPosition = $startPosition.value;
-				} else if (e.startPosition.match(/^[WE]:$/)) {
-					e.startPosition = '';
-				}
+				e.startPosition = $startPosition.value;
 				updateGesture(e);
 				setTimeout(
 					() => { history.back(); },
