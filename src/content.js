@@ -756,7 +756,7 @@ if (typeof browser === 'undefined') {
 				if (g) list[g.s + input] = g.cmd;
 				if (gh) list[gh.s + inputHold] = gh.cmd;
 			}
-			const s = await suggestGestures(list, g, input);
+			const s = await suggestGestures(list, g.cmd, input);
 			if (
 				pullToRefresh.isEnabled &&
 				SimpleGesture.ini.pullToRefresh === 'text'
@@ -780,7 +780,7 @@ if (typeof browser === 'undefined') {
 		},
 	};
 
-	const suggestGestures = async (list, match, input) => {
+	const suggestGestures = async (list, cmd, input) => {
 		const elms = [];
 		let s = '';
 		if (!list) return { elms, s };
@@ -806,7 +806,7 @@ if (typeof browser === 'undefined') {
 				a.style.opacity = SUGGEST_OPACITY;
 			}
 			const text = document.createElement('SPAN');
-			text.style.opacity = v === match ? 1 : SUGGEST_OPACITY;
+			text.style.opacity = v === cmd ? 1 : SUGGEST_OPACITY;
 			text.textContent = name
 			label.appendChild(text);
 			elms.push(label);
