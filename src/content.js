@@ -254,7 +254,7 @@ if (typeof browser === 'undefined') {
 			arrows.push('H');
 			executeEvent(SimpleGesture.onInput, e);
 			if (SimpleGesture.ini.toast) await toast.showGesture(false);
-			if (!getAndDoCommand(e)) return;
+			if (!handleGesture(e)) return;
 			resetGesture();
 		},
 	};
@@ -326,7 +326,7 @@ if (typeof browser === 'undefined') {
 			touchEndTime = Date.now();
 			timeout.cancel();
 			toast.hide();
-			if (getAndDoCommand(e)) {
+			if (handleGesture(e)) {
 				e.stopPropagation();
 				e.cancelable && e.preventDefault();
 			}
@@ -338,7 +338,7 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	const getAndDoCommand = e => {
+	const handleGesture = e => {
 		if (pullToRefresh.isEnabled && pullToRefresh.end()) return;
 		if (setupSingleTap(e)) return;
 		if (executeEvent(SimpleGesture.onEnd, e)) return true;
