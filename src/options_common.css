@@ -389,7 +389,7 @@ input[type="checkbox"] {
   background: var(--submit-fg);
 }
 .icon-cancel::before {
-  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1"><path d="M2 2l12 12M2 14l12-12"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M6 8l-3 3 3 3m-3-3h6a4 4 0 0 0 0-8h-5"/></svg>');
 }
 .icon-save::before {
   mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M2 8l5 5 7-7"/></svg>');
