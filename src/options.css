@@ -441,9 +441,6 @@
 .icon-add::before {
   mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1"><path d="M2 8h12M8 2v12"/></svg>');
 }
-.icon-tool::before {
-  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M13.5 12l-4.5-4.5a4 4 0 0 0-5.5-5.5l2.25 2.25l-1.5 1.5-2.25-2.25a4 4 0 0 0 5.5 5.5l4.5 4.5a1 1 0 0 0 1.5-1.5z"/></svg>');
-}
 
 /* icon */
 .icon-flask::after {
