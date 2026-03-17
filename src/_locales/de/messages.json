@@ -227,16 +227,16 @@
 		"message": "Vom rechten Bildschirmrand"
 	},
 	"from_L": {
-		"message": "Von der linken Bildschirmkante."
+		"message": "Von der linken Bildschirmkante"
 	},
 	"from_R": {
-		"message": "Von der rechten Bildschirmkante."
+		"message": "Von der rechten Bildschirmkante"
 	},
 	"from_T": {
-		"message": "Von der oberen Bildschirmkante."
+		"message": "Von der oberen Bildschirmkante"
 	},
 	"from_B": {
-		"message": "Von der unteren Bildschirmkante."
+		"message": "Von der unteren Bildschirmkante"
 	},
 	"fingers": {
 		"message": "finger"
