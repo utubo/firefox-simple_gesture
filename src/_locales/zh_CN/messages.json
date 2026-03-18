@@ -244,6 +244,9 @@
 	"Settings": {
 		"message": "设置"
 	},
+	"gestureDlgNote": {
+		"message": "支持超出框外"
+	},
 	"drawSquare": {
 		"message": "画一个小方块。"
 	},

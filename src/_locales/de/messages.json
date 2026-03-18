@@ -244,6 +244,9 @@
 	"Settings": {
 		"message": "Optionen"
 	},
+	"gestureDlgNote": {
+		"message": "Über den Rahmen hinaus möglich."
+	},
 	"drawSquare": {
 		"message": "Zeichne ein kleines Quadrat."
 	},

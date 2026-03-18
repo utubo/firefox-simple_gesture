@@ -221,28 +221,31 @@
 		"message": "開始位置指定無し"
 	},
 	"from_W": {
-		"message": "画面左側から"
+		"message": "画面左半分から"
 	},
 	"from_E": {
-		"message": "画面右側から"
+		"message": "画面右半分から"
 	},
 	"from_L": {
-		"message": "画面左端から"
+		"message": "左端から"
 	},
 	"from_R": {
-		"message": "画面右端から"
+		"message": "右端から"
 	},
 	"from_T": {
-		"message": "画面上端から"
+		"message": "上端から"
 	},
 	"from_B": {
-		"message": "画面下端から"
+		"message": "下端から"
 	},
 	"fingers": {
 		"message": "本指"
 	},
 	"Settings": {
 		"message": "設定"
+	},
+	"gestureDlgNote": {
+		"message": "入力を枠内に収める必要はありません"
 	},
 	"drawSquare": {
 		"message": "指で小さめに四角を描いてください"

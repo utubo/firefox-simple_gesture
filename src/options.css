@@ -175,6 +175,14 @@
 }
 
 /* dialog */
+.dlg-label {
+  color: var(--dlg-label);
+  text-align: center;
+}
+.dlg-label.note {
+  opacity: .6;
+
+}
 .dlg-labels {
   bottom: calc(50% + 30vmin + .5rem);
   color: var(--dlg-label);
@@ -192,6 +200,12 @@
   font-size: 1.7rem;
   font-size: 1.2rem;
 }
+.dlg-buttons {
+  position: fixed;
+  text-align: center;
+  top: calc(50% + 30vmin + 1.5rem);
+  width: 100%;
+}
 @media (max-height: 23rem) {
   .gesture-area {
     opacity: 0;
@@ -203,6 +217,9 @@
   }
   .dlg-labels {
     bottom: calc(50% - 1rem);
+  }
+  .dlg-buttons {
+    top: calc(50% + 1.5rem);
   }
 }
 
@@ -218,10 +235,6 @@
 .prevent-pull-to-refresh {
   height: calc(100vh + 2000px);
   width: calc(100vw + 2000px);
-}
-#startPosition {
-  color: var(--dlg-label);
-  text-align: center;
 }
 .gesture-area {
   background: #14141422;

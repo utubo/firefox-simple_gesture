@@ -244,6 +244,9 @@
 	"Settings": {
 		"message": "Settings"
 	},
+	"gestureDlgNote": {
+		"message": "Outside the box OK."
+	},
 	"drawSquare": {
 		"message": "Draw a small square."
 	},

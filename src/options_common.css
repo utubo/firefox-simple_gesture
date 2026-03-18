@@ -244,12 +244,6 @@ input[type="checkbox"] {
   white-space: pre;
   text-align: left;
 }
-.dlg-buttons {
-  position: fixed;
-  text-align: center;
-  top: calc(50% + 30vmin + 1.5rem);
-  width: 100%;
-}
 .dlg-container {
   background: var(--bg-color);
   border-radius: .5rem;
@@ -263,11 +257,6 @@ input[type="checkbox"] {
 .dlg-label {
   text-align: left;
   margin-top: 1em;
-}
-@media (max-height: 23rem) {
-  .dlg-buttons {
-    top: calc(50% + 1.5rem);
-  }
 }
 
 /* color dlg */
