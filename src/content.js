@@ -756,7 +756,7 @@ if (typeof browser === 'undefined') {
 				if (g) list[g.s + input] = g.cmd;
 				if (gh) list[gh.s + inputHold] = gh.cmd;
 			}
-			const s = await suggestGestures(list, g.cmd, input);
+			const s = await suggestGestures(list, g?.cmd, input);
 			if (
 				pullToRefresh.isEnabled &&
 				SimpleGesture.ini.pullToRefresh === 'text'
