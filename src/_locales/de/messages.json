@@ -221,22 +221,22 @@
 		"message": "Von überall"
 	},
 	"from_W": {
-		"message": "Vom linken Bildschirmrand"
+		"message": "Ab linkener Hälfte"
 	},
 	"from_E": {
-		"message": "Vom rechten Bildschirmrand"
+		"message": "Ab rechter Hälfte"
 	},
 	"from_L": {
-		"message": "Von der linken Bildschirmkante"
+		"message": "Vom linken Rand"
 	},
 	"from_R": {
-		"message": "Von der rechten Bildschirmkante"
+		"message": "Vom rechten Rand"
 	},
 	"from_T": {
-		"message": "Von der oberen Bildschirmkante"
+		"message": "Vom oberen Rand"
 	},
 	"from_B": {
-		"message": "Von der unteren Bildschirmkante"
+		"message": "Vom unteren Rand"
 	},
 	"fingers": {
 		"message": "finger"

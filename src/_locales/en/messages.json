@@ -221,22 +221,22 @@
 		"message": "From any where"
 	},
 	"from_W": {
-		"message": "From the left side of screen"
+		"message": "From left half"
 	},
 	"from_E": {
-		"message": "From the right side of screen"
+		"message": "From right half"
 	},
 	"from_L": {
-		"message": "From the left edge of screen"
+		"message": "From left edge"
 	},
 	"from_R": {
-		"message": "From the right edge of screen"
+		"message": "From right edge"
 	},
 	"from_T": {
-		"message": "From the top edge of screen"
+		"message": "From top edge"
 	},
 	"from_B": {
-		"message": "From the bottom edge of screen"
+		"message": "From bottom edge"
 	},
 	"fingers": {
 		"message": "fingers"
@@ -245,7 +245,7 @@
 		"message": "Settings"
 	},
 	"gestureDlgNote": {
-		"message": "Outside the box OK."
+		"message": "Drawing outside box OK."
 	},
 	"drawSquare": {
 		"message": "Draw a small square."

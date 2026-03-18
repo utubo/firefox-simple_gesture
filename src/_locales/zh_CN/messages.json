@@ -221,22 +221,22 @@
 		"message": "任意起始位置"
 	},
 	"from_W": {
-		"message": "从屏幕左侧"
+		"message": "从左半部分"
 	},
 	"from_E": {
-		"message": "从屏幕右侧"
+		"message": "从右半部分"
 	},
 	"from_L": {
-		"message": "从屏幕的左边缘"
+		"message": "从左边缘"
 	},
 	"from_R": {
-		"message": "从屏幕的右边缘"
+		"message": "从右边缘"
 	},
 	"from_T": {
-		"message": "从屏幕的顶部边缘"
+		"message": "从顶部边缘"
 	},
 	"from_B": {
-		"message": "从屏幕的底部边缘"
+		"message": "从底部边缘"
 	},
 	"fingers": {
 		"message": "指"
