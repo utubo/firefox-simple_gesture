@@ -292,7 +292,7 @@ try {
 		getGesture(g) {
 			return fromGestureObj({
 				arrows: g.arrows,
-				startPosition: $startPosition.value || g.startPosition,
+				startPosition: $startPosition.value,
 				fingers: g.fingers,
 			});
 		},
@@ -403,7 +403,7 @@ try {
 			$inputedGesture.classList.add('canceled');
 			$cancelInputGesture.classList.add('hover');
 		}
-		toggleClass(!e.startPosition && !e.fingers, 'hide', $inputedFingers);
+		toggleClass(!e.fingers, 'hide', $inputedFingers);
 		dlgs.gestureDlg.updateLabel(e);
 		const gesture = dlgs.gestureDlg.getGesture(e);
 		let dup = SimpleGesture.ini.gestures[gesture];
