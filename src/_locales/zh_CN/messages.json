@@ -284,7 +284,7 @@
 		"message": "補記到script命令"
 	},
 	"scriptWorksOnlyWhen": {
-		"message": "用户脚本仅在当前URL为“http：// ...”或“https：// ...”时才起作用。"
+		"message": "JavaScript 在设置页面或受保护的页面上不起作用。"
 	},
 	"dontSetUntrustedScript": {
 		"message": "不要设置不受信任的脚本，因为这可能会导致安全问题。"

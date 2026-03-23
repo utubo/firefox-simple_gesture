@@ -552,7 +552,13 @@ try {
 		s.appendChild(f);
 	};
 	const autoTitleByUrl = () => {
-		if ($customGestureTitle.value && $customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) return;
+		if ($customGestureTitle.value && $customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) {
+			return;
+		}
+		if ($customGestureUrl.value.startsWith('javascript:')) {
+			$customGestureTitle.value = 'Bookmarklet';
+			return;
+		}
 		const m = /https?:\/\/([^\/]+)/.exec($customGestureUrl.value);
 		if (m) {
 			$customGestureTitle.value = m[1];

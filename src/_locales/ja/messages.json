@@ -284,7 +284,7 @@
 		"message": "コマンドをscriptに追加する"
 	},
 	"scriptWorksOnlyWhen": {
-		"message": "JavaScriptは現在のURLがhttp～～のときだけ動きます。"
+		"message": "JavaScriptは設定ページや保護されたページでは動きません"
 	},
 	"dontSetUntrustedScript": {
 		"message": "信頼できないスクリプトをセットしないで下さい。セキュリティ上の問題が発生する場合があります。"

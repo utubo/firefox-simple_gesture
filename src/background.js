@@ -333,10 +333,13 @@ if (typeof browser === 'undefined') {
 			const key = 'simple_gesture_' + arg.command;
 			const c = (await browser.storage.local.get(key))[key];
 			if (c.url) {
-				if (c.currentTab) {
-					browser.tabs.update(arg.tab.id, { url: c.url });
-				} else {
+				if (!c.currentTab) {
 					browser.tabs.create({ active: true, url: c.url });
+				} else if (c.url.startsWith('javascript:')) {
+					const script = decodeURIComponent(c.url.replace('javascript:', ''));
+					exec.executeScript({ tabId: arg.tab.id, code: script });
+				} else {
+					browser.tabs.update(arg.tab.id, { url: c.url });
 				}
 				return;
 			}
