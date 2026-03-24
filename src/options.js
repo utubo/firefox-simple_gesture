@@ -576,7 +576,7 @@ try {
 		let script = `\nSimpleGesture.doCommand('${name}');\n`;
 		if (name[0] === CUSTOM_GESTURE_PREFIX) {
 			const title = findCustomGesture(name).title.replace(/\/\*\s+|\s+\*\//g, '');
-			script = `\n/* ${title} */${script}`;
+			script = `\n// ${title}${script}`;
 		}
 		$customGestureScript.value += script;
 		$customGestureScript.selectStart = $customGestureScript.value.length;

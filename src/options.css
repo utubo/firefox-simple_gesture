@@ -368,9 +368,10 @@
   text-align: left;
 }
 #addCommandToScript {
+  border: none;
   font-size: .9rem;
   max-width: calc(100% - 1.6rem);
-  padding: 0;
+  padding: 0 0 0 .2rem;
 }
 .custom-gesture-script-note::after {
   background: linear-gradient(rgba(249,249,250,0) 0,rgba(249,249,250,1) 100%);
