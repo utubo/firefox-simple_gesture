@@ -343,12 +343,15 @@ input[type="checkbox"] {
   width: 100%;
 }
 .denylist-item {
-  margin-bottom: .5em;
+  margin: 1em 0;
 }
 .denylist-input {
   margin-right: .5em;
   vertical-align: middle;
   width: calc(100% - 3.5em);
+}
+.delete-denylist {
+  vertical-align: middle;
 }
 .denylist-item:last-child .delete-denylist {
   opacity: .3;
