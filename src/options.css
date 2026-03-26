@@ -102,12 +102,6 @@
   color: var(--caption);
   display: block;
 }
-.summary {
-  color: var(--secondery);
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
 .explanation {
   padding: .4rem 0;
 }

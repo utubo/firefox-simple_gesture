@@ -68,6 +68,13 @@ h2:first-of-type {
 .any-items-container {
   transition: .2s;
 }
+.summary {
+  font-size: .9rem;
+  color: var(--secondery);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
 
 /* form */
 form {
