@@ -229,9 +229,9 @@
 					</div>
 				</div>
 			</div>
-			<div id="blacklistEdit" class="item">
-				<label class="caption i18n">Blacklist</label>
-				<div id="blacklistSummary" class="summary">None</div>
+			<div id="denylistEdit" class="item">
+				<label class="caption i18n">Denylist</label>
+				<div id="denylistSummary" class="summary">None</div>
 			</div>
 			<div class="item experimental">
 				<label class="checkbox-label">
@@ -268,8 +268,8 @@
 				<div class="custom-gesture-edit button icon-edit"></div>
 				<div class="custom-gesture-delete button icon-delete"></div>
 			</div>
-			<div class="blacklist-item">
-				<input type="url" class="text-input blacklist-input" placeholder="https://url.starts.with/this"><span class="delete-blacklist button icon-delete"></span>
+			<div class="denylist-item">
+				<input type="url" class="text-input denylist-input" placeholder="https://url.starts.with/this"><span class="delete-denylist button icon-delete"></span>
 			</div>
 			<!-- for add flask with javascript -->
 			<i class="icon-flask"></i>
@@ -371,15 +371,15 @@
 			</div>
 		</div>
 
-		<div id="blacklistDlg" class="dlg transparent">
+		<div id="denylistDlg" class="dlg transparent">
 			<div class="dlg-container">
-				<label class="caption i18n">Blacklist</label>
-				<div id="blacklist"></div>
+				<label class="caption i18n">Denylist</label>
+				<div id="denylist"></div>
 				<div class="buttons">
 					<span class="button icon-cancel js-history-back i18n">cancel</span>
 					<span class="button icon-save js-submit i18n">save</span>
 				</div>
-				<div class="note i18n">After saving, You need to reload the page.</div>
+				<div class="note note-info i18n">After saving, You need to reload the page.</div>
 			</div>
 		</div>
 

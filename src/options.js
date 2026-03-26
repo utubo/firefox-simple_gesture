@@ -170,7 +170,7 @@ try {
 	const $templates = byId('templates');
 	const $gestureTemplate = byClass($templates, 'gesture-item');
 	const $buttonsTamplate = byClass($templates, 'custom-gesture-buttons');
-	const $blacklistTemplate = byClass($templates, 'blacklist-item');
+	const $denylistTemplate = byClass($templates, 'denylist-item');
 	const $inputedGesture = byId('inputedGesture');
 	const $inputedFingers = byId('inputedFingers');
 	const $dupName = byId('dupName');
@@ -357,11 +357,11 @@ try {
 				changeState({dlg: 'confirmDeleteDlg'});
 				return;
 			}
-			if (e.target.classList.contains('delete-blacklist')) {
-				const blacklistItem = parentByClass(e.target, 'blacklist-item');
-				byClass(blacklistItem, 'blacklist-input').value = '';
-				if (blacklistItem.nextSibling) {
-					blacklistItem.remove();
+			if (e.target.classList.contains('delete-denylist')) {
+				const denylistItem = parentByClass(e.target, 'denylist-item');
+				byClass(denylistItem, 'denylist-input').value = '';
+				if (denylistItem.nextSibling) {
+					denylistItem.remove();
 				}
 				return;
 			}
@@ -662,52 +662,52 @@ try {
 		}
 	};
 
-	// blacklist dlg ----
-	const setupBlacklistSummary = () => {
+	// denylist dlg ----
+	const setupDenylistSummary = () => {
 		let count = 0;
 		const urls = [];
-		for (const item of (SimpleGesture.ini.blacklist || [])) {
+		for (const item of SimpleGesture.ini.denylist) {
 			urls.push(item.url);
 			if (5 < ++count) {
 				urls.push('...');
 				break;
 			}
 		}
-		byId('blacklistSummary').textContent = count ? urls.join(', ') : getMessage('None');
+		byId('denylistSummary').textContent = count ? urls.join(', ') : getMessage('None');
 	};
-	dlgs.blacklistDlg = {
+	dlgs.denylistDlg = {
 		onShow() {
-			const blacklist = byId('blacklist');
-			const newList = blacklist.cloneNode(false);
-			if (SimpleGesture.ini.blacklist) {
-				for (const urlPattern of SimpleGesture.ini.blacklist) {
-					const item = $blacklistTemplate.cloneNode(true);
-					byClass(item, 'blacklist-input').value = urlPattern.url;
+			const denylist = byId('denylist');
+			const newList = denylist.cloneNode(false);
+			if (SimpleGesture.ini.denylist) {
+				for (const urlPattern of SimpleGesture.ini.denylist) {
+					const item = $denylistTemplate.cloneNode(true);
+					byClass(item, 'denylist-input').value = urlPattern.url;
 					newList.appendChild(item);
 				}
 			}
-			const newItem = $blacklistTemplate.cloneNode(true);
+			const newItem = $denylistTemplate.cloneNode(true);
 			newList.appendChild(newItem);
-			blacklist.parentNode.replaceChild(newList, blacklist);
+			denylist.parentNode.replaceChild(newList, denylist);
 		},
 		onHide: NOP,
 		onSubmit() {
 			const list = [];
-			for (const input of allByClass('blacklist-input')) {
+			for (const input of allByClass('denylist-input')) {
 				if (input.value) {
 					list.push({url: input.value});
 				}
 			}
-			SimpleGesture.ini.blacklist = list;
+			SimpleGesture.ini.denylist = list;
 			saveIni();
-			setupBlacklistSummary();
+			setupDenylistSummary();
 		},
 		init() {
 			window.addEventListener('input', e => {
-				if (e.target.classList.contains('blacklist-input')) {
+				if (e.target.classList.contains('denylist-input')) {
 					if (!e.target.parentNode.nextSibling) {
-						const newItem = $blacklistTemplate.cloneNode(true);
-						byId('blacklist').appendChild(newItem);
+						const newItem = $denylistTemplate.cloneNode(true);
+						byId('denylist').appendChild(newItem);
 					}
 					return;
 				}
@@ -973,10 +973,10 @@ try {
 			}
 		});
 		byId('exportSetting').addEventListener('click', exportSetting);
-		byId('blacklistEdit').addEventListener('click', () => {
-			changeState({dlg: 'blacklistDlg'});
+		byId('denylistEdit').addEventListener('click', () => {
+			changeState({dlg: 'denylistDlg'});
 		});
-		setupBlacklistSummary();
+		setupDenylistSummary();
 		// Firefox cant open link. bug?
 		byId('exp_readme').addEventListener('click', e => {
 			browser.tabs.create({ active: true, url: 'experimental.html' });
@@ -1160,7 +1160,7 @@ try {
 	// START HERE ! ------
 	(async() => {
 		try {
-			SimpleGesture.ini = (await storageValue('simple_gesture')) || SimpleGesture.ini;
+			await SimpleGesture.loadIni();
 			exData = (await storageValue('simple_gesture_exdata')) || exData;
 			await setupSettingItems();
 		} catch (e) {

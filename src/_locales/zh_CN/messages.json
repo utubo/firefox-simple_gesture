@@ -298,7 +298,7 @@
 	"message": {
 		"message": "消息"
 	},
-	"Blacklist": {
+	"Denylist": {
 		"message": "黑名单"
 	},
 	"disableWhileZoomedIn": {

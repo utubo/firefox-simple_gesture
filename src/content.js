@@ -25,12 +25,13 @@ if (typeof browser === 'undefined') {
 		touchHoldMsec: 0,
 		toast: true,
 		toastMinStroke: 2,
-		blacklist: [],
+		denylist: [],
 		disableWhileZoomedIn: false,
 		suggestNext: true,
 		confirmCloseTabs: true,
 		interval: 0,
 		pullToRefresh: '',
+		version: 5,
 	};
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
@@ -853,6 +854,11 @@ if (typeof browser === 'undefined') {
 		} else {
 			removeEventListener('click', waitForDoubleTap);
 		}
+		// for old version
+		if (SimpleGesture.ini.blacklist) {
+			SimpleGesture.ini.denylist = SimpleGesture.ini.blacklist;
+			delete SimpleGesture.ini.blacklist;
+		}
 	};
 
 	SimpleGesture.isDelaySingleTap = () => {
@@ -867,13 +873,11 @@ if (typeof browser === 'undefined') {
 
 	// START HERE ! ------
 	await SimpleGesture.loadIni();
-	if (SimpleGesture.ini.blacklist) {
-		for (const urlPattern of SimpleGesture.ini.blacklist) {
-			if (urlPattern.url && location.href.startsWith(urlPattern.url)) {
-				return;
-			}
+	for (const urlPattern of SimpleGesture.ini.denylist) {
+		if (urlPattern.url && location.href.startsWith(urlPattern.url)) {
+			return;
 		}
-	};
+	}
 
 	SimpleGesture.addTouchEventListener(window, { start: onTouchStart, move: onTouchMove, end: onTouchEnd, cancel: onCancel });
 	VV.addEventListener('scroll', e => {

@@ -387,20 +387,9 @@
   text-align: left;
 }
 
-/* blacklist */
-#blacklistDlg > .dlg-container {
-  width: 100%;
-}
-.blacklist-item {
-  margin-bottom: .5em;
-}
-.blacklist-input {
-  margin-right: .5em;
-  vertical-align: middle;
-  width: calc(100% - 3.5em);
-}
-.blacklist-item:last-child .delete-blacklist {
-  opacity: .3;
+/* denylist */
+#denylistDlg .buttons {
+  margin-bottom: 1em;
 }
 
 /* others */

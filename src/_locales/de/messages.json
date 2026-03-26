@@ -298,8 +298,8 @@
 	"message": {
 		"message": "Nachricht"
 	},
-	"Blacklist": {
-		"message": "Blacklist"
+	"Denylist": {
+		"message": "Denylist"
 	},
 	"disableWhileZoomedIn": {
 		"message": "Deaktivieren bei Vergrößerung"

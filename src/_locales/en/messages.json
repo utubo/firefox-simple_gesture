@@ -298,8 +298,8 @@
 	"message": {
 		"message": "Message"
 	},
-	"Blacklist": {
-		"message": "Deny list"
+	"Denylist": {
+		"message": "Denylist"
 	},
 	"disableWhileZoomedIn": {
 		"message": "Disable while zoomed in"

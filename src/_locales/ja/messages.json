@@ -298,7 +298,7 @@
 	"message": {
 		"message": "メッセージ"
 	},
-	"Blacklist": {
+	"Denylist": {
 		"message": "ジェスチャ無効URL"
 	},
 	"disableWhileZoomedIn": {
