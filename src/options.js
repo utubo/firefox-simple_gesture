@@ -795,23 +795,28 @@ try {
 	};
 
 	// User-Agent switcher ----
-	SimpleGesture.refreshUserAgentStatus = async () => {
+	const refreshUserAgentStatus = async () => {
 		const state = await browser.runtime.sendMessage('isUserAgentSwitched');
 		$userAgentStatus.checked = state;
 	};
 	const setupToggleUserAgent = async () => {
-		await SimpleGesture.refreshUserAgentStatus();
+		await refreshUserAgentStatus();
 		$userAgentStatus.addEventListener('input', async () => {
 			await browser.runtime.sendMessage({
 				command: 'toggleUserAgent',
 				force: true,
 				userAgent: $userAgentStatus.checked ? '' : null,
 			});
-			SimpleGesture.refreshUserAgentStatus();
+			refreshUserAgentStatus();
 		});
 		document.addEventListener('visibilitychange', () => {
 			if (!document.hidden) {
-				SimpleGesture.refreshUserAgentStatus();
+				refreshUserAgentStatus();
+			}
+		});
+		browser.runtime.onMessage.addListener((request) => {
+			if (request.cmd === 'refreshUserAgentStatus') {
+				refreshUserAgentStatus();
 			}
 		});
 	};

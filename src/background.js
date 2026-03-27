@@ -299,12 +299,7 @@ if (typeof browser === 'undefined') {
 				onOff = 'ON';
 			}
 			if (arg.tab.url === browser.runtime.getURL('options.html')) {
-				browser.scripting.executeScript({
-					target: { tabId: arg.tab.id },
-					func: () => {
-						SimpleGesture.refreshUserAgentStatus();
-					}
-				});
+				browser.tabs.sendMessage(arg.tab.id, { cmd: 'refreshUserAgentStatus' })
 			} else {
 				await browser.tabs.reload(arg.tab.id);
 			}
