@@ -1,6 +1,5 @@
 /* colors */
 :root {
-  --caption: #0c0c0d;
   --dlg-label: #fbfbfe;
 }
 
@@ -93,13 +92,13 @@
 }
 .caption,
 .gesture-caption {
-  color: var(--caption);
+  color: var(--fg-color);
   display: block;
   font-size: 1.1rem;
   position: relative;
 }
 .sub-caption {
-  color: var(--caption);
+  color: var(--fg-color);
   display: block;
 }
 .explanation {
@@ -467,11 +466,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --caption: #fbfbfecc;
-  }
   .gesture-caption {
-    color: var(--caption);
+    color: var(--fg-color);
   }
   .gesture-area {
     background: #141414aa;

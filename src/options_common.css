@@ -1,17 +1,17 @@
 /* basic */
 :root {
   --fg-color: #15141a;
-  --bg-color: #f9f9fa;
+  --bg-color: #f9f9fb;
   --accent: #592acb;
   --secondery: #5b5b66;
-  --third: #d7d7db;
-  --checked: #302962;
-  --checked-bg: #c6c4d4;
-  --checkbox-fg: #ececec;
-  --checkbox-bg: #bebec1;
-  --button: #cfcfd8;
-  --submit: #302962;
-  --submit-fg: #f9f9fa;
+  --third: #e0e0e6;
+  --checked: #312a64;
+  --checked-fg: #fbfbfe;
+  --checkbox-fg: #80808e;
+  --checkbox-bg: #e0e0e6;
+  --button: #e0e0e6;
+  --primary: #e7dfff;
+  --primary-fg: #15141a;
   --red: #c50042;
 }
 body {
@@ -193,37 +193,42 @@ input[type="checkbox"] {
   transition: .2s;
   &::before {
     background: var(--checkbox-bg);
-    border-radius: .4rem;
+    border: 2px solid var(--checkbox-fg);
+    border-radius: 1rem;
+    box-sizing: border-box;
     content: '';
     display: inline-block;
-    height: .8rem;
+    height: 1.8rem;
     position: absolute;
     right: 0;
-    top: calc(50% - .4rem);
+    top: 50%;
+    translate: 0 -50%;
     transition: .3s;
-    width: 2rem;
+    width: 3rem;
   }
   &::after {
     background: var(--checkbox-fg);
     border-radius: 50%;
-    box-shadow: 0 2px 2px #0004;
     content: '';
     display: inline-block;
-    height: 1.2rem;
+    height: .9rem;
     position: absolute;
     right: 0;
-    top: calc(50% - .6rem);
-    transform: translateX(-1rem);
+    top: 50%;
+    translate: -1.6rem -50%;
     transition: .3s;
-    width: 1.2rem;
+    width: .9rem;
   }
   &:has(>input[type="checkbox"]:checked) {
     &::before {
-      background: var(--checked-bg);
+      background: var(--checked);
+      border-color: var(--checked);
     }
     &::after {
-      background: var(--checked);
-      transform: translateX(0);
+      background: var(--checked-fg);
+      height: 1.3rem;
+      translate: -.3rem -50%;
+      width: 1.3rem;
     }
   }
 }
@@ -393,8 +398,8 @@ input[type="checkbox"] {
   padding: .2rem .8rem;
 }
 .js-submit {
-  background: var(--submit);
-  color: var(--submit-fg);
+  background: var(--primary);
+  color: var(--primary-fg);
 }
 .button::before {
   background: var(--fg-color);
@@ -404,7 +409,7 @@ input[type="checkbox"] {
   width: 1rem;
 }
 .js-submit::before {
-  background: var(--submit-fg);
+  background: var(--primary-fg);
 }
 .icon-cancel::before {
   mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="black" stroke-width="1" fill="none"><path d="M6 9l-3 3 3 3m-3-3h6a4 4 0 0 0 0-8h-5"/></svg>');
@@ -433,12 +438,11 @@ input[type="checkbox"] {
     --accent: #cb9eff;
     --secondery: #cfcfd8;
     --third: #fbfbfe66;
-    --checked: #a86ffa;
-    --checked-bg: #523f71;
-    --checkbox-fg: #b9b9b9;
-    --checkbox-bg: #6a6971;
+    --checked: #d9bfff;
+    --checked-fg: #15141a;
+    --checkbox-fg: #8f8f9d;
+    --checkbox-bg: #3a3944;
     --button: #52525e;
-    --submit: #7542e5;
     --red: #ff9aa2;
   }
   .dlg {
