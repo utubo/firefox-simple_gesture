@@ -106,7 +106,8 @@ const onPopState = e => {
     // enable touch scroll.
     document.body.style.overflow = null;
   } else if (state.dlg) {
-    dlgs[state.dlg].onShow(state.targetId);
+    dlgs[state.dlg].targetId = state.targetId;
+    dlgs[state.dlg].onShow();
     openedDlg = byId(state.dlg);
     fadein(openedDlg);
     // prevent touch scroll.
@@ -139,9 +140,8 @@ dlgs.colorDlg = {
   getPreview(i) {
     return byClass(i.parentNode, 'color-preview');
   },
-  onShow(id) {
-    dlgs.colorDlg.targetId = id;
-    const elm = byId(id);
+  onShow() {
+    const elm = byId(dlgs.colorDlg.targetId);
     const a = byId('sliderA');
     a.style.color = elm.value;
     requestAnimationFrame(() => {

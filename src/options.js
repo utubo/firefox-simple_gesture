@@ -303,8 +303,7 @@ const setupGestureList = () => {
 			return;
 		}
 		if (e.target.classList.contains('custom-gesture-delete')) {
-			setupConfirmDeleteDlg(e);
-			changeState({dlg: 'confirmDeleteDlg'});
+			changeState({dlg: 'confirmDeleteDlg', targetId: dataTargetId(e) });
 			return;
 		}
 		const item = parentByClass(e.target, 'gesture-item');
@@ -414,8 +413,7 @@ const deleteCustomGesture = id => {
 };
 dlgs.editDlg = {
 	targetId: null,
-	async onShow(id) {
-		dlgs.editDlg.targetId = id;
+	async onShow() {
 		$customGestureTitle.value = findCustomGesture(id).title;
 		const details = await storageValue(`simple_gesture_${id}`);
 		$customGestureType.value = [
@@ -533,11 +531,8 @@ const setupEditDlg = () => {
 };
 
 // confirm delete dlg ----
-const setupConfirmDeleteDlg = e => {
-	dlgs.confirmDeleteDlg.targetId = dataTargetId(e);
-};
 dlgs.confirmDeleteDlg = {
-	targetId: '',
+	targetId: null,
 	onShow: NOP,
 	onHide: NOP,
 	onSubmit() {
