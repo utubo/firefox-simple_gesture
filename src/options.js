@@ -13,10 +13,8 @@ const INSTEAD_OF_EMPTY = {
 	interval: 0,
 	touchHoldMsec: 0,
 };
-const TIMERS = {};
 const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
 SimpleGesture.MAX_LENGTH += 3; // margin of cancel to input.
-const NOP = () => {};
 const SHOW_TAP_HOLD_DELAY = 1000;
 const TAP_HOLD_MSEC_DEFAULT = 1200;
 
@@ -96,6 +94,30 @@ const toGestureObj = s => {
 };
 
 const fromGestureObj = g => `${g.startPosition || ''}${g.fingers || ''}${(g.arrows || []).slice(0, MAX_LENGTH).join('-')}`;
+
+// for Orion browser.
+const getMsgCompatible = key => {
+	const msg = browser.i18n.getMessage(key);
+	return key === msg ? '' : msg;
+}
+
+const getMsg = (s, isGesture) => {
+	if (!s) return s;
+	if (s[0] === CUSTOM_GESTURE_PREFIX) {
+		const c = findCustomGesture(s);
+		return c?.title || '';
+	} else {
+		try {
+			const key = s.replace(/[^0-9a-zA-Z_]/g, '_');
+			return isGesture &&
+				getMsgCompatible(key + '__label') ||
+				getMsgCompatible(key) ||
+				s;
+		} catch {
+			return s;
+		}
+	}
+};
 
 // DOM objects --------------
 const $gestureTemplate = byClass($templates, 'gesture-item');
@@ -568,7 +590,6 @@ const setupAdjustmentDlg = () => {
 		changeState({dlg: 'adjustmentDlg'});
 	});
 };
-
 dlgs.adjustmentDlg = {
 	onShow() {
 		fadein('adjustmentDlg');
@@ -608,42 +629,8 @@ const setupToggleUserAgent = async () => {
 	});
 };
 
-// for Orion browser.
-const getMsgCompatible = key => {
-	const msg = browser.i18n.getMessage(key);
-	return key === msg ? '' : msg;
-}
-
-const getMsg = (s, isGesture) => {
-	if (!s) return s;
-	if (s[0] === CUSTOM_GESTURE_PREFIX) {
-		const c = findCustomGesture(s);
-		return c?.title || '';
-	} else {
-		try {
-			const key = s.replace(/[^0-9a-zA-Z_]/g, '_');
-			return isGesture &&
-				getMsgCompatible(key + '__label') ||
-				getMsgCompatible(key) ||
-				s;
-		} catch {
-			return s;
-		}
-	}
-};
-const onChecked = e => {
-	for (const elm of allByClass(`js-linked-${e.target.id}`)) {
-		toggleClass(!e.target.checked, 'disabled', elm);
-	}
-};
-const toggleExperimental = () => {
-	for (const elm of allByClass('experimental')) {
-		toggleClass(!exData.experimental, 'hide', elm);
-	}
-};
-
 // Import / Export ----------
-comp.importExport.import = async json  {
+comp.importExport.import = async json => {
 	try {
 		const obj = JSON.parse(json);
 		Object.assign(SimpleGesture.ini, obj.ini);
@@ -661,7 +648,7 @@ comp.importExport.import = async json  {
 		alert(e.message);
 	}
 };
-comp.inportExport.export = async () => {
+comp.importExport.export = async () => {
 	const data = {
 		ini: SimpleGesture.ini,
 		exData: exData,
@@ -677,18 +664,17 @@ comp.inportExport.export = async () => {
 	link.setAttribute('href', href);
 	link.click();
 };
-const setupOtherOptions = async () => {
-	document.documentElement.lang = await browser.i18n.getUILanguage();
-	for (const caption of allByClass('i18n')) {
-		caption.textContent = getMsg(caption.textContent);
+
+// Others -----------------
+const toggleExperimental = () => {
+	for (const elm of allByClass('experimental')) {
+		toggleClass(!exData.experimental, 'hide', elm);
 	}
+};
+
+const setupOtherOptions = async () => {
 	for (const caption of allByClass('i18n-gesture')) {
 		caption.textContent = getMsg(caption.textContent, true);
-	}
-	for (const elm of document.getElementsByTagName('INPUT')) {
-		if (elm.type === 'checkbox') {
-			elm.addEventListener('change', onChecked);
-		}
 	}
 	for (const sub of allByClass('sub-item')) {
 		const parentId = sub.getAttribute('data-parent');
@@ -708,9 +694,10 @@ const setupOtherOptions = async () => {
 		elm.addEventListener('change', saveBindingValues);
 		elm.addEventListener('input', saveBindingValuesDelay);
 	}
+	// Touch hold
 	const $touchHold = byId('touchHold');
 	$touchHold.checked = !!SimpleGesture.ini.touchHoldMsec;
-	onChecked({ target: $touchHold });
+	comp.common.onChecked({ target: $touchHold });
 	$touchHold.addEventListener('click', () => {
 		$touchHoldMsec.value = $touchHold.checked
 			? SimpleGesture.ini.timeout <= 100
@@ -719,6 +706,7 @@ const setupOtherOptions = async () => {
 			: 0;
 		saveBindingValues();
 	});
+	// Experimental
 	toggleExperimental();
 	// Firefox cant open link. bug?
 	byId('exp_readme').addEventListener('click', e => {
@@ -727,61 +715,16 @@ const setupOtherOptions = async () => {
 	});
 };
 
-// common events
-addEventListener('click', e => {
-	if (!e?.target.classList) return;
-	if (e.target.classList.contains('js-history-back')) {
-		history.back();
-		return;
-	}
-	if (e.target.classList.contains('js-submit')) {
-		const f = dlgs[openedDlg.id].onSubmit;
-		f && f();
-		history.back();
-	}
-});
-
-// control Back button
+// control Back button ----
 const changeState = state => {
 	if (!state.dlg) return;
 	history.pushState(state, document.title);
 	onPopState({ state: state });
 };
 let preventPopStateEvent = false;
-const onPopState = e => {
-	if (preventPopStateEvent) return;
-	const state = e.state || history.state || { y: 0 };
-	if (openedDlg && !state.dlg) {
-		dlgs[openedDlg.id].onHide();
-		fadeout(openedDlg);
-		openedDlg = null;
-		// enable touch scroll.
-		document.body.style.overflow = null;
-	} else if (state.dlg) {
-		const d = dlgs[state.dlg];
-		const i = d.init;
-		if (i) {
-			i();
-			d.init = null;
-		}
-		d.onShow(state.targetId);
-		openedDlg = byId(state.dlg);
-		fadein(openedDlg);
-		// prevent touch scroll.
-		if (window.innerWidth === document.body.clientWidth) { // prevent blink scroll bar.
-			document.body.style.overflow = 'hidden';
-		}
-	} else {
-		setTimeout(() => { window.scrollTo(0, state.y); });
-	}
-};
 const scrollIntoView = target => {
 	onScrollEnd({ force: true }); // Save current position.
-	try {
-		target.scrollIntoView({ behavior: 'smooth' });
-	} catch (e) {
-		target.scrollIntoView(); // For Firefox 54-58
-	}
+	target.scrollIntoView({ behavior: 'smooth' });
 };
 const onScrollEnd = e => {
 	if (openedDlg) return;
@@ -807,18 +750,15 @@ const onScrollEnd = e => {
 	}
 };
 window.addEventListener('scroll', () => { resetTimer('onScrollEnd', onScrollEnd, 200); });
-window.addEventListener('popstate', onPopState);
-
-// setup options page
-const highligtItem = e => {
-	const item = parentByClass(e.target, 'link-item');
-	item?.classList?.add('active');
-};
-const unhighligtItem = () => {
-	for (const item of allByClass('active')) {
-		item.classList.remove('active');
+window.addEventListener('popstate', () => {
+	// TODO
+	if (preventPopStateEvent) return;
+	if (!openedDlg && !state.dlg) {
+		setTimeout(() => { window.scrollTo(0, state.y); });
 	}
-};
+});
+
+// Index ------------------
 const setupIndexPage = () => {
 	const v = manifest.version_name ?? manifest.version;
 	byId('splashVersion').textContent = `version ${v}`
@@ -843,16 +783,6 @@ const setupIndexPage = () => {
 		document.styleSheets.item(0).insertRule(`.page { min-height: ${innerHeight}px; }`, 0);
 	});
 };
-const removeCover = () => {
-	const cover = byId('cover');
-	if (!cover) return;
-	setTimeout(() => { fadeout(cover); });
-	setTimeout(() => { cover.remove(); }, 500);
-	setTimeout(() => {
-		document.body.classList.add('initialized');
-		initialized = true;
-	}, 500);
-};
 const setupSettingItems = async () => {
 	document.body.classList.add(`mv${manifest.manifest_version}`);
 	setupGestureList();
@@ -860,11 +790,8 @@ const setupSettingItems = async () => {
 	setupAdjustmentDlg();
 	setupIndexPage();
 	await setupOtherOptions();
-	// no wait for Orion browser.
-	// await setupToggleUserAgent();
-	setupToggleUserAgent();
-	onPopState(history);
-	removeCover();
+	// NOTE: no await for Orion browser.
+	/* await */ setupToggleUserAgent();
 };
 
 // error handling
@@ -877,7 +804,7 @@ const addLog = div => {
 	}
 	debuglogDiv.appendChild(div);
 	debuglogDiv.classList.remove('hide');
-	removeCover();
+	comp.common.removeCover();
 };
 const addErrorLog = (e, cause) => {
 	const err = e.error || e;

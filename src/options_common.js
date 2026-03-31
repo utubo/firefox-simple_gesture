@@ -323,6 +323,7 @@ comp.common = {
     for (const elm of $bidingForms) {
       if (elm.type === 'checkbox') {
         elm.checked = !!ini[elm.id];
+        elm.addEventListener('change', comp.common.onChecked);
       } else if (elm.type === 'radio') {
         elm.checked = ini[elm.name] === elm.value;
       } else {
@@ -364,6 +365,11 @@ comp.common = {
       document.body.classList.add('initialized');
       initialized = true;
     }, 500);
+  },
+  onChecked() {
+    for (const elm of allByClass(`js-linked-${e.target.id}`)) {
+      toggleClass(!e.target.checked, 'disabled', elm);
+    }
   },
 };
 
@@ -415,8 +421,8 @@ const initialize = async (mySettings) => {
   for (const c of Object.values(comp)) {
     c.init && c.init();
   }
-  onPopState(history);
   await settings.onInitialize();
+  onPopState(history);
   comp.common.removeCover();
 };
 
