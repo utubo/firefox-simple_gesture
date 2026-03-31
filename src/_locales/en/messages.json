@@ -286,6 +286,9 @@
 	"scriptWorksOnlyWhen": {
 		"message": "JavaScript does not work on settings pages or protected pages."
 	},
+	"userScriptManifestV3": {
+		"message": "Please enable 'Allow user scripts' in the extension settings."
+	},
 	"dontSetUntrustedScript": {
 		"message": "Don't set untrusted script, as this could lead to a security issue."
 	},

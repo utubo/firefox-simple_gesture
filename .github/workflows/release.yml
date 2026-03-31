@@ -46,6 +46,8 @@ jobs:
 
       - name: Create assets
         run: |
+          echo "${{ secrets.CRX_PRIVATE_KEY }}" > key.pem
+          npm install -g crx
           sh ./build.sh
 
       - name: Create release
@@ -58,4 +60,5 @@ jobs:
           files: |
             simple-gesture.xpi
             simple-gesture-chrome.zip
+            simple-gesture-chrome.crx
 

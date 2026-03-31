@@ -339,7 +339,7 @@ if (typeof browser === 'undefined') {
 				return;
 			}
 			if (c.script) {
-				exec.executeScript({ tabId: arg.tab.id, code: c.script });
+				exec.executeScript({ tab: arg.tab, code: c.script });
 			}
 			if (c.message) {
 				let msg = c.message;
@@ -367,7 +367,7 @@ if (typeof browser === 'undefined') {
 					browser.tabs.update(arg.tab.id, { active: true });
 				}
 				// execute the additional script.
-				code && exec.executeScript({ tabId: tab.id, code: code});
+				code && exec.executeScript({ tab: tab, code: code});
 				return;
 			}
 			// open in current tab
@@ -378,7 +378,7 @@ if (typeof browser === 'undefined') {
 					if (changeInfo.status !== 'complete' || tabId !== arg.tab.id) return;
 					clearTimeout(timer);
 					removeListener();
-					exec.executeScript({ tabId: tabId, code: code});
+					exec.executeScript({ tab: { id: tabId }, code: code});
 				};
 				browser.tabs.onUpdated.addListener(f);// FF for Android doesn't support extraParameter.tabId.
 			}
@@ -388,26 +388,65 @@ if (typeof browser === 'undefined') {
 			const userScript = `{
 				SimpleGesture.target = document.getElementsByClassName('simple-gesture-target')[0];
 				SimpleGesture.exit = v => { throw new Error('SimpleGestureExit'); };
+				SimpleGesture.doCommand = SimpleGesture.doCmd;
 				SimpleGesture.open = (url, options) => {
-					let msg = Object.assign({ command: 'open', url: url }, options);
-					browser.runtime.sendMessage(JSON.stringify(msg));
+					const opt = Object.assign({ url: url }, options);
+					SimpleGesture.doCmd('open', opt);
 				};
+				(async () => {
 				${arg.code || arg.script}
+				})();
 			}`;
-			// TODO: Migrate to Manifest V3.
-			browser.tabs.executeScript(arg.tabId, { code: userScript })
-			.then(result => { result?.[0]?.url && exec.open(result?.[0]); })
-			.catch (e => {
-				if (e.message === 'SimpleGestureExit') return;
-				if (e.message.indexOf('result is non-structured-clonable data') !== -1) return;// Ignore the invalid return value.
-				const msg = e.message.replace(/(['\\])/g, '\\$1');
-				browser.tabs.executeScript({
-					target: { tabId: arg.tabId },
-					args: [msg],
-					func: (msg) => alert(msg),
+			if (browser.userScripts?.execute) {
+				// NOTE: userScripts cannot access extension objects.
+				await chrome.userScripts.configureWorld({ messaging: true });
+				const result = await browser.userScripts.execute({
+					target: { tabId: arg.tab.id },
+					js: [{ code: `
+						if (true) {
+							const SimpleGesture = {};
+							SimpleGesture.doCmd = async (cmd, options) => {
+								const msg = { command: 'doCommand', cmd: cmd, options: options };
+								await chrome.runtime.sendMessage(JSON.stringify(msg));
+							};
+							${userScript}
+						}
+					`}],
 				});
-			});
+				if (result[0].error === 'SimpleGestureExit') return;
+				if (result[0].error) {
+					console.error(result[0].error);
+					browser.scripting.executeScript({
+						target: { tabId: arg.tab.id },
+						args: [result[0].error],
+						func: msg => alert(msg)
+					});
+				}
+				result[0].result?.url && exec.open(result[0].result);
+			} else {
+				// TODO: Delete this with Migrate to Manifest V3.
+				browser.tabs.executeScript(arg.tab.id, { code: userScript })
+				.then(result => { result?.[0]?.url && exec.open(result?.[0]); })
+				.catch (e => {
+					if (e.message === 'SimpleGestureExit') return;
+					// Ignore the invalid return value.
+					if (e.message.indexOf('result is non-structured-clonable data') !== -1) return;
+					const msg = e.message.replace(/(['\\])/g, '\\$1');
+					browser.scripting.executeScript({
+						target: { tabId: arg.tab.id },
+						args: [msg],
+						func: (msg) => alert(msg),
+					});
+				});
+			}
 		},
+		async doCommand(arg) {
+			await browser.scripting.executeScript({
+				target: { tabId: arg.tab.id },
+				args: [arg.cmd, arg.options || {}],
+				func: (cmd, options) => SimpleGesture.doCmd(cmd, options),
+			});
+		}
 	};
 
 	const msgToArg = async (msg, sender) => {
@@ -443,6 +482,13 @@ if (typeof browser === 'undefined') {
 		messageHandler(msg, sender, callback);
 		return true;
 	});
+
+	if (browser.runtime.onUserScriptMessage) {
+		browser.runtime.onUserScriptMessage.addListener((msg, sender, callback) => {
+			messageHandler(msg, sender, callback);
+			return true;
+		});
+	}
 
 	// For other extensions
 	browser.runtime.onMessageExternal.addListener((msg, sender, callback) => {

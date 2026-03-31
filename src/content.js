@@ -346,7 +346,7 @@ if (typeof browser === 'undefined') {
 		const g = findCmdRaw(startPosition, fingers, arrows);
 		if (!g) return;
 		if (!isGestureEnabled && g.cmd!== 'disableGesture') return;
-		SimpleGesture.doCommand(g.cmd);
+		SimpleGesture.doCmd(g.cmd);
 		if (SimpleGesture.ini.interval) {
 			intervalSleep = true;
 			setTimeout(() => {
@@ -380,7 +380,7 @@ if (typeof browser === 'undefined') {
 		}
 	};
 
-	SimpleGesture.doCommand = (g, options) => {
+	SimpleGesture.doCmd = (g, options) => {
 		switch (g) {
 			case 'forward': history.forward(); break;
 			case 'back': history.back(); break;

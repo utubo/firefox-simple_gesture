@@ -140,6 +140,7 @@
 			<div id="customGestureList" class="gesture-list"></div>
 			<div id="addCustomGesture" class="button icon-add i18n">addCustomGesture</div>
 			<div class="sub-item"><span class="note note-alert i18n">scriptWorksOnlyWhen</span></div>
+			<div class="sub-item mv3-show"><span class="note note-alert i18n">userScriptManifestV3</span></div>
 			</div>
 		</div>
 
@@ -323,7 +324,7 @@
 					<option value="message" class="caption i18n">SendMessageToExtension</option>
 				</select>
 				<input id="customGestureUrl" type="url" class="text-input" placeholder="https://www.example.com/">
-				<div id="customGestureScriptDiv" class="disabled-mv3">
+				<div id="customGestureScriptDiv">
 					<textarea id="customGestureScript" class="text-input" placeholder="alert('Hello World');"></textarea>
 					<div class="custom-gesture-script-note">
 						<div class="experimental">
@@ -334,9 +335,9 @@
 				</div>
 				<div id="customGestureMsgDiv">
 					<form name="customGestureMsg">
-						<label class="dlg-label sub-caption i18n">extensionId</label>
-						<input id="customGestureMsgId" class="text-input">
-						<label class="dlg-label sub-caption i18n">message</label>
+						<label class="dlg-item-label i18n">extensionId</label>
+						<input id="customGestureMsgId" class="text-input" placeholder="some_add_on@example.com">
+						<label class="dlg-item-label i18n">message</label>
 						<label class="radio-label">
 							<input id="messageTypeString" type="radio" name="messageType" value="string">
 							<span>String</span>
@@ -345,7 +346,7 @@
 							<input id="messageTypeJson" type="radio" name="messageType" value="json">
 							<span>JSON Object</span>
 						</label>
-						<input id="customGestureMsgValue" class="text-input">
+						<input id="customGestureMsgValue" class="text-input" placeholder='{ "key": "value" }'>
 						<br>
 						<span class="note note-help">
 							<a target="_blank" href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage">
@@ -399,6 +400,7 @@
 		<div id="cover"></div>
 
 		<script src="content.js"></script>
+		<script src="options_common.js"></script>
 		<script src="options.js"></script>
 	</body>
 </html>

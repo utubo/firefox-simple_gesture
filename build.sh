@@ -30,8 +30,8 @@ mv -f ../$XPI_NAME.zip ../$XPI_NAME.xpi
 # Chrome
 cp -p manifest_chrome.json manifest.json
 for_beta
-zip -r ../$XPI_NAME.zip * -x "manifest_*.json"
-mv -f ../$XPI_NAME.zip ../$XPI_NAME-chrome.zip
+zip -r ../$XPI_NAME-chrome.zip * -x "manifest_*.json"
+crx pack ./ -o ../$XPI_NAME-chrome.crx
 
 # Restore manifest.json
 mv -f manifest_firefox.json manifest.json

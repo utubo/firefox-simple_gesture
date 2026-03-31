@@ -4,16 +4,11 @@
 }
 
 /* manifest v3 */
-.mv3 .disabled-mv3 {
-  opacity: .4;
-  pointer-events: none;
+.mv3-show {
+  display: none !important;
 }
-.mv3 .disabled-mv3::before {
-  content: 'Sorry this Manifest v3 does not support this.';
-  display: block;
-  font-size: 1rem;
-  margin: 0 1.2rem;
-  opacity: 1;
+.mv3 .mv3-show {
+  display: block !important;
 }
 
 /* paging */
@@ -186,6 +181,10 @@
   text-align: center;
   text-shadow: 0px 0px 2px #fbfbfe77;
   width: 100%;
+}
+.dlg-item-label {
+  display: block;
+  margin-top: 1.5rem;
 }
 .adjustment-dlg-caption {
   color: var(--dlg-label);

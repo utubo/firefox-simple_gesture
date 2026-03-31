@@ -286,6 +286,9 @@
 	"scriptWorksOnlyWhen": {
 		"message": "JavaScriptは設定ページや保護されたページでは動きません"
 	},
+	"userScriptManifestV3": {
+		"message": "拡張機能の設定で「ユーザー スクリプトを許可する」を有効にしてください。"
+	},
 	"dontSetUntrustedScript": {
 		"message": "信頼できないスクリプトをセットしないで下さい。セキュリティ上の問題が発生する場合があります。"
 	},
