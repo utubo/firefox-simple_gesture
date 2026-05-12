@@ -40,10 +40,9 @@ To enable User scripts, please follow these exact steps:
 1. Download `simple-gesture-chrome.crx` from [here](https://github.com/utubo/firefox-simple_gesture/releases/latest).
 
 #### Step 2: Enable Developer Options
-1. Activate Developer option ()
-2. Go to Settings > About Microsoft Edge.
-3. Tap the Version Number (e.g., Edge Canary 1xx.x.x) 5 times rapidly.
-4. You will see a toast message: "Developer options enabled."
+1. Go to Settings > About Microsoft Edge.
+2. Tap the Version Number (e.g., Edge Canary 1xx.x.x) 5 times rapidly.
+3. You will see a toast message: "Developer options enabled."
 
 #### Step 3: Install the .crx File
 1. Go back to the main Settings menu.
@@ -54,7 +53,7 @@ To enable User scripts, please follow these exact steps:
 
 ### For Kiwi Browser
 
-Support for Kiwi Browser has been discontinued as of version 5.1.6.
+Support for Kiwi Browser has been discontinued as of version [5.1.6](https://github.com/utubo/firefox-simple_gesture/releases/tag/v5.1.6).
 
 1. Download `simple-gesture-chrome.zip` from [here](https://github.com/utubo/firefox-simple_gesture/releases/tag/v5.1.6).
 2. In Chromium, open Extensions (e.g. `kiwi://extensions`).
