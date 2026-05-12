@@ -287,7 +287,7 @@
 		"message": "JavaScript 在设置页面或受保护的页面上不起作用。"
 	},
 	"userScriptManifestV3": {
-		"message": "请在扩展程序设置中启用“允许用户脚本”。"
+		"message": "请在扩展程序的“详细信息”中启用“允许用户脚本”。"
 	},
 	"dontSetUntrustedScript": {
 		"message": "不要设置不受信任的脚本，因为这可能会导致安全问题。"

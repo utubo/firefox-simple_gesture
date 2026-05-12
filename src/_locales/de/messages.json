@@ -287,7 +287,7 @@
 		"message": "JavaScript funktioniert auf Einstellungsseiten oder geschützten Seiten nicht."
 	},
 	"userScriptManifestV3": {
-		"message": "Bitte aktivieren Sie „User-Skripte zulassen“ in den Erweiterungseinstellungen."
+		"message": "Bitte aktivieren Sie „User Scripts zulassen“ in den Details der Erweiterung."
 	},
 	"dontSetUntrustedScript": {
 		"message": "Füge kein Skript ein, das nicht vertrauenswürdig ist, da sonst ein Sicherheitsproblem entstehen könnte."
