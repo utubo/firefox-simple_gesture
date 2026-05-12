@@ -17,12 +17,12 @@ https://addons.mozilla.org/addon/simple-gesture/
 If you are willing to help test the Beta version.  
 https://addons.mozilla.org/addon/simple-gesture-beta/
 
-### For other browsers
+## For other browsers
 > [!CAUTION]
 > This add-on is designed for Firefox for Android.
 > It can be installed on Chromium-based browsers, but it has not been tested on them.
 
-#### From Chrome web store
+### From Chrome web store
 https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhoblclnckbda
 
 To enable User scripts, please follow these exact steps:
@@ -33,26 +33,26 @@ To enable User scripts, please follow these exact steps:
 4. Tap the three-dot menu (...) in the top right corner.
 5. Toggle the switch for User scripts to enable it.
 
-#### From .crx on Chromium borwser (e.g. Edge Canary)
+### From .crx on Chromium borwser (e.g. Edge Canary)
 
-##### Step 1: Download .crx
+#### Step 1: Download .crx
 
 1. Download `simple-gesture-chrome.crx` from [here](https://github.com/utubo/firefox-simple_gesture/releases/latest).
 
-##### Step 2: Enable Developer Options
+#### Step 2: Enable Developer Options
 1. Activate Developer option ()
 2. Go to Settings > About Microsoft Edge.
 3. Tap the Version Number (e.g., Edge Canary 1xx.x.x) 5 times rapidly.
 4. You will see a toast message: "Developer options enabled."
 
-##### Step 3: Install the .crx File
+#### Step 3: Install the .crx File
 1. Go back to the main Settings menu.
 2. Tap the newly appeared Developer options.
 3. Select Extension install by CRX.
 4. Locate and select your downloaded .crx file from your storage.
 5. Click Add when the confirmation prompt appears.
 
-#### For Kiwi Browser
+### For Kiwi Browser
 
 Support for Kiwi Browser has been discontinued as of version 5.1.6.
 
@@ -62,7 +62,7 @@ Support for Kiwi Browser has been discontinued as of version 5.1.6.
 4. Click `+(from .zip/.crx/.user.js)`.
 5. Select `simple-gesture-chrome.zip`.
 
-#### Known issues
+### Known issues
 - The "Open link in background" toast notification does not appear.
 
 ## For Developers
