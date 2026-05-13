@@ -723,40 +723,27 @@ const setupOtherOptions = async () => {
 };
 
 // control Back button ----
-let preventPopStateEvent = false;
-const scrollIntoView = target => {
-	onScrollEnd({ force: true }); // Save current position.
-	target.scrollIntoView({ behavior: 'smooth' });
+const pushIndexState = () => {
+	if (history.state === 'toIndex') return;
+	history.pushState('toIndex', '');
 };
-const onScrollEnd = e => {
+const clearIndexState = () => {
+	if (history.state !== 'toIndex') return;
+	addEventListener('popstate', clearIndexState, { once: true });
+	history.back();
+}
+const scrollToPage = page => {
 	if (openedDlg) return;
-	const hasOldY = history.state && 'y' in history.state;
-	const newY = window.scrollY;
-	if (newY || e?.force) {
-		if (hasOldY) {
-			history.replaceState({ y: newY }, document.title);
-		} else {
-			history.pushState({ y: newY }, document.title);
-		}
-	} else if (hasOldY) {
-		// Prevent to stack histories.
-		try {
-			preventPopStateEvent = true;
-			history.back();
-			requestAnimationFrame(() => {
-				window.scrollTo({ top: 0, behavior: 'instant' });
-			});
-		} finally {
-			preventPopStateEvent = false;
-		}
-	}
+	if (!page) return;
+	pushIndexState();
+	byId(page).scrollIntoView({ behavior: 'smooth' });
 };
-window.addEventListener('scroll', () => { resetTimer('onScrollEnd', onScrollEnd, 200); });
-window.addEventListener('popstate', () => {
-	// TODO
-	if (preventPopStateEvent) return;
-	if (!openedDlg && !history.state?.dlg) {
-		setTimeout(() => { window.scrollTo(0, history.state?.y || 0); });
+window.addEventListener('scroll', () => {
+	if (openedDlg) return;
+	if (window.scrollY) {
+		pushIndexState();
+	} else {
+		clearIndexState();
 	}
 });
 
@@ -772,7 +759,7 @@ const setupIndexPage = () => {
 		const item = parentByClass(e.target, 'link-item');
 		const page = item?.getAttribute('data-targetPage');
 		if (page) {
-			scrollIntoView(byId(page));
+			scrollToPage(page);
 		}
 	});
 	// Highlight when touched with JS. (css ':active' does not work.)
