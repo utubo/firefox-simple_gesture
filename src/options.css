@@ -11,6 +11,11 @@
   display: block !important;
 }
 
+/* edge */
+* {
+  -webkit-tap-highlight-color: #0000;
+}
+
 /* paging */
 .first-page {
   flex-direction: column;
