@@ -723,29 +723,39 @@ const setupOtherOptions = async () => {
 };
 
 // control Back button ----
-const pushIndexState = () => {
-	if (history.state === 'toIndex') return;
-	history.pushState('toIndex', '');
+history.scrollRestoration = 'manual';
+const pushScrState = () => {
+	if (history.state === 'scrolled') return;
+	history.pushState('scrolled', '');
 };
 const clearIndexState = () => {
-	if (history.state !== 'toIndex') return;
-	addEventListener('popstate', clearIndexState, { once: true });
+	if (history.state !== 'scrolled') return;
+	window.addEventListener('popstate', clearIndexState, { once: true });
 	history.back();
 }
 const scrollToPage = page => {
 	if (openedDlg) return;
 	if (!page) return;
-	pushIndexState();
+	pushScrState();
 	byId(page).scrollIntoView({ behavior: 'smooth' });
 };
 window.addEventListener('scroll', () => {
 	if (openedDlg) return;
 	if (window.scrollY) {
-		pushIndexState();
+		pushScrState();
 	} else {
 		clearIndexState();
 	}
 });
+window.addEventListener('popstate', () => {
+	if (openedDlg) return;
+	if (history.state === 'scrolled') return;
+	if (!window.scrollY) return;
+	scrollTo({ top: 0, behavior: 'smooth' });
+});
+if (window.scrollY) {
+	pushScrState();
+}
 
 // Index ------------------
 const setupIndexPage = () => {
