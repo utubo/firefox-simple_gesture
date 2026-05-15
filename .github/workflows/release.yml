@@ -59,6 +59,7 @@ jobs:
           generate_release_notes: true
           files: |
             simple-gesture.xpi
+            simple-gesture-beta.xpi
             simple-gesture-chrome.zip
             simple-gesture-chrome.crx
 
