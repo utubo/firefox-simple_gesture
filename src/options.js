@@ -705,13 +705,14 @@ const setupOtherOptions = async () => {
 	const $touchHold = byId('touchHold');
 	$touchHold.checked = !!SimpleGesture.ini.touchHoldMsec;
 	comp.common.onChecked({ target: $touchHold });
-	$touchHold.addEventListener('click', () => {
+	$touchHold.addEventListener('click', e => {
 		$touchHoldMsec.value = $touchHold.checked
 			? SimpleGesture.ini.timeout <= 100
 			? TAP_HOLD_MSEC_DEFAULT
 			: Math.min(TAP_HOLD_MSEC_DEFAULT, SimpleGesture.ini.timeout - 100)
 			: 0;
 		saveBindingValues();
+		comp.common.onChecked(e);
 	});
 	// Experimental
 	toggleExperimental();

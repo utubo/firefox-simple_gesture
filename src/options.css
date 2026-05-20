@@ -460,7 +460,7 @@
 .icon-doubletap::before {
   mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12"><path fill="none" stroke="black" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="M1 6a4 4 0 1 1 10 0 M3 6a3 3 0 1 1 6 0 M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1"/></svg>');
 }
-.icon-taphold::before {
+.icon-touchhold::before {
   mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12"><path fill="none" stroke="black" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="M8.2 4.1v-1.5zh1.5M8.2 6.5a2.7 2.7 0 1 1 0.5 0M4 11q-3-2 1-1v-3.5q1-2 2 0v2.5l3 1v1"/></svg>');
 }
 
