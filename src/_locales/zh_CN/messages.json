@@ -149,7 +149,7 @@
 		"message": "下拉刷新"
 	},
 	"pullToRefreshNote": {
-		"message": "要使用此功能，请禁用 Firefox 自带的下拉刷新。"
+		"message": "要使用此功能，请禁用浏览器的“下拉刷新”功能。"
 	},
 	"showIcon": {
 		"message": "显示图标"
