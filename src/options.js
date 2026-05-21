@@ -440,7 +440,7 @@ dlgs.editDlg = {
 		m.messageType.value = details.messageType || 'string';
 		const c = findCustomGesture(dlgs.editDlg.targetId);
 		editStart(byId(`${c.id}_caption`));
-		toggleEditor();
+		dlgs.editDlg.toggleFields();
 	},
 	onHide() {
 		const c = findCustomGesture(dlgs.editDlg.targetId);
@@ -479,70 +479,74 @@ dlgs.editDlg = {
 		byId(`${c.id}_caption`).textContent = c.title;
 		reloadAllTabsIni(); // for toast
 	},
-};
-const toggleEditor = () => {
-	const t = $customGestureType.value;
-	toggleClass(!t.includes('url'), 'hide', $customGestureUrl);
-	toggleClass(t !== 'message', 'hide', byId('customGestureMsgDiv'));
-	toggleClass(t !== 'script', 'hide', byId('customGestureScriptDiv'));
-	toggleClass(t === 'script', 'dlg-fill', $customGestureDlgContainer);
-	if (t !== 'script') return;
-	const s = byId('addCommandToScript');
-	const f = document.createDocumentFragment();
-	f.appendChild(s.firstChild.cloneNode(true));
-	for (const i of allByClass('gesture-item')) {
-		const name = i.id.replace(/_item/, '');
-		if (name === dlgs.editDlg.targetId) continue;
-		if (!name) continue;
-		const o = document.createElement('OPTION');
-		o.value = name;
-		o.textContent = byClass(i, 'gesture-caption').textContent;
-		f.appendChild(o);
-	}
-	while (s.firstChild) { s.remove(s.firstChild); }
-	s.appendChild(f);
-};
-const autoTitleByUrl = () => {
-	if ($customGestureTitle.value && $customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) {
-		return;
-	}
-	if ($customGestureUrl.value.startsWith('javascript:')) {
-		$customGestureTitle.value = 'Bookmarklet';
-		return;
-	}
-	const m = /https?:\/\/([^\/]+)/.exec($customGestureUrl.value);
-	if (m) {
-		$customGestureTitle.value = m[1];
-	}
-};
-const autoTitleByScript = () => {
-	const m = /\*\s+@name\s+(.+?)(\s*\n|\s+\*)/.exec($customGestureScript.value);
-	if (m) {
-		$customGestureTitle.value = m[1];
-	}
-};
-const addCommand = e => {
-	const name = e.target.value;
-	if (!name) return;
-	let script = `\nawait SimpleGesture.doCommand('${name}');\n`;
-	if (name[0] === CUSTOM_GESTURE_PREFIX) {
-		const title = findCustomGesture(name).title.replace(/\/\*\s+|\s+\*\//g, '');
-		script = `\n// ${title}${script}`;
-	}
-	$customGestureScript.value += script;
-	$customGestureScript.selectStart = $customGestureScript.value.length;
-	$customGestureScript.scrollTop = $customGestureScript.scrollHeight;
-	requestAnimationFrame(() => { e.target.selectedIndex = 0; });
-};
-const setupEditDlg = () => {
-	byId('addCustomGesture').addEventListener('click', addCustomGesture);
-	$customGestureType.addEventListener('change', toggleEditor);
-	$customGestureUrl.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByUrl, 1000); });
-	$customGestureScript.addEventListener('input', () => { resetTimer('autoTitle', autoTitleByScript, 1000); });
-	byId('addCommandToScript').addEventListener('change', addCommand);
+	init() {
+		byId('addCustomGesture').addEventListener('click', addCustomGesture);
+		$customGestureType.addEventListener('change', dlgs.editDlg.toggleFields);
+		$customGestureUrl.addEventListener('input', () => {
+			resetTimer('autoTitle', dlgs.editDlg.autoTitleByUrl, 1000);
+		});
+		$customGestureScript.addEventListener('input', () => {
+			resetTimer('autoTitle', dlgs.editDlg.autoTitleByScript, 1000);
+		});
+		byId('addCommandToScript').addEventListener('change', dlgs.editDlg.addCommand);
+	},
+	toggleFields() {
+		const t = $customGestureType.value;
+		toggleClass(!t.includes('url'), 'hide', $customGestureUrl);
+		toggleClass(t !== 'message', 'hide', byId('customGestureMsgDiv'));
+		toggleClass(t !== 'script', 'hide', byId('customGestureScriptDiv'));
+		toggleClass(t === 'script', 'dlg-fill', $customGestureDlgContainer);
+		if (t !== 'script') return;
+		const s = byId('addCommandToScript');
+		const f = document.createDocumentFragment();
+		f.appendChild(s.firstChild.cloneNode(true));
+		for (const i of allByClass('gesture-item')) {
+			const name = i.id.replace(/_item/, '');
+			if (name === dlgs.editDlg.targetId) continue;
+			if (!name) continue;
+			const o = document.createElement('OPTION');
+			o.value = name;
+			o.textContent = byClass(i, 'gesture-caption').textContent;
+			f.appendChild(o);
+		}
+		while (s.firstChild) { s.remove(s.firstChild); }
+		s.appendChild(f);
+	},
+	addCommand(e) {
+		const name = e.target.value;
+		if (!name) return;
+		let script = `\nawait SimpleGesture.doCommand('${name}');\n`;
+		if (name[0] === CUSTOM_GESTURE_PREFIX) {
+			const title = findCustomGesture(name).title.replace(/\/\*\s+|\s+\*\//g, '');
+			script = `\n// ${title}${script}`;
+		}
+		$customGestureScript.value += script;
+		$customGestureScript.selectStart = $customGestureScript.value.length;
+		$customGestureScript.scrollTop = $customGestureScript.scrollHeight;
+		requestAnimationFrame(() => { e.target.selectedIndex = 0; });
+	},
+	autoTitleByUrl() {
+		if ($customGestureTitle.value && $customGestureTitle.value !== INSTEAD_OF_EMPTY.defaultTitle) {
+			return;
+		}
+		if ($customGestureUrl.value.startsWith('javascript:')) {
+			$customGestureTitle.value = 'Bookmarklet';
+			return;
+		}
+		const m = /https?:\/\/([^\/]+)/.exec($customGestureUrl.value);
+		if (m) {
+			$customGestureTitle.value = m[1];
+		}
+	},
+	autoTitleByScript() {
+		const m = /\*\s+@name\s+(.+?)(\s*\n|\s+\*)/.exec($customGestureScript.value);
+		if (m) {
+			$customGestureTitle.value = m[1];
+		}
+	},
 };
 
-// confirm delete dlg ----
+// confirm delete dialog ----
 dlgs.confirmDeleteDlg = {
 	targetId: null,
 	onShow: NOP,
@@ -552,51 +556,7 @@ dlgs.confirmDeleteDlg = {
 	},
 };
 
-// adjustment dlg ----
-const setupAdjustmentDlg = () => {
-	const dlg = byId('adjustmentDlg');
-	SimpleGesture.addTouchEventListener(dlg, {
-		start(e) {
-			[minX, minY] = SimpleGesture.getXY(e);
-			[maxX, maxY] = [minX, minY];
-			startTime = Date.now();
-			safePreventDefault(e);
-			e.stopPropagation();
-			timeout.disable();
-		},
-		move(e) {
-			if (!startTime) return;
-			const [x, y] = SimpleGesture.getXY(e);
-			minX = Math.min(x, minX);
-			minY = Math.min(y, minY);
-			maxX = Math.max(x, maxX);
-			maxY = Math.max(y, maxY);
-			safePreventDefault(e);
-			e.stopPropagation();
-		},
-		end() {
-			let size = Math.max(maxX - minX, maxY - minY);
-			size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
-			size *= 0.8; // margin
-			size ^= 0; // to integer;
-			if (10 < size) {
-				SimpleGesture.ini.timeout = Date.now() - startTime + 300; // margin 300ms. It seems better not to dvide this by 4.
-				SimpleGesture.ini.strokeSize = size;
-				saveIni();
-				$timeout.value = SimpleGesture.ini.timeout;
-				$strokeSize.value = SimpleGesture.ini.strokeSize;
-			} else {
-				timeout.restore();
-			}
-			history.back();
-		},
-		cancel: NOP,
-	});
-	byId('timeoutAndStrokeSize').addEventListener('click', e => {
-		if (e.target.tagName === 'INPUT') return;
-		changeState({dlg: 'adjustmentDlg'});
-	});
-};
+// adjustment dialog ----
 dlgs.adjustmentDlg = {
 	onShow() {
 		fadein('adjustmentDlg');
@@ -606,7 +566,51 @@ dlgs.adjustmentDlg = {
 	onHide() {
 		startTime = null;
 		editEnd($timeout, $strokeSize);
-	}
+	},
+	init() {
+		const dlg = byId('adjustmentDlg');
+		SimpleGesture.addTouchEventListener(dlg, {
+			start(e) {
+				[minX, minY] = SimpleGesture.getXY(e);
+				[maxX, maxY] = [minX, minY];
+				startTime = Date.now();
+				safePreventDefault(e);
+				e.stopPropagation();
+				timeout.disable();
+			},
+			move(e) {
+				if (!startTime) return;
+				const [x, y] = SimpleGesture.getXY(e);
+				minX = Math.min(x, minX);
+				minY = Math.min(y, minY);
+				maxX = Math.max(x, maxX);
+				maxY = Math.max(y, maxY);
+				safePreventDefault(e);
+				e.stopPropagation();
+			},
+			end() {
+				let size = Math.max(maxX - minX, maxY - minY);
+				size *= 320 / Math.min(window.innerWidth, window.innerHeight); // based on screen size is 320x480
+				size *= 0.8; // margin
+				size ^= 0; // to integer;
+				if (10 < size) {
+					SimpleGesture.ini.timeout = Date.now() - startTime + 300; // margin 300ms. It seems better not to dvide this by 4.
+					SimpleGesture.ini.strokeSize = size;
+					saveIni();
+					$timeout.value = SimpleGesture.ini.timeout;
+					$strokeSize.value = SimpleGesture.ini.strokeSize;
+				} else {
+					timeout.restore();
+				}
+				history.back();
+			},
+			cancel: NOP,
+		});
+		byId('timeoutAndStrokeSize').addEventListener('click', e => {
+			if (e.target.tagName === 'INPUT') return;
+			changeState({dlg: 'adjustmentDlg'});
+		});
+	},
 };
 
 // User-Agent switcher ----
@@ -786,8 +790,6 @@ const setupIndexPage = () => {
 const setupSettingItems = async () => {
 	document.body.classList.add(`mv${manifest.manifest_version}`);
 	setupGestureList();
-	setupEditDlg();
-	setupAdjustmentDlg();
 	setupIndexPage();
 	await setupOtherOptions();
 	// NOTE: no await for Orion browser.
@@ -825,7 +827,7 @@ const addErrorLog = (e, cause) => {
 	}
 	addLog(div);
 };
-addEventListener('error',	addErrorLog);
+addEventListener('error', addErrorLog);
 
 // START HERE ! ------
 const mySettings = {
