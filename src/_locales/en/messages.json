@@ -247,11 +247,14 @@
 	"gestureDlgNote": {
 		"message": "Drawing outside box OK."
 	},
+	"gestureDlgNote2": {
+		"message": "Incompatible with browser's native gestures."
+	},
 	"drawSquare": {
 		"message": "Draw a small square."
 	},
 	"basedOn320x480": {
-		"message": "(Based on screen size is 320 x 480.)"
+		"message": "(Based on screen size is 320 x 480)"
 	},
 	"clear": {
 		"message": "Clear"

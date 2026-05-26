@@ -4,7 +4,7 @@
 		"description": "Name of the extension."
 	},
 	"extensionDescription": {
-		"message": "シンプルなAndroid用のタッチジェスチャです。",
+		"message": "シンプルなAndroid用のタッチジェスチャです",
 		"description": "Description of the extension."
 	},
 	"forward": {
@@ -149,7 +149,7 @@
 		"message": "プルダウンで更新"
 	},
 	"pullToRefreshNote": {
-		"message": "この機能を使用する場合は、ブラウザ標準の「プルダウンで更新」機能を無効にしてください。"
+		"message": "この機能を使用する場合は、ブラウザ標準の「プルダウンで更新」機能を無効にしてください"
 	},
 	"showIcon": {
 		"message": "アイコンを表示"
@@ -247,6 +247,9 @@
 	"gestureDlgNote": {
 		"message": "入力を枠内に収める必要はありません"
 	},
+	"gestureDlgNote2": {
+		"message": "ブラウザ本体のジェスチャーと競合すると動作しません"
+	},
 	"drawSquare": {
 		"message": "指で小さめに四角を描いてください"
 	},
@@ -287,10 +290,10 @@
 		"message": "JavaScriptは設定ページや保護されたページでは動きません"
 	},
 	"userScriptManifestV3": {
-		"message": "拡張機能の詳細で「ユーザー スクリプトを許可する」を有効にしてください。"
+		"message": "拡張機能の詳細で「ユーザー スクリプトを許可する」を有効にしてください"
 	},
 	"dontSetUntrustedScript": {
-		"message": "信頼できないスクリプトをセットしないで下さい。セキュリティ上の問題が発生する場合があります。"
+		"message": "信頼できないスクリプトをセットしないで下さい。セキュリティ上の問題が発生する場合があります"
 	},
 	"SendMessageToExtension": {
 		"message": "拡張機能にメッセージを送信する"
@@ -311,7 +314,7 @@
 		"message": "無し"
 	},
 	"After_saving__You_need_to_reload_the_page_": {
-		"message": "ページを再読み込みすると反映されます。"
+		"message": "ページを再読み込みすると反映されます"
 	},
 	"advanced": {
 		"message": "高度な設定"

@@ -247,6 +247,9 @@
 	"gestureDlgNote": {
 		"message": "Über den Rahmen hinaus möglich."
 	},
+	"gestureDlgNote2": {
+		"message": "Nicht kompatibel mit nativen Browser-Gesten."
+	},
 	"drawSquare": {
 		"message": "Zeichne ein kleines Quadrat."
 	},

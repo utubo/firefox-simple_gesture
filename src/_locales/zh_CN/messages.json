@@ -149,7 +149,7 @@
 		"message": "下拉刷新"
 	},
 	"pullToRefreshNote": {
-		"message": "要使用此功能，请禁用浏览器的“下拉刷新”功能。"
+		"message": "要使用此功能，请禁用浏览器的“下拉刷新”功能"
 	},
 	"showIcon": {
 		"message": "显示图标"
@@ -247,8 +247,11 @@
 	"gestureDlgNote": {
 		"message": "支持超出框外"
 	},
+	"gestureDlgNote2": {
+		"message": "若与浏览器自带的手势冲突，将无法正常运行"
+	},
 	"drawSquare": {
-		"message": "画一个小方块。"
+		"message": "画一个小方块"
 	},
 	"basedOn320x480": {
 		"message": "(此基于屏幕尺寸为 320 x 480。)"
@@ -284,13 +287,13 @@
 		"message": "補記到script命令"
 	},
 	"scriptWorksOnlyWhen": {
-		"message": "JavaScript 在设置页面或受保护的页面上不起作用。"
+		"message": "JavaScript 在设置页面或受保护的页面上不起作用"
 	},
 	"userScriptManifestV3": {
-		"message": "请在扩展程序的“详细信息”中启用“允许用户脚本”。"
+		"message": "请在扩展程序的“详细信息”中启用“允许用户脚本”"
 	},
 	"dontSetUntrustedScript": {
-		"message": "不要设置不受信任的脚本，因为这可能会导致安全问题。"
+		"message": "不要设置不受信任的脚本，因为这可能会导致安全问题"
 	},
 	"SendMessageToExtension": {
 		"message": "向扩展名发送消息"
@@ -311,7 +314,7 @@
 		"message": "沒"
 	},
 	"After_saving__You_need_to_reload_the_page_": {
-		"message": "保存后，您需要重新加载页面。"
+		"message": "保存后，您需要重新加载页面"
 	},
 	"advanced": {
 		"message": "高等的"
@@ -320,10 +323,10 @@
 		"message": "您确定要删除吗?\n（此操作无法撤消!）"
 	},
 	"message_gesture_is_disabled": {
-		"message": "Simple Gesuture已禁用。"
+		"message": "Simple Gesuture已禁用"
 	},
 	"message_gesture_is_enabled": {
-		"message": "Simple Gesuture已启用。"
+		"message": "Simple Gesuture已启用"
 	},
 	"basicGestures": {
 		"message": "基本"
