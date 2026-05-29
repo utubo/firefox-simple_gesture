@@ -24,7 +24,7 @@ https://addons.mozilla.org/addon/simple-gesture-beta/
 
 ### From Chrome web store or Microsoft Edge Add-ons
 - https://chromewebstore.google.com/deta-il/simple-gesture/jkgkcjbjbngoajkhlckkhoblclnckbda
-- https://microsoftedge.microsoft.com/addons/detail/simple-gesture/hfhdokhgdkcaebhjdblfgafnimchimkd?hl=ja-jp
+- https://microsoftedge.microsoft.com/addons/detail/simple-gesture/hfhdokhgdkcaebhjdblfgafnimchimkd
 
 To enable User scripts, please follow these exact steps:
 
