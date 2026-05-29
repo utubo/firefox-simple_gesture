@@ -22,8 +22,9 @@ https://addons.mozilla.org/addon/simple-gesture-beta/
 > This add-on is designed for Firefox for Android.
 > It can be installed on Chromium-based browsers, but it has not been tested on them.
 
-### From Chrome web store
-https://chromewebstore.google.com/detail/simple-gesture/jkgkcjbjbngoajkhlckkhoblclnckbda
+### From Chrome web store or Microsoft Edge Add-ons
+- https://chromewebstore.google.com/deta-il/simple-gesture/jkgkcjbjbngoajkhlckkhoblclnckbda
+- https://microsoftedge.microsoft.com/addons/detail/simple-gesture/hfhdokhgdkcaebhjdblfgafnimchimkd?hl=ja-jp
 
 To enable User scripts, please follow these exact steps:
 
