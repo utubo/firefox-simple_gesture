@@ -12,6 +12,7 @@ const INSTEAD_OF_EMPTY = {
 	toastMinStroke: 2,
 	interval: 0,
 	touchHoldMsec: 0,
+	edgeWidth: 0.1,
 };
 const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
 SimpleGesture.MAX_LENGTH += 3; // margin of cancel to input.
@@ -146,6 +147,7 @@ const $customGestureScript = byId('customGestureScript');
 const $userAgentStatus = byId('userAgentStatus');
 const $timeout = byId('timeout');
 const $strokeSize = byId('strokeSize');
+const $edgeWidth = byId('edgeWidth');
 const $preventPullToRefresh = byId('preventPullToRefresh');
 const $touchHoldMsec = byId('touchHoldMsec');
 const $startPosition = byId('startPosition');
@@ -231,6 +233,8 @@ dlgs.gestureDlg = {
 		$preventPullToRefresh.scrollLeft = 1000;
 		dlgs.gestureDlg.backup = SimpleGesture.ini.maxFingers;
 		SimpleGesture.ini.maxFingers = dlgs.gestureDlg.FREE_FOR_EDIT;
+		const ew = 100 * Number($edgeWidth.value);
+		document.documentElement.style.setProperty('--edge-width', `${ew}vmin`);
 	},
 	onHide() {
 		timeout.restore();
@@ -608,6 +612,7 @@ dlgs.adjustmentDlg = {
 		});
 		byId('timeoutAndStrokeSize').addEventListener('click', e => {
 			if (e.target.tagName === 'INPUT') return;
+			if (e.target.closest('.js-preventUsefulDlg')) return;
 			changeState({dlg: 'adjustmentDlg'});
 		});
 	},

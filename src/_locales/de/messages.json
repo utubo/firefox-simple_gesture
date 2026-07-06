@@ -178,6 +178,18 @@
 	"strokeSize": {
 		"message": "Gestenlänge"
 	},
+	"edgeWidth": {
+		"message": "Randbereich"
+	},
+	"narrow": {
+		"message": "Schmal"
+	},
+	"Wide": {
+		"message": "Breit"
+	},
+	"veryWide": {
+		"message": "Sehr breit"
+	},
 	"getstureInterval": {
 		"message": "Mindestabstand zwischen zwei Gesten"
 	},

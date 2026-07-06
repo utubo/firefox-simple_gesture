@@ -31,7 +31,8 @@ if (typeof browser === 'undefined') {
 		confirmCloseTabs: true,
 		interval: 0,
 		pullToRefresh: '',
-		version: 5,
+		edgeWidth: 0.1,
+		version: 6,
 	};
 	SimpleGesture.MAX_LENGTH = 9;
 	const SINGLETAP_MSEC = 200;
@@ -105,7 +106,7 @@ if (typeof browser === 'undefined') {
 		lastInnerHeight = h;
 		const m = Math.min(w, h)
 		size = (SimpleGesture.ini.strokeSize * m / 320)^0;
-		edgeWidth = (m / 10)^0;
+		edgeWidth = (m * SimpleGesture.ini.edgeWidth)^0;
 		rightEdge = lastInnerWidth - edgeWidth;
 		bottomEdge = lastInnerHeight - edgeWidth;
 		halfWidth = w / 2;

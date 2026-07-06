@@ -178,6 +178,18 @@
 	"strokeSize": {
 		"message": "描边尺寸"
 	},
+	"edgeWidth": {
+		"message": "边缘宽度"
+	},
+	"narrow": {
+		"message": "窄"
+	},
+	"Wide": {
+		"message": "宽"
+	},
+	"veryWide": {
+		"message": "极宽"
+	},
 	"getstureInterval": {
 		"message": "两个手势之间的最小间隔"
 	},

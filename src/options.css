@@ -2,6 +2,7 @@
 :root {
   --dlg-label: #fbfbfe;
   --dlg-note: #c9c9cb;
+  --edge-width: 10vmin;
 }
 
 /* manifest v3 */
@@ -250,44 +251,44 @@
   transition: .3s;
   width: 54vmin;
   &[data-startPosition="W:"] {
-    height: calc(100dvh - 20vmin);
-    left: 10vmin;
-    top: 10vmin;
-    width: calc(50% - 10vmin);
+    height: calc(100dvh - var(--edge-width) * 2);
+    left: var(--edge-width);
+    top: var(--edge-width);
+    width: calc(50% - var(--edge-width));
   }
   &[data-startPosition="E:"] {
-    height: calc(100dvh - 20vmin);
+    height: calc(100dvh - var(--edge-width) * 2);
     left: 50%;
-    top: 10vmin;
-    width: calc(50% - 10vmin);
+    top: var(--edge-width);
+    width: calc(50% - var(--edge-width));
   }
   &[data-startPosition="L:"] {
     border-left: none;
-    height: calc(100dvh - 20vmin);
+    height: calc(100dvh - var(--edge-width) * 2);
     left: 0;
-    top: 10vmin;
-    width: 10vmin;
+    top: var(--edge-width);
+    width: var(--edge-width);
   }
   &[data-startPosition="R:"] {
     border-right: none;
-    height: calc(100dvh - 20vmin);
-    left: calc(100vw - 10vmin);
-    top: 10vmin;
-    width: 10vmin;
+    height: calc(100dvh - var(--edge-width) * 2);
+    left: calc(100vw - var(--edge-width));
+    top: var(--edge-width);
+    width: var(--edge-width);
   }
   &[data-startPosition="T:"] {
     border-top: none;
-    height: 10vmin;
-    left: 10vmin;
+    height: var(--edge-width);
+    left: var(--edge-width);
     top: 0;
-    width: calc(100dvw - 20vmin);
+    width: calc(100dvw - var(--edge-width) * 2);
   }
   &[data-startPosition="B:"] {
     border-bottom: none;
-    height: 10vmin;
-    left: 10vmin;
+    height: var(--edge-width);
+    left: var(--edge-width);
     top: calc(100dvh - 10vmin);
-    width: calc(100dvw - 20vmin);
+    width: calc(100dvw - var(--edge-width) * 2);
   }
 }
 .inputed-gesture-container {

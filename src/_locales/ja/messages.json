@@ -175,6 +175,18 @@
 	"strokeSize": {
 		"message": "辺のサイズ"
 	},
+	"edgeWidth": {
+		"message": "画面端の判定"
+	},
+	"narrow": {
+		"message": "狭い"
+	},
+	"Wide": {
+		"message": "広い"
+	},
+	"veryWide": {
+		"message": "とても広い"
+	},
 	"getstureInterval": {
 		"message": "ジェスチャー入力の最小間隔"
 	},

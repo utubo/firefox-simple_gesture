@@ -159,6 +159,15 @@
 					<div class="note i18n">basedOn320x480</div>
 					<input id="strokeSize" class="number-input js-binding" type="number" min="1" max="999" size="5">px
 				</div>
+				<div class="sub-item js-preventUsefulDlg">
+					<label class="sub-caption i18n">edgeWidth</label><!-- don't add 'for="..."' -->
+					<select id="edgeWidth" class="js-binding" data-type="number">
+						<option class="i18n" value="0.05">narrow</option>
+						<option class="i18n" value="0.1" selected>default</option>
+						<option class="i18n" value="0.15">wide</option>
+						<option class="i18n" value="0.2">veryWide</option>
+					</select>
+				</div>
 			</div>
 			<div class="item">
 				<label class="caption i18n icon-label icon-doubletap">doubleTapMsec</label>

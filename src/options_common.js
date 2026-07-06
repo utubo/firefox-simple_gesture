@@ -388,7 +388,7 @@ const saveBindingValues = async () => {
     } else if (elm.value === settings.insteadOfEmpty[elm.id]) {
       ini[elm.id] = null;
     } else if (t === 'number') {
-      if (elm.value.match(/^\d+$/)) {
+      if (elm.value.match(/^[0-9.]+$/)) {
         ini[elm.id] = Number(elm.value);
       }
     } else {

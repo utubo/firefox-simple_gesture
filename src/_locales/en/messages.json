@@ -176,7 +176,19 @@
 		"message": "Timeout"
 	},
 	"strokeSize": {
-		"message": "Stroke size"
+		"message": "Stroke Size"
+	},
+	"edgeWidth": {
+		"message": "Edge Trigger Width"
+	},
+	"narrow": {
+		"message": "Narrow"
+	},
+	"Wide": {
+		"message": "Wide"
+	},
+	"veryWide": {
+		"message": "Very Wide"
 	},
 	"getstureInterval": {
 		"message": "Minimum interval between two gestures"
