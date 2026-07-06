@@ -327,9 +327,9 @@ comp.common = {
       } else if (elm.type === 'radio') {
         elm.checked = ini[elm.name] === elm.value;
       } else {
-        elm.value = ini[elm.id] || settings.insteadOfEmpty[elm.id] || (
-          elm.type === 'number' ? 0 : ''
-        );
+        elm.value = (ini[elm.id] === 0 ? 0 : ini[elm.id]) ||
+          settings.insteadOfEmpty[elm.id] ||
+          (elm.type === 'number' ? 0 : '');
       }
     }
   },
@@ -388,8 +388,9 @@ const saveBindingValues = async () => {
     } else if (elm.value === settings.insteadOfEmpty[elm.id]) {
       ini[elm.id] = null;
     } else if (t === 'number') {
-      if (elm.value.match(/^[0-9.]+$/)) {
-        ini[elm.id] = Number(elm.value);
+      const v = Number(elm.value);
+      if (!Number.isNaN(v)) {
+        ini[elm.id] = v;
       }
     } else {
       ini[elm.id] = elm.value;

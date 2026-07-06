@@ -13,6 +13,9 @@ const INSTEAD_OF_EMPTY = {
 	interval: 0,
 	touchHoldMsec: 0,
 	edgeWidth: 0.1,
+	strokeSize: 50,
+	timeout: 1500,
+	doubleTapMsec: 200,
 };
 const MAX_LENGTH = SimpleGesture.MAX_LENGTH;
 SimpleGesture.MAX_LENGTH += 3; // margin of cancel to input.
