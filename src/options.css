@@ -287,7 +287,7 @@
     border-bottom: none;
     height: var(--edge-width);
     left: var(--edge-width);
-    top: calc(100dvh - 10vmin);
+    top: calc(100dvh - var(--edge-width));
     width: calc(100dvw - var(--edge-width) * 2);
   }
 }
