@@ -1,0 +1,367 @@
+{
+	"extensionName": {
+		"message": "Простые жесты",
+		"description": "Name of the extension."
+	},
+	"extensionDescription": {
+		"message": "Простое управление браузером с помощью сенсорных жестов на Android.",
+		"description": "Description of the extension."
+	},
+	"forward": {
+		"message": "Вперед"
+	},
+	"back": {
+		"message": "Назад"
+	},
+	"top": {
+		"message": "Прокрутить в самый верх"
+	},
+	"bottom": {
+		"message": "Прокрутить в самый низ"
+	},
+	"pageUp": {
+		"message": "Прокрутить на страницу вверх"
+	},
+	"pageDown": {
+		"message": "Прокрутить на страницу вниз"
+	},
+	"reload": {
+		"message": "Перезагрузить страницу"
+	},
+	"close": {
+		"message": "Закрыть вкладку"
+	},
+	"afterClose": {
+		"message": "После закрытия перейти к"
+	},
+	"default": {
+		"message": "По умолчанию"
+	},
+	"closeLeft": {
+		"message": "Закрыть вкладки слева"
+	},
+	"closeRight": {
+		"message": "Закрыть вкладки справа"
+	},
+	"closeAll": {
+		"message": "Закрыть все вкладки"
+	},
+	"closeOthers": {
+		"message": "Закрыть другие вкладки"
+	},
+	"closeSameUrl": {
+		"message": "Закрыть вкладки с тем же URL"
+	},
+	"close_n_tabs": {
+		"message": "Вы собираетесь закрыть следующее количество вкладок: %count%.\nВы уверены, что хотите продолжить?"
+	},
+	"fullMatch": {
+		"message": "Полностью"
+	},
+	"domain": {
+		"message": "Домен"
+	},
+	"contextRoot": {
+		"message": "Корневой каталог сайта"
+	},
+	"reopen": {
+		"message": "Открыть закрытую вкладку"
+	},
+	"No_recently_closed_tabs": {
+		"message": "Нет недавно закрытых вкладок"
+	},
+	"openLinkInNewTab": {
+		"message": "Открыть ссылку в новой вкладке"
+	},
+	"openLinkInBackground": {
+		"message": "Открыть ссылку в фоновой вкладке"
+	},
+	"openLinkInBackgroundDiscarded": {
+		"message": "Содержимое вкладки будет загружено только при переключении на неё."
+	},
+	"toastForNewTabPosition": {
+		"message": "Расположение уведомления"
+	},
+	"toastForNewTabPositionDefault": {
+		"message": "По умолчанию"
+	},
+	"toastForNewTabPositionTop": {
+		"message": "Сверху"
+	},
+	"toastForNewTabPositionNone": {
+		"message": "Не показывать"
+	},
+	"New_tab_opened": {
+		"message": "Открыта новая вкладка"
+	},
+	"confirmCloseTabs": {
+		"message": "Подтверждать закрытие нескольких вкладок"
+	},
+	"Switch": {
+		"message": "Переключить"
+	},
+	"doubleTapNote": {
+		"message": "Одиночное касание задерживается для ожидания двойного касания."
+	},
+	"duplicateTab": {
+		"message": "Дублировать вкладку"
+	},
+	"nextTab": {
+		"message": "Следующая вкладка"
+	},
+	"prevTab": {
+		"message": "Предыдущая вкладка"
+	},
+	"lastUsedTab": {
+		"message": "Последняя использованная вкладка"
+	},
+	"newTab__label": {
+		"message": "Открыть новую вкладку"
+	},
+	"newTab": {
+		"message": "Новая вкладка"
+	},
+	"newTabUrl": {
+		"message": "Ссылка (URL)"
+	},
+	"toggleUserAgent": {
+		"message": "Запрашивать версию сайта для ПК"
+	},
+	"userAgent": {
+		"message": "Идентификатор браузера (User-Agent)"
+	},
+	"disableGesture__label": {
+		"message": "Включить или отключить жесты"
+	},
+	"disableGesture": {
+		"message": "Включить / отключить"
+	},
+	"openAddonSettings__label": {
+		"message": "Открыть настройки расширения"
+	},
+	"openAddonSettings": {
+		"message": "Настройки"
+	},
+	"fastScroll": {
+		"message": "Быстрая прокрутка"
+	},
+	"pullToRefresh": {
+		"message": "Провести для обновления"
+	},
+	"pullToRefreshNote": {
+		"message": "Чтобы использовать эту функцию, отключите встроенную функцию обновления страницы в браузере."
+	},
+	"showIcon": {
+		"message": "Показывать значок команды"
+	},
+	"showText": {
+		"message": "Показывать название команды"
+	},
+	"disable": {
+		"message": "Отключить"
+	},
+	"rightEdge": {
+		"message": "Правый край"
+	},
+	"leftEdge": {
+		"message": "Левый край"
+	},
+	"reverse": {
+		"message": "Изменить направление"
+	},
+	"timeoutAndStrokeSize": {
+		"message": "Тайм-аут и толщина линии"
+	},
+	"timeout": {
+		"message": "Время ожидания (тайм-аут)"
+	},
+	"strokeSize": {
+		"message": "Толщина линии"
+	},
+	"edgeWidth": {
+		"message": "Ширина области активации у края"
+	},
+	"narrow": {
+		"message": "Узкая"
+	},
+	"Wide": {
+		"message": "Широкая"
+	},
+	"veryWide": {
+		"message": "Очень широкая"
+	},
+	"getstureInterval": {
+		"message": "Минимальная пауза между жестами"
+	},
+	"doubleTap": {
+		"message": "Двойное касание"
+	},
+	"doubleTapMsec": {
+		"message": "Максимальный интервал двойного касания"
+	},
+	"delaySingleTap": {
+		"message": "Задерживать одиночное касание для ожидания двойного"
+	},
+	"delaySingleTapNote": {
+		"message": "Если одиночное касание не работает, попробуйте тройное касание."
+	},
+	"touchHold": {
+		"message": "Коснуться и удерживать"
+	},
+	"displayCommand": {
+		"message": "Показывать название распознанной команды"
+	},
+	"toastForeground": {
+		"message": "Цвет текста уведомления"
+	},
+	"toastBackground": {
+		"message": "Цвет фона уведомления"
+	},
+	"suggestNext": {
+		"message": "Показывать возможные продолжения жеста"
+	},
+	"toastMinStroke": {
+		"message": "Минимальная длина жеста для показа подсказки"
+	},
+	"EnableExperimentalFeatures": {
+		"message": "Включить экспериментальные функции"
+	},
+	"startPosition": {
+		"message": "Начало жеста"
+	},
+	"from_anyWhere": {
+		"message": "В любом месте экрана"
+	},
+	"from_W": {
+		"message": "Из левой половины экрана"
+	},
+	"from_E": {
+		"message": "Из правой половины экрана"
+	},
+	"from_L": {
+		"message": "От левого края экрана"
+	},
+	"from_R": {
+		"message": "От правого края экрана"
+	},
+	"from_T": {
+		"message": "От верхнего края экрана"
+	},
+	"from_B": {
+		"message": "От нижнего края экрана"
+	},
+	"fingers": {
+		"message": "Количество пальцев"
+	},
+	"Settings": {
+		"message": "Настройки"
+	},
+	"gestureDlgNote": {
+		"message": "Можно рисовать за пределами рамки."
+	},
+	"gestureDlgNote2": {
+		"message": "Несовместимо со встроенными жестами браузера."
+	},
+	"drawSquare": {
+		"message": "Нарисуйте небольшой квадрат."
+	},
+	"basedOn320x480": {
+		"message": "(Для экрана размером 320 × 480)"
+	},
+	"clear": {
+		"message": "Очистить"
+	},
+	"delete": {
+		"message": "Удалить"
+	},
+	"edit": {
+		"message": "Изменить"
+	},
+	"cancel": {
+		"message": "Отмена"
+	},
+	"save": {
+		"message": "Сохранить"
+	},
+	"addCustomGesture": {
+		"message": "Добавить пользовательский жест"
+	},
+	"OpenURLInNewTab": {
+		"message": "Открыть ссылку в новой вкладке"
+	},
+	"OpenURLInCurrentTab": {
+		"message": "Открыть ссылку в текущей вкладке"
+	},
+	"ExecuteJavascript": {
+		"message": "Выполнить код JavaScript"
+	},
+	"addCommandToScript": {
+		"message": "Добавить действие в сценарий"
+	},
+	"scriptWorksOnlyWhen": {
+		"message": "JavaScript не выполняется на страницах настроек и других защищённых страницах браузера."
+	},
+	"userScriptManifestV3": {
+		"message": "Включите параметр «Разрешить пользовательские сценарии» в настройках расширения."
+	},
+	"dontSetUntrustedScript": {
+		"message": "Не используйте непроверенный код — это может привести к проблемам с безопасностью."
+	},
+	"SendMessageToExtension": {
+		"message": "Отправить сообщение другому расширению"
+	},
+	"extensionId": {
+		"message": "Идентификатор расширения"
+	},
+	"message": {
+		"message": "Сообщение"
+	},
+	"Denylist": {
+		"message": "Чёрный список сайтов"
+	},
+	"disableWhileZoomedIn": {
+		"message": "Отключать жесты при масштабировании страницы"
+	},
+	"None": {
+		"message": "Нет"
+	},
+	"After_saving__You_need_to_reload_the_page_": {
+		"message": "После сохранения необходимо перезагрузить страницу."
+	},
+	"advanced": {
+		"message": "Дополнительные настройки"
+	},
+	"message_delete_confirm": {
+		"message": "Удалить этот элемент?\nЭто действие нельзя отменить."
+	},
+	"message_gesture_is_disabled": {
+		"message": "Жесты отключены."
+	},
+	"message_gesture_is_enabled": {
+		"message": "Жесты включены."
+	},
+	"basicGestures": {
+		"message": "Основные жесты"
+	},
+	"tabGestures": {
+		"message": "Жесты вкладок"
+	},
+	"otherGestures": {
+		"message": "Другие жесты"
+	},
+	"customGestures": {
+		"message": "Пользовательские жесты"
+	},
+	"configurations": {
+		"message": "Конфигурация"
+	},
+	"Export___Import": {
+		"message": "Экспорт и импорт"
+	},
+	"Export_settings_to_downloads_folder": {
+		"message": "Экспортировать настройки в папку «Загрузки»"
+	},
+	"Import_settings_from_JSON": {
+		"message": "Импортировать настройки из файла JSON"
+	}
+}
