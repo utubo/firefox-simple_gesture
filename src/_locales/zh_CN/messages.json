@@ -319,6 +319,9 @@
 	"Denylist": {
 		"message": "黑名单"
 	},
+	"disableInLandscape": {
+		"message": "横屏时停用"
+	},
 	"disableWhileZoomedIn": {
 		"message": "放大时停用"
 	},

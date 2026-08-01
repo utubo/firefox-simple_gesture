@@ -27,6 +27,7 @@ if (typeof browser === 'undefined') {
 		toastMinStroke: 2,
 		denylist: [],
 		disableWhileZoomedIn: false,
+		disableInLandscape: false,
 		suggestNext: true,
 		confirmCloseTabs: true,
 		interval: 0,
@@ -264,6 +265,8 @@ if (typeof browser === 'undefined') {
 	// touch-events ------
 	const onTouchStart = e => {
 		if (intervalSleep) return;
+		if (SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
+		if (SimpleGesture.ini.disableInLandscape && window.matchMedia("(orientation: landscape)").matches) return;
 		fixSize();
 		if (!size) return;
 		touchStartTime = Date.now();
@@ -298,7 +301,6 @@ if (typeof browser === 'undefined') {
 		if (fastScroll.state) return fastScroll.do(e);
 		if (arrows === null) return;
 		if (arrows.length > SimpleGesture.MAX_LENGTH) return;
-		if (!arrows && SimpleGesture.ini.disableWhileZoomedIn && 1.1 < VV.scale) return;
 		if (!setupFingers(e)) return;
 		const [x, y] = SimpleGesture.getXY(e);
 		const dx = x - lx;

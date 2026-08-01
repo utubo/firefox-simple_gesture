@@ -319,6 +319,9 @@
 	"Denylist": {
 		"message": "Denylist"
 	},
+	"disableInLandscape": {
+		"message": "Im Querformat deaktivieren"
+	},
 	"disableWhileZoomedIn": {
 		"message": "Deaktivieren bei Vergrößerung"
 	},

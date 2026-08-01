@@ -319,6 +319,9 @@
 	"Denylist": {
 		"message": "Denylist"
 	},
+	"disableInLandscape": {
+		"message": "Disable in landscape mode"
+	},
 	"disableWhileZoomedIn": {
 		"message": "Disable while zoomed in"
 	},

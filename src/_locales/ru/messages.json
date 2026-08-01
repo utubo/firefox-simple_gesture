@@ -319,6 +319,9 @@
 	"Denylist": {
 		"message": "Чёрный список сайтов"
 	},
+	"disableInLandscape": {
+		"message": "Отключать в ландшафтном режиме"
+	},
 	"disableWhileZoomedIn": {
 		"message": "Отключать жесты при масштабировании страницы"
 	},

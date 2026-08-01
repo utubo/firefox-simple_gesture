@@ -319,6 +319,9 @@
 	"Denylist": {
 		"message": "ジェスチャ無効URL"
 	},
+	"disableInLandscape": {
+		"message": "横画面で無効にする"
+	},
 	"disableWhileZoomedIn": {
 		"message": "拡大表示中は無効にする"
 	},
