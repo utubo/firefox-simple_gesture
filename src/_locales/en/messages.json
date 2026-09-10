@@ -97,6 +97,9 @@
 	"confirmCloseTabs": {
 		"message": "Confirm before closing multiple tabs"
 	},
+	"newTabOnLastTabClose": {
+		"message": "New tab on last tab close"
+	},
 	"Switch": {
 		"message": "SWITCH"
 	},

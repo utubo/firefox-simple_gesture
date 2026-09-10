@@ -97,6 +97,9 @@
 	"confirmCloseTabs": {
 		"message": "关闭多个标签页时进行确认"
 	},
+	"newTabOnLastTabClose": {
+		"message": "关闭最后一个标签页时打开新标签页"
+	},
 	"Switch": {
 		"message": "切换"
 	},

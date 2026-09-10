@@ -114,6 +114,19 @@ if (typeof browser === 'undefined') {
 		await browser.tabs.update(target.id, { active: true });
 	};
 
+	// New tab on last tab close
+	const newTabOnLastTabCloseDelay = async () => {
+		const tabs = await browser.tabs.query({ active: true });
+		if (tabs[0]) return;
+		exec.newTab();
+	};
+
+	const newTabOnLastTabClose = async () => {
+		const delay = await iniValue('newTabOnLastTabClose');
+		if (!delay) return;
+		setTimeout(newTabOnLastTabCloseDelay, delay);
+	};
+
 	// Gestures
 	const exec = {
 		async openLinkInNewTab(arg) {
@@ -146,7 +159,8 @@ if (typeof browser === 'undefined') {
 				case 'nextTab': await exec.nextTab(arg); break;
 				case 'lastUsedTab': await exec.lastUsedTab(arg); break;
 			}
-			browser.tabs.remove(arg.tab.id);
+			await browser.tabs.remove(arg.tab.id);
+			newTabOnLastTabClose();
 		},
 		async closeIf(arg, filter) {
 			const tabs = await browser.tabs.query({});
@@ -172,7 +186,8 @@ if (typeof browser === 'undefined') {
 				});
 				if (!ret?.[0]?.result) return;
 			}
-			browser.tabs.remove(ids);
+			await browser.tabs.remove(ids);
+			newTabOnLastTabClose();
 		},
 		async closeAll(arg) {
 			exec.closeIf(arg, () => true);

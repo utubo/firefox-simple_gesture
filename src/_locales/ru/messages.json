@@ -97,6 +97,9 @@
 	"confirmCloseTabs": {
 		"message": "Подтверждать закрытие нескольких вкладок"
 	},
+	"newTabOnLastTabClose": {
+		"message": "Новая вкладка при закрытии последней"
+	},
 	"Switch": {
 		"message": "Переключить"
 	},

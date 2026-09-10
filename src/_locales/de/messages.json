@@ -97,6 +97,9 @@
 	"confirmCloseTabs": {
 		"message": "Beim Schließen mehrerer Tabs bestätigen"
 	},
+	"newTabOnLastTabClose": {
+		"message": "Neuer Tab beim Schließen des letzten Tabs"
+	},
 	"Switch": {
 		"message": "WECHSELN"
 	},

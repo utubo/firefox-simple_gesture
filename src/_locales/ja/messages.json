@@ -97,6 +97,9 @@
 	"confirmCloseTabs": {
 		"message": "複数のタブを閉じるときに確認する"
 	},
+	"newTabOnLastTabClose": {
+		"message": "全てのタブを閉じたら新しいタブを開く"
+	},
 	"Switch": {
 		"message": "切り替え"
 	},

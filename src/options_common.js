@@ -379,11 +379,11 @@ const saveBindingValues = async () => {
   for (const elm of $bidingForms) {
     const ini = settings.getIni()
     const t = elm.getAttribute('data-type') || elm.type;
-    if (t === 'checkbox') {
-      ini[elm.id] = elm.checked;
-    } else if (t === 'radio') {
+    if (elm.type === 'checkbox') {
+      ini[elm.id] = t === 'number' ? Number(elm.value) : elm.checked;
+    } else if (elm.type === 'radio') {
       if (elm.checked) {
-        ini[elm.name] = elm.value;
+        ini[elm.name] = t === 'number' ? Number(elm.value) : elm.value;
       }
     } else if (elm.value === settings.insteadOfEmpty[elm.id]) {
       ini[elm.id] = null;
